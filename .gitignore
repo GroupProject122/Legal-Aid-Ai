@@ -1,0 +1,10 @@
+.env
+.DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+backend/vectorstore/
+backend/.env
+backend/.venv/
+dist/
+node_modules/
