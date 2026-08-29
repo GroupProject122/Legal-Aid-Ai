@@ -87,3 +87,4 @@ LLM_PROVIDER=local
 ```
 
 This still uses the local SentenceTransformer FAISS retrieval flow, but it does not call Gemini. Use `LLM_PROVIDER=gemini` with `GEMINI_API_KEY` for real generated answers.
+# Legal-Aid-Ai
