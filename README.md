@@ -1,6 +1,6 @@
 # Legal Aid AI
 
-Frontend pages are in the project root Vite app. The backend is a small FastAPI RAG MVP for Indian consumer-law questions using only PDFs placed in `backend/documents/`.
+Frontend pages are in the `frontend/` Vite app. The backend is a small FastAPI RAG MVP for Indian consumer-law questions using only PDFs placed in `backend/documents/`.
 
 The default backend setup uses local SentenceTransformer embeddings with FAISS retrieval, then sends only the retrieved context to Gemini for structured answer generation.
 
@@ -72,6 +72,8 @@ uvicorn main:app --reload --port 8000
 In another terminal:
 
 ```bash
+cd frontend
+npm install
 npm run dev
 ```
 
