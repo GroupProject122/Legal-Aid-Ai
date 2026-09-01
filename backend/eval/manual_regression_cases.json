@@ -1,0 +1,139 @@
+{
+  "description": "Manual real-user regression cases from the targeted quality pass. Expectations are behavioral, not exact wording.",
+  "cases": [
+    {
+      "case_id": "manual_01_defective_refund",
+      "query": "The seller is refusing to refund a defective product.",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "preferred_provisions": ["39"],
+      "must_not_prioritize": ["83", "84", "86"],
+      "expected_ui_category": "Consumer",
+      "notes": "Ordinary refund/remedy framing should outrank product-liability framing."
+    },
+    {
+      "case_id": "manual_02_delhi_electricity",
+      "query": "My landlord in Delhi has disconnected the electricity supply to my rented house. What can I do?",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "preferred_provisions": ["45"],
+      "expected_corpus_status": "sufficient",
+      "expected_ui_category": "Tenant"
+    },
+    {
+      "case_id": "manual_03_natural_credential_misuse",
+      "query": "Someone used my personal details to access my online account without permission. What can I do?",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act"],
+      "preferred_provisions": ["66C"],
+      "expected_ui_category": "Cyber",
+      "notes": "Natural credential misuse should surface Section 66C."
+    },
+    {
+      "case_id": "manual_04_explicit_identity_theft",
+      "query": "Someone used my password and personal details to log into my account without my permission. Is this identity theft under Indian cyber law?",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act"],
+      "preferred_provisions": ["66C"],
+      "expected_ui_category": "Cyber"
+    },
+    {
+      "case_id": "manual_05_mumbai_tenancy_gap",
+      "query": "My landlord in Mumbai has disconnected the electricity supply to my rented house. What can I do?",
+      "expected_domains": ["tenancy"],
+      "expected_corpus_status": "insufficient",
+      "expected_ui_category": "Tenant"
+    },
+    {
+      "case_id": "manual_06_rti_no_reply",
+      "query": "I filed an RTI application but did not receive any reply. What can I do next?",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Right to Information Act"],
+      "preferred_provisions": ["18", "19"],
+      "expected_ui_category": "Fundamental Rights",
+      "verifier_fallback_should_remain_useful": true
+    },
+    {
+      "case_id": "manual_07_article_14",
+      "query": "Can the government treat two similarly situated citizens differently without a valid reason? Does Article 14 apply?",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Constitution of India"],
+      "preferred_provisions": ["14"],
+      "expected_ui_category": "Fundamental Rights",
+      "empty_sections_hidden": true
+    },
+    {
+      "case_id": "manual_08_phone_refund",
+      "query": "I bought a phone online for Rs. 20000. It was defective from the first day. I asked the seller for a refund, but they refused. I have the invoice and chat messages. What can I do?",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "preferred_provisions": ["39"],
+      "must_not_prioritize": ["83", "84", "86"],
+      "expected_ui_category": "Consumer"
+    },
+    {
+      "case_id": "manual_09_instagram_seller",
+      "query": "I paid Rs. 15000 to an Instagram seller for a phone, but after receiving the payment they blocked me and never delivered the product. What can I do?",
+      "expected_domains": ["consumer", "cyber"],
+      "expected_primary_documents": ["Consumer Protection Act", "Information Technology Act", "National Cybercrime Reporting Portal"],
+      "expected_source_families": ["consumer", "cyber"],
+      "must_not_prioritize": ["83", "84", "86"],
+      "expected_ui_category": "Consumer, Cyber"
+    },
+    {
+      "case_id": "manual_10_free_legal_aid",
+      "query": "I cannot afford a lawyer. Am I eligible for free legal aid and where can I apply?",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Legal Services Authorities Act"],
+      "preferred_provisions": ["12", "13"],
+      "expected_ui_category": "Fundamental Rights"
+    },
+    {
+      "case_id": "manual_11_vague_landlord_threat",
+      "query": "My landlord is threatening me. What can I do?",
+      "expected_domains": ["tenancy"],
+      "should_clarify": true,
+      "expected_ui_category": "Tenant"
+    },
+    {
+      "case_id": "manual_12_divorce_unsupported",
+      "query": "My wife has filed for divorce. What legal options do I have?",
+      "expected_domains": [],
+      "expected_router_status": "unsupported",
+      "expected_ui_category": "Other"
+    },
+    {
+      "case_id": "manual_13_defective_laptop_no_harm",
+      "query": "I bought a defective laptop online. It stopped working within two days, but the seller is refusing replacement or refund. No one was injured. What can I do?",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "preferred_provisions": ["39"],
+      "must_not_prioritize": ["82", "83", "84", "85", "86", "87"],
+      "must_not_surface_provisions": ["82", "83", "84", "85", "86", "87"],
+      "expected_ui_category": "Consumer",
+      "notes": "Explicit no-harm facts should suppress product-liability framing."
+    },
+    {
+      "case_id": "manual_14_instagram_seller_true_multidomain",
+      "query": "I paid Rs. 15000 to an Instagram seller for a phone, but after receiving the payment they blocked me and never delivered the product. What can I do?",
+      "expected_domains": ["consumer", "cyber"],
+      "expected_primary_documents": ["Consumer Protection Act", "National Cybercrime Reporting Portal"],
+      "expected_source_families": ["consumer", "cyber"],
+      "must_not_prioritize": ["82", "83", "84", "85", "86", "87"],
+      "must_not_surface_provisions": ["82", "83", "84", "85", "86", "87"],
+      "expected_ui_category": "Consumer, Cyber",
+      "notes": "Consumer remedy and cyber reporting sources should both survive."
+    },
+    {
+      "case_id": "manual_15_rti_no_response_appeal_priority",
+      "query": "I filed an RTI application but did not receive any reply. What can I do next?",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Right to Information Act"],
+      "preferred_provisions": ["19"],
+      "preferred_before_provisions": {"19": ["18", "20"]},
+      "expected_ui_category": "Fundamental Rights",
+      "verifier_fallback_should_remain_useful": true,
+      "notes": "Section 19 appeal material should be the primary RTI non-response route, with complaint/penalty material secondary."
+    }
+  ]
+}

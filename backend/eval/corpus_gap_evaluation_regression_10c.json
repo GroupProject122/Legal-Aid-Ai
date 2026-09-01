@@ -1,0 +1,773 @@
+{
+  "confusion_matrix": {
+    "insufficient": {
+      "insufficient": 9,
+      "limited": 0,
+      "sufficient": 0
+    },
+    "limited": {
+      "insufficient": 0,
+      "limited": 9,
+      "sufficient": 0
+    },
+    "sufficient": {
+      "insufficient": 0,
+      "limited": 0,
+      "sufficient": 12
+    }
+  },
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/corpus_gap_cases.json",
+    "gemini_model": "gemini-flash-lite-latest"
+  },
+  "failures": [],
+  "latency": {
+    "average_gemini_latency_ms": null,
+    "gemini_corpus_gap_calls": 0,
+    "max_gemini_latency_ms": null,
+    "min_gemini_latency_ms": null
+  },
+  "metrics": {
+    "case_count": 30,
+    "gemini_corpus_gap_calls": 0,
+    "gemini_failures": 0,
+    "insufficient_detection_accuracy": 1.0,
+    "jurisdiction_gap_detection_rate": 1.0,
+    "limited_detection_accuracy": 1.0,
+    "missing_primary_source_detection_rate": 1.0,
+    "overall_classification_accuracy": 1.0,
+    "overall_reason_aware_accuracy": 1.0,
+    "sufficient_precision": 1.0,
+    "sufficient_recall": 1.0,
+    "unnecessary_abstention_rate": 0.0,
+    "unsafe_answer_rate": 0.0
+  },
+  "results": [
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "tenancy"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_delhi_electricity",
+      "issue": "landlord cut electricity in Delhi",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_equality",
+      "issue": "right to equality",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_rti",
+      "issue": "RTI application ka reply nahi mila",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_identity_theft",
+      "issue": "identity theft using my personal details",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "consumer"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_defective_refund",
+      "issue": "defective product refund issue",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "missing_current_law",
+        "domain_not_fully_covered"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [
+        "missing_current_law"
+      ],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_cert_in",
+      "issue": "Does CERT-In direction require cyber incident reporting?",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "Some useful cyber material is available, but a source that may be material to this issue is not present in the current corpus.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "missing_current_law",
+        "domain_not_fully_covered"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [
+        "missing_current_law"
+      ],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_dpdp_act",
+      "issue": "What does the DPDP Act say about consent withdrawal?",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "Some useful cyber material is available, but a source that may be material to this issue is not present in the current corpus.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "supporting_sources_only",
+        "missing_primary_authority"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [
+        "supporting_sources_only"
+      ],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_cyber_manual_only",
+      "issue": "how do I report online cybercrime",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "Only supporting or procedural sources were retrieved.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "weak_retrieval"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "consumer"
+      ],
+      "expected_reason_codes": [
+        "weak_retrieval"
+      ],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_weak_consumer",
+      "issue": "complex consumer compensation issue requiring case law",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved material appears relevant but not especially strong.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "weak_retrieval"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_constitution_complex",
+      "issue": "complex proportionality test for speech restriction",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved material appears relevant but not especially strong.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "jurisdiction_not_covered"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "tenancy"
+      ],
+      "expected_reason_codes": [
+        "jurisdiction_not_covered"
+      ],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_mumbai_tenancy",
+      "issue": "my landlord in Mumbai cut electricity",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "The tenancy corpus is currently Delhi-focused, so it cannot reliably answer this non-Delhi tenancy issue.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "jurisdiction_not_covered"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "tenancy"
+      ],
+      "expected_reason_codes": [
+        "jurisdiction_not_covered"
+      ],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_haryana_tenancy",
+      "issue": "my landlord in Haryana is evicting me",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "The tenancy corpus is currently Delhi-focused, so it cannot reliably answer this non-Delhi tenancy issue.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "case_law_not_in_corpus"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [
+        "case_law_not_in_corpus"
+      ],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_specific_case",
+      "issue": "What did the Supreme Court hold in Minerva Mills case?",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "The current corpus does not include comprehensive case-law material for this specific case-law question.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "no_relevant_source"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "consumer"
+      ],
+      "expected_reason_codes": [
+        "no_relevant_source"
+      ],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_no_chunks",
+      "issue": "supported-looking issue but no source retrieved",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "No relevant legal source was retrieved.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "fact_law_mismatch"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [
+        "fact_law_mismatch"
+      ],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_off_domain_chunks",
+      "issue": "cyber fraud online payment",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "Retrieved sources do not match the routed legal domain.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "weak_retrieval",
+        "missing_primary_authority"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_weak_supporting",
+      "issue": "unknown cyber law question",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "Only weak, non-primary legal material was retrieved.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_legal_aid",
+      "issue": "I want free legal aid",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_human_rights",
+      "issue": "human rights complaint against public authority",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "consumer"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_dark_pattern",
+      "issue": "dark pattern forced me to subscribe",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_intermediary",
+      "issue": "intermediary failed to remove unlawful content",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "supporting_sources_only",
+        "missing_primary_authority"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "tenancy"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_supporting_property",
+      "issue": "rent agreement registration dispute",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "Only supporting or procedural sources were retrieved.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "case_law_not_in_corpus"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "consumer"
+      ],
+      "expected_reason_codes": [
+        "case_law_not_in_corpus"
+      ],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "limited_case_law_general",
+      "issue": "consumer case law on mental agony compensation",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "The current corpus does not include comprehensive case-law material for this specific case-law question.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "supporting_sources_only",
+        "missing_primary_authority"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_bns_cyber_support",
+      "issue": "online threats and cyber harassment",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "Only supporting or procedural sources were retrieved.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "jurisdiction_not_covered"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "tenancy"
+      ],
+      "expected_reason_codes": [
+        "jurisdiction_not_covered"
+      ],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_up_tenancy",
+      "issue": "tenant dispute in Uttar Pradesh",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "The tenancy corpus is currently Delhi-focused, so it cannot reliably answer this non-Delhi tenancy issue.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "consumer"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_misleading_ad",
+      "issue": "misleading advertisement caused loss",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "consumer"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_direct_selling",
+      "issue": "direct selling company refusing refund",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "weak_retrieval"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_procedural_rti",
+      "issue": "exact RTI second appeal drafting format",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved material appears relevant but not especially strong.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "domain_not_fully_covered",
+        "missing_primary_authority"
+      ],
+      "actual_status": "insufficient",
+      "allow_grounded_answer": false,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "insufficient",
+      "gemini_latency_ms": null,
+      "id": "insufficient_tax_public",
+      "issue": "income tax notice reply under tax law",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": true,
+      "summary": "The current corpus does not contain the primary legal source needed for this issue.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [
+        "supporting_sources_only",
+        "missing_primary_authority"
+      ],
+      "actual_status": "limited",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "cyber"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "limited",
+      "gemini_latency_ms": null,
+      "id": "limited_bnss_procedure",
+      "issue": "cyber FIR criminal procedure after online fraud",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": true,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "Only supporting or procedural sources were retrieved.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    },
+    {
+      "actual_reason_codes": [],
+      "actual_status": "sufficient",
+      "allow_grounded_answer": true,
+      "correct": true,
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_reason_codes": [],
+      "expected_status": "sufficient",
+      "gemini_latency_ms": null,
+      "id": "sufficient_contempt",
+      "issue": "what is contempt of court",
+      "latency_ms": 0,
+      "reason_hit": true,
+      "require_limitation": false,
+      "source": "deterministic",
+      "suggest_professional_help": false,
+      "summary": "The retrieved corpus material appears sufficient for a grounded answer.",
+      "unnecessary_abstention": false,
+      "unsafe_answer": false
+    }
+  ]
+}

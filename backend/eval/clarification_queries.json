@@ -1,0 +1,196 @@
+{
+  "scenarios": [
+    {
+      "id": "consumer_01",
+      "initial_message": "mere paise fas gaye",
+      "expected_clarification": true,
+      "replies": ["Instagram seller ko payment ki thi aur ab reply nahi kar raha"],
+      "expected_final_status": "classified",
+      "expected_domains": ["consumer", "cyber"]
+    },
+    {
+      "id": "consumer_02",
+      "initial_message": "mujhe refund issue hai",
+      "expected_clarification": true,
+      "replies": ["online product defective nikla"],
+      "expected_final_status": "classified",
+      "expected_domains": ["consumer"]
+    },
+    {
+      "id": "consumer_03",
+      "initial_message": "company ne galat kiya",
+      "expected_clarification": true,
+      "replies": ["direct selling company refund nahi de rahi"],
+      "expected_final_status": "classified",
+      "expected_domains": ["consumer"]
+    },
+    {
+      "id": "cyber_01",
+      "initial_message": "paise chale gaye",
+      "expected_clarification": true,
+      "replies": ["phishing link pe OTP daal diya tha"],
+      "expected_final_status": "classified",
+      "expected_domains": ["cyber"]
+    },
+    {
+      "id": "cyber_02",
+      "initial_message": "account problem hai",
+      "expected_clarification": true,
+      "replies": ["mera Instagram hack ho gaya"],
+      "expected_final_status": "classified",
+      "expected_domains": ["cyber"]
+    },
+    {
+      "id": "cyber_03",
+      "initial_message": "someone is misusing my details",
+      "expected_clarification": true,
+      "replies": ["online fake account bana ke personal details use kar raha hai"],
+      "expected_final_status": "classified",
+      "expected_domains": ["cyber"]
+    },
+    {
+      "id": "tenancy_01",
+      "initial_message": "someone is troubling me",
+      "expected_clarification": true,
+      "replies": ["landlord electricity cut kar raha hai"],
+      "expected_final_status": "classified",
+      "expected_domains": ["tenancy"]
+    },
+    {
+      "id": "tenancy_02",
+      "initial_message": "deposit nahi mil raha",
+      "expected_clarification": true,
+      "replies": ["landlord security deposit return nahi kar raha"],
+      "expected_final_status": "classified",
+      "expected_domains": ["tenancy"]
+    },
+    {
+      "id": "tenancy_03",
+      "initial_message": "ghar ka issue hai",
+      "expected_clarification": true,
+      "replies": ["tenant rent pay nahi kar raha"],
+      "expected_final_status": "classified",
+      "expected_domains": ["tenancy"]
+    },
+    {
+      "id": "public_01",
+      "initial_message": "government office problem hai",
+      "expected_clarification": true,
+      "replies": ["RTI application ka reply nahi mila"],
+      "expected_final_status": "classified",
+      "expected_domains": ["constitutional_public_authority"]
+    },
+    {
+      "id": "public_02",
+      "initial_message": "mujhe help chahiye",
+      "expected_clarification": true,
+      "replies": ["free legal aid chahiye"],
+      "expected_final_status": "classified",
+      "expected_domains": ["constitutional_public_authority"]
+    },
+    {
+      "id": "public_03",
+      "initial_message": "rights violation hua",
+      "expected_clarification": true,
+      "replies": ["government authority ne discriminate kiya"],
+      "expected_final_status": "classified",
+      "expected_domains": ["constitutional_public_authority"]
+    },
+    {
+      "id": "unsupported_01",
+      "initial_message": "mujhe notice mila hai",
+      "expected_clarification": true,
+      "replies": ["income tax department se notice hai"],
+      "expected_final_status": "unsupported",
+      "expected_domains": []
+    },
+    {
+      "id": "unsupported_02",
+      "initial_message": "family matter hai",
+      "expected_clarification": true,
+      "replies": ["divorce chahiye"],
+      "expected_final_status": "unsupported",
+      "expected_domains": []
+    },
+    {
+      "id": "unsupported_03",
+      "initial_message": "court matter hai",
+      "expected_clarification": true,
+      "replies": ["bail kaise milegi"],
+      "expected_final_status": "unsupported",
+      "expected_domains": []
+    },
+    {
+      "id": "out_01",
+      "initial_message": "mujhe kuch puchna hai",
+      "expected_clarification": true,
+      "replies": ["weather tomorrow"],
+      "expected_final_status": "out_of_scope",
+      "expected_domains": []
+    },
+    {
+      "id": "out_02",
+      "initial_message": "help karo",
+      "expected_clarification": true,
+      "replies": ["Python code likho"],
+      "expected_final_status": "out_of_scope",
+      "expected_domains": []
+    },
+    {
+      "id": "multi_01",
+      "initial_message": "online paise ka issue hai",
+      "expected_clarification": true,
+      "replies": ["Instagram seller ne payment li aur block kar diya"],
+      "expected_final_status": "classified",
+      "expected_domains": ["consumer", "cyber"]
+    },
+    {
+      "id": "multi_02",
+      "initial_message": "landlord trouble kar raha hai",
+      "expected_clarification": true,
+      "replies": ["online threats de raha hai aur electricity cut kar di"],
+      "expected_final_status": "classified",
+      "expected_domains": ["tenancy", "cyber"]
+    },
+    {
+      "id": "stuck_01",
+      "initial_message": "mera matter hai",
+      "expected_clarification": true,
+      "replies": ["matter hai bas", "same matter hai"],
+      "expected_final_status": "unclear",
+      "expected_domains": []
+    },
+    {
+      "id": "stuck_02",
+      "initial_message": "mere saath galat hua",
+      "expected_clarification": true,
+      "replies": ["galat hua bas", "pata nahi"],
+      "expected_final_status": "unclear",
+      "expected_domains": []
+    },
+    {
+      "id": "classified_no_clarification_01",
+      "initial_message": "landlord electricity cut kar raha hai",
+      "expected_clarification": false,
+      "replies": [],
+      "expected_final_status": "classified",
+      "expected_domains": ["tenancy"]
+    },
+    {
+      "id": "classified_no_clarification_02",
+      "initial_message": "seller refund nahi de raha defective product ke liye",
+      "expected_clarification": false,
+      "replies": [],
+      "expected_final_status": "classified",
+      "expected_domains": ["consumer"]
+    },
+    {
+      "id": "classified_no_clarification_03",
+      "initial_message": "RTI application ka reply nahi mila",
+      "expected_clarification": false,
+      "replies": [],
+      "expected_final_status": "classified",
+      "expected_domains": ["constitutional_public_authority"]
+    }
+  ]
+}

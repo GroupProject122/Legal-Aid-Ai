@@ -1,0 +1,808 @@
+{
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/manual_regression_cases.json",
+    "live_gemini_calls": 0
+  },
+  "failures": [],
+  "metrics": {
+    "case_count": 15,
+    "category_sync_correctness": 1.0,
+    "consumer_no_harm_suppression": 1.0,
+    "consumer_primary_framing_correctness": 1.0,
+    "cyber_identity_misuse_provision_hit": 1.0,
+    "debug_language_leakage_rate": 0.0,
+    "empty_section_guard_rate": 1.0,
+    "failed_cases": [],
+    "multi_domain_source_coverage": 1.0,
+    "overall_expected_behavior_rate": 1.0,
+    "passed_cases": [
+      "manual_01_defective_refund",
+      "manual_02_delhi_electricity",
+      "manual_03_natural_credential_misuse",
+      "manual_04_explicit_identity_theft",
+      "manual_05_mumbai_tenancy_gap",
+      "manual_06_rti_no_reply",
+      "manual_07_article_14",
+      "manual_08_phone_refund",
+      "manual_09_instagram_seller",
+      "manual_10_free_legal_aid",
+      "manual_11_vague_landlord_threat",
+      "manual_12_divorce_unsupported",
+      "manual_13_defective_laptop_no_harm",
+      "manual_14_instagram_seller_true_multidomain",
+      "manual_15_rti_no_response_appeal_priority"
+    ],
+    "rti_no_response_priority": 1.0,
+    "verifier_fallback_usefulness": 1.0
+  },
+  "results": [
+    {
+      "case_id": "manual_01_defective_refund",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "The seller is refusing to refund a defective product.",
+      "retrieved": [
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "39",
+          "rank": 1,
+          "rerank_score": 1.4228,
+          "score": 0.5328,
+          "section_title": "Findings of District Commission"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "2",
+          "rank": 2,
+          "rerank_score": 1.1646,
+          "score": 0.5163,
+          "section_title": "Definitions"
+        },
+        {
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+          "domain": "consumer",
+          "provision": "6",
+          "rank": 3,
+          "rerank_score": 0.9544,
+          "score": 0.4836,
+          "section_title": "Duties of sellers on marketplace"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "17",
+          "rank": 4,
+          "rerank_score": 0.8941,
+          "score": 0.4576,
+          "section_title": "Complaints to authorities"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_02_delhi_electricity",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "My landlord in Delhi has disconnected the electricity supply to my rented house. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "45",
+          "rank": 1,
+          "rerank_score": 0.7825,
+          "score": 0.3665,
+          "section_title": "Cutting off or withholding essential supply or service"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "14C",
+          "rank": 2,
+          "rerank_score": 0.6199,
+          "score": 0.4019,
+          "section_title": "Right to recover immediate possession of premises to accrue to Central Government and"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "2",
+          "rank": 3,
+          "rerank_score": 0.6145,
+          "score": 0.3605,
+          "section_title": "Clause (d) has been ins"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "47",
+          "rank": 4,
+          "rerank_score": 0.5472,
+          "score": 0.3652,
+          "section_title": "Leases of vacant premises to Government"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_03_natural_credential_misuse",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "Someone used my personal details to access my online account without permission. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Information Technology Act, 2000",
+          "domain": "cyber",
+          "provision": "66C",
+          "rank": 1,
+          "rerank_score": 1.017,
+          "score": 0.503,
+          "section_title": "Punishment for identity theft"
+        },
+        {
+          "document_title": "The Information Technology Act, 2000",
+          "domain": "cyber",
+          "provision": "72",
+          "rank": 2,
+          "rerank_score": 0.692,
+          "score": 0.414,
+          "section_title": "Penalty for Breach of confidentiality and privacy"
+        },
+        {
+          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "domain": "cyber",
+          "provision": "",
+          "rank": 3,
+          "rerank_score": 0.6546,
+          "score": 0.4286,
+          "section_title": null
+        },
+        {
+          "document_title": "The Information Technology Act, 2000",
+          "domain": "cyber",
+          "provision": "66F",
+          "rank": 4,
+          "rerank_score": 0.6301,
+          "score": 0.3721,
+          "section_title": "Punishment for cyber terrorism"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_04_explicit_identity_theft",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "Someone used my password and personal details to log into my account without my permission. Is this identity theft under Indian cyber law?",
+      "retrieved": [
+        {
+          "document_title": "The Information Technology Act, 2000",
+          "domain": "cyber",
+          "provision": "66C",
+          "rank": 1,
+          "rerank_score": 1.0257,
+          "score": 0.5737,
+          "section_title": "Punishment for identity theft"
+        },
+        {
+          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "domain": "cyber",
+          "provision": "",
+          "rank": 2,
+          "rerank_score": 0.7451,
+          "score": 0.5511,
+          "section_title": null
+        },
+        {
+          "document_title": "The Information Technology Act, 2000",
+          "domain": "cyber",
+          "provision": "66F",
+          "rank": 3,
+          "rerank_score": 0.6726,
+          "score": 0.4566,
+          "section_title": "Punishment for cyber terrorism"
+        },
+        {
+          "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+          "domain": "cyber",
+          "provision": "",
+          "rank": 4,
+          "rerank_score": 0.583,
+          "score": 0.498,
+          "section_title": null
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_05_mumbai_tenancy_gap",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "My landlord in Mumbai has disconnected the electricity supply to my rented house. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "45",
+          "rank": 1,
+          "rerank_score": 0.785,
+          "score": 0.369,
+          "section_title": "Cutting off or withholding essential supply or service"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "1",
+          "rank": 2,
+          "rerank_score": 0.5541,
+          "score": 0.3361,
+          "section_title": "Added by Act 57 of 1988, s"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "14C",
+          "rank": 3,
+          "rerank_score": 0.5062,
+          "score": 0.3062,
+          "section_title": "Right to recover immediate possession of premises to accrue to Central Government and"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "47",
+          "rank": 4,
+          "rerank_score": 0.4847,
+          "score": 0.3027,
+          "section_title": "Leases of vacant premises to Government"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_06_rti_no_reply",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "I filed an RTI application but did not receive any reply. What can I do next?",
+      "retrieved": [
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "19",
+          "rank": 1,
+          "rerank_score": 1.0987,
+          "score": 0.5857,
+          "section_title": "Appeal"
+        },
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "18",
+          "rank": 2,
+          "rerank_score": 0.9088,
+          "score": 0.5668,
+          "section_title": "Powers and functions of Info rmation Commissions"
+        },
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "5",
+          "rank": 3,
+          "rerank_score": 0.8632,
+          "score": 0.5082,
+          "section_title": "Designation of Public Information Offic ers"
+        },
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "6",
+          "rank": 4,
+          "rerank_score": 0.8442,
+          "score": 0.4982,
+          "section_title": "Request for obtaining information"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_07_article_14",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "Can the government treat two similarly situated citizens differently without a valid reason? Does Article 14 apply?",
+      "retrieved": [
+        {
+          "document_title": "The Constitution of India",
+          "domain": "constitutional_public_authority",
+          "provision": "14",
+          "rank": 1,
+          "rerank_score": 0.9642,
+          "score": 0.6587,
+          "section_title": "Equality before law"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_08_phone_refund",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "I bought a phone online for Rs. 20000. It was defective from the first day. I asked the seller for a refund, but they refused. I have the invoice and chat messages. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "39",
+          "rank": 1,
+          "rerank_score": 1.1952,
+          "score": 0.4229,
+          "section_title": "Findings of District Commission"
+        },
+        {
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+          "domain": "consumer",
+          "provision": "6",
+          "rank": 2,
+          "rerank_score": 0.7945,
+          "score": 0.4361,
+          "section_title": "Duties of sellers on marketplace"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "38",
+          "rank": 3,
+          "rerank_score": 0.7725,
+          "score": 0.3791,
+          "section_title": "Procedure on admission of complaint"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "47",
+          "rank": 4,
+          "rerank_score": 0.7207,
+          "score": 0.3757,
+          "section_title": "Jurisdiction of State Commission"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_09_instagram_seller",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "I paid Rs. 15000 to an Instagram seller for a phone, but after receiving the payment they blocked me and never delivered the product. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "39",
+          "rank": 1,
+          "rerank_score": 1.0821,
+          "score": 0.3283,
+          "section_title": "Findings of District Commission"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "17",
+          "rank": 2,
+          "rerank_score": 0.8082,
+          "score": 0.403,
+          "section_title": "Complaints to authorities"
+        },
+        {
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+          "domain": "consumer",
+          "provision": "6",
+          "rank": 3,
+          "rerank_score": 0.7869,
+          "score": 0.4412,
+          "section_title": "Duties of sellers on marketplace"
+        },
+        {
+          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "domain": "cyber",
+          "provision": "",
+          "rank": 4,
+          "rerank_score": 0.5538,
+          "score": 0.4596,
+          "section_title": null
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_10_free_legal_aid",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "I cannot afford a lawyer. Am I eligible for free legal aid and where can I apply?",
+      "retrieved": [
+        {
+          "document_title": "The Legal Services Authorities Act, 1987",
+          "domain": "constitutional_public_authority",
+          "provision": "15",
+          "rank": 1,
+          "rerank_score": 0.7997,
+          "score": 0.4938,
+          "section_title": "National Legal Aid Fund"
+        },
+        {
+          "document_title": "The Legal Services Authorities Act, 1987",
+          "domain": "constitutional_public_authority",
+          "provision": "16",
+          "rank": 2,
+          "rerank_score": 0.7755,
+          "score": 0.4697,
+          "section_title": "State Legal Aid Fund"
+        },
+        {
+          "document_title": "The Legal Services Authorities Act, 1987",
+          "domain": "constitutional_public_authority",
+          "provision": "13",
+          "rank": 3,
+          "rerank_score": 0.7576,
+          "score": 0.4405,
+          "section_title": "Entitlement of legal services"
+        },
+        {
+          "document_title": "The Legal Services Authorities Act, 1987",
+          "domain": "constitutional_public_authority",
+          "provision": "12",
+          "rank": 4,
+          "rerank_score": 0.7371,
+          "score": 0.4245,
+          "section_title": "Criteria for giving legal services"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_11_vague_landlord_threat",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "My landlord is threatening me. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "1",
+          "rank": 1,
+          "rerank_score": 0.6127,
+          "score": 0.3677,
+          "section_title": "Added by Act 57 of 1988, s"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "26",
+          "rank": 2,
+          "rerank_score": 0.5933,
+          "score": 0.3663,
+          "section_title": "Receipt to be given for rent paid"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "43",
+          "rank": 3,
+          "rerank_score": 0.5626,
+          "score": 0.3356,
+          "section_title": "Finality of order"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "46",
+          "rank": 4,
+          "rerank_score": 0.5571,
+          "score": 0.3481,
+          "section_title": "Landlord's duty to give notice of new construction to Government"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_12_divorce_unsupported",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "My wife has filed for divorce. What legal options do I have?",
+      "retrieved": [
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "52",
+          "rank": 1,
+          "rerank_score": 0.5412,
+          "score": 0.3362,
+          "section_title": "Hearing of appeal"
+        },
+        {
+          "document_title": "The Constitution of India",
+          "domain": "constitutional_public_authority",
+          "provision": "5",
+          "rank": 2,
+          "rerank_score": 0.443,
+          "score": 0.3405,
+          "section_title": "Marriage an d divorce; infants and minors; adoption; wills, intestacy and succession; joint family"
+        },
+        {
+          "document_title": "The Bharatiya Nagarik Suraksha Sanhita, 2023",
+          "domain": "cyber",
+          "provision": "487",
+          "rank": 3,
+          "rerank_score": 0.3542,
+          "score": 0.3742,
+          "section_title": "Discharge from custody"
+        },
+        {
+          "document_title": "The Bharatiya Nyaya Sanhita, 2023",
+          "domain": "cyber",
+          "provision": "84",
+          "rank": 4,
+          "rerank_score": 0.3394,
+          "score": 0.3144,
+          "section_title": "Enticing or taking away or detaining with criminal intent a married woman"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_13_defective_laptop_no_harm",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "I bought a defective laptop online. It stopped working within two days, but the seller is refusing replacement or refund. No one was injured. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "39",
+          "rank": 1,
+          "rerank_score": 1.2842,
+          "score": 0.4562,
+          "section_title": "Findings of District Commission"
+        },
+        {
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+          "domain": "consumer",
+          "provision": "6",
+          "rank": 2,
+          "rerank_score": 0.9016,
+          "score": 0.4816,
+          "section_title": "Duties of sellers on marketplace"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "38",
+          "rank": 3,
+          "rerank_score": 0.8762,
+          "score": 0.4102,
+          "section_title": "Procedure on admission of complaint"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "17",
+          "rank": 4,
+          "rerank_score": 0.8106,
+          "score": 0.4046,
+          "section_title": "Complaints to authorities"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_14_instagram_seller_true_multidomain",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "I paid Rs. 15000 to an Instagram seller for a phone, but after receiving the payment they blocked me and never delivered the product. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "39",
+          "rank": 1,
+          "rerank_score": 1.0821,
+          "score": 0.3283,
+          "section_title": "Findings of District Commission"
+        },
+        {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "17",
+          "rank": 2,
+          "rerank_score": 0.8082,
+          "score": 0.403,
+          "section_title": "Complaints to authorities"
+        },
+        {
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+          "domain": "consumer",
+          "provision": "6",
+          "rank": 3,
+          "rerank_score": 0.7869,
+          "score": 0.4412,
+          "section_title": "Duties of sellers on marketplace"
+        },
+        {
+          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "domain": "cyber",
+          "provision": "",
+          "rank": 4,
+          "rerank_score": 0.5538,
+          "score": 0.4596,
+          "section_title": null
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    },
+    {
+      "case_id": "manual_15_rti_no_response_appeal_priority",
+      "category_sync_present": true,
+      "correct": true,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": true,
+      "product_liability_not_dominant": true,
+      "query": "I filed an RTI application but did not receive any reply. What can I do next?",
+      "retrieved": [
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "19",
+          "rank": 1,
+          "rerank_score": 1.0987,
+          "score": 0.5857,
+          "section_title": "Appeal"
+        },
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "18",
+          "rank": 2,
+          "rerank_score": 0.9088,
+          "score": 0.5668,
+          "section_title": "Powers and functions of Info rmation Commissions"
+        },
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "5",
+          "rank": 3,
+          "rerank_score": 0.8632,
+          "score": 0.5082,
+          "section_title": "Designation of Public Information Offic ers"
+        },
+        {
+          "document_title": "The Right to Information Act, 2005",
+          "domain": "constitutional_public_authority",
+          "provision": "6",
+          "rank": 4,
+          "rerank_score": 0.8442,
+          "score": 0.4982,
+          "section_title": "Request for obtaining information"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    }
+  ]
+}

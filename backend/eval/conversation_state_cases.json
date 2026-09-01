@@ -1,0 +1,152 @@
+{
+  "description": "Curated multi-turn scenarios for compact active case state. Expectations test session continuity, not legal correctness.",
+  "cases": [
+    {
+      "case_id": "conv_01_tenancy_follow_up",
+      "initial_summary": "Delhi tenancy issue where landlord disconnected electricity.",
+      "domains": ["tenancy"],
+      "known_facts": ["User rents a house in Delhi.", "Landlord disconnected electricity."],
+      "message": "What if he says I have not paid rent for two months?",
+      "expected_turn_type": "follow_up_question",
+      "must_preserve": ["electricity", "rent for two months"]
+    },
+    {
+      "case_id": "conv_02_consumer_additional_fact",
+      "initial_summary": "Consumer refund dispute for defective phone.",
+      "domains": ["consumer"],
+      "known_facts": ["Seller refused refund for defective phone."],
+      "message": "I paid by UPI.",
+      "expected_turn_type": "additional_fact",
+      "must_preserve": ["UPI"]
+    },
+    {
+      "case_id": "conv_03_amount_correction",
+      "initial_summary": "Payment dispute.",
+      "domains": ["consumer"],
+      "known_facts": ["User paid Rs. 50,000."],
+      "message": "Sorry, it was Rs. 45,000.",
+      "expected_turn_type": "correction",
+      "must_preserve": ["45,000"],
+      "must_not_preserve": ["50,000"]
+    },
+    {
+      "case_id": "conv_04_thanks_bypass",
+      "initial_summary": "Delhi tenancy issue.",
+      "domains": ["tenancy"],
+      "known_facts": ["Landlord disconnected electricity."],
+      "message": "thanks",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "conv_05_new_consumer_issue_from_tenancy",
+      "initial_summary": "Delhi tenancy issue.",
+      "domains": ["tenancy"],
+      "known_facts": ["Landlord disconnected electricity."],
+      "message": "My online order was never delivered. What can I do?",
+      "expected_turn_type": "new_issue",
+      "must_not_preserve": ["electricity"]
+    },
+    {
+      "case_id": "conv_06_pronoun_seller_online_report",
+      "initial_summary": "Seller took payment and did not deliver product.",
+      "domains": ["consumer", "cyber"],
+      "known_facts": ["Seller took payment.", "Product was not delivered."],
+      "message": "Can I report him online?",
+      "expected_turn_type": "follow_up_question",
+      "must_preserve": ["seller", "not delivered", "report him online"]
+    },
+    {
+      "case_id": "conv_07_hacked_account_follow_up",
+      "initial_summary": "User's Instagram account was hacked.",
+      "domains": ["cyber"],
+      "known_facts": ["Instagram account was hacked."],
+      "message": "What if they changed my email too?",
+      "expected_turn_type": "follow_up_question",
+      "must_preserve": ["Instagram", "changed my email"]
+    },
+    {
+      "case_id": "conv_08_rti_additional_fact",
+      "initial_summary": "RTI application received no reply.",
+      "domains": ["constitutional_public_authority"],
+      "known_facts": ["RTI application received no reply."],
+      "message": "The PIO did not respond.",
+      "expected_turn_type": "additional_fact",
+      "must_preserve": ["PIO did not respond"]
+    },
+    {
+      "case_id": "conv_09_hello_bypass",
+      "initial_summary": "Consumer refund issue.",
+      "domains": ["consumer"],
+      "known_facts": ["Seller refused refund."],
+      "message": "hello",
+      "expected_turn_type": "small_talk",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "conv_10_date_correction",
+      "initial_summary": "Invoice dispute.",
+      "domains": ["consumer"],
+      "known_facts": ["Purchase date was 10 June 2026."],
+      "message": "Actually it was 15 June 2026.",
+      "expected_turn_type": "correction",
+      "must_preserve": ["15 June 2026"],
+      "must_not_preserve": ["10 June 2026"]
+    },
+    {
+      "case_id": "conv_11_tenancy_additional_fact",
+      "initial_summary": "Landlord is threatening tenant.",
+      "domains": ["tenancy"],
+      "known_facts": ["Landlord is threatening tenant."],
+      "message": "He also said he will cut water.",
+      "expected_turn_type": "additional_fact",
+      "must_preserve": ["cut water"]
+    },
+    {
+      "case_id": "conv_12_new_rti_issue_from_consumer",
+      "initial_summary": "Defective product refund dispute.",
+      "domains": ["consumer"],
+      "known_facts": ["Seller refused refund."],
+      "message": "My RTI application also got no reply.",
+      "expected_turn_type": "new_issue",
+      "must_not_preserve": ["refund"]
+    },
+    {
+      "case_id": "conv_13_document_context_preserved",
+      "initial_summary": "Rent agreement assisted tenancy issue.",
+      "domains": ["tenancy"],
+      "known_facts": ["Confirmed rent agreement says monthly rent is Rs. 25,000."],
+      "confirmed_document_context_id": "doc_ctx_test",
+      "message": "Can he still disconnect electricity?",
+      "expected_turn_type": "follow_up_question",
+      "expected_document_context_preserved": true
+    },
+    {
+      "case_id": "conv_14_ack_ok",
+      "initial_summary": "Cyber account access issue.",
+      "domains": ["cyber"],
+      "known_facts": ["Someone accessed online account without permission."],
+      "message": "ok",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "conv_15_more_fact_consumer",
+      "initial_summary": "Online seller did not deliver product.",
+      "domains": ["consumer", "cyber"],
+      "known_facts": ["Online seller took payment.", "Product not delivered."],
+      "message": "The seller blocked me after I asked for refund.",
+      "expected_turn_type": "additional_fact",
+      "must_preserve": ["blocked me", "refund"]
+    },
+    {
+      "case_id": "conv_16_unrelated_divorce_from_cyber",
+      "initial_summary": "Cyber phishing payment issue.",
+      "domains": ["cyber"],
+      "known_facts": ["Phishing link caused payment loss."],
+      "message": "My wife filed for divorce.",
+      "expected_turn_type": "new_issue",
+      "must_not_preserve": ["phishing"]
+    }
+  ]
+}

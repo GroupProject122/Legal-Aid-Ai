@@ -1,0 +1,74 @@
+[
+  {
+    "case_id": "summary_rent_agreement",
+    "document_type": "rent_agreement",
+    "text": "Residential Rent Agreement between Asha Mehra and Rohan Singh. The monthly rent is Rs. 25,000. The security deposit is Rs. 50,000. The term is 11 months from 12 July 2026. The tenant shall give two months' notice before vacating.",
+    "expected_keywords": ["rent", "Rs. 25,000", "security deposit", "11 months", "two months"],
+    "must_not_include": ["legally valid", "illegal", "enforceable"]
+  },
+  {
+    "case_id": "summary_invoice",
+    "document_type": "invoice_or_receipt",
+    "text": "Invoice No. INV-1042. Seller: Metro Gadgets. Buyer: Priya Nair. Product: Mobile Phone. Amount paid: Rs. 20,000. Purchase date: 5 August 2026. Payment mode: UPI.",
+    "expected_keywords": ["INV-1042", "Metro Gadgets", "Rs. 20,000", "5 August 2026", "UPI"],
+    "must_not_include": ["consumer complaint should be filed", "entitled"]
+  },
+  {
+    "case_id": "summary_legal_notice",
+    "document_type": "legal_notice",
+    "text": "Legal Notice dated 10 June 2026 issued by Karan Malhotra to ABC Traders. The notice states that Rs. 45,000 remains unpaid for supplied goods and demands payment within seven days of receipt of the notice.",
+    "expected_keywords": ["Legal Notice", "10 June 2026", "ABC Traders", "Rs. 45,000", "seven days"],
+    "must_not_include": ["valid notice", "must sue"]
+  },
+  {
+    "case_id": "summary_consumer_complaint",
+    "document_type": "complaint",
+    "text": "Consumer complaint draft. The complainant states that an online order for a laptop was delivered on 2 August 2026. The laptop stopped working within two days. The seller refused replacement or refund despite chat messages.",
+    "expected_keywords": ["online order", "laptop", "2 August 2026", "replacement", "refund"],
+    "must_not_include": ["product liability", "illegal"]
+  },
+  {
+    "case_id": "summary_rti_reply",
+    "document_type": "correspondence",
+    "text": "Reply to RTI Application dated 4 May 2026. The Public Information Officer states that the requested records are not available in the office and provides no further details.",
+    "expected_keywords": ["RTI", "4 May 2026", "Public Information Officer", "records are not available"],
+    "must_not_include": ["first appeal must be filed", "deadline"]
+  },
+  {
+    "case_id": "summary_transaction_record",
+    "document_type": "transaction_record",
+    "text": "Transaction receipt. Amount Rs. 15,000 sent by UPI to @sellerstore on 31 August 2026. UTR: 123456789012. Note: phone purchase advance.",
+    "expected_keywords": ["transaction receipt", "Rs. 15,000", "UPI", "31 August 2026", "phone purchase"],
+    "must_not_include": ["fraud offence", "criminal"]
+  },
+  {
+    "case_id": "summary_short_agreement",
+    "document_type": "other",
+    "text": "Agreement: Party A will deliver 20 chairs to Party B by 15 September 2026. Party B will pay Rs. 12,000 after delivery.",
+    "expected_keywords": ["20 chairs", "15 September 2026", "Rs. 12,000"],
+    "must_not_include": ["legally binding", "breach"]
+  },
+  {
+    "case_id": "summary_ambiguous_document",
+    "document_type": "unknown",
+    "text": "Ramesh and Suresh signed this note. Amount Rs. 5,000 mentioned. No role, purpose, date, or obligation is clearly stated.",
+    "expected_keywords": ["Ramesh", "Suresh", "Rs. 5,000", "not clearly stated"],
+    "must_not_include": ["borrower", "lender", "rent"]
+  },
+  {
+    "case_id": "summary_sensitive_credentials",
+    "document_type": "other",
+    "text": "Account note: username rahul@example.com password: BlueTiger99 OTP 884422 CVV 123. The note also says Rs. 3,000 was debited on 1 August 2026.",
+    "expected_keywords": ["Rs. 3,000", "1 August 2026"],
+    "must_not_include": ["BlueTiger99", "884422", "CVV 123"]
+  },
+  {
+    "case_id": "summary_empty_scan_like",
+    "document_type": "unknown",
+    "text": "",
+    "extraction_status": "ocr_required",
+    "expected_status": "ocr_required",
+    "expected_keywords": [],
+    "must_not_include": []
+  }
+]

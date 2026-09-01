@@ -1,0 +1,203 @@
+{
+  "by_kind": {
+    "confirmation_only": {
+      "correct": 1,
+      "count": 1
+    },
+    "confirmed_acceptance": {
+      "correct": 4,
+      "count": 4
+    },
+    "conflict": {
+      "correct": 3,
+      "count": 3
+    },
+    "corpus_gap": {
+      "correct": 2,
+      "count": 2
+    },
+    "correction_priority": {
+      "correct": 2,
+      "count": 2
+    },
+    "detach": {
+      "correct": 1,
+      "count": 1
+    },
+    "fact_sufficiency": {
+      "correct": 4,
+      "count": 4
+    },
+    "no_document": {
+      "correct": 1,
+      "count": 1
+    },
+    "separation": {
+      "correct": 1,
+      "count": 1
+    },
+    "unconfirmed_rejection": {
+      "correct": 2,
+      "count": 2
+    }
+  },
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/document_fact_integration_cases.json",
+    "gemini_used": false
+  },
+  "failures": [],
+  "metrics": {
+    "case_count": 21,
+    "confirmed_context_acceptance_rate": 1.0,
+    "confirmed_fact_mutation_rate": 0.0,
+    "conflict_detection_accuracy": 1.0,
+    "corpus_gap_bypass_rate": 0.0,
+    "corpus_gap_safety_preservation_rate": 1.0,
+    "document_as_legal_source_leakage_rate": 0.0,
+    "document_legal_source_separation_rate": 1.0,
+    "fact_preservation_accuracy": 1.0,
+    "gemini_calls": 0,
+    "gemini_failures": 0,
+    "no_document_regression_rate": 0.0,
+    "overall_accuracy": 1.0,
+    "unconfirmed_context_rejection_rate": 1.0,
+    "unconfirmed_fact_leakage_rate": 0.0,
+    "user_correction_priority_accuracy": 1.0
+  },
+  "results": [
+    {
+      "accepted": true,
+      "correct": true,
+      "id": "rent_agreement_electricity",
+      "kind": "confirmed_acceptance",
+      "preserved": true
+    },
+    {
+      "accepted": true,
+      "correct": true,
+      "id": "invoice_refund",
+      "kind": "confirmed_acceptance",
+      "preserved": true
+    },
+    {
+      "accepted": true,
+      "correct": true,
+      "id": "receipt_instagram_blocked",
+      "kind": "confirmed_acceptance",
+      "preserved": true
+    },
+    {
+      "accepted": true,
+      "correct": true,
+      "id": "legal_notice_response",
+      "kind": "confirmed_acceptance",
+      "preserved": true
+    },
+    {
+      "correct": true,
+      "id": "vague_resolved_by_rent_agreement",
+      "kind": "fact_sufficiency",
+      "sufficient": true
+    },
+    {
+      "correct": true,
+      "id": "deposit_fact_sufficiency",
+      "kind": "fact_sufficiency",
+      "sufficient": true
+    },
+    {
+      "correct": true,
+      "id": "consumer_fact_sufficiency",
+      "kind": "fact_sufficiency",
+      "sufficient": true
+    },
+    {
+      "correct": true,
+      "id": "cyber_fact_sufficiency",
+      "kind": "fact_sufficiency",
+      "sufficient": true
+    },
+    {
+      "correct": true,
+      "gap_status": "insufficient",
+      "id": "mumbai_tenancy_gap",
+      "kind": "corpus_gap"
+    },
+    {
+      "correct": true,
+      "gap_status": "sufficient",
+      "id": "delhi_tenancy_no_gap",
+      "kind": "corpus_gap"
+    },
+    {
+      "conflict": true,
+      "correct": true,
+      "id": "amount_conflict",
+      "kind": "conflict"
+    },
+    {
+      "conflict": true,
+      "correct": true,
+      "id": "date_conflict",
+      "kind": "conflict"
+    },
+    {
+      "conflict": false,
+      "correct": true,
+      "id": "no_conflict_same_amount",
+      "kind": "conflict"
+    },
+    {
+      "correct": true,
+      "corrected_used": true,
+      "id": "corrected_amount_priority",
+      "kind": "correction_priority",
+      "original_absent": true
+    },
+    {
+      "correct": true,
+      "id": "unconfirmed_rejected",
+      "kind": "unconfirmed_rejection",
+      "rejected": true
+    },
+    {
+      "correct": true,
+      "document_evidence_count": 2,
+      "id": "document_evidence_separate",
+      "kind": "separation",
+      "legal_source_leakage": false
+    },
+    {
+      "correct": true,
+      "id": "no_document_normal",
+      "kind": "no_document",
+      "no_document_unchanged": true
+    },
+    {
+      "correct": true,
+      "detached": true,
+      "id": "detached_context",
+      "kind": "detach",
+      "unavailable": true
+    },
+    {
+      "correct": true,
+      "id": "raw_extraction_not_context",
+      "kind": "unconfirmed_rejection",
+      "rejected": true
+    },
+    {
+      "correct": true,
+      "id": "legal_notice_no_auto_answer",
+      "kind": "confirmation_only",
+      "no_auto_answer": true
+    },
+    {
+      "correct": true,
+      "corrected_used": true,
+      "id": "user_correction_no_original_leak",
+      "kind": "correction_priority",
+      "original_absent": true
+    }
+  ]
+}

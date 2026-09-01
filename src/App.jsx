@@ -4,6 +4,7 @@ import {
   Bell,
   Bot,
   BriefcaseBusiness,
+  ChevronLeft,
   ChevronRight,
   CircleHelp,
   CircleUserRound,
@@ -48,11 +49,12 @@ import {
 const navItems = [
   { label: 'Home', icon: Home, page: 'home', href: '#/' },
   { label: 'Ask Question', icon: MessageCircle, page: 'ask', href: '#/ask' },
-  { label: 'My Cases', icon: BriefcaseBusiness, href: '#/' },
+  { label: 'My Cases', icon: BriefcaseBusiness, page: 'cases', href: '#/cases' },
   { label: 'Documents', icon: FileText, page: 'documents', href: '#/documents' },
-  { label: 'Know Your Rights', icon: ShieldCheck, href: '#/' },
-  { label: 'Schemes', icon: Gift, href: '#/' },
-  { label: 'About Us', icon: CircleHelp, href: '#/' }
+  { label: 'Summarize Document', icon: Sparkles, page: 'summarize', href: '#/summarize-document' },
+  { label: 'Know Your Rights', icon: ShieldCheck, page: 'rights', href: '#/rights' },
+  { label: 'Schemes', icon: Gift, page: 'schemes', href: '#/schemes' },
+  { label: 'About Us', icon: CircleHelp, page: 'about', href: '#/about' }
 ];
 
 const categories = [
@@ -68,25 +70,29 @@ const features = [
     title: 'Know Your Rights',
     description: 'Understand your legal rights in simple words.',
     button: 'Explore Now',
-    icon: Scale
+    icon: Scale,
+    href: '#/rights'
   },
   {
     title: 'Draft Complaints',
     description: 'Create professional complaint letters in seconds.',
     button: 'Create Now',
-    icon: FilePenLine
+    icon: FilePenLine,
+    href: '#/ask'
   },
   {
     title: 'Follow Procedure',
     description: 'Step-by-step guidance on what to do and where to go.',
     button: 'Learn More',
-    icon: Landmark
+    icon: Landmark,
+    href: '#/ask'
   },
   {
     title: 'Government Schemes',
     description: 'Find schemes and benefits you may be eligible for.',
     button: 'View Schemes',
-    icon: Gift
+    icon: Gift,
+    href: '#/'
   }
 ];
 
@@ -112,6 +118,67 @@ const exampleQuestions = [
 const demoQuestion = 'I bought a phone online and it stopped working after two days. The seller is refusing to refund me. What can I do?';
 
 const askCategories = ['Consumer', 'Tenant', 'Cyber', 'Fundamental Rights', 'Other'];
+
+function displayCategoryFromRouting(routing) {
+  const domains = routing?.domains || [];
+  if (!domains.length) {
+    if (routing?.status === 'unsupported' || routing?.status === 'out_of_scope') return 'Other';
+    return '';
+  }
+  const labels = {
+    consumer: 'Consumer',
+    cyber: 'Cyber',
+    tenancy: 'Tenant',
+    constitutional_public_authority: 'Fundamental Rights'
+  };
+  return domains.map((domain) => labels[domain]).filter(Boolean).join(', ');
+}
+
+function createMessageId(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function replaceAssistantPlaceholder(messages, placeholderId, assistantMessage) {
+  let replaced = false;
+  const nextMessages = messages.map((message) => {
+    if (message.id !== placeholderId) return message;
+    replaced = true;
+    return assistantMessage;
+  });
+  return replaced ? nextMessages : [...nextMessages, assistantMessage];
+}
+
+function formatCaseDate(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  });
+}
+
+function messagesFromSavedCase(savedMessages = []) {
+  return savedMessages.map((message) => {
+    if (message.role === 'user') {
+      return {
+        id: `saved-user-${message.id}`,
+        role: 'user',
+        text: message.content || '',
+        timestamp: message.created_at
+      };
+    }
+    return {
+      id: `saved-ai-${message.id}`,
+      role: 'ai',
+      response: message.content || createTechnicalErrorResponse('This saved response could not be displayed.'),
+      timestamp: message.created_at
+    };
+  });
+}
 
 const documentTabs = [
   { label: 'All Documents', count: 52, icon: FolderOpen },
@@ -300,10 +367,18 @@ function VintageLawBook({ className = '' }) {
   );
 }
 
-function Sidebar({ activePage = 'home' }) {
+function Sidebar({ activePage = 'home', collapsed = false, onToggle }) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-frame" />
+      <button
+        type="button"
+        className="sidebar-toggle"
+        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        onClick={onToggle}
+      >
+        {collapsed ? <ChevronRight size={20} strokeWidth={1.9} /> : <ChevronLeft size={20} strokeWidth={1.9} />}
+      </button>
       <div className="brand">
         <div className="brand-emblem">
           <span className="laurel left">〈</span>
@@ -317,7 +392,13 @@ function Sidebar({ activePage = 'home' }) {
 
       <nav className="nav-list" aria-label="Main navigation">
         {navItems.map(({ label, icon: Icon, page, href }) => (
-          <a href={href} className={`nav-item ${page === activePage ? 'active' : ''}`} key={label}>
+          <a
+            href={href}
+            className={`nav-item ${page === activePage ? 'active' : ''}`}
+            key={label}
+            title={collapsed ? label : undefined}
+            data-tooltip={label}
+          >
             <Icon size={23} strokeWidth={1.7} />
             <span>{label}</span>
           </a>
@@ -378,12 +459,10 @@ function Hero() {
         <span />
       </div>
       <div className="hero-title-wrap">
-        <div className="hero-laurel left" aria-hidden="true">❬</div>
         <h2>Legal Aid AI</h2>
-        <div className="hero-laurel right" aria-hidden="true">❭</div>
       </div>
-      <p className="hero-subtitle">Get clear answers. Know your rights. Take action.</p>
       <LegalMark className="hero-mark" />
+      <p className="hero-subtitle">Get clear answers. Know your rights. Take action.</p>
     </section>
   );
 }
@@ -435,7 +514,7 @@ function CategoryPills() {
   );
 }
 
-function FeatureCard({ title, description, button, icon: Icon }) {
+function FeatureCard({ title, description, button, icon: Icon, href }) {
   return (
     <article className="feature-card">
       <div className="ornament corner-a" />
@@ -448,7 +527,7 @@ function FeatureCard({ title, description, button, icon: Icon }) {
       <h3>{title}</h3>
       <p>{description}</p>
       <div className="card-separator">◇</div>
-      <button type="button" className="card-button">
+      <button type="button" className="card-button" onClick={() => { window.location.hash = href; }}>
         <span>{button}</span>
         <ChevronRight size={18} />
       </button>
@@ -678,8 +757,14 @@ function SourceCard({ source, onClick }) {
 function LegalAIResponse({ response, onSourceClick }) {
   const answer = response?.answer || {};
   const sources = response?.sources || [];
-  const possibleRights = (answer.possible_rights || []).map(cleanDisplayText).filter(Boolean);
-  const nextSteps = (answer.next_steps || []).map(cleanDisplayText).filter(Boolean);
+  const documentEvidence = response?.document_evidence_used || [];
+  const possibleRights = (answer.possible_rights || answer.possible_legal_position || []).map(cleanDisplayText).filter(Boolean);
+  const nextSteps = (answer.next_steps || answer.suggested_next_steps || []).map(cleanDisplayText).filter(Boolean);
+  const whatThisMayInvolve = (answer.what_this_may_involve || []).map(cleanDisplayText).filter(Boolean);
+  const evidenceToPreserve = (answer.evidence_to_preserve || []).map(cleanDisplayText).filter(Boolean);
+  const whereToApproach = (answer.where_to_approach || []).map(cleanDisplayText).filter(Boolean);
+  const limitations = (answer.limitations || []).map(cleanDisplayText).filter(Boolean);
+  const clarificationQuestion = cleanDisplayText(response?.clarification?.question);
 
   if (response?.technical_error) {
     return (
@@ -735,40 +820,89 @@ function LegalAIResponse({ response, onSourceClick }) {
         <div className="response-section">
           <h4>What this may involve</h4>
           <p>{cleanDisplayText(answer.issue_summary) || 'The available legal sources do not contain enough information to answer this reliably.'}</p>
-        </div>
-
-        <div className="response-section">
-          <h4>Your possible rights</h4>
-          {possibleRights.length > 0 ? (
+          {whatThisMayInvolve.length > 0 && (
             <ul>
-              {possibleRights.map((right) => <li key={right}>{right}</li>)}
+              {whatThisMayInvolve.map((item) => <li key={item}>{item}</li>)}
             </ul>
-          ) : (
-            <p>The available sources do not provide enough reliable detail to list specific possible rights for this question.</p>
           )}
         </div>
 
-        <div className="response-section">
-          <h4>Suggested next steps</h4>
-          <ol className="step-list">
-            {nextSteps.map((step, index) => (
-              <li key={step}><span>{index + 1}</span>{step}</li>
-            ))}
-          </ol>
-        </div>
+        {clarificationQuestion ? (
+          <div className="response-section">
+            <h4>Clarification needed</h4>
+            <p>{clarificationQuestion}</p>
+          </div>
+        ) : possibleRights.length > 0 ? (
+          <div className="response-section">
+            <h4>Your possible rights</h4>
+            <ul>
+              {possibleRights.map((right) => <li key={right}>{right}</li>)}
+            </ul>
+          </div>
+        ) : null}
 
-        <div className="response-section sources-section">
-          <h4>Sources used</h4>
-          {sources.length > 0 ? (
+        {!clarificationQuestion && nextSteps.length > 0 && (
+          <div className="response-section">
+            <h4>Suggested next steps</h4>
+            <ol className="step-list">
+              {nextSteps.map((step, index) => (
+                <li key={step}><span>{index + 1}</span>{step}</li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {!clarificationQuestion && evidenceToPreserve.length > 0 && (
+          <div className="response-section">
+            <h4>Evidence to preserve</h4>
+            <ul>
+              {evidenceToPreserve.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+        )}
+
+        {!clarificationQuestion && whereToApproach.length > 0 && (
+          <div className="response-section">
+            <h4>Where to approach</h4>
+            <ul>
+              {whereToApproach.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+        )}
+
+        {!clarificationQuestion && limitations.length > 0 && (
+          <div className="response-section">
+            <h4>Limitations</h4>
+            <ul>
+              {limitations.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+        )}
+
+        {!clarificationQuestion && sources.length > 0 && (
+          <div className="response-section sources-section">
+            <h4>Sources used</h4>
             <div className="source-list">
               {sources.map((source) => (
                 <SourceCard source={source} onClick={onSourceClick} key={`${source.document}-${source.page}-${source.section || 'source'}`} />
               ))}
             </div>
-          ) : (
-            <p>No source citation was available for this response.</p>
-          )}
-        </div>
+          </div>
+        )}
+
+        {!clarificationQuestion && documentEvidence.length > 0 && (
+          <div className="response-section document-evidence-section">
+            <h4>Document facts used</h4>
+            <ul>
+              {documentEvidence.map((fact, index) => (
+                <li key={`${fact.label}-${index}`}>
+                  <strong>{cleanDisplayText(fact.label)}:</strong> {cleanDisplayText(fact.value)}
+                  {fact.source_page ? <small> Document page {fact.source_page}</small> : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="response-disclaimer">
           <ShieldCheck size={16} strokeWidth={1.7} />
@@ -786,6 +920,17 @@ function LoadingState() {
       <span />
       <p>Reviewing the available legal sources...</p>
     </div>
+  );
+}
+
+function LoadingMessage() {
+  return (
+    <article className="message-row ai-message-row">
+      <div className="message-avatar ai-message-avatar" aria-hidden="true">
+        <Scale size={21} strokeWidth={1.45} />
+      </div>
+      <LoadingState />
+    </article>
   );
 }
 
@@ -816,6 +961,14 @@ function ChatComposer({ value, onChange, onSubmit, onAttach }) {
 }
 
 function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick }) {
+  const scrollRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const node = scrollRef.current;
+    if (!node) return;
+    node.scrollTo({ top: node.scrollHeight, behavior: 'smooth' });
+  }, [messages, isLoading]);
+
   return (
     <section className="chat-panel" aria-label="Legal AI chat">
       <PanelCorners />
@@ -827,7 +980,7 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
         <button type="button" className="outline-action" onClick={onClear}>New Question</button>
       </div>
 
-      <div className="chat-scroll">
+      <div className="chat-scroll" ref={scrollRef}>
         {messages.length === 0 && !isLoading ? (
           <WelcomeState onSelectExample={onExample} />
         ) : (
@@ -835,9 +988,10 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
             {messages.map((message) => (
               message.role === 'user'
                 ? <UserMessage text={message.text} key={message.id} />
+                : message.role === 'assistant_loading'
+                  ? <LoadingMessage key={message.id} />
                 : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} key={message.id} />
             ))}
-            {isLoading && <LoadingState />}
           </>
         )}
       </div>
@@ -847,7 +1001,8 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
   );
 }
 
-function QuerySummaryPanel({ category, setCategory, onAttach }) {
+function QuerySummaryPanel({ category, setCategory, onAttach, attachedFactContext, onDetachFactContext }) {
+  const selectedCategories = category.split(',').map((item) => item.trim()).filter(Boolean);
   return (
     <aside className="query-summary-panel" aria-label="Your query summary">
       <section className="summary-card query-card">
@@ -872,7 +1027,7 @@ function QuerySummaryPanel({ category, setCategory, onAttach }) {
           {askCategories.map((item) => (
             <button
               type="button"
-              className={`mini-chip ${category === item ? 'selected' : ''}`}
+              className={`mini-chip ${selectedCategories.includes(item) ? 'selected' : ''}`}
               onClick={() => setCategory(item)}
               key={item}
             >
@@ -893,9 +1048,14 @@ function QuerySummaryPanel({ category, setCategory, onAttach }) {
           <Paperclip size={22} strokeWidth={1.6} />
           <div>
             <h4>Documents attached</h4>
-            <p>0</p>
+            <p>{attachedFactContext ? 'Confirmed facts attached' : '0'}</p>
           </div>
         </button>
+        {attachedFactContext && (
+          <button type="button" className="detach-facts-button" onClick={onDetachFactContext}>
+            Detach document facts
+          </button>
+        )}
       </section>
 
       <section className="summary-card tip-card">
@@ -971,13 +1131,17 @@ function SourceExcerptModal({ source, onClose }) {
   );
 }
 
-function AskQuestionPage({ initialQuery = '' }) {
+function AskQuestionPage({ initialQuery = '', initialCaseId = '' }) {
   const [input, setInput] = React.useState(initialQuery);
   const [messages, setMessages] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [category, setCategory] = React.useState('');
   const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(false);
   const [selectedSource, setSelectedSource] = React.useState(null);
+  const [clarificationStateId, setClarificationStateId] = React.useState(null);
+  const [conversationStateId, setConversationStateId] = React.useState(null);
+  const [caseId, setCaseId] = React.useState(initialCaseId || null);
+  const [attachedFactContext, setAttachedFactContext] = React.useState(null);
   const loadingTimer = React.useRef(null);
 
   React.useEffect(() => {
@@ -986,33 +1150,126 @@ function AskQuestionPage({ initialQuery = '' }) {
 
   React.useEffect(() => () => window.clearTimeout(loadingTimer.current), []);
 
+  React.useEffect(() => {
+    if (!initialCaseId) return;
+    let ignore = false;
+    const loadCase = async () => {
+      try {
+        const response = await fetch(`/api/cases/${encodeURIComponent(initialCaseId)}`);
+        const payload = await safeJsonResponse(response);
+        if (!response.ok || !payload) {
+          throw new Error('Could not load this case.');
+        }
+        if (ignore) return;
+        setCaseId(payload.case?.id || initialCaseId);
+        setMessages(messagesFromSavedCase(payload.messages || []));
+        const stateId = payload.conversation_state?.conversation_state_id || null;
+        setConversationStateId(stateId);
+        setClarificationStateId(null);
+        const restoredCategory = displayCategoryFromRouting({
+          status: payload.conversation_state?.domains?.length ? 'classified' : undefined,
+          domains: payload.conversation_state?.domains || []
+        });
+        setCategory(restoredCategory || displayCategoryFromRouting({
+          status: payload.case?.primary_domain ? 'classified' : undefined,
+          domains: payload.case?.primary_domain ? [payload.case.primary_domain] : []
+        }));
+        if (payload.confirmed_document_context) {
+          setAttachedFactContext(payload.confirmed_document_context);
+          window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify(payload.confirmed_document_context));
+        }
+      } catch (error) {
+        console.error('Could not open saved case', error);
+        if (!ignore) {
+          setMessages([{
+            id: createMessageId('ai-error'),
+            role: 'ai',
+            response: createTechnicalErrorResponse('Legal Aid AI could not open this saved case right now.'),
+            timestamp: new Date().toISOString()
+          }]);
+        }
+      }
+    };
+    loadCase();
+    return () => {
+      ignore = true;
+    };
+  }, [initialCaseId]);
+
+  React.useEffect(() => {
+    const stored = window.sessionStorage.getItem('legalAidConfirmedFactContext');
+    if (stored) {
+      try {
+        setAttachedFactContext(JSON.parse(stored));
+      } catch (error) {
+        console.error('Could not read confirmed fact context', error);
+        window.sessionStorage.removeItem('legalAidConfirmedFactContext');
+      }
+    }
+  }, []);
+
   const submitQuestion = async (question) => {
     const text = question.trim();
     if (!text || isLoading) return;
 
     window.clearTimeout(loadingTimer.current);
-    setMessages([{ id: `user-${Date.now()}`, role: 'user', text }]);
+    const activeClarificationStateId = clarificationStateId;
+    const activeConversationStateId = conversationStateId;
+    const activeCaseId = caseId;
+    const assistantMessageId = createMessageId('ai-loading');
+    setMessages((current) => [
+      ...current,
+      { id: createMessageId('user'), role: 'user', text, timestamp: new Date().toISOString() },
+      { id: assistantMessageId, role: 'assistant_loading', timestamp: new Date().toISOString() }
+    ]);
     setInput('');
     setIsLoading(true);
     loadingTimer.current = window.setTimeout(async () => {
       try {
+        const requestBody = activeClarificationStateId
+          ? {
+              question: text,
+              clarification_state_id: activeClarificationStateId,
+              ...(activeCaseId ? { case_id: activeCaseId } : {}),
+              ...(activeConversationStateId ? { conversation_state_id: activeConversationStateId } : {})
+            }
+          : {
+              question: text,
+              ...(activeCaseId ? { case_id: activeCaseId } : {}),
+              ...(activeConversationStateId ? { conversation_state_id: activeConversationStateId } : {}),
+              ...(attachedFactContext?.confirmed_fact_context_id
+                ? { confirmed_fact_context_id: attachedFactContext.confirmed_fact_context_id }
+                : {})
+            };
         const response = await fetch('/api/ask', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: text })
+          body: JSON.stringify(requestBody)
         });
         const payload = await parseAskResponse(response);
-        setMessages((current) => [...current, { id: `ai-${Date.now()}`, role: 'ai', response: payload }]);
+        setClarificationStateId(payload?.clarification?.needed ? payload.clarification.state_id : null);
+        setConversationStateId(payload?.conversation_state_id || null);
+        if (payload?.case_id) {
+          setCaseId(payload.case_id);
+        }
+        const routedCategory = displayCategoryFromRouting(payload?.routing);
+        if (routedCategory) {
+          setCategory(routedCategory);
+        }
+        setMessages((current) => replaceAssistantPlaceholder(current, assistantMessageId, {
+          id: createMessageId('ai'),
+          role: 'ai',
+          response: payload,
+          timestamp: new Date().toISOString()
+        }));
       } catch (error) {
         console.error('Ask Legal Aid AI request failed', error);
-        setMessages((current) => [
-          ...current,
-          {
-            id: `ai-${Date.now()}`,
-            role: 'ai',
-            response: createTechnicalErrorResponse(error.message)
-          }
-        ]);
+        setMessages((current) => replaceAssistantPlaceholder(current, assistantMessageId, {
+          id: createMessageId('ai-error'),
+          role: 'ai',
+          response: createTechnicalErrorResponse(error.message),
+          timestamp: new Date().toISOString()
+        }));
       } finally {
         setIsLoading(false);
       }
@@ -1034,6 +1291,20 @@ function AskQuestionPage({ initialQuery = '' }) {
     setMessages([]);
     setIsLoading(false);
     setSelectedSource(null);
+    setClarificationStateId(null);
+    setConversationStateId(null);
+    setCaseId(null);
+    setCategory('');
+    window.sessionStorage.removeItem('legalAidConfirmedFactContext');
+    setAttachedFactContext(null);
+    if (window.location.hash.includes('case=')) {
+      window.location.hash = '#/ask';
+    }
+  };
+
+  const handleDetachFactContext = () => {
+    window.sessionStorage.removeItem('legalAidConfirmedFactContext');
+    setAttachedFactContext(null);
   };
 
   return (
@@ -1058,6 +1329,8 @@ function AskQuestionPage({ initialQuery = '' }) {
             category={category}
             setCategory={setCategory}
             onAttach={() => setIsAttachmentOpen(true)}
+            attachedFactContext={attachedFactContext}
+            onDetachFactContext={handleDetachFactContext}
           />
         </div>
       </div>
@@ -1092,7 +1365,7 @@ function DocumentsPageHeader() {
         <i>◇</i>
         <span />
       </div>
-      <p>Upload, organize and manage your important legal documents securely.</p>
+      <p>Manage your uploaded legal documents securely.</p>
       <PageDivider />
     </section>
   );
@@ -1133,11 +1406,12 @@ function DocumentSearch({ value, onChange }) {
 }
 
 function FileTypeIcon({ type }) {
-  const Icon = type === 'jpg' ? FileImage : FileText;
-  const label = type === 'docx' ? 'DOCX' : type.toUpperCase();
+  const normalizedType = type || 'file';
+  const Icon = normalizedType === 'jpg' ? FileImage : FileText;
+  const label = normalizedType === 'docx' ? 'DOCX' : normalizedType.toUpperCase();
 
   return (
-    <div className={`file-type-icon ${type}`} aria-hidden="true">
+    <div className={`file-type-icon ${normalizedType}`} aria-hidden="true">
       <Icon size={19} strokeWidth={1.7} />
       <span>{label}</span>
     </div>
@@ -1298,13 +1572,164 @@ function DocumentsPanel({ activeTab, setActiveTab, search, setSearch, filteredDo
   );
 }
 
-function UploadDocumentCard() {
-  const [selectedFile, setSelectedFile] = React.useState('');
+function UploadDocumentCard({ onUploaded, externalInputRef }) {
+  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [status, setStatus] = React.useState('idle');
+  const [message, setMessage] = React.useState('');
+  const [extraction, setExtraction] = React.useState(null);
+  const [factStatus, setFactStatus] = React.useState('idle');
+  const [factMessage, setFactMessage] = React.useState('');
+  const [factExtraction, setFactExtraction] = React.useState(null);
+  const [editableFacts, setEditableFacts] = React.useState(null);
+  const [expanded, setExpanded] = React.useState(false);
   const fileInputRef = React.useRef(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files?.[0]?.name || '');
+  const setFileInputNode = (node) => {
+    fileInputRef.current = node;
+    if (externalInputRef) {
+      externalInputRef.current = node;
+    }
   };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0] || null;
+    setSelectedFile(file);
+    setStatus('idle');
+    setMessage('');
+    setExtraction(null);
+    setFactStatus('idle');
+    setFactMessage('');
+    setFactExtraction(null);
+    setEditableFacts(null);
+    setExpanded(false);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      setMessage('Choose a PDF, DOCX, or TXT file first.');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    setStatus('uploading');
+    setMessage('');
+    setExtraction(null);
+    try {
+      const response = await fetch('/api/documents/extract', {
+        method: 'POST',
+        body: formData
+      });
+      const rawBody = await response.text();
+      let data = null;
+      try {
+        data = rawBody ? JSON.parse(rawBody) : null;
+      } catch (error) {
+        console.error('Failed to parse document extraction response', { error, status: response.status, rawBody });
+      }
+      if (!response.ok) {
+        throw new Error(data?.detail || 'Legal Aid AI could not extract this document right now.');
+      }
+      if (!data) {
+        throw new Error('Legal Aid AI could not read the extraction response.');
+      }
+      setExtraction(data);
+      setStatus(data.status || 'success');
+      setMessage(documentExtractionMessage(data));
+      setFactStatus('idle');
+      setFactMessage('');
+      setFactExtraction(null);
+      setEditableFacts(null);
+      if (data.document_id && onUploaded) {
+        onUploaded(data);
+      }
+    } catch (error) {
+      console.error('Document extraction failed', error);
+      setStatus('failed');
+      setMessage(error.message || 'Legal Aid AI could not extract this document right now.');
+    }
+  };
+
+  const handleIdentifyFacts = async () => {
+    if (!extraction?.text) {
+      setFactMessage('Extract text from a document first.');
+      return;
+    }
+    setFactStatus('loading');
+    setFactMessage('');
+    try {
+      const response = await fetch('/api/documents/extract-facts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ extraction })
+      });
+      const data = await safeJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(data?.detail || 'Legal Aid AI could not identify facts right now.');
+      }
+      setFactExtraction(data);
+      setEditableFacts(data.facts || null);
+      setFactStatus(data.status || 'success');
+      setFactMessage(documentFactMessage(data));
+    } catch (error) {
+      console.error('Document fact extraction failed', error);
+      setFactStatus('failed');
+      setFactMessage(error.message || 'Legal Aid AI could not identify facts right now.');
+    }
+  };
+
+  const handleFactChange = (category, index, value) => {
+    setEditableFacts((current) => {
+      const next = structuredClone(current);
+      next[category][index].value = value;
+      return next;
+    });
+  };
+
+  const handleRemoveFact = (category, index) => {
+    setEditableFacts((current) => {
+      const next = structuredClone(current);
+      next[category] = next[category].filter((_, itemIndex) => itemIndex !== index);
+      return next;
+    });
+  };
+
+  const handleConfirmFacts = async () => {
+    if (!factExtraction?.fact_extraction_id || !editableFacts) {
+      return;
+    }
+    setFactStatus('confirming');
+    try {
+      const response = await fetch('/api/documents/confirm-facts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fact_extraction_id: factExtraction.fact_extraction_id,
+          confirmed_facts: editableFacts,
+          ...(extraction?.document_id ? { document_id: extraction.document_id } : {})
+        })
+      });
+      const data = await safeJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(data?.detail || 'Legal Aid AI could not confirm these facts right now.');
+      }
+      setFactStatus('confirmed');
+      if (data?.confirmed_fact_context_id) {
+        window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify({
+          confirmed_fact_context_id: data.confirmed_fact_context_id,
+          document_type: data.confirmed_facts?.document_type || 'unknown'
+        }));
+      }
+      setFactMessage('Facts confirmed. They remain user case facts and are not legal authority.');
+    } catch (error) {
+      console.error('Document fact confirmation failed', error);
+      setFactStatus('failed');
+      setFactMessage(error.message || 'Legal Aid AI could not confirm these facts right now.');
+    }
+  };
+
+  const previewText = extraction?.text || '';
+  const previewLimit = expanded ? 5000 : 1200;
+  const preview = previewText.slice(0, previewLimit);
 
   return (
     <section className="documents-side-card upload-card">
@@ -1314,21 +1739,160 @@ function UploadDocumentCard() {
         <UploadCloud size={36} strokeWidth={1.45} />
         <strong>Drag & drop files here</strong>
         <span>or click to browse</span>
-        <small>Supported: PDF, JPG, PNG, DOCX<br />Max size: 10 MB</small>
+        <small>Supported: PDF, DOCX, TXT<br />Max size: 10 MB</small>
       </button>
       <input
-        ref={fileInputRef}
+        ref={setFileInputNode}
         className="sr-only"
         type="file"
-        accept=".pdf,.jpg,.jpeg,.png,.docx"
+        accept=".pdf,.docx,.txt"
         onChange={handleFileChange}
         aria-label="Browse files"
       />
       <button type="button" className="browse-button" onClick={() => fileInputRef.current?.click()}>Browse Files</button>
-      {selectedFile && <p className="selected-file">Selected: {selectedFile}</p>}
-      <p className="upload-note">Document processing will be enabled in a later version.</p>
+      {selectedFile && <p className="selected-file">Selected: {selectedFile.name}</p>}
+      <button type="button" className="browse-button extract-button" disabled={!selectedFile || status === 'uploading'} onClick={handleUpload}>
+        {status === 'uploading' ? 'Extracting...' : 'Extract Text'}
+      </button>
+      {message && <p className={`upload-note extraction-status ${status}`}>{message}</p>}
+      {extraction && (
+        <div className="extraction-preview">
+          <dl>
+            <div><dt>Type</dt><dd>{(extraction.file_type || 'unsupported').toUpperCase()}</dd></div>
+            <div><dt>Size</dt><dd>{formatBytes(extraction.size_bytes)}</dd></div>
+            {extraction.page_count ? <div><dt>Pages</dt><dd>{extraction.page_count}</dd></div> : null}
+            <div><dt>Text</dt><dd>{extraction.character_count || 0} chars</dd></div>
+          </dl>
+          {preview ? (
+            <>
+              <pre>{preview}{previewText.length > previewLimit ? '...' : ''}</pre>
+              {previewText.length > 1200 && (
+                <button type="button" className="preview-toggle" onClick={() => setExpanded((value) => !value)}>
+                  {expanded ? 'Show Less' : 'Show More'}
+                </button>
+              )}
+            </>
+          ) : null}
+          {previewText && (
+            <button type="button" className="browse-button extract-button" disabled={factStatus === 'loading'} onClick={handleIdentifyFacts}>
+              {factStatus === 'loading' ? 'Identifying...' : 'Identify Key Facts'}
+            </button>
+          )}
+        </div>
+      )}
+      {factMessage && <p className={`upload-note extraction-status ${factStatus}`}>{factMessage}</p>}
+      {editableFacts && (
+        <div className="document-facts-review">
+          <h4>Facts I understood</h4>
+          <p>Review these as case facts from your document, not legal sources.</p>
+          <div className="fact-type-row">
+            <span>Document Type</span>
+            <strong>{(editableFacts.document_type || 'unknown').replaceAll('_', ' ')}</strong>
+          </div>
+          {editableFacts.document_summary && <p className="fact-summary">{editableFacts.document_summary}</p>}
+          {factCategoriesForDisplay.map(({ key, label }) => (
+            <FactCategory
+              key={key}
+              label={label}
+              items={editableFacts[key] || []}
+              onChange={(index, value) => handleFactChange(key, index, value)}
+              onRemove={(index) => handleRemoveFact(key, index)}
+            />
+          ))}
+          <button type="button" className="browse-button extract-button" disabled={factStatus === 'confirming'} onClick={handleConfirmFacts}>
+            {factStatus === 'confirming' ? 'Confirming...' : 'Confirm Facts'}
+          </button>
+          {factStatus === 'confirmed' && (
+            <button type="button" className="browse-button extract-button" onClick={() => { window.location.hash = '#/ask'; }}>
+              Ask a legal question using these facts
+            </button>
+          )}
+        </div>
+      )}
     </section>
   );
+}
+
+const factCategoriesForDisplay = [
+  { key: 'parties', label: 'Parties' },
+  { key: 'dates', label: 'Important Dates' },
+  { key: 'amounts', label: 'Amounts' },
+  { key: 'identifiers', label: 'Identifiers' },
+  { key: 'locations', label: 'Locations' },
+  { key: 'important_terms', label: 'Important Terms' },
+  { key: 'events', label: 'Events' },
+  { key: 'notices_or_demands', label: 'Notices or Demands' },
+  { key: 'other_facts', label: 'Other Facts' },
+  { key: 'uncertain_items', label: 'Uncertain Items' }
+];
+
+function FactCategory({ label, items, onChange, onRemove }) {
+  if (!items.length) return null;
+  return (
+    <div className="fact-category">
+      <h5>{label}</h5>
+      {items.map((item, index) => (
+        <div className="fact-item" key={`${item.label}-${index}`}>
+          <label>
+            <span>{item.label || 'Fact'}</span>
+            <input value={item.value || ''} onChange={(event) => onChange(index, event.target.value)} />
+          </label>
+          <small>{item.source_page ? `Document evidence: page ${item.source_page}` : 'Document evidence'}{item.confidence ? ` - ${item.confidence}` : ''}</small>
+          {item.source_excerpt && <blockquote>{item.source_excerpt}</blockquote>}
+          <button type="button" className="preview-toggle" onClick={() => onRemove(index)}>Remove</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+async function safeJsonResponse(response) {
+  const rawBody = await response.text();
+  if (!rawBody) return null;
+  try {
+    return JSON.parse(rawBody);
+  } catch (error) {
+    console.error('Failed to parse JSON response', { error, status: response.status, rawBody });
+    return null;
+  }
+}
+
+function documentExtractionMessage(result) {
+  if (result.status === 'success') {
+    return 'Text extracted successfully. This is a preview only; it has not been added to the legal corpus.';
+  }
+  if (result.status === 'partial') {
+    return result.warnings?.[0] || 'Some text was extracted, but the document may need review.';
+  }
+  if (result.status === 'ocr_required') {
+    return 'This document appears scanned or image-based. OCR is not available in this phase.';
+  }
+  if (result.status === 'unsupported') {
+    return 'This file type is not supported yet. Please upload PDF, DOCX, or TXT.';
+  }
+  return result.warnings?.[0] || 'Text extraction failed for this document.';
+}
+
+function documentFactMessage(result) {
+  if (result.status === 'success') {
+    return 'Key facts identified. Please review and confirm them before using them elsewhere.';
+  }
+  if (result.status === 'fact_extraction_unavailable') {
+    return result.warnings?.[0] || 'Fact extraction is unavailable right now. The extracted text is still available for review.';
+  }
+  return result.warnings?.[0] || 'Legal Aid AI could not identify facts from this document.';
+}
+
+function formatBytes(bytes = 0) {
+  if (!bytes) return '0 B';
+  const units = ['B', 'KB', 'MB'];
+  let value = bytes;
+  let unitIndex = 0;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+  return `${value.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
 }
 
 function StorageOverview() {
@@ -1386,6 +1950,8 @@ function DocumentsUtilityColumn() {
 }
 
 function DocumentPreviewModal({ document, onClose }) {
+  const extraction = document?.extraction || {};
+  const previewText = extraction.text || '';
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section
@@ -1401,29 +1967,196 @@ function DocumentPreviewModal({ document, onClose }) {
         <div className="modal-emblem">
           <FileText size={30} strokeWidth={1.55} />
         </div>
-        <h3 id="document-preview-title">{document.name}</h3>
-        <p>{document.description}</p>
-        <div className="preview-placeholder">
-          <Eye size={28} strokeWidth={1.45} />
-          <strong>Document preview will be available here.</strong>
-          <span>No document is opened or analyzed in this frontend demo.</span>
+        <h3 id="document-preview-title">{document.filename}</h3>
+        <p>{formatCaseDate(document.updated_at)}</p>
+        {document.file_url && (
+          <a className="document-file-link" href={document.file_url} target="_blank" rel="noreferrer">
+            Open stored file
+            <ArrowUpRight size={16} strokeWidth={1.7} />
+          </a>
+        )}
+        <div className="preview-placeholder document-text-preview">
+          <strong>Extracted text preview</strong>
+          {previewText ? (
+            <pre>{previewText.slice(0, 5000)}{previewText.length > 5000 ? '...' : ''}</pre>
+          ) : (
+            <span>No extracted text preview is available for this document.</span>
+          )}
         </div>
       </section>
     </div>
   );
 }
 
-function DocumentsPage() {
-  const [activeTab, setActiveTab] = React.useState('All Documents');
-  const [search, setSearch] = React.useState('');
-  const [openMenu, setOpenMenu] = React.useState('');
-  const [previewDocument, setPreviewDocument] = React.useState(null);
+function DocumentRenameModal({ document, onClose, onSave }) {
+  const [filename, setFilename] = React.useState(document?.filename || '');
+  const [error, setError] = React.useState('');
 
-  const filteredDocuments = documents.filter((document) => {
-    const matchesTab = activeTab === 'All Documents' || document.tab === activeTab || document.category === activeTab.slice(0, -1);
-    const haystack = `${document.name} ${document.description} ${document.category} ${document.linkedTo}`.toLowerCase();
-    return matchesTab && haystack.includes(search.trim().toLowerCase());
-  });
+  const submit = async (event) => {
+    event.preventDefault();
+    setError('');
+    try {
+      await onSave(document.id, filename);
+      onClose();
+    } catch (saveError) {
+      setError(saveError.message || 'Could not rename this document.');
+    }
+  };
+
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
+      <form
+        className="attachment-modal document-action-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="rename-document-title"
+        onMouseDown={(event) => event.stopPropagation()}
+        onSubmit={submit}
+      >
+        <button type="button" className="modal-close" aria-label="Close rename dialog" onClick={onClose}>
+          <X size={20} />
+        </button>
+        <div className="modal-emblem">
+          <Pencil size={30} strokeWidth={1.55} />
+        </div>
+        <h3 id="rename-document-title">Rename Document</h3>
+        <label className="rename-document-field">
+          <span>Document name</span>
+          <input value={filename} onChange={(event) => setFilename(event.target.value)} autoFocus />
+        </label>
+        {error && <p className="document-action-error">{error}</p>}
+        <div className="document-dialog-actions">
+          <button type="button" className="document-outline-button" onClick={onClose}>Cancel</button>
+          <button type="submit" className="case-open-button">Save</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function DocumentDeleteModal({ document, onClose, onDelete }) {
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
+      <section
+        className="attachment-modal document-action-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-document-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="modal-close" aria-label="Close delete dialog" onClick={onClose}>
+          <X size={20} />
+        </button>
+        <div className="modal-emblem delete-emblem">
+          <Trash2 size={30} strokeWidth={1.55} />
+        </div>
+        <h3 id="delete-document-title">Delete document?</h3>
+        <p>This will permanently remove the uploaded document.</p>
+        <div className="document-dialog-actions">
+          <button type="button" className="document-outline-button" onClick={onClose}>Cancel</button>
+          <button type="button" className="document-delete-button" onClick={() => onDelete(document.id)}>Delete</button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PersistedDocumentRow({ document, onView, onRename, onDelete }) {
+  return (
+    <tr>
+      <td>
+        <div className="document-name-cell">
+          <FileTypeIcon type={document.file_type} />
+          <div>
+            <strong>{document.filename}</strong>
+          </div>
+        </div>
+      </td>
+      <td>{formatCaseDate(document.updated_at || document.created_at)}</td>
+      <td>
+        <div className="persisted-document-actions">
+          <button type="button" className="document-outline-button" onClick={() => onView(document.id)}>
+            <Eye size={16} strokeWidth={1.7} />
+            View
+          </button>
+          <button type="button" className="document-outline-button" onClick={() => onRename(document)}>
+            <Pencil size={16} strokeWidth={1.7} />
+            Rename
+          </button>
+          <button type="button" className="document-delete-button" onClick={() => onDelete(document)}>
+            <Trash2 size={16} strokeWidth={1.7} />
+            Delete
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+function DocumentsPage() {
+  const [storedDocuments, setStoredDocuments] = React.useState([]);
+  const [status, setStatus] = React.useState('loading');
+  const [previewDocument, setPreviewDocument] = React.useState(null);
+  const [renameDocument, setRenameDocument] = React.useState(null);
+  const [deleteDocument, setDeleteDocument] = React.useState(null);
+  const uploadInputRef = React.useRef(null);
+
+  const loadDocuments = React.useCallback(async () => {
+    setStatus('loading');
+    try {
+      const response = await fetch('/api/documents');
+      const payload = await safeJsonResponse(response);
+      if (!response.ok || !Array.isArray(payload)) {
+        throw new Error('Documents could not be loaded.');
+      }
+      setStoredDocuments(payload);
+      setStatus('ready');
+    } catch (error) {
+      console.error('Could not load documents', error);
+      setStatus('error');
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadDocuments();
+  }, [loadDocuments]);
+
+  const handleView = async (documentId) => {
+    try {
+      const response = await fetch(`/api/documents/${encodeURIComponent(documentId)}`);
+      const payload = await safeJsonResponse(response);
+      if (!response.ok || !payload) {
+        throw new Error('Could not open this document.');
+      }
+      setPreviewDocument(payload);
+    } catch (error) {
+      console.error('Could not view document', error);
+    }
+  };
+
+  const handleRename = async (documentId, filename) => {
+    const response = await fetch(`/api/documents/${encodeURIComponent(documentId)}/rename`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename })
+    });
+    const payload = await safeJsonResponse(response);
+    if (!response.ok) {
+      throw new Error(payload?.detail || 'Could not rename this document.');
+    }
+    await loadDocuments();
+  };
+
+  const handleDelete = async (documentId) => {
+    const response = await fetch(`/api/documents/${encodeURIComponent(documentId)}`, { method: 'DELETE' });
+    const payload = await safeJsonResponse(response);
+    if (!response.ok) {
+      console.error('Could not delete document', payload?.detail);
+      return;
+    }
+    setDeleteDocument(null);
+    await loadDocuments();
+  };
 
   return (
     <>
@@ -1431,21 +2164,356 @@ function DocumentsPage() {
       <HeaderControls />
       <div className="documents-content-frame">
         <DocumentsPageHeader />
-        <div className="documents-workspace">
-          <DocumentsPanel
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            search={search}
-            setSearch={setSearch}
-            filteredDocuments={filteredDocuments}
-            openMenu={openMenu}
-            setOpenMenu={setOpenMenu}
-            setPreviewDocument={setPreviewDocument}
-          />
-          <DocumentsUtilityColumn />
-        </div>
+        <section className="documents-panel persisted-documents-panel" aria-label="Uploaded documents">
+          <PanelCorners />
+          <UploadDocumentCard onUploaded={loadDocuments} externalInputRef={uploadInputRef} />
+          <div className="persisted-document-table-wrap">
+            {status === 'loading' && <p className="empty-documents">Loading documents...</p>}
+            {status === 'error' && <p className="empty-documents">Documents could not be loaded right now.</p>}
+            {status === 'ready' && storedDocuments.length === 0 && (
+              <div className="empty-documents persisted-empty-documents">
+                <FileText size={34} strokeWidth={1.45} />
+                <p>No documents uploaded yet.</p>
+                <span>Upload a PDF, DOCX, or TXT file to get started.</span>
+                <button type="button" className="browse-button" onClick={() => uploadInputRef.current?.click()}>
+                  Upload Document
+                </button>
+              </div>
+            )}
+            {status === 'ready' && storedDocuments.length > 0 && (
+              <table className="document-table persisted-document-table">
+                <thead>
+                  <tr>
+                    <th>Document Name</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {storedDocuments.map((document) => (
+                    <PersistedDocumentRow
+                      document={document}
+                      key={document.id}
+                      onView={handleView}
+                      onRename={setRenameDocument}
+                      onDelete={setDeleteDocument}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </section>
       </div>
       {previewDocument && <DocumentPreviewModal document={previewDocument} onClose={() => setPreviewDocument(null)} />}
+      {renameDocument && <DocumentRenameModal document={renameDocument} onClose={() => setRenameDocument(null)} onSave={handleRename} />}
+      {deleteDocument && <DocumentDeleteModal document={deleteDocument} onClose={() => setDeleteDocument(null)} onDelete={handleDelete} />}
+    </>
+  );
+}
+
+function SummarizeDocumentPage() {
+  const [documents, setDocuments] = React.useState([]);
+  const [documentStatus, setDocumentStatus] = React.useState('loading');
+  const [selectedDocumentId, setSelectedDocumentId] = React.useState('');
+  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [uploadStatus, setUploadStatus] = React.useState('idle');
+  const [uploadMessage, setUploadMessage] = React.useState('');
+  const [summaryStatus, setSummaryStatus] = React.useState('idle');
+  const [summaryResult, setSummaryResult] = React.useState(null);
+  const fileInputRef = React.useRef(null);
+
+  const loadDocuments = React.useCallback(async () => {
+    setDocumentStatus('loading');
+    try {
+      const response = await fetch('/api/documents');
+      const payload = await safeJsonResponse(response);
+      if (!response.ok || !Array.isArray(payload)) {
+        throw new Error('Documents could not be loaded.');
+      }
+      setDocuments(payload.filter((document) => ['pdf', 'docx', 'txt'].includes(document.file_type)));
+      setDocumentStatus('ready');
+    } catch (error) {
+      console.error('Could not load documents for summary', error);
+      setDocumentStatus('error');
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadDocuments();
+  }, [loadDocuments]);
+
+  const selectedDocument = documents.find((document) => String(document.id) === String(selectedDocumentId));
+
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0] || null;
+    setSelectedFile(file);
+    setUploadStatus('idle');
+    setUploadMessage('');
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      setUploadMessage('Choose a PDF, DOCX, or TXT file first.');
+      return;
+    }
+    setUploadStatus('uploading');
+    setUploadMessage('');
+    setSummaryResult(null);
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    try {
+      const response = await fetch('/api/documents/extract', {
+        method: 'POST',
+        body: formData
+      });
+      const payload = await safeJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(payload?.detail || 'This document could not be uploaded.');
+      }
+      if (payload?.status === 'ocr_required') {
+        setUploadStatus('ocr_required');
+        setUploadMessage('This appears to be a scanned PDF. OCR is not supported yet.');
+      } else if (!payload?.document_id) {
+        setUploadStatus('failed');
+        setUploadMessage(documentExtractionMessage(payload || {}));
+      } else {
+        setUploadStatus('success');
+        setUploadMessage('Document uploaded. You can now summarize it.');
+        await loadDocuments();
+        setSelectedDocumentId(String(payload.document_id));
+      }
+    } catch (error) {
+      console.error('Summary document upload failed', error);
+      setUploadStatus('failed');
+      setUploadMessage(error.message || 'This document could not be uploaded.');
+    }
+  };
+
+  const handleSummarize = async () => {
+    if (!selectedDocumentId) {
+      setSummaryStatus('failed');
+      setSummaryResult({
+        status: 'summary_unavailable',
+        message: 'Select or upload a document first.'
+      });
+      return;
+    }
+    setSummaryStatus('loading');
+    setSummaryResult(null);
+    try {
+      const response = await fetch(`/api/documents/${encodeURIComponent(selectedDocumentId)}/summarize`, {
+        method: 'POST'
+      });
+      const payload = await safeJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(payload?.detail || 'The summary could not be generated right now.');
+      }
+      setSummaryResult({
+        ...(payload || {}),
+        filename: selectedDocument?.filename || 'Selected document',
+        document_id: selectedDocumentId
+      });
+      setSummaryStatus(payload?.status === 'success' ? 'success' : payload?.status || 'failed');
+      if (payload?.status === 'success' && !payload.cached) {
+        await loadDocuments();
+      }
+    } catch (error) {
+      console.error('Document summary failed', error);
+      setSummaryStatus('failed');
+      setSummaryResult({
+        status: 'summary_unavailable',
+        filename: selectedDocument?.filename || 'Selected document',
+        document_id: selectedDocumentId,
+        message: error.message || 'The summary could not be generated right now. Please try again later.'
+      });
+    }
+  };
+
+  const resetSelection = () => {
+    setSelectedDocumentId('');
+    setSelectedFile(null);
+    setUploadStatus('idle');
+    setUploadMessage('');
+    setSummaryStatus('idle');
+    setSummaryResult(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="summary-content-frame">
+        <section className="documents-page-header summarize-page-header">
+          <div className="header-ornament-line" aria-hidden="true">
+            <span />
+            <i>◇</i>
+          </div>
+          <h2>Summarize Document</h2>
+          <div className="header-ornament-line" aria-hidden="true">
+            <i>◇</i>
+            <span />
+          </div>
+          <p>Get a clear, plain-language summary of your legal document.</p>
+          <PageDivider />
+        </section>
+
+        <section className="documents-panel summary-work-card" aria-label="Document summarization">
+          <PanelCorners />
+          <div className="summary-card-heading">
+            <div className="summary-card-icon">
+              <Sparkles size={28} strokeWidth={1.55} />
+            </div>
+            <div>
+              <h3>Choose a document</h3>
+              <p>Select one of your uploaded documents or upload a new PDF, DOCX, or TXT file.</p>
+            </div>
+          </div>
+
+          <div className="summary-select-block">
+            <label htmlFor="summary-document-select">Select an uploaded document</label>
+            {documentStatus === 'loading' && <p className="summary-muted">Loading your documents...</p>}
+            {documentStatus === 'error' && <p className="summary-error">Documents could not be loaded right now.</p>}
+            {documentStatus === 'ready' && documents.length === 0 && (
+              <p className="summary-muted">No uploaded documents found. Upload a PDF, DOCX, or TXT file to get started.</p>
+            )}
+            {documentStatus === 'ready' && documents.length > 0 && (
+              <select
+                id="summary-document-select"
+                value={selectedDocumentId}
+                onChange={(event) => {
+                  setSelectedDocumentId(event.target.value);
+                  setSummaryResult(null);
+                  setSummaryStatus('idle');
+                }}
+              >
+                <option value="">Select an uploaded document</option>
+                {documents.map((document) => (
+                  <option value={document.id} key={document.id}>
+                    {document.filename}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          <div className="summary-upload-block">
+            <span>Upload a new document</span>
+            <button type="button" className="summary-upload-drop" onClick={() => fileInputRef.current?.click()}>
+              <UploadCloud size={30} strokeWidth={1.45} />
+              <strong>{selectedFile ? selectedFile.name : 'Browse PDF, DOCX, or TXT'}</strong>
+              <small>Max size follows the existing upload limit.</small>
+            </button>
+            <input
+              ref={fileInputRef}
+              className="sr-only"
+              type="file"
+              accept=".pdf,.docx,.txt"
+              onChange={handleFileChange}
+              aria-label="Upload document for summary"
+            />
+            <button
+              type="button"
+              className="document-outline-button summary-upload-button"
+              disabled={!selectedFile || uploadStatus === 'uploading'}
+              onClick={handleUpload}
+            >
+              {uploadStatus === 'uploading' ? 'Uploading...' : 'Upload Document'}
+            </button>
+            {uploadMessage && <p className={`summary-status-text ${uploadStatus}`}>{uploadMessage}</p>}
+          </div>
+
+          <div className="summary-cta-area">
+            {summaryStatus === 'loading' ? (
+              <div className="summary-loading-state">
+                <span className="summary-spinner" aria-hidden="true" />
+                <strong>Generating your summary...</strong>
+                <p>This may take a few seconds.</p>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="ask-button summary-primary-button"
+                disabled={!selectedDocumentId}
+                onClick={handleSummarize}
+              >
+                <Sparkles size={17} strokeWidth={1.7} />
+                Summarize Document
+              </button>
+            )}
+          </div>
+        </section>
+
+        {summaryResult && (
+          <section className={`documents-panel summary-result-card ${summaryResult.status === 'success' ? 'success' : 'failed'}`}>
+            <PanelCorners />
+            <div className="summary-result-header">
+              <FileText size={25} strokeWidth={1.55} />
+              <div>
+                <h3>Document Summary</h3>
+                <p>{summaryResult.filename}</p>
+              </div>
+            </div>
+            {summaryResult.status === 'success' && summaryResult.summary ? (
+              <div className="summary-result-text">{summaryResult.summary}</div>
+            ) : (
+              <p className="summary-error">{summaryResult.message || summaryStatusMessage(summaryResult.status)}</p>
+            )}
+            <div className="summary-disclaimer">
+              <Info size={18} strokeWidth={1.7} />
+              <p>This summary is based only on the uploaded document and is provided for general understanding. It is not legal advice.</p>
+            </div>
+            <div className="summary-result-actions">
+              {summaryResult.document_id && (
+                <a
+                  className="document-outline-button"
+                  href={`/api/documents/${encodeURIComponent(summaryResult.document_id)}/file`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Eye size={16} strokeWidth={1.7} />
+                  View Original Document
+                </a>
+              )}
+              <button type="button" className="document-outline-button" onClick={resetSelection}>
+                Choose Another Document
+              </button>
+            </div>
+          </section>
+        )}
+      </div>
+    </>
+  );
+}
+
+function summaryStatusMessage(status) {
+  if (status === 'ocr_required') {
+    return 'This appears to be a scanned PDF. OCR is not supported yet.';
+  }
+  if (status === 'no_extracted_text') {
+    return "We couldn't find readable text in this document.";
+  }
+  if (status === 'document_too_long_for_summary') {
+    return 'This document is too long to summarize safely in this version.';
+  }
+  return 'The summary could not be generated right now. Please try again later.';
+}
+
+function AboutUsPage() {
+  return (
+    <>
+      <HeaderControls />
+    </>
+  );
+}
+
+function SchemesPage() {
+  return (
+    <>
+      <HeaderControls />
     </>
   );
 }
@@ -1466,8 +2534,737 @@ function HomePage() {
   );
 }
 
+function MyCasesPage() {
+  const [cases, setCases] = React.useState([]);
+  const [status, setStatus] = React.useState('loading');
+  const [caseToDelete, setCaseToDelete] = React.useState(null);
+  const [caseToRename, setCaseToRename] = React.useState(null);
+  const [deleteAllRequested, setDeleteAllRequested] = React.useState(false);
+  const [deleteStatus, setDeleteStatus] = React.useState('idle');
+  const [notice, setNotice] = React.useState('');
+
+  const loadCases = React.useCallback(async () => {
+    try {
+      const response = await fetch('/api/cases');
+      const payload = await safeJsonResponse(response);
+      if (!response.ok || !Array.isArray(payload)) {
+        throw new Error('Could not load saved cases.');
+      }
+      setCases(payload);
+      setStatus('ready');
+    } catch (error) {
+      console.error('Could not load cases', error);
+      setStatus('error');
+    }
+  }, []);
+
+  React.useEffect(() => {
+    setStatus('loading');
+    loadCases();
+  }, [loadCases]);
+
+  const openCase = (caseId) => {
+    window.location.hash = `#/ask?case=${encodeURIComponent(caseId)}`;
+  };
+
+  const confirmDeleteCase = async () => {
+    if (!caseToDelete) return;
+    setDeleteStatus('deleting');
+    try {
+      const response = await fetch(`/api/cases/${encodeURIComponent(caseToDelete.id)}`, { method: 'DELETE' });
+      const payload = await safeJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(payload?.detail || 'Could not delete this case.');
+      }
+      setCases((current) => current.filter((savedCase) => savedCase.id !== caseToDelete.id));
+      setCaseToDelete(null);
+      setNotice('Case deleted.');
+      window.setTimeout(() => setNotice(''), 2200);
+      await loadCases();
+    } catch (error) {
+      console.error('Could not delete case', error);
+      setNotice(error.message || 'Could not delete this case.');
+    } finally {
+      setDeleteStatus('idle');
+    }
+  };
+
+  const renameCase = async (savedCase, title) => {
+    const response = await fetch(`/api/cases/${encodeURIComponent(savedCase.id)}/rename`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title })
+    });
+    const payload = await safeJsonResponse(response);
+    if (!response.ok) {
+      throw new Error(payload?.detail || 'Could not rename this case.');
+    }
+    setCases((current) => current.map((item) => (item.id === savedCase.id ? { ...item, ...payload } : item)));
+    setCaseToRename(null);
+    setNotice('Case renamed.');
+    window.setTimeout(() => setNotice(''), 2200);
+    await loadCases();
+  };
+
+  const confirmDeleteAllCases = async () => {
+    setDeleteStatus('deleting_all');
+    try {
+      const response = await fetch('/api/cases', { method: 'DELETE' });
+      const payload = await safeJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(payload?.detail || 'Could not delete saved cases.');
+      }
+      setCases([]);
+      setDeleteAllRequested(false);
+      setNotice(`${payload?.deleted_count || 0} case${payload?.deleted_count === 1 ? '' : 's'} deleted.`);
+      window.setTimeout(() => setNotice(''), 2200);
+      await loadCases();
+    } catch (error) {
+      console.error('Could not delete all cases', error);
+      setNotice(error.message || 'Could not delete saved cases.');
+    } finally {
+      setDeleteStatus('idle');
+    }
+  };
+
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="cases-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>⌘</i></div>
+          <h2>My Cases</h2>
+          <div className="header-ornament-line"><i>⌘</i><span /></div>
+          <p>Continue your previous legal conversations.</p>
+          <PageDivider />
+        </header>
+
+        <section className="cases-total-card" aria-label="Total saved cases">
+          <PanelCorners />
+          <div className="cases-total-icon">
+            <BriefcaseBusiness size={30} strokeWidth={1.45} />
+          </div>
+          <div>
+            <p>Total Cases</p>
+            <strong>{cases.length}</strong>
+            <span>All your legal conversations in one place</span>
+          </div>
+        </section>
+
+        <div className="cases-bulk-actions">
+          <button
+            type="button"
+            className="case-delete-all-button"
+            disabled={status !== 'ready' || cases.length === 0}
+            onClick={() => setDeleteAllRequested(true)}
+          >
+            <Trash2 size={16} strokeWidth={1.8} />
+            Delete All Cases
+          </button>
+        </div>
+
+        <section className="cases-list" aria-label="Saved cases">
+          {notice && <p className="case-toast" role="status">{notice}</p>}
+          {status === 'loading' && <p className="cases-empty">Loading saved cases...</p>}
+          {status === 'error' && <p className="cases-empty">Saved cases could not be loaded right now.</p>}
+          {status === 'ready' && cases.length === 0 && (
+            <div className="cases-empty-state">
+              <BriefcaseBusiness size={34} strokeWidth={1.45} />
+              <h3>No saved cases yet.</h3>
+              <p>Start a legal conversation and it will appear here.</p>
+              <button type="button" className="ask-button" onClick={() => { window.location.hash = '#/ask'; }}>
+                Ask a Question
+              </button>
+            </div>
+          )}
+          {status === 'ready' && cases.map((savedCase) => (
+            <article className="case-list-card" key={savedCase.id}>
+              <div className="case-list-icon" aria-hidden="true">
+                <BriefcaseBusiness size={25} strokeWidth={1.45} />
+              </div>
+              <div className="case-list-main">
+                <h3>{savedCase.title || 'Legal Question'}</h3>
+                <p><Clock size={14} strokeWidth={1.7} />{formatCaseDate(savedCase.updated_at)}</p>
+              </div>
+              <div className="case-card-actions">
+                <button
+                  type="button"
+                  className="case-rename-icon-button"
+                  aria-label={`Rename ${savedCase.title || 'case'}`}
+                  onClick={() => setCaseToRename(savedCase)}
+                >
+                  <Pencil size={17} strokeWidth={1.8} />
+                </button>
+                <button
+                  type="button"
+                  className="case-delete-icon-button"
+                  aria-label={`Delete ${savedCase.title || 'case'}`}
+                  onClick={() => setCaseToDelete(savedCase)}
+                >
+                  <Trash2 size={17} strokeWidth={1.8} />
+                </button>
+                <button type="button" className="case-open-button" onClick={() => openCase(savedCase.id)}>
+                  Open Case
+                  <ChevronRight size={16} strokeWidth={1.8} />
+                </button>
+              </div>
+            </article>
+          ))}
+        </section>
+      </div>
+      {caseToDelete && (
+        <CaseDeleteModal
+          savedCase={caseToDelete}
+          status={deleteStatus}
+          onCancel={() => setCaseToDelete(null)}
+          onDelete={confirmDeleteCase}
+        />
+      )}
+      {caseToRename && (
+        <CaseRenameModal
+          savedCase={caseToRename}
+          onCancel={() => setCaseToRename(null)}
+          onRename={renameCase}
+        />
+      )}
+      {deleteAllRequested && (
+        <DeleteAllCasesModal
+          count={cases.length}
+          status={deleteStatus}
+          onCancel={() => setDeleteAllRequested(false)}
+          onDelete={confirmDeleteAllCases}
+        />
+      )}
+    </>
+  );
+}
+
+function CaseRenameModal({ savedCase, onCancel, onRename }) {
+  const [title, setTitle] = React.useState(savedCase.title || '');
+  const [status, setStatus] = React.useState('idle');
+  const [error, setError] = React.useState('');
+
+  const submitRename = async (event) => {
+    event.preventDefault();
+    const nextTitle = title.trim();
+    if (!nextTitle) {
+      setError('Enter a case title.');
+      return;
+    }
+    setStatus('saving');
+    setError('');
+    try {
+      await onRename(savedCase, nextTitle);
+    } catch (renameError) {
+      setError(renameError.message || 'Could not rename this case.');
+      setStatus('idle');
+    }
+  };
+
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={onCancel}>
+      <form
+        className="attachment-modal document-action-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="rename-case-title"
+        onSubmit={submitRename}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="modal-close" aria-label="Close rename case dialog" onClick={onCancel}>
+          <X size={20} />
+        </button>
+        <div className="modal-emblem">
+          <Pencil size={30} strokeWidth={1.55} />
+        </div>
+        <h3 id="rename-case-title">Rename Case</h3>
+        <label className="rename-document-field">
+          <span>Case title</span>
+          <input value={title} onChange={(event) => setTitle(event.target.value)} autoFocus maxLength={80} />
+        </label>
+        {error && <p className="document-error">{error}</p>}
+        <div className="document-dialog-actions">
+          <button type="button" className="document-outline-button" onClick={onCancel} disabled={status === 'saving'}>Cancel</button>
+          <button type="submit" className="case-open-button" disabled={status === 'saving'}>
+            {status === 'saving' ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function CaseDeleteModal({ savedCase, status, onCancel, onDelete }) {
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={onCancel}>
+      <section
+        className="attachment-modal document-action-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-case-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="modal-close" aria-label="Close delete case dialog" onClick={onCancel}>
+          <X size={20} />
+        </button>
+        <div className="modal-emblem delete-emblem">
+          <Trash2 size={30} strokeWidth={1.55} />
+        </div>
+        <h3 id="delete-case-title">Delete case?</h3>
+        <p>This will permanently delete “{savedCase.title || 'Legal Question'}” and its conversation history.</p>
+        <div className="document-dialog-actions">
+          <button type="button" className="document-outline-button" onClick={onCancel} disabled={status === 'deleting'}>Cancel</button>
+          <button type="button" className="document-delete-button" onClick={onDelete} disabled={status === 'deleting'}>
+            {status === 'deleting' ? 'Deleting...' : 'Delete Case'}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function DeleteAllCasesModal({ count, status, onCancel, onDelete }) {
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={onCancel}>
+      <section
+        className="attachment-modal document-action-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-all-cases-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="modal-close" aria-label="Close delete all cases dialog" onClick={onCancel}>
+          <X size={20} />
+        </button>
+        <div className="modal-emblem delete-emblem">
+          <Trash2 size={30} strokeWidth={1.55} />
+        </div>
+        <h3 id="delete-all-cases-title">Delete all cases?</h3>
+        <p>This will permanently delete {count} saved case{count === 1 ? '' : 's'} and their conversation history.</p>
+        <div className="document-dialog-actions">
+          <button type="button" className="document-outline-button" onClick={onCancel} disabled={status === 'deleting_all'}>Cancel</button>
+          <button type="button" className="document-delete-button" onClick={onDelete} disabled={status === 'deleting_all'}>
+            {status === 'deleting_all' ? 'Deleting...' : 'Delete All Cases'}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function rightsIcon(iconName) {
+  const icons = {
+    shopping_cart: ShoppingCart,
+    shield: ShieldCheck,
+    home: Home,
+    landmark: Landmark,
+    file_text: FileText
+  };
+  return icons[iconName] || Scale;
+}
+
+function LegalAwarenessPage({ segments }) {
+  if (segments[1] === 'source' && segments[2] && segments[3] === 'provision' && segments[4]) {
+    return <RightsProvisionPage sourceId={segments[2]} provisionId={segments[4]} />;
+  }
+  if (segments[1] === 'source' && segments[2]) {
+    return <RightsSourcePage sourceId={segments[2]} />;
+  }
+  if (segments[1]) {
+    return <RightsCategoryPage categoryId={segments[1]} />;
+  }
+  return <RightsHomePage />;
+}
+
+function RightsHomePage() {
+  const [categories, setCategories] = React.useState([]);
+  const [status, setStatus] = React.useState('loading');
+
+  React.useEffect(() => {
+    let ignore = false;
+    const loadCategories = async () => {
+      try {
+        const response = await fetch('/api/legal-awareness/categories');
+        const payload = await safeJsonResponse(response);
+        if (!response.ok || !Array.isArray(payload)) throw new Error('Could not load rights categories.');
+        if (!ignore) {
+          setCategories(payload);
+          setStatus('ready');
+        }
+      } catch (error) {
+        console.error('Could not load legal-awareness categories', error);
+        if (!ignore) setStatus('error');
+      }
+    };
+    loadCategories();
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const popularTopics = [
+    { label: 'Defective Product', category: 'consumer' },
+    { label: 'Refund & Replacement', category: 'consumer' },
+    { label: 'Online Fraud', category: 'cyber' },
+    { label: 'Identity Misuse', category: 'cyber' },
+    { label: 'Rent & Essential Services', category: 'tenancy' },
+    { label: 'RTI Application', category: 'public_services' },
+    { label: 'Free Legal Aid', category: 'public_services' }
+  ];
+
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="rights-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>◇</i></div>
+          <h2>Know Your Rights</h2>
+          <div className="header-ornament-line"><i>◇</i><span /></div>
+          <p>Understand important legal rights in simple words.</p>
+          <PageDivider />
+        </header>
+
+        <section className="rights-section" aria-label="Explore legal rights by category">
+          <h3>Explore by Category</h3>
+          <div className="rights-category-list">
+            {status === 'loading' && <p className="rights-muted">Loading rights categories...</p>}
+            {status === 'error' && <p className="rights-muted">Rights categories could not be loaded right now.</p>}
+            {status === 'ready' && categories.map((category) => {
+              const Icon = rightsIcon(category.icon);
+              return (
+                <article className="rights-category-card" key={category.id}>
+                  <div className="rights-card-icon"><Icon size={31} strokeWidth={1.45} /></div>
+                  <div>
+                    <h3>{category.title}</h3>
+                    <p>{category.description}</p>
+                  </div>
+                  <button type="button" className="rights-learn-button" onClick={() => { window.location.hash = `#/rights/${category.id}`; }}>
+                    Learn More
+                    <ArrowUpRight size={16} strokeWidth={1.8} />
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="rights-section popular-topics-section">
+          <h3>Popular Topics</h3>
+          <div className="popular-topic-list">
+            {popularTopics.map((topic) => (
+              <button type="button" key={topic.label} onClick={() => { window.location.hash = `#/rights/${topic.category}`; }}>
+                <FolderOpen size={15} strokeWidth={1.7} />
+                {topic.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <RightsDisclaimerCard />
+      </div>
+    </>
+  );
+}
+
+function RightsCategoryPage({ categoryId }) {
+  const [category, setCategory] = React.useState(null);
+  const [status, setStatus] = React.useState('loading');
+
+  React.useEffect(() => {
+    let ignore = false;
+    const loadCategory = async () => {
+      try {
+        const response = await fetch(`/api/legal-awareness/categories/${encodeURIComponent(categoryId)}`);
+        const payload = await safeJsonResponse(response);
+        if (!response.ok || !payload) throw new Error('Could not load this rights category.');
+        if (!ignore) {
+          setCategory(payload);
+          setStatus('ready');
+        }
+      } catch (error) {
+        console.error('Could not load legal-awareness category', error);
+        if (!ignore) setStatus('error');
+      }
+    };
+    loadCategory();
+    return () => {
+      ignore = true;
+    };
+  }, [categoryId]);
+
+  if (status !== 'ready') {
+    return <RightsLoadingState message={status === 'error' ? 'This category could not be loaded.' : 'Loading category...'} />;
+  }
+
+  const Icon = rightsIcon(category.icon);
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="rights-content-frame">
+        <button type="button" className="rights-back-button" onClick={() => { window.location.hash = '#/rights'; }}>
+          ← Back to Know Your Rights
+        </button>
+        <section className="rights-detail-hero">
+          <div className="rights-card-icon rights-hero-icon"><Icon size={42} strokeWidth={1.35} /></div>
+          <div>
+            <h2>{category.title}</h2>
+            <p>{category.description}</p>
+          </div>
+        </section>
+        <PageDivider />
+
+        {category.limitation && <div className="rights-limitation">{category.limitation}</div>}
+
+        <RightsInfoSection title="What You Should Know" items={category.overview} />
+
+        <section className="rights-panel">
+          <h3>Common Issues</h3>
+          <div className="rights-issue-grid">
+            {category.common_issues.map((issue) => (
+              <article key={issue.title}>
+                <div className="rights-mini-icon"><Scale size={22} strokeWidth={1.45} /></div>
+                <h4>{issue.title}</h4>
+                <p>{issue.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="rights-panel">
+          <h3>Relevant Legal Sources</h3>
+          <div className="rights-source-list">
+            {category.sources.map((source) => (
+              <button type="button" className="rights-source-card" key={source.id} onClick={() => { window.location.hash = `#/rights/source/${source.id}`; }}>
+                <FileText size={24} strokeWidth={1.45} />
+                <span>
+                  <strong>{source.short_title}</strong>
+                  <small>{source.document_type} · {source.jurisdiction}{source.year ? ` · ${source.year}` : ''}</small>
+                </span>
+                <ChevronRight size={18} strokeWidth={1.8} />
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <RightsInfoSection title="What You Can Do" items={category.what_you_can_do} ordered />
+        <RightsAskCta label={`Need help with ${category.title.toLowerCase()}?`} />
+        <RightsDisclaimerCard text={category.disclaimer} />
+      </div>
+    </>
+  );
+}
+
+function RightsSourcePage({ sourceId }) {
+  const [source, setSource] = React.useState(null);
+  const [status, setStatus] = React.useState('loading');
+
+  React.useEffect(() => {
+    let ignore = false;
+    const loadSource = async () => {
+      try {
+        const response = await fetch(`/api/legal-awareness/sources/${encodeURIComponent(sourceId)}`);
+        const payload = await safeJsonResponse(response);
+        if (!response.ok || !payload) throw new Error('Could not load this source.');
+        if (!ignore) {
+          setSource(payload);
+          setStatus('ready');
+        }
+      } catch (error) {
+        console.error('Could not load legal-awareness source', error);
+        if (!ignore) setStatus('error');
+      }
+    };
+    loadSource();
+    return () => {
+      ignore = true;
+    };
+  }, [sourceId]);
+
+  if (status !== 'ready') {
+    return <RightsLoadingState message={status === 'error' ? 'This source could not be loaded.' : 'Loading source...'} />;
+  }
+
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="rights-content-frame">
+        <button type="button" className="rights-back-button" onClick={() => { window.location.hash = '#/rights'; }}>
+          ← Back to Know Your Rights
+        </button>
+        <section className="rights-panel rights-source-detail">
+          <h2>{source.short_title || source.document_title}</h2>
+          <p>{source.description}</p>
+          <div className="rights-meta-row">
+            <span>{source.jurisdiction || 'India'}</span>
+            <span>{source.year || 'Current corpus'}</span>
+            <span>{source.document_type}</span>
+            <span>{source.authority_level}</span>
+          </div>
+          <a className="rights-source-file-button" href={`/api/legal-awareness/sources/${source.id}/file`} target="_blank" rel="noreferrer">
+            View Source
+            <ArrowUpRight size={16} strokeWidth={1.7} />
+          </a>
+        </section>
+
+        <RightsInfoSection title="What this law covers" items={source.what_this_law_covers} />
+
+        <section className="rights-panel">
+          <h3>Important Provisions</h3>
+          {source.important_provisions.length ? (
+            <div className="rights-source-list">
+              {source.important_provisions.map((provision) => (
+                <button
+                  type="button"
+                  className="rights-source-card"
+                  key={provision.id}
+                  onClick={() => { window.location.hash = `#/rights/source/${source.id}/provision/${provision.id}`; }}
+                >
+                  <FileText size={23} strokeWidth={1.45} />
+                  <span>
+                    <strong>{provision.label} — {provision.title}</strong>
+                    <small>{provision.page ? `Source page ${provision.page}` : 'Source page unavailable'}</small>
+                  </span>
+                  <ChevronRight size={18} strokeWidth={1.8} />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="rights-muted">Important provisions are not currently available for this source in the local legal corpus.</p>
+          )}
+        </section>
+        <RightsAskCta label="Need help applying this source?" />
+        <RightsDisclaimerCard />
+      </div>
+    </>
+  );
+}
+
+function RightsProvisionPage({ sourceId, provisionId }) {
+  const [provision, setProvision] = React.useState(null);
+  const [status, setStatus] = React.useState('loading');
+
+  React.useEffect(() => {
+    let ignore = false;
+    const loadProvision = async () => {
+      try {
+        const response = await fetch(`/api/legal-awareness/sources/${encodeURIComponent(sourceId)}/provisions/${encodeURIComponent(provisionId)}`);
+        const payload = await safeJsonResponse(response);
+        if (!response.ok || !payload) throw new Error('Could not load this provision.');
+        if (!ignore) {
+          setProvision(payload);
+          setStatus('ready');
+        }
+      } catch (error) {
+        console.error('Could not load legal-awareness provision', error);
+        if (!ignore) setStatus('error');
+      }
+    };
+    loadProvision();
+    return () => {
+      ignore = true;
+    };
+  }, [sourceId, provisionId]);
+
+  if (status !== 'ready') {
+    return <RightsLoadingState message={status === 'error' ? 'This provision is not currently available in the local legal corpus.' : 'Loading provision...'} />;
+  }
+
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="rights-content-frame">
+        <button type="button" className="rights-back-button" onClick={() => { window.location.hash = `#/rights/source/${sourceId}`; }}>
+          ← Back to Source
+        </button>
+        <section className="rights-panel rights-provision-detail">
+          <h2>{provision.label} — {provision.title}</h2>
+          <h3>Plain-language explanation</h3>
+          <p>{provision.plain_language_explanation}</p>
+          <h3>Official source excerpt</h3>
+          <blockquote>{provision.official_excerpt || 'No excerpt is available for this provision.'}</blockquote>
+          <div className="rights-meta-row">
+            <span>{provision.source?.short_title}</span>
+            {provision.page ? <span>Page {provision.page}</span> : null}
+            <span>{provision.source?.jurisdiction}</span>
+          </div>
+          <a className="rights-source-file-button" href={`/api/legal-awareness/sources/${sourceId}/file`} target="_blank" rel="noreferrer">
+            View Source
+            <ArrowUpRight size={16} strokeWidth={1.7} />
+          </a>
+        </section>
+        <RightsAskCta label="Want guidance for your situation?" />
+        <RightsDisclaimerCard />
+      </div>
+    </>
+  );
+}
+
+function RightsInfoSection({ title, items, ordered = false }) {
+  if (!items?.length) return null;
+  const ListTag = ordered ? 'ol' : 'ul';
+  return (
+    <section className="rights-panel">
+      <h3>{title}</h3>
+      <ListTag className={ordered ? 'rights-step-list' : undefined}>
+        {items.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}
+      </ListTag>
+    </section>
+  );
+}
+
+function RightsAskCta({ label }) {
+  return (
+    <section className="rights-ask-cta">
+      <Scale size={31} strokeWidth={1.4} />
+      <div>
+        <h3>{label}</h3>
+        <p>Describe your situation and get legally grounded guidance.</p>
+      </div>
+      <button type="button" className="ask-button" onClick={() => { window.location.hash = '#/ask'; }}>
+        Ask a Question
+        <ArrowUpRight size={16} strokeWidth={1.7} />
+      </button>
+    </section>
+  );
+}
+
+function RightsDisclaimerCard({ text }) {
+  return (
+    <section className="rights-disclaimer">
+      <Info size={19} strokeWidth={1.7} />
+      <p>{text || 'This information is for general legal awareness and does not constitute professional legal advice. For guidance on your specific situation, ask a question.'}</p>
+    </section>
+  );
+}
+
+function RightsLoadingState({ message }) {
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="rights-content-frame">
+        <section className="rights-panel">
+          <p className="rights-muted">{message}</p>
+        </section>
+      </div>
+    </>
+  );
+}
+
 export default function App() {
   const [route, setRoute] = React.useState(() => window.location.hash || '#/');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
+    try {
+      return window.localStorage.getItem('legalAid.sidebarCollapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   React.useEffect(() => {
     const handleHashChange = () => setRoute(window.location.hash || '#/');
@@ -1476,16 +3273,52 @@ export default function App() {
   }, []);
 
   const [, routePath = '/'] = route.match(/^#([^?]*)/) || [];
+  const routeSegments = routePath.split('/').filter(Boolean);
   const queryString = route.includes('?') ? route.slice(route.indexOf('?') + 1) : '';
-  const initialQuery = new URLSearchParams(queryString).get('q') || '';
-  const activePage = routePath === '/ask' ? 'ask' : routePath === '/documents' ? 'documents' : 'home';
+  const queryParams = new URLSearchParams(queryString);
+  const initialQuery = queryParams.get('q') || '';
+  const initialCaseId = queryParams.get('case') || '';
+  const activePage = routeSegments[0] === 'ask'
+    ? 'ask'
+    : routeSegments[0] === 'documents'
+      ? 'documents'
+      : routeSegments[0] === 'summarize-document'
+        ? 'summarize'
+        : routeSegments[0] === 'cases'
+          ? 'cases'
+          : routeSegments[0] === 'rights'
+            ? 'rights'
+            : routeSegments[0] === 'about'
+              ? 'about'
+              : routeSegments[0] === 'schemes'
+                ? 'schemes'
+                : 'home';
 
   return (
-    <div className="app-shell">
-      <Sidebar activePage={activePage} />
-      <main className="main-panel">
-        {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} />}
+    <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      <Sidebar
+        activePage={activePage}
+        collapsed={isSidebarCollapsed}
+        onToggle={() => {
+          setIsSidebarCollapsed((current) => {
+            const next = !current;
+            try {
+              window.localStorage.setItem('legalAid.sidebarCollapsed', String(next));
+            } catch {
+              // Preference persistence is optional.
+            }
+            return next;
+          });
+        }}
+      />
+      <main className={`main-panel ${activePage}-page-panel`}>
+        {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} />}
+        {activePage === 'cases' && <MyCasesPage />}
         {activePage === 'documents' && <DocumentsPage />}
+        {activePage === 'summarize' && <SummarizeDocumentPage />}
+        {activePage === 'rights' && <LegalAwarenessPage segments={routeSegments} />}
+        {activePage === 'about' && <AboutUsPage />}
+        {activePage === 'schemes' && <SchemesPage />}
         {activePage === 'home' && <HomePage />}
       </main>
     </div>

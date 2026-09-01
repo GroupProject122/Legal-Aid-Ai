@@ -1,0 +1,284 @@
+{
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/conversation_state_cases.json",
+    "live_gemini_calls": 0
+  },
+  "metrics": {
+    "additional_fact_preservation_accuracy": 1.0,
+    "case_count": 16,
+    "correction_accuracy": 1.0,
+    "document_context_preservation_rate": 1.0,
+    "failed_cases": [],
+    "follow_up_classification_accuracy": 1.0,
+    "new_issue_detection_accuracy": 1.0,
+    "overall_accuracy": 1.0,
+    "previous_fact_preservation_rate": 1.0,
+    "small_talk_bypass_rate": 1.0,
+    "unrelated_fact_contamination_rate": 0.0
+  },
+  "results": [
+    {
+      "bypass_correct": true,
+      "case_id": "conv_01_tenancy_follow_up",
+      "case_summary": "Delhi tenancy issue where landlord disconnected electricity. Follow-up: What if he says I have not paid rent for two months?",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "follow_up_question",
+      "known_facts": [
+        "User rents a house in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "What if he says I have not paid rent for two months?",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "follow_up_question",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_02_consumer_additional_fact",
+      "case_summary": "Consumer refund dispute for defective phone. Additional fact: I paid by UPI.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "additional_fact",
+      "known_facts": [
+        "Seller refused refund for defective phone.",
+        "I paid by UPI."
+      ],
+      "message": "I paid by UPI.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "additional_fact",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_03_amount_correction",
+      "case_summary": "Payment dispute. Corrected fact: Sorry, it was Rs. 45,000.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "correction",
+      "known_facts": [
+        "Sorry, it was Rs. 45,000."
+      ],
+      "message": "Sorry, it was Rs. 45,000.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "correction",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_04_thanks_bypass",
+      "case_summary": "Delhi tenancy issue.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "acknowledgement",
+      "known_facts": [
+        "Landlord disconnected electricity."
+      ],
+      "message": "thanks",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "acknowledgement",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_05_new_consumer_issue_from_tenancy",
+      "case_summary": "Delhi tenancy issue.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "new_issue",
+      "known_facts": [
+        "Landlord disconnected electricity."
+      ],
+      "message": "My online order was never delivered. What can I do?",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "new_issue",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_06_pronoun_seller_online_report",
+      "case_summary": "Seller took payment and did not deliver product. Follow-up: Can I report him online?",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "follow_up_question",
+      "known_facts": [
+        "Seller took payment.",
+        "Product was not delivered."
+      ],
+      "message": "Can I report him online?",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "follow_up_question",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_07_hacked_account_follow_up",
+      "case_summary": "User's Instagram account was hacked. Follow-up: What if they changed my email too?",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "follow_up_question",
+      "known_facts": [
+        "Instagram account was hacked."
+      ],
+      "message": "What if they changed my email too?",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "follow_up_question",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_08_rti_additional_fact",
+      "case_summary": "RTI application received no reply. Additional fact: The PIO did not respond.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "additional_fact",
+      "known_facts": [
+        "RTI application received no reply.",
+        "The PIO did not respond."
+      ],
+      "message": "The PIO did not respond.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "additional_fact",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_09_hello_bypass",
+      "case_summary": "Consumer refund issue.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "small_talk",
+      "known_facts": [
+        "Seller refused refund."
+      ],
+      "message": "hello",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "small_talk",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_10_date_correction",
+      "case_summary": "Invoice dispute. Corrected fact: Actually it was 15 June 2026.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "correction",
+      "known_facts": [
+        "Actually it was 15 June 2026."
+      ],
+      "message": "Actually it was 15 June 2026.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "correction",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_11_tenancy_additional_fact",
+      "case_summary": "Landlord is threatening tenant. Additional fact: He also said he will cut water.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "additional_fact",
+      "known_facts": [
+        "Landlord is threatening tenant.",
+        "He also said he will cut water."
+      ],
+      "message": "He also said he will cut water.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "additional_fact",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_12_new_rti_issue_from_consumer",
+      "case_summary": "Defective product refund dispute.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "new_issue",
+      "known_facts": [
+        "Seller refused refund."
+      ],
+      "message": "My RTI application also got no reply.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "new_issue",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_13_document_context_preserved",
+      "case_summary": "Rent agreement assisted tenancy issue. Follow-up: Can he still disconnect electricity?",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "follow_up_question",
+      "known_facts": [
+        "Confirmed rent agreement says monthly rent is Rs. 25,000."
+      ],
+      "message": "Can he still disconnect electricity?",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "follow_up_question",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_14_ack_ok",
+      "case_summary": "Cyber account access issue.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "acknowledgement",
+      "known_facts": [
+        "Someone accessed online account without permission."
+      ],
+      "message": "ok",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "acknowledgement",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_15_more_fact_consumer",
+      "case_summary": "Online seller did not deliver product. Additional fact: The seller blocked me after I asked for refund.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "additional_fact",
+      "known_facts": [
+        "Online seller took payment.",
+        "Product not delivered.",
+        "The seller blocked me after I asked for refund."
+      ],
+      "message": "The seller blocked me after I asked for refund.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "additional_fact",
+      "turn_type_correct": true
+    },
+    {
+      "bypass_correct": true,
+      "case_id": "conv_16_unrelated_divorce_from_cyber",
+      "case_summary": "Cyber phishing payment issue.",
+      "correct": true,
+      "document_context_correct": true,
+      "expected_turn_type": "new_issue",
+      "known_facts": [
+        "Phishing link caused payment loss."
+      ],
+      "message": "My wife filed for divorce.",
+      "must_not_preserve_correct": true,
+      "must_preserve_correct": true,
+      "predicted_turn_type": "new_issue",
+      "turn_type_correct": true
+    }
+  ]
+}

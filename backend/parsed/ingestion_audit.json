@@ -1,0 +1,2565 @@
+{
+  "archive_manual_review_safety": [],
+  "audit_summary": {
+    "severity_counts": {
+      "HIGH": 0,
+      "LOW": 3,
+      "MEDIUM": 143
+    },
+    "status": "PASS WITH WARNINGS",
+    "total_chunks_checked": 4388,
+    "unique_chunk_ids": 4388
+  },
+  "child_chunk_issues": [],
+  "duplicate_findings": {
+    "exact_duplicate_group_count": 0,
+    "exact_duplicate_groups": [],
+    "near_duplicate_group_count": 3,
+    "near_duplicate_groups": [
+      {
+        "chunk_ids": [
+          "cyber_bharatiya_nyaya_sanhita_2023__chunk_0086",
+          "cyber_bharatiya_nyaya_sanhita_2023__chunk_0469"
+        ],
+        "count": 2,
+        "snippet": "CHAPTER XI Section 196 — Promoting enmity between different groups on grounds of religion, race, place of birth, 196. Promoting enmity between different groups ",
+        "source_files": [
+          "cyber/bharatiya_nyaya_sanhita_2023.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_bharatiya_nyaya_sanhita_2023__chunk_0217",
+          "cyber_bharatiya_nyaya_sanhita_2023__chunk_0617"
+        ],
+        "count": 2,
+        "snippet": "CHAPTER XVII Section 327 — Mischief with intent to destroy or make unsafe a rail, aircraft, decked vessel or one of 327. Mischief with intent to destroy or make",
+        "source_files": [
+          "cyber/bharatiya_nyaya_sanhita_2023.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_bharatiya_nyaya_sanhita_2023__chunk_0229",
+          "cyber_bharatiya_nyaya_sanhita_2023__chunk_0635"
+        ],
+        "count": 2,
+        "snippet": "CHAPTER XVIII Section 339 — Having possession of document described in section 337 or section 338, knowing it to be 339. Having possession of document described",
+        "source_files": [
+          "cyber/bharatiya_nyaya_sanhita_2023.pdf"
+        ]
+      }
+    ]
+  },
+  "fallback_statistics": {
+    "by_document_ranked": [
+      {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 14,
+        "fallback_percentage": 70.0,
+        "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
+        "structure_aware_chunks": 6,
+        "structure_aware_percentage": 30.0,
+        "total_chunks": 20
+      },
+      {
+        "document_type": "amendment_rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 50.0,
+        "source_file": "consumer/ecommerce_amendment_rules_2021.pdf",
+        "structure_aware_chunks": 1,
+        "structure_aware_percentage": 50.0,
+        "total_chunks": 2
+      },
+      {
+        "document_type": "regulations",
+        "domain": "consumer",
+        "fallback_chunks": 13,
+        "fallback_percentage": 33.33,
+        "source_file": "consumer/consumer_commission_procedure_regulations_2020.pdf",
+        "structure_aware_chunks": 26,
+        "structure_aware_percentage": 66.67,
+        "total_chunks": 39
+      },
+      {
+        "document_type": "rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 16.67,
+        "source_file": "consumer/jurisdiction_rules_2021.pdf",
+        "structure_aware_chunks": 5,
+        "structure_aware_percentage": 83.33,
+        "total_chunks": 6
+      },
+      {
+        "document_type": "rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 12.5,
+        "source_file": "consumer/mediation_rules_2020.pdf",
+        "structure_aware_chunks": 7,
+        "structure_aware_percentage": 87.5,
+        "total_chunks": 8
+      },
+      {
+        "document_type": "guidelines",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 6.67,
+        "source_file": "consumer/dark_patterns_guidelines_2023.pdf",
+        "structure_aware_chunks": 14,
+        "structure_aware_percentage": 93.33,
+        "total_chunks": 15
+      },
+      {
+        "document_type": "rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 6.67,
+        "source_file": "consumer/ecommerce_rules_2020.pdf",
+        "structure_aware_chunks": 14,
+        "structure_aware_percentage": 93.33,
+        "total_chunks": 15
+      },
+      {
+        "document_type": "guidelines",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 5.56,
+        "source_file": "consumer/misleading_ads_guidelines_2022.pdf",
+        "structure_aware_chunks": 17,
+        "structure_aware_percentage": 94.44,
+        "total_chunks": 18
+      },
+      {
+        "document_type": "rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 4.35,
+        "source_file": "consumer/direct_selling_rules_2021.pdf",
+        "structure_aware_chunks": 22,
+        "structure_aware_percentage": 95.65,
+        "total_chunks": 23
+      },
+      {
+        "document_type": "statute",
+        "domain": "constitutional_public_authority",
+        "fallback_chunks": 1,
+        "fallback_percentage": 3.12,
+        "source_file": "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
+        "structure_aware_chunks": 31,
+        "structure_aware_percentage": 96.88,
+        "total_chunks": 32
+      },
+      {
+        "document_type": "rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 2.86,
+        "source_file": "consumer/cdrc_general_rules_2020.pdf",
+        "structure_aware_chunks": 34,
+        "structure_aware_percentage": 97.14,
+        "total_chunks": 35
+      },
+      {
+        "document_type": "statute",
+        "domain": "constitutional_public_authority",
+        "fallback_chunks": 1,
+        "fallback_percentage": 2.22,
+        "source_file": "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
+        "structure_aware_chunks": 44,
+        "structure_aware_percentage": 97.78,
+        "total_chunks": 45
+      },
+      {
+        "document_type": "statute",
+        "domain": "constitutional_public_authority",
+        "fallback_chunks": 1,
+        "fallback_percentage": 2.17,
+        "source_file": "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
+        "structure_aware_chunks": 45,
+        "structure_aware_percentage": 97.83,
+        "total_chunks": 46
+      },
+      {
+        "document_type": "rules",
+        "domain": "tenancy",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.75,
+        "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+        "structure_aware_chunks": 56,
+        "structure_aware_percentage": 98.25,
+        "total_chunks": 57
+      },
+      {
+        "document_type": "rules",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.56,
+        "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+        "structure_aware_chunks": 63,
+        "structure_aware_percentage": 98.44,
+        "total_chunks": 64
+      },
+      {
+        "document_type": "statute",
+        "domain": "constitutional_public_authority",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.28,
+        "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+        "structure_aware_chunks": 77,
+        "structure_aware_percentage": 98.72,
+        "total_chunks": 78
+      },
+      {
+        "document_type": "rules",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.1,
+        "source_file": "cyber/digital_personal_data_protection_rules_2025.pdf",
+        "structure_aware_chunks": 90,
+        "structure_aware_percentage": 98.9,
+        "total_chunks": 91
+      },
+      {
+        "document_type": "statute",
+        "domain": "tenancy",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.04,
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+        "structure_aware_chunks": 95,
+        "structure_aware_percentage": 98.96,
+        "total_chunks": 96
+      },
+      {
+        "document_type": "supporting_document_registration_law",
+        "domain": "tenancy",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.97,
+        "source_file": "tenancy/registration_act_1908.pdf",
+        "structure_aware_chunks": 102,
+        "structure_aware_percentage": 99.03,
+        "total_chunks": 103
+      },
+      {
+        "document_type": "statute",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.83,
+        "source_file": "cyber/information_technology_act_2000.pdf",
+        "structure_aware_chunks": 120,
+        "structure_aware_percentage": 99.17,
+        "total_chunks": 121
+      },
+      {
+        "document_type": "statute",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.74,
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "structure_aware_chunks": 135,
+        "structure_aware_percentage": 99.26,
+        "total_chunks": 136
+      },
+      {
+        "document_type": "supporting_property_law",
+        "domain": "tenancy",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.57,
+        "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+        "structure_aware_chunks": 173,
+        "structure_aware_percentage": 99.43,
+        "total_chunks": 174
+      },
+      {
+        "document_type": "supporting_criminal_law",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.15,
+        "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+        "structure_aware_chunks": 664,
+        "structure_aware_percentage": 99.85,
+        "total_chunks": 665
+      },
+      {
+        "document_type": "supporting_criminal_procedure",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.09,
+        "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+        "structure_aware_chunks": 1127,
+        "structure_aware_percentage": 99.91,
+        "total_chunks": 1128
+      },
+      {
+        "document_type": "constitution",
+        "domain": "constitutional_public_authority",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.07,
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_aware_chunks": 1370,
+        "structure_aware_percentage": 99.93,
+        "total_chunks": 1371
+      }
+    ],
+    "total_fallback_chunks": 50
+  },
+  "header_footer_noise": {
+    "patterns": [
+      {
+        "count": 6,
+        "source_file_count": 6,
+        "source_files": [
+          "consumer/cdrc_general_rules_2020.pdf",
+          "consumer/direct_selling_rules_2021.pdf",
+          "consumer/ecommerce_amendment_rules_2021.pdf",
+          "consumer/ecommerce_rules_2020.pdf",
+          "consumer/jurisdiction_rules_2021.pdf",
+          "consumer/mediation_rules_2020.pdf"
+        ],
+        "text": "MINISTRY OF CONSUMER AFFAIRS, FOOD AND PUBLIC DISTRIBUTION"
+      },
+      {
+        "count": 5,
+        "source_file_count": 5,
+        "source_files": [
+          "consumer/consumer_commission_procedure_regulations_2020.pdf",
+          "consumer/direct_selling_rules_2021.pdf",
+          "consumer/ecommerce_amendment_rules_2021.pdf",
+          "consumer/ecommerce_rules_2020.pdf",
+          "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf"
+        ],
+        "text": "(2) They shall come into force on the date of their publication in the Official Gazette."
+      },
+      {
+        "count": 2,
+        "source_file_count": 2,
+        "source_files": [
+          "consumer/dark_patterns_guidelines_2023.pdf",
+          "consumer/misleading_ads_guidelines_2022.pdf"
+        ],
+        "text": "(2) It shall come into force on the date of its publication in the Official Gazette."
+      },
+      {
+        "count": 2,
+        "source_file_count": 2,
+        "source_files": [
+          "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+          "tenancy/delhi_rent_control_act_1958.pdf"
+        ],
+        "text": "Gazette, appoint."
+      }
+    ],
+    "suspicious_pattern_count": 4
+  },
+  "manifest_inconsistencies": [],
+  "page_range_issues": [
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1065",
+      "line_number": 2934,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1066",
+      "line_number": 2935,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1067",
+      "line_number": 2936,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1068",
+      "line_number": 2937,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1069",
+      "line_number": 2938,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1070",
+      "line_number": 2939,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1071",
+      "line_number": 2940,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1072",
+      "line_number": 2941,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1073",
+      "line_number": 2942,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1074",
+      "line_number": 2943,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1075",
+      "line_number": 2944,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1076",
+      "line_number": 2945,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1077",
+      "line_number": 2946,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1078",
+      "line_number": 2947,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1079",
+      "line_number": 2948,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1080",
+      "line_number": 2949,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1081",
+      "line_number": 2950,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1082",
+      "line_number": 2951,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1083",
+      "line_number": 2952,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1084",
+      "line_number": 2953,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1085",
+      "line_number": 2954,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1086",
+      "line_number": 2955,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1087",
+      "line_number": 2956,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1088",
+      "line_number": 2957,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1089",
+      "line_number": 2958,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1090",
+      "line_number": 2959,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1091",
+      "line_number": 2960,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1092",
+      "line_number": 2961,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1093",
+      "line_number": 2962,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1094",
+      "line_number": 2963,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1095",
+      "line_number": 2964,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1096",
+      "line_number": 2965,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1097",
+      "line_number": 2966,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1098",
+      "line_number": 2967,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1099",
+      "line_number": 2968,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1100",
+      "line_number": 2969,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1101",
+      "line_number": 2970,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1102",
+      "line_number": 2971,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1103",
+      "line_number": 2972,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1104",
+      "line_number": 2973,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1105",
+      "line_number": 2974,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1106",
+      "line_number": 2975,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1107",
+      "line_number": 2976,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1108",
+      "line_number": 2977,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1109",
+      "line_number": 2978,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1110",
+      "line_number": 2979,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1111",
+      "line_number": 2980,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1112",
+      "line_number": 2981,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1113",
+      "line_number": 2982,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1114",
+      "line_number": 2983,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1115",
+      "line_number": 2984,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1116",
+      "line_number": 2985,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1117",
+      "line_number": 2986,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1118",
+      "line_number": 2987,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1119",
+      "line_number": 2988,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1120",
+      "line_number": 2989,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1121",
+      "line_number": 2990,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1122",
+      "line_number": 2991,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    },
+    {
+      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1123",
+      "line_number": 2992,
+      "message": "Chunk spans more than 50 pages",
+      "page_end": 282,
+      "page_start": 222,
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "type": "large_page_range"
+    }
+  ],
+  "per_document_quality_metrics": [
+    {
+      "counts_by_structure_type": {
+        "article": 1321,
+        "fallback": 1,
+        "preamble": 1,
+        "schedule": 48
+      },
+      "document_type": "constitution",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_aware_chunks": 1370,
+      "structure_aware_percentage": 99.93,
+      "total_chunks": 1371
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "section": 31
+      },
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
+      "structure_aware_chunks": 31,
+      "structure_aware_percentage": 96.88,
+      "total_chunks": 32
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "section": 44
+      },
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
+      "structure_aware_chunks": 44,
+      "structure_aware_percentage": 97.78,
+      "total_chunks": 45
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "section": 45
+      },
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
+      "structure_aware_chunks": 45,
+      "structure_aware_percentage": 97.83,
+      "total_chunks": 46
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 2,
+        "section": 75
+      },
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+      "structure_aware_chunks": 77,
+      "structure_aware_percentage": 98.72,
+      "total_chunks": 78
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 32,
+        "schedule": 2
+      },
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/cdrc_general_rules_2020.pdf",
+      "structure_aware_chunks": 34,
+      "structure_aware_percentage": 97.14,
+      "total_chunks": 35
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 13,
+        "regulation": 26
+      },
+      "document_type": "regulations",
+      "domain": "consumer",
+      "fallback_chunks": 13,
+      "source_file": "consumer/consumer_commission_procedure_regulations_2020.pdf",
+      "structure_aware_chunks": 26,
+      "structure_aware_percentage": 66.67,
+      "total_chunks": 39
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "section": 135
+      },
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/consumer_protection_act_2019.pdf",
+      "structure_aware_chunks": 135,
+      "structure_aware_percentage": 99.26,
+      "total_chunks": 136
+    },
+    {
+      "counts_by_structure_type": {
+        "annexure": 7,
+        "fallback": 1,
+        "guideline": 7
+      },
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/dark_patterns_guidelines_2023.pdf",
+      "structure_aware_chunks": 14,
+      "structure_aware_percentage": 93.33,
+      "total_chunks": 15
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 22
+      },
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/direct_selling_rules_2021.pdf",
+      "structure_aware_chunks": 22,
+      "structure_aware_percentage": 95.65,
+      "total_chunks": 23
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 1
+      },
+      "document_type": "amendment_rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/ecommerce_amendment_rules_2021.pdf",
+      "structure_aware_chunks": 1,
+      "structure_aware_percentage": 50.0,
+      "total_chunks": 2
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 13,
+        "schedule": 1
+      },
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/ecommerce_rules_2020.pdf",
+      "structure_aware_chunks": 14,
+      "structure_aware_percentage": 93.33,
+      "total_chunks": 15
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 5
+      },
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/jurisdiction_rules_2021.pdf",
+      "structure_aware_chunks": 5,
+      "structure_aware_percentage": 83.33,
+      "total_chunks": 6
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 7
+      },
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/mediation_rules_2020.pdf",
+      "structure_aware_chunks": 7,
+      "structure_aware_percentage": 87.5,
+      "total_chunks": 8
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "guideline": 17
+      },
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/misleading_ads_guidelines_2022.pdf",
+      "structure_aware_chunks": 17,
+      "structure_aware_percentage": 94.44,
+      "total_chunks": 18
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 116,
+        "section": 1011
+      },
+      "document_type": "supporting_criminal_procedure",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "structure_aware_chunks": 1127,
+      "structure_aware_percentage": 99.91,
+      "total_chunks": 1128
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "section": 664
+      },
+      "document_type": "supporting_criminal_law",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+      "structure_aware_chunks": 664,
+      "structure_aware_percentage": 99.85,
+      "total_chunks": 665
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 80,
+        "schedule": 10
+      },
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/digital_personal_data_protection_rules_2025.pdf",
+      "structure_aware_chunks": 90,
+      "structure_aware_percentage": 98.9,
+      "total_chunks": 91
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 3,
+        "section": 117
+      },
+      "document_type": "statute",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/information_technology_act_2000.pdf",
+      "structure_aware_chunks": 120,
+      "structure_aware_percentage": 99.17,
+      "total_chunks": 121
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 31,
+        "schedule": 32
+      },
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+      "structure_aware_chunks": 63,
+      "structure_aware_percentage": 98.44,
+      "total_chunks": 64
+    },
+    {
+      "counts_by_structure_type": {
+        "annexure": 6,
+        "fallback": 14
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 14,
+      "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
+      "structure_aware_chunks": 6,
+      "structure_aware_percentage": 30.0,
+      "total_chunks": 20
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 2,
+        "section": 93
+      },
+      "document_type": "statute",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+      "structure_aware_chunks": 95,
+      "structure_aware_percentage": 98.96,
+      "total_chunks": 96
+    },
+    {
+      "counts_by_structure_type": {
+        "annexure": 1,
+        "fallback": 1,
+        "rule": 55
+      },
+      "document_type": "rules",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+      "structure_aware_chunks": 56,
+      "structure_aware_percentage": 98.25,
+      "total_chunks": 57
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 2,
+        "section": 100
+      },
+      "document_type": "supporting_document_registration_law",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/registration_act_1908.pdf",
+      "structure_aware_chunks": 102,
+      "structure_aware_percentage": 99.03,
+      "total_chunks": 103
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 6,
+        "section": 167
+      },
+      "document_type": "supporting_property_law",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_aware_chunks": 173,
+      "structure_aware_percentage": 99.43,
+      "total_chunks": 174
+    }
+  ],
+  "provision_metadata_inconsistencies": [],
+  "sequence_anomalies": [
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0024",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0023",
+      "previous_number": "19",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0038",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0036",
+      "previous_number": "30",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0041",
+      "current_number": "7",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0040",
+      "previous_number": "32",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0087",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0086",
+      "previous_number": "77",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0114",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0113",
+      "previous_number": "101",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0142",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0140",
+      "previous_number": "124",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0155",
+      "current_number": "5",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0154",
+      "previous_number": "133",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0166",
+      "current_number": "3",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0165",
+      "previous_number": "143",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0170",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0168",
+      "previous_number": "145",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0181",
+      "current_number": "6",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0180",
+      "previous_number": "154",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0223",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0222",
+      "previous_number": "190",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0252",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0251",
+      "previous_number": "217",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0267",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0266",
+      "previous_number": "231",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0282",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0281",
+      "previous_number": "241",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0366",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0364",
+      "previous_number": "277",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0372",
+      "current_number": "3",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0371",
+      "previous_number": "282",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0376",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0375",
+      "previous_number": "286",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0401",
+      "current_number": "6",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0399",
+      "previous_number": "311",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0435",
+      "current_number": "6",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0431",
+      "previous_number": "332",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0452",
+      "current_number": "7",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0451",
+      "previous_number": "342",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0456",
+      "current_number": "3",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0455",
+      "previous_number": "344",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0479",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0477",
+      "previous_number": "357",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0501",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0499",
+      "previous_number": "367",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0512",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0502",
+      "previous_number": "369",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0525",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0519",
+      "previous_number": "371E",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0528",
+      "current_number": "3",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0527",
+      "previous_number": "372",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0532",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0531",
+      "previous_number": "374",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0538",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0537",
+      "previous_number": "378",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0545",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0542",
+      "previous_number": "395",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0586",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0585",
+      "previous_number": "16",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0625",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0624",
+      "previous_number": "69",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0641",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0640",
+      "previous_number": "415",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0650",
+      "current_number": "6",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0648",
+      "previous_number": "719",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0665",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0663",
+      "previous_number": "21",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0710",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0709",
+      "previous_number": "47",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0756",
+      "current_number": "4",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0755",
+      "previous_number": "97",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0784",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0783",
+      "previous_number": "33",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0805",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0804",
+      "previous_number": "56",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0816",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0815",
+      "previous_number": "66",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0861",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0859",
+      "previous_number": "47",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0892",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0891",
+      "previous_number": "23",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0971",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0970",
+      "previous_number": "107",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0994",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0993",
+      "previous_number": "132",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1066",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1065",
+      "previous_number": "205",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1141",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1140",
+      "previous_number": "279",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1147",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1146",
+      "previous_number": "284",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1186",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1185",
+      "previous_number": "29",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1205",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1204",
+      "previous_number": "18",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1331",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_constitution_of_india__chunk_1330",
+      "previous_number": "107",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_type": "article",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_contempt_of_courts_act_1971__chunk_0031",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_contempt_of_courts_act_1971__chunk_0030",
+      "previous_number": "24",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0060",
+      "current_number": "1",
+      "previous_chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0057",
+      "previous_number": "31",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0075",
+      "current_number": "2",
+      "previous_chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0074",
+      "previous_number": "25",
+      "severity": "MEDIUM",
+      "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "consumer_cdrc_general_rules_2020__chunk_0026",
+      "current_number": "1",
+      "previous_chunk_id": "consumer_cdrc_general_rules_2020__chunk_0024",
+      "previous_number": "18",
+      "severity": "MEDIUM",
+      "source_file": "consumer/cdrc_general_rules_2020.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0398",
+      "current_number": "1",
+      "previous_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0395",
+      "previous_number": "531",
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1124",
+      "current_number": "2",
+      "previous_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1011",
+      "previous_number": "531",
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0249",
+      "current_number": "1",
+      "previous_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0248",
+      "previous_number": "358",
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0660",
+      "current_number": "2",
+      "previous_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0659",
+      "previous_number": "358",
+      "severity": "MEDIUM",
+      "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_digital_personal_data_protection_rules_2025__chunk_0031",
+      "current_number": "1",
+      "previous_chunk_id": "cyber_digital_personal_data_protection_rules_2025__chunk_0029",
+      "previous_number": "23",
+      "severity": "MEDIUM",
+      "source_file": "cyber/digital_personal_data_protection_rules_2025.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_digital_personal_data_protection_rules_2025__chunk_0056",
+      "current_number": "1",
+      "previous_chunk_id": "cyber_digital_personal_data_protection_rules_2025__chunk_0052",
+      "previous_number": "13",
+      "severity": "MEDIUM",
+      "source_file": "cyber/digital_personal_data_protection_rules_2025.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_information_technology_act_2000__chunk_0043",
+      "current_number": "2",
+      "previous_chunk_id": "cyber_information_technology_act_2000__chunk_0042",
+      "previous_number": "36",
+      "severity": "MEDIUM",
+      "source_file": "cyber/information_technology_act_2000.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_information_technology_act_2000__chunk_0108",
+      "current_number": "5",
+      "previous_chunk_id": "cyber_information_technology_act_2000__chunk_0106",
+      "previous_number": "87",
+      "severity": "MEDIUM",
+      "source_file": "cyber/information_technology_act_2000.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_information_technology_act_2000__chunk_0115",
+      "current_number": "2",
+      "previous_chunk_id": "cyber_information_technology_act_2000__chunk_0114",
+      "previous_number": "90",
+      "severity": "MEDIUM",
+      "source_file": "cyber/information_technology_act_2000.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0026",
+      "current_number": "2",
+      "previous_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0025",
+      "previous_number": "14",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0044",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0043",
+      "previous_number": "22",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0050",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0049",
+      "previous_number": "25B",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0057",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0056",
+      "previous_number": "27",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0091",
+      "current_number": "2",
+      "previous_chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0090",
+      "previous_number": "57",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0033",
+      "current_number": "2",
+      "previous_chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0026",
+      "previous_number": "24",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_registration_act_1908__chunk_0020",
+      "current_number": "4",
+      "previous_chunk_id": "tenancy_registration_act_1908__chunk_0019",
+      "previous_number": "16",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/registration_act_1908.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_registration_act_1908__chunk_0026",
+      "current_number": "5",
+      "previous_chunk_id": "tenancy_registration_act_1908__chunk_0025",
+      "previous_number": "18",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/registration_act_1908.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_registration_act_1908__chunk_0043",
+      "current_number": "4",
+      "previous_chunk_id": "tenancy_registration_act_1908__chunk_0042",
+      "previous_number": "33",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/registration_act_1908.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_registration_act_1908__chunk_0062",
+      "current_number": "2",
+      "previous_chunk_id": "tenancy_registration_act_1908__chunk_0061",
+      "previous_number": "50",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/registration_act_1908.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_registration_act_1908__chunk_0103",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_registration_act_1908__chunk_0101",
+      "previous_number": "91",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/registration_act_1908.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0059",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0058",
+      "previous_number": "44",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0079",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0075",
+      "previous_number": "57",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0082",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0081",
+      "previous_number": "60",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0095",
+      "current_number": "1",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0094",
+      "previous_number": "67",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0098",
+      "current_number": "4",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0097",
+      "previous_number": "69",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0112",
+      "current_number": "3",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0111",
+      "previous_number": "72",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0122",
+      "current_number": "2",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0121",
+      "previous_number": "83",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0126",
+      "current_number": "3",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0124",
+      "previous_number": "84",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0134",
+      "current_number": "2",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0133",
+      "previous_number": "100",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0167",
+      "current_number": "6",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0165",
+      "previous_number": "130",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    }
+  ],
+  "suspicious_large_chunks": {
+    "high_priority_over_15000": [],
+    "high_priority_over_15000_count": 0,
+    "review_over_8000": [],
+    "review_over_8000_count": 0,
+    "top_20_largest": [
+      {
+        "char_count": 2158,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0603",
+        "provision_number": "9",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2158,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0604",
+        "provision_number": "9",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2143,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0617",
+        "provision_number": "3",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2132,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0643",
+        "provision_number": "4",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2126,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0528",
+        "provision_number": "3",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2116,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0504",
+        "provision_number": "369",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2116,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0508",
+        "provision_number": "369",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2116,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0509",
+        "provision_number": "369",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2115,
+        "chunk_id": "consumer_consumer_protection_act_2019__chunk_0037",
+        "provision_number": "21",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 2113,
+        "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0469",
+        "provision_number": "196",
+        "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 2110,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0440",
+        "provision_number": "337",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2110,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0444",
+        "provision_number": "337",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2110,
+        "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0322",
+        "provision_number": "62",
+        "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 2108,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0446",
+        "provision_number": "337",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2107,
+        "chunk_id": "consumer_cdrc_general_rules_2020__chunk_0019",
+        "provision_number": "14",
+        "source_file": "consumer/cdrc_general_rules_2020.pdf",
+        "structure_type": "rule"
+      },
+      {
+        "char_count": 2106,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0619",
+        "provision_number": "5",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 2106,
+        "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0438",
+        "provision_number": "34",
+        "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 2106,
+        "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0529",
+        "provision_number": "253",
+        "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 2106,
+        "chunk_id": "cyber_information_technology_act_2000__chunk_0084",
+        "provision_number": "70B",
+        "source_file": "cyber/information_technology_act_2000.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 2105,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0432",
+        "provision_number": "332",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      }
+    ]
+  },
+  "suspicious_short_chunks": {
+    "counts_by_source": {
+      "constitutional_public_authority/constitution_of_india.pdf": 171,
+      "constitutional_public_authority/right_to_information_act_2005.pdf": 9,
+      "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf": 118,
+      "cyber/bharatiya_nyaya_sanhita_2023.pdf": 59,
+      "cyber/digital_personal_data_protection_rules_2025.pdf": 3,
+      "tenancy/delhi_rent_control_act_1958.pdf": 1,
+      "tenancy/delhi_rent_control_rules_1959.pdf": 9,
+      "tenancy/registration_act_1908.pdf": 2,
+      "tenancy/transfer_of_property_act_1882.pdf": 4
+    },
+    "review_40_to_100_count": 367,
+    "review_samples": [
+      {
+        "char_count": 53,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0193",
+        "snippet": "PART VI Schedule. The Advocate -General for the State",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "schedule"
+      },
+      {
+        "char_count": 80,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0650",
+        "snippet": "PART D Article 6 — Paragraph 18 omitted by ibid 6. Paragraph 18 omitted by ibid.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 70,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0654",
+        "snippet": "PART II Article 2 — Jaintia Hills District 2. Jaintia Hills District.]",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 56,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0664",
+        "snippet": "PART II SEVENTH SCHEDULE (Article 246) List I—Union List",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "schedule"
+      },
+      {
+        "char_count": 95,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0668",
+        "snippet": "PART II Article 4 — Naval, military and air force works 4. Naval, military and air force works.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 81,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0676",
+        "snippet": "PART II Article 12 — United Nations Organisation 12. United Nations Organisation.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 53,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0679",
+        "snippet": "PART II Article 15 — War and peace 15. War and peace.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 67,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0680",
+        "snippet": "PART II Article 16 — Foreign jurisdiction 16. Foreign jurisdiction.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 49,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0682",
+        "snippet": "PART II Article 18 — Extradition 18. Extradition.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 97,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0684",
+        "snippet": "PART II Article 20 — Pilgrimages to places outside India 20. Pilgrimages to places outside India.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 75,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0697",
+        "snippet": "PART II Article 35 — Public debt of the Union 35. Public debt of the Union.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 53,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0699",
+        "snippet": "PART II Article 37 — Foreign loans 37. Foreign loans.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 69,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0700",
+        "snippet": "PART II Article 38 — Reserve Bank of India 38. Reserve Bank of India.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 75,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0701",
+        "snippet": "PART II Article 39 — Post Office Savings Bank 39. Post Office Savings Bank.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 87,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0704",
+        "snippet": "PART II Article 42 — Inter-State trade and commerce 42. Inter-State trade and commerce.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 41,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0707",
+        "snippet": "PART II Article 45 — Banking 45. Banking.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 81,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0710",
+        "snippet": "PART II Article 2 — Entry 33 omitted by s 2. Entry 33 omitted by s. 26, ibid. 214",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 97,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0711",
+        "snippet": "PART II Article 48 — Stock exchanges and futures markets 48. Stock exchanges and futures markets.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 57,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0744",
+        "snippet": "PART II Article 85 — Corporation tax 85. Corporation tax.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 45,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0773",
+        "snippet": "PART II Article 21 — Fisheries 21. Fisheries.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 61,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0776",
+        "snippet": "PART II Article 25 — Gas and gas-works 25. Gas and gas-works.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 74,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0779",
+        "snippet": "PART II Article 28 — Markets and fairs 28. Markets and fairs. 329* * * * *",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 67,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0781",
+        "snippet": "PART II Article 31 — Inns and inn-keepers 31. Inns and inn-keepers.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 67,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0786",
+        "snippet": "PART II Article 34 — Betting and gambling 34. Betting and gambling.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 75,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0794",
+        "snippet": "PART II Article 43 — Public debt of the State 43. Public debt of the State.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 55,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0795",
+        "snippet": "PART II Article 44 — Treasure trove 44. Treasure trove.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 83,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0797",
+        "snippet": "PART II Article 46 — Taxes on agricultural income 46. Taxes on agricultural income.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 83,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0800",
+        "snippet": "PART II Article 49 — Taxes on lands and buildings 49. Taxes on lands and buildings.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 79,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0808",
+        "snippet": "PART II Article 58 — Taxes on animals and boats 58. Taxes on animals and boats.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 59,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0823",
+        "snippet": "PART II Article 8 — Actionable wrongs 8. Actionable wrongs.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      }
+    ],
+    "very_suspicious_samples": [
+      {
+        "char_count": 23,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0220",
+        "snippet": "PART VI Third Schedule.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "schedule"
+      },
+      {
+        "char_count": 19,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0311",
+        "snippet": "PART VIII Schedule.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "schedule"
+      },
+      {
+        "char_count": 39,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0731",
+        "snippet": "PART II Article 69 — Census 69. Census.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 37,
+        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0809",
+        "snippet": "PART II Article 59 — Tolls 59. Tolls.",
+        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+        "structure_type": "article"
+      },
+      {
+        "char_count": 32,
+        "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0396",
+        "snippet": "CHAPTER XXXIX THE FIRST SCHEDULE",
+        "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+        "structure_type": "schedule"
+      },
+      {
+        "char_count": 31,
+        "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0018",
+        "snippet": "Section 128 — Force 128. Force.",
+        "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 35,
+        "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0020",
+        "snippet": "Section 130 — Assault 130. Assault.",
+        "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 39,
+        "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0028",
+        "snippet": "Section 138 — Abduction 138. Abduction.",
+        "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+        "structure_type": "section"
+      },
+      {
+        "char_count": 35,
+        "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0056",
+        "snippet": "Annexure to this Form may be used).",
+        "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+        "structure_type": "annexure"
+      }
+    ],
+    "very_suspicious_under_40_count": 9
+  },
+  "validation_failures": []
+}

@@ -1,0 +1,324 @@
+{
+  "single_domain_queries": [
+    {
+      "id": "consumer_01",
+      "query": "seller refund nahi de raha",
+      "expected_status": "classified",
+      "expected_domains": ["consumer"],
+      "expected_primary_domain": "consumer"
+    },
+    {
+      "id": "consumer_02",
+      "query": "defective product replace nahi hua",
+      "expected_status": "classified",
+      "expected_domains": ["consumer"],
+      "expected_primary_domain": "consumer"
+    },
+    {
+      "id": "consumer_03",
+      "query": "online order damaged nikla aur company help nahi kar rahi",
+      "expected_status": "classified",
+      "expected_domains": ["consumer"],
+      "expected_primary_domain": "consumer"
+    },
+    {
+      "id": "consumer_04",
+      "query": "misleading advertisement dekh kar product kharida aur loss ho gaya",
+      "expected_status": "classified",
+      "expected_domains": ["consumer"],
+      "expected_primary_domain": "consumer"
+    },
+    {
+      "id": "consumer_05",
+      "query": "app ne dark pattern se mujhe subscription mein phasa diya",
+      "expected_status": "classified",
+      "expected_domains": ["consumer"],
+      "expected_primary_domain": "consumer"
+    },
+    {
+      "id": "consumer_06",
+      "query": "direct selling company refund deny kar rahi hai",
+      "expected_status": "classified",
+      "expected_domains": ["consumer"],
+      "expected_primary_domain": "consumer"
+    },
+    {
+      "id": "consumer_07",
+      "query": "where can I file a consumer complaint against an ecommerce seller",
+      "expected_status": "classified",
+      "expected_domains": ["consumer"],
+      "expected_primary_domain": "consumer"
+    },
+    {
+      "id": "cyber_01",
+      "query": "mera Instagram hack ho gaya",
+      "expected_status": "classified",
+      "expected_domains": ["cyber"],
+      "expected_primary_domain": "cyber"
+    },
+    {
+      "id": "cyber_02",
+      "query": "phishing link se paise chale gaye",
+      "expected_status": "classified",
+      "expected_domains": ["cyber"],
+      "expected_primary_domain": "cyber"
+    },
+    {
+      "id": "cyber_03",
+      "query": "someone used my personal details for identity theft",
+      "expected_status": "classified",
+      "expected_domains": ["cyber"],
+      "expected_primary_domain": "cyber"
+    },
+    {
+      "id": "cyber_04",
+      "query": "UPI fraud ho gaya aur bank transaction unauthorized hai",
+      "expected_status": "classified",
+      "expected_domains": ["cyber"],
+      "expected_primary_domain": "cyber"
+    },
+    {
+      "id": "cyber_05",
+      "query": "social media par meri private information share kar di",
+      "expected_status": "classified",
+      "expected_domains": ["cyber"],
+      "expected_primary_domain": "cyber"
+    },
+    {
+      "id": "cyber_06",
+      "query": "intermediary unlawful content remove nahi kar raha",
+      "expected_status": "classified",
+      "expected_domains": ["cyber"],
+      "expected_primary_domain": "cyber"
+    },
+    {
+      "id": "cyber_07",
+      "query": "how do I report cybercrime online",
+      "expected_status": "classified",
+      "expected_domains": ["cyber"],
+      "expected_primary_domain": "cyber"
+    },
+    {
+      "id": "tenancy_01",
+      "query": "landlord electricity cut kar raha hai",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy"],
+      "expected_primary_domain": "tenancy"
+    },
+    {
+      "id": "tenancy_02",
+      "query": "security deposit return nahi kar raha landlord",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy"],
+      "expected_primary_domain": "tenancy"
+    },
+    {
+      "id": "tenancy_03",
+      "query": "Delhi mein landlord bina notice eviction bol raha hai",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy"],
+      "expected_primary_domain": "tenancy"
+    },
+    {
+      "id": "tenancy_04",
+      "query": "tenant rent pay nahi kar raha",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy"],
+      "expected_primary_domain": "tenancy"
+    },
+    {
+      "id": "tenancy_05",
+      "query": "rent agreement dispute hai",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy"],
+      "expected_primary_domain": "tenancy"
+    },
+    {
+      "id": "tenancy_06",
+      "query": "landlord suddenly rent badha raha hai",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy"],
+      "expected_primary_domain": "tenancy"
+    },
+    {
+      "id": "tenancy_07",
+      "query": "essential supply stopped by landlord in Delhi",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy"],
+      "expected_primary_domain": "tenancy"
+    },
+    {
+      "id": "public_01",
+      "query": "RTI ka reply nahi mila",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_domain": "constitutional_public_authority"
+    },
+    {
+      "id": "public_02",
+      "query": "mujhe free legal aid chahiye",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_domain": "constitutional_public_authority"
+    },
+    {
+      "id": "public_03",
+      "query": "government authority ne discriminate kiya",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_domain": "constitutional_public_authority"
+    },
+    {
+      "id": "public_04",
+      "query": "right to equality violation by government office",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_domain": "constitutional_public_authority"
+    },
+    {
+      "id": "public_05",
+      "query": "public authority information dene se mana kar rahi hai",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_domain": "constitutional_public_authority"
+    },
+    {
+      "id": "public_06",
+      "query": "human rights complaint against public authority",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_domain": "constitutional_public_authority"
+    },
+    {
+      "id": "public_07",
+      "query": "court order deliberately disobeyed hai",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_domain": "constitutional_public_authority"
+    }
+  ],
+  "multi_domain_queries": [
+    {
+      "id": "multi_01",
+      "query": "Instagram seller ne paise liye aur block kar diya",
+      "expected_status": "classified",
+      "expected_domains": ["consumer", "cyber"]
+    },
+    {
+      "id": "multi_02",
+      "query": "landlord online threats de raha hai aur electricity bhi cut ki",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy", "cyber"]
+    },
+    {
+      "id": "multi_03",
+      "query": "public authority leaked my personal information online",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority", "cyber"]
+    },
+    {
+      "id": "multi_04",
+      "query": "online marketplace account hacked and seller refuses refund",
+      "expected_status": "classified",
+      "expected_domains": ["consumer", "cyber"]
+    },
+    {
+      "id": "multi_05",
+      "query": "landlord ne WhatsApp par dhamki di aur deposit bhi nahi diya",
+      "expected_status": "classified",
+      "expected_domains": ["tenancy", "cyber"]
+    },
+    {
+      "id": "multi_06",
+      "query": "government website ne RTI data leak kar diya",
+      "expected_status": "classified",
+      "expected_domains": ["constitutional_public_authority", "cyber"]
+    }
+  ],
+  "unclear_queries": [
+    {
+      "id": "unclear_01",
+      "query": "mere paise fas gaye",
+      "expected_status": "unclear"
+    },
+    {
+      "id": "unclear_02",
+      "query": "mujhe notice mila hai",
+      "expected_status": "unclear"
+    },
+    {
+      "id": "unclear_03",
+      "query": "mere saath galat hua",
+      "expected_status": "unclear"
+    },
+    {
+      "id": "unclear_04",
+      "query": "someone is troubling me",
+      "expected_status": "unclear"
+    },
+    {
+      "id": "unclear_05",
+      "query": "complaint karni hai",
+      "expected_status": "unclear"
+    },
+    {
+      "id": "unclear_06",
+      "query": "legal notice samajh nahi aa raha",
+      "expected_status": "unclear"
+    }
+  ],
+  "unsupported_queries": [
+    {
+      "id": "unsupported_01",
+      "query": "mujhe divorce chahiye",
+      "expected_status": "unsupported"
+    },
+    {
+      "id": "unsupported_02",
+      "query": "bail kaise milegi",
+      "expected_status": "unsupported"
+    },
+    {
+      "id": "unsupported_03",
+      "query": "inheritance dispute hai",
+      "expected_status": "unsupported"
+    },
+    {
+      "id": "unsupported_04",
+      "query": "income tax notice ka reply kaise doon",
+      "expected_status": "unsupported"
+    },
+    {
+      "id": "unsupported_05",
+      "query": "child custody case mein kya karna hai",
+      "expected_status": "unsupported"
+    },
+    {
+      "id": "unsupported_06",
+      "query": "company shareholder dispute hai",
+      "expected_status": "unsupported"
+    }
+  ],
+  "out_of_scope_queries": [
+    {
+      "id": "out_01",
+      "query": "weather tomorrow",
+      "expected_status": "out_of_scope"
+    },
+    {
+      "id": "out_02",
+      "query": "Python code likho",
+      "expected_status": "out_of_scope"
+    },
+    {
+      "id": "out_03",
+      "query": "best pizza recipe batao",
+      "expected_status": "out_of_scope"
+    },
+    {
+      "id": "out_04",
+      "query": "today cricket score kya hai",
+      "expected_status": "out_of_scope"
+    }
+  ]
+}

@@ -1,0 +1,384 @@
+{
+  "all_provision_labelled_queries": [
+    {
+      "expected_domain": [
+        "consumer"
+      ],
+      "expected_primary_documents": [
+        "The Consumer Protection Act, 2019",
+        "The Consumer Protection (E-Commerce) Rules, 2020"
+      ],
+      "expected_primary_sources": [
+        "consumer/consumer_protection_act_2019.pdf",
+        "consumer/ecommerce_rules_2020.pdf"
+      ],
+      "expected_provision_numbers": [
+        "39",
+        "83",
+        "86"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 2
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 2
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "online seller refusing refund",
+      "query_id": "consumer_01"
+    },
+    {
+      "expected_domain": [
+        "consumer"
+      ],
+      "expected_primary_documents": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "expected_primary_sources": [
+        "consumer/consumer_protection_act_2019.pdf"
+      ],
+      "expected_provision_numbers": [
+        "39",
+        "83",
+        "86"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 2
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 2
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "defective product and seller not replacing it",
+      "query_id": "consumer_02"
+    },
+    {
+      "expected_domain": [
+        "consumer"
+      ],
+      "expected_primary_documents": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "expected_primary_sources": [
+        "consumer/consumer_protection_act_2019.pdf"
+      ],
+      "expected_provision_numbers": [
+        "69"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "limitation period for consumer complaint",
+      "query_id": "consumer_08"
+    },
+    {
+      "expected_domain": [
+        "consumer"
+      ],
+      "expected_primary_documents": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "expected_primary_sources": [
+        "consumer/consumer_protection_act_2019.pdf"
+      ],
+      "expected_provision_numbers": [
+        "39"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "can consumer commission order repair or replacement",
+      "query_id": "consumer_09"
+    },
+    {
+      "expected_domain": [
+        "cyber"
+      ],
+      "expected_primary_documents": [
+        "The Information Technology Act, 2000"
+      ],
+      "expected_primary_sources": [
+        "cyber/information_technology_act_2000.pdf"
+      ],
+      "expected_provision_numbers": [
+        "43",
+        "66"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": false,
+        "raw_rank": null
+      },
+      "part_7b_hit_at_5": false,
+      "part_7b_provision_rank": null,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": false,
+        "raw_rank": null
+      },
+      "part_7c_hit_at_5": false,
+      "part_7c_provision_rank": null,
+      "query": "unauthorized access to computer account",
+      "query_id": "cyber_08"
+    },
+    {
+      "expected_domain": [
+        "tenancy"
+      ],
+      "expected_primary_documents": [
+        "The Delhi Rent Control Act, 1958"
+      ],
+      "expected_primary_sources": [
+        "tenancy/delhi_rent_control_act_1958.pdf"
+      ],
+      "expected_provision_numbers": [
+        "45"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 3
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 2,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 3
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 2,
+      "query": "landlord cut electricity",
+      "query_id": "tenancy_01"
+    },
+    {
+      "expected_domain": [
+        "tenancy"
+      ],
+      "expected_primary_documents": [
+        "The Delhi Rent Control Act, 1958"
+      ],
+      "expected_primary_sources": [
+        "tenancy/delhi_rent_control_act_1958.pdf"
+      ],
+      "expected_provision_numbers": [
+        "14"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "landlord wants to evict me without proper process",
+      "query_id": "tenancy_02"
+    },
+    {
+      "expected_domain": [
+        "tenancy"
+      ],
+      "expected_primary_documents": [
+        "The Delhi Rent Control Act, 1958"
+      ],
+      "expected_primary_sources": [
+        "tenancy/delhi_rent_control_act_1958.pdf"
+      ],
+      "expected_provision_numbers": [
+        "45"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "essential supply stopped by landlord",
+      "query_id": "tenancy_05"
+    },
+    {
+      "expected_domain": [
+        "constitutional_public_authority"
+      ],
+      "expected_primary_documents": [
+        "The Constitution of India"
+      ],
+      "expected_primary_sources": [
+        "constitutional_public_authority/constitution_of_india.pdf"
+      ],
+      "expected_provision_numbers": [
+        "14"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "right to equality",
+      "query_id": "constitutional_01"
+    },
+    {
+      "expected_domain": [
+        "constitutional_public_authority"
+      ],
+      "expected_primary_documents": [
+        "The Constitution of India"
+      ],
+      "expected_primary_sources": [
+        "constitutional_public_authority/constitution_of_india.pdf"
+      ],
+      "expected_provision_numbers": [
+        "19"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "freedom of speech restriction",
+      "query_id": "constitutional_03"
+    },
+    {
+      "expected_domain": [
+        "constitutional_public_authority"
+      ],
+      "expected_primary_documents": [
+        "The Constitution of India"
+      ],
+      "expected_primary_sources": [
+        "constitutional_public_authority/constitution_of_india.pdf"
+      ],
+      "expected_provision_numbers": [
+        "21"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7b_hit_at_5": true,
+      "part_7b_provision_rank": 1,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": true,
+        "raw_rank": 1
+      },
+      "part_7c_hit_at_5": true,
+      "part_7c_provision_rank": 1,
+      "query": "right to life and personal liberty",
+      "query_id": "constitutional_04"
+    }
+  ],
+  "new_regressions": [],
+  "part_7b_metrics": {
+    "average_off_domain_top5_count": 0.083,
+    "document_hit_at_1": 0.861,
+    "document_hit_at_3": 0.917,
+    "document_hit_at_5": 0.917,
+    "domain_hit_at_1": 1.0,
+    "domain_hit_at_3": 1.0,
+    "mrr": 0.887,
+    "provision_hit_at_5": 0.909,
+    "provision_query_count": 11,
+    "query_count": 36
+  },
+  "part_7c_metrics": {
+    "average_off_domain_top5_count": 0.028,
+    "document_hit_at_1": 0.917,
+    "document_hit_at_3": 0.972,
+    "document_hit_at_5": 0.972,
+    "domain_hit_at_1": 1.0,
+    "domain_hit_at_3": 1.0,
+    "mrr": 0.943,
+    "provision_hit_at_5": 0.909,
+    "provision_query_count": 11,
+    "query_count": 36
+  },
+  "pre_existing_provision_misses": [
+    {
+      "expected_domain": [
+        "cyber"
+      ],
+      "expected_primary_documents": [
+        "The Information Technology Act, 2000"
+      ],
+      "expected_primary_sources": [
+        "cyber/information_technology_act_2000.pdf"
+      ],
+      "expected_provision_numbers": [
+        "43",
+        "66"
+      ],
+      "part_7b_candidate_presence": {
+        "present_in_raw_top10": false,
+        "raw_rank": null
+      },
+      "part_7b_hit_at_5": false,
+      "part_7b_provision_rank": null,
+      "part_7c_candidate_presence": {
+        "present_in_raw_top10": false,
+        "raw_rank": null
+      },
+      "part_7c_hit_at_5": false,
+      "part_7c_provision_rank": null,
+      "query": "unauthorized access to computer account",
+      "query_id": "cyber_08"
+    }
+  ],
+  "recommendation": "The Part 7C provision regression has been removed by a narrow public-authority query-expansion fix. One pre-existing cyber provision miss remains because the expected IT Act provisions are absent from the raw Top 10 candidate pool. Do not broadly retune retrieval for that in Part 7D; handle it later with focused cyber provision evaluation if needed.",
+  "summary": {
+    "new_regression_count": 0,
+    "part_7b_hit_count": 10,
+    "part_7c_hit_count": 10,
+    "pre_existing_miss_count": 1,
+    "production_code_changed_by_this_diagnosis": true,
+    "provision_labelled_query_count": 11
+  }
+}

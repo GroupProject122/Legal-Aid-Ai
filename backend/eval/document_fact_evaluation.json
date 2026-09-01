@@ -1,0 +1,567 @@
+{
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/document_fact_cases.json",
+    "gemini_model": "gemini-flash-lite-latest",
+    "gemini_used": true
+  },
+  "failures": [
+    {
+      "actual_document_type": "complaint",
+      "confirmation_required": true,
+      "document_type_correct": false,
+      "expected_document_type": "other",
+      "expected_uncertain": [],
+      "expected_values": [
+        "email account",
+        "6 June 2026",
+        "unknown device"
+      ],
+      "fact_count": 6,
+      "forbidden_leaks": [],
+      "found_values": [
+        "email account",
+        "6 June 2026",
+        "unknown device"
+      ],
+      "gemini_latency_ms": 2765,
+      "hallucinated_forbidden": false,
+      "id": "other_identity_misuse",
+      "key_recall": 1.0,
+      "latency_ms": 2766,
+      "missing_values": [],
+      "provenance_count": 6,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    }
+  ],
+  "metrics": {
+    "average_gemini_latency_ms": 2638,
+    "average_latency_ms": 2638.2,
+    "case_count": 15,
+    "confirmation_required_rate": 1.0,
+    "document_type_accuracy": 0.933,
+    "gemini_calls": 15,
+    "gemini_failures": 0,
+    "hallucinated_fact_rate": 0.0,
+    "key_fact_precision": 1.0,
+    "key_fact_recall": 1.0,
+    "provenance_presence_rate": 1.0,
+    "sensitive_data_leakage_rate": 0.0,
+    "structured_output_success_rate": 1.0,
+    "uncertainty_handling_accuracy": 1.0
+  },
+  "results": [
+    {
+      "actual_document_type": "rent_agreement",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "rent_agreement",
+      "expected_uncertain": [],
+      "expected_values": [
+        "Ramesh Kumar",
+        "Priya Sharma",
+        "Rs. 25,000",
+        "Rs. 50,000",
+        "1 January 2026",
+        "two months notice"
+      ],
+      "fact_count": 6,
+      "forbidden_leaks": [],
+      "found_values": [
+        "Ramesh Kumar",
+        "Priya Sharma",
+        "Rs. 25,000",
+        "Rs. 50,000",
+        "1 January 2026",
+        "two months notice"
+      ],
+      "gemini_latency_ms": 2880,
+      "hallucinated_forbidden": false,
+      "id": "rent_agreement_basic",
+      "key_recall": 1.0,
+      "latency_ms": 2880,
+      "missing_values": [],
+      "provenance_count": 6,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "invoice_or_receipt",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "invoice_or_receipt",
+      "expected_uncertain": [],
+      "expected_values": [
+        "INV-44",
+        "ABC Mobiles",
+        "Neha Jain",
+        "12 June 2026",
+        "Rs. 18,999",
+        "OD12345"
+      ],
+      "fact_count": 7,
+      "forbidden_leaks": [],
+      "found_values": [
+        "INV-44",
+        "ABC Mobiles",
+        "Neha Jain",
+        "12 June 2026",
+        "Rs. 18,999",
+        "OD12345"
+      ],
+      "gemini_latency_ms": 2560,
+      "hallucinated_forbidden": false,
+      "id": "invoice_phone",
+      "key_recall": 1.0,
+      "latency_ms": 2560,
+      "missing_values": [],
+      "provenance_count": 7,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "invoice_or_receipt",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "invoice_or_receipt",
+      "expected_uncertain": [],
+      "expected_values": [
+        "OR-7788",
+        "2 March 2026",
+        "Rs. 4,500"
+      ],
+      "fact_count": 4,
+      "forbidden_leaks": [],
+      "found_values": [
+        "OR-7788",
+        "2 March 2026",
+        "Rs. 4,500"
+      ],
+      "gemini_latency_ms": 2666,
+      "hallucinated_forbidden": false,
+      "id": "refund_receipt",
+      "key_recall": 1.0,
+      "latency_ms": 2666,
+      "missing_values": [],
+      "provenance_count": 4,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "legal_notice",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "legal_notice",
+      "expected_uncertain": [],
+      "expected_values": [
+        "5 May 2026",
+        "Anita Rao",
+        "QuickShop Pvt Ltd",
+        "damaged mixer grinder",
+        "Rs. 3,200",
+        "7 days"
+      ],
+      "fact_count": 7,
+      "forbidden_leaks": [],
+      "found_values": [
+        "5 May 2026",
+        "Anita Rao",
+        "QuickShop Pvt Ltd",
+        "damaged mixer grinder",
+        "Rs. 3,200",
+        "7 days"
+      ],
+      "gemini_latency_ms": 2765,
+      "hallucinated_forbidden": false,
+      "id": "legal_notice_consumer",
+      "key_recall": 1.0,
+      "latency_ms": 2765,
+      "missing_values": [],
+      "provenance_count": 7,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "complaint",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "complaint",
+      "expected_uncertain": [],
+      "expected_values": [
+        "Ritu Sen",
+        "HomeAppliance Store",
+        "refrigerator stopped working",
+        "Rs. 31,000",
+        "CC-9001"
+      ],
+      "fact_count": 5,
+      "forbidden_leaks": [],
+      "found_values": [
+        "Ritu Sen",
+        "HomeAppliance Store",
+        "refrigerator stopped working",
+        "Rs. 31,000",
+        "CC-9001"
+      ],
+      "gemini_latency_ms": 2838,
+      "hallucinated_forbidden": false,
+      "id": "complaint_copy",
+      "key_recall": 1.0,
+      "latency_ms": 2838,
+      "missing_values": [],
+      "provenance_count": 5,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "transaction_record",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "transaction_record",
+      "expected_uncertain": [],
+      "expected_values": [
+        "InstaSeller99",
+        "Rs. 10,000",
+        "UPI998877",
+        "18 July 2026",
+        "Success"
+      ],
+      "fact_count": 6,
+      "forbidden_leaks": [],
+      "found_values": [
+        "InstaSeller99",
+        "Rs. 10,000",
+        "UPI998877",
+        "18 July 2026",
+        "Success"
+      ],
+      "gemini_latency_ms": 2897,
+      "hallucinated_forbidden": false,
+      "id": "transaction_record",
+      "key_recall": 1.0,
+      "latency_ms": 2897,
+      "missing_values": [],
+      "provenance_count": 6,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "correspondence",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "correspondence",
+      "expected_uncertain": [],
+      "expected_values": [
+        "damaged",
+        "14 April 2026",
+        "replacement",
+        "15 April 2026",
+        "Kavya"
+      ],
+      "fact_count": 7,
+      "forbidden_leaks": [],
+      "found_values": [
+        "damaged",
+        "14 April 2026",
+        "replacement",
+        "15 April 2026",
+        "Kavya"
+      ],
+      "gemini_latency_ms": 2967,
+      "hallucinated_forbidden": false,
+      "id": "email_correspondence",
+      "key_recall": 1.0,
+      "latency_ms": 2967,
+      "missing_values": [],
+      "provenance_count": 7,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "unknown",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "unknown",
+      "expected_uncertain": [
+        "role"
+      ],
+      "expected_values": [
+        "Ramesh",
+        "Sita",
+        "Rs. 12,000"
+      ],
+      "fact_count": 7,
+      "forbidden_leaks": [],
+      "found_values": [
+        "Ramesh",
+        "Sita",
+        "Rs. 12,000"
+      ],
+      "gemini_latency_ms": 3173,
+      "hallucinated_forbidden": false,
+      "id": "ambiguous_party_role",
+      "key_recall": 1.0,
+      "latency_ms": 3173,
+      "missing_values": [],
+      "provenance_count": 7,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [
+        "role"
+      ],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "rent_agreement",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "rent_agreement",
+      "expected_uncertain": [],
+      "expected_values": [
+        "Rs. 20,000"
+      ],
+      "fact_count": 4,
+      "forbidden_leaks": [],
+      "found_values": [
+        "Rs. 20,000"
+      ],
+      "gemini_latency_ms": 2250,
+      "hallucinated_forbidden": false,
+      "id": "repeated_amount",
+      "key_recall": 1.0,
+      "latency_ms": 2250,
+      "missing_values": [],
+      "provenance_count": 4,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "transaction_record",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "transaction_record",
+      "expected_uncertain": [],
+      "expected_values": [
+        "Rs. 2,000"
+      ],
+      "fact_count": 4,
+      "forbidden_leaks": [],
+      "found_values": [
+        "Rs. 2,000"
+      ],
+      "gemini_latency_ms": 2663,
+      "hallucinated_forbidden": false,
+      "id": "sensitive_credentials",
+      "key_recall": 1.0,
+      "latency_ms": 2664,
+      "missing_values": [],
+      "provenance_count": 4,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "legal_notice",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "legal_notice",
+      "expected_uncertain": [],
+      "expected_values": [
+        "9 August 2026",
+        "Mohan",
+        "Asha",
+        "Rs. 45,000",
+        "three months"
+      ],
+      "fact_count": 7,
+      "forbidden_leaks": [],
+      "found_values": [
+        "9 August 2026",
+        "Mohan",
+        "Asha",
+        "Rs. 45,000",
+        "three months"
+      ],
+      "gemini_latency_ms": 2688,
+      "hallucinated_forbidden": false,
+      "id": "legal_notice_tenancy",
+      "key_recall": 1.0,
+      "latency_ms": 2688,
+      "missing_values": [],
+      "provenance_count": 7,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "unknown",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "unknown",
+      "expected_uncertain": [
+        "payment"
+      ],
+      "expected_values": [],
+      "fact_count": 3,
+      "forbidden_leaks": [],
+      "found_values": [],
+      "gemini_latency_ms": 1751,
+      "hallucinated_forbidden": false,
+      "id": "sparse_document",
+      "key_recall": 1.0,
+      "latency_ms": 1751,
+      "missing_values": [],
+      "provenance_count": 3,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [
+        "payment"
+      ],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "complaint",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "complaint",
+      "expected_uncertain": [],
+      "expected_values": [
+        "3 February 2026",
+        "RTI-2026-55",
+        "10 March 2026"
+      ],
+      "fact_count": 5,
+      "forbidden_leaks": [],
+      "found_values": [
+        "3 February 2026",
+        "RTI-2026-55",
+        "10 March 2026"
+      ],
+      "gemini_latency_ms": 2522,
+      "hallucinated_forbidden": false,
+      "id": "complaint_number_notice",
+      "key_recall": 1.0,
+      "latency_ms": 2522,
+      "missing_values": [],
+      "provenance_count": 5,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "complaint",
+      "confirmation_required": true,
+      "document_type_correct": false,
+      "expected_document_type": "other",
+      "expected_uncertain": [],
+      "expected_values": [
+        "email account",
+        "6 June 2026",
+        "unknown device"
+      ],
+      "fact_count": 6,
+      "forbidden_leaks": [],
+      "found_values": [
+        "email account",
+        "6 June 2026",
+        "unknown device"
+      ],
+      "gemini_latency_ms": 2765,
+      "hallucinated_forbidden": false,
+      "id": "other_identity_misuse",
+      "key_recall": 1.0,
+      "latency_ms": 2766,
+      "missing_values": [],
+      "provenance_count": 6,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [],
+      "uncertainty_ok": true
+    },
+    {
+      "actual_document_type": "unknown",
+      "confirmation_required": true,
+      "document_type_correct": true,
+      "expected_document_type": "unknown",
+      "expected_uncertain": [
+        "role"
+      ],
+      "expected_values": [
+        "Ajay",
+        "Rekha"
+      ],
+      "fact_count": 4,
+      "forbidden_leaks": [],
+      "found_values": [
+        "Ajay",
+        "Rekha"
+      ],
+      "gemini_latency_ms": 2185,
+      "hallucinated_forbidden": false,
+      "id": "unclear_signature",
+      "key_recall": 1.0,
+      "latency_ms": 2186,
+      "missing_values": [],
+      "provenance_count": 4,
+      "provenance_rate": 1.0,
+      "sensitive_leak": false,
+      "status": "success",
+      "structured_ok": true,
+      "uncertain_hits": [
+        "role"
+      ],
+      "uncertainty_ok": true
+    }
+  ]
+}

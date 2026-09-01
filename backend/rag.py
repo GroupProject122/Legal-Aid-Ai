@@ -14,6 +14,8 @@ from google.genai import errors as genai_errors
 from google.genai import types
 from sentence_transformers import SentenceTransformer
 
+import grounded_answer
+import claim_verifier
 from config import (
     DISCLAIMER,
     EMBEDDING_MODEL,
@@ -58,11 +60,23 @@ class RetrievedChunk:
     page: int
     score: float
     rerank_score: float = 0.0
+    domain: str | None = None
+    retrieval_priority: str | None = None
+    authority_level: str | None = None
+    status: str | None = None
+    document_type: str | None = None
     chapter: str | None = None
     section_number: str | None = None
     section_title: str | None = None
     rule_number: str | None = None
     rule_title: str | None = None
+    chunk_id: str | None = None
+    article_number: str | None = None
+    article_title: str | None = None
+    regulation_number: str | None = None
+    regulation_title: str | None = None
+    page_start: int | None = None
+    page_end: int | None = None
 
 
 CONSUMER_KEYWORDS = {
@@ -91,6 +105,291 @@ ADMINISTRATIVE_KEYWORDS = {
     "mediator", "settlement report", "settlement", "recording such settlement",
 }
 
+DOMAIN_SIGNAL_CUES = {
+    "consumer": {
+        "defective product": 0.45,
+        "defective goods": 0.45,
+        "refund": 0.32,
+        "replacement": 0.3,
+        "replace": 0.25,
+        "warranty": 0.28,
+        "seller": 0.28,
+        "ecommerce order": 0.35,
+        "e-commerce order": 0.35,
+        "misleading advertisement": 0.45,
+        "dark pattern": 0.45,
+        "service deficiency": 0.4,
+        "deficiency": 0.24,
+        "product liability": 0.45,
+        "consumer complaint": 0.42,
+        "consumer commission": 0.4,
+        "direct selling": 0.42,
+        "damaged goods": 0.35,
+        "faulty product": 0.35,
+        "instagram seller": 0.34,
+        "online seller took payment": 0.38,
+        "never delivered": 0.28,
+    },
+    "cyber": {
+        "hacked": 0.42,
+        "hacking": 0.42,
+        "phishing": 0.45,
+        "cyber fraud": 0.55,
+        "cybercrime": 0.5,
+        "cyber crime": 0.5,
+        "otp fraud": 0.48,
+        "unauthorized access": 0.5,
+        "account hacked": 0.55,
+        "used my login details": 0.48,
+        "used my credentials": 0.48,
+        "used my personal details": 0.38,
+        "access account without permission": 0.45,
+        "access my online account": 0.4,
+        "logged in as me": 0.45,
+        "pretended to be me online": 0.48,
+        "account credentials": 0.48,
+        "social media hacked": 0.55,
+        "social media": 0.28,
+        "instagram": 0.28,
+        "blocked me": 0.18,
+        "took payment and blocked": 0.35,
+        "blocked after payment": 0.34,
+        "disappeared after payment": 0.36,
+        "fake seller": 0.3,
+        "identity theft": 0.5,
+        "malware": 0.42,
+        "password stolen": 0.45,
+        "online scam": 0.42,
+        "digital fraud": 0.5,
+        "upi fraud": 0.5,
+        "fraudulent transaction": 0.45,
+        "data breach": 0.45,
+        "private data": 0.35,
+        "intermediary": 0.38,
+        "unlawful content": 0.34,
+        "grievance officer": 0.35,
+        "report online cybercrime": 0.55,
+    },
+    "tenancy": {
+        "landlord": 0.42,
+        "tenant": 0.4,
+        "rent": 0.32,
+        "eviction": 0.42,
+        "security deposit": 0.45,
+        "lease": 0.34,
+        "rent agreement": 0.45,
+        "electricity cut": 0.45,
+        "cut electricity": 0.45,
+        "essential supply": 0.48,
+        "premises": 0.3,
+        "rented property": 0.36,
+    },
+    "constitutional_public_authority": {
+        "article 14": 0.5,
+        "article 19": 0.5,
+        "article 21": 0.5,
+        "fundamental right": 0.45,
+        "equality": 0.4,
+        "freedom of speech": 0.5,
+        "rti": 0.5,
+        "right to information": 0.5,
+        "public authority": 0.45,
+        "legal aid": 0.42,
+        "free lawyer": 0.4,
+        "human rights": 0.45,
+        "custodial abuse": 0.45,
+        "contempt of court": 0.45,
+        "disobeyed court order": 0.45,
+        "court order was deliberately disobeyed": 0.45,
+        "government authority": 0.38,
+        "personal liberty": 0.42,
+        "government office": 0.32,
+    },
+}
+GENERIC_DOMAIN_TERMS = {"online", "payment", "money", "complaint", "account", "issue", "problem"}
+DOMAIN_SIGNAL_THRESHOLD = 0.25
+DOMAIN_SIGNAL_CLOSE_DELTA = 0.16
+DOMAIN_PRIMARY_BOOST = 0.20
+DOMAIN_SECONDARY_BOOST = 0.10
+DOMAIN_MISMATCH_PENALTY = 0.12
+RETRIEVAL_PRIORITY_WEIGHTS = {
+    "high": 0.045,
+    "medium": 0.02,
+    "low": -0.015,
+}
+AUTHORITY_LEVEL_WEIGHTS = {
+    "primary": 0.035,
+    "official_guidance": 0.018,
+    "procedural_guide": -0.012,
+}
+SUPPORTING_ONLY_PENALTY = 0.04
+REFERENCE_ONLY_PENALTY = 0.035
+PROCEDURAL_QUERY_MANUAL_BOOST = 0.06
+PROCEDURAL_QUERY_TERMS = {
+    "report",
+    "reporting",
+    "portal",
+    "file",
+    "filing",
+    "register",
+    "submit",
+    "how do i",
+    "where can i",
+}
+PUBLIC_AUTHORITY_INTENT_CUES = {
+    "rti": {
+        "rti": 0.55,
+        "right to information": 0.55,
+        "information request": 0.38,
+        "public information officer": 0.48,
+        "pio": 0.42,
+        "information denied": 0.42,
+        "refusing information": 0.42,
+        "refused information": 0.42,
+        "refused to give information": 0.45,
+        "rti application": 0.55,
+        "no reply to rti": 0.55,
+        "appeal under rti": 0.5,
+        "government office for records": 0.32,
+    },
+    "fundamental_rights": {
+        "article 14": 0.55,
+        "article 19": 0.55,
+        "article 21": 0.55,
+        "equality": 0.42,
+        "freedom of speech": 0.55,
+        "personal liberty": 0.5,
+        "fundamental right": 0.5,
+        "constitutional right": 0.45,
+        "discrimination by government": 0.5,
+        "government discriminated": 0.45,
+        "discriminated": 0.36,
+        "state action": 0.38,
+        "treated me unfairly": 0.32,
+        "government authority treated": 0.32,
+    },
+    "legal_aid": {
+        "free legal aid": 0.55,
+        "free lawyer": 0.5,
+        "legal services authority": 0.5,
+        "legal aid eligibility": 0.55,
+        "nalsa": 0.5,
+        "dlsa": 0.48,
+        "slsa": 0.48,
+        "legal aid": 0.42,
+    },
+    "human_rights": {
+        "human rights complaint": 0.55,
+        "human rights": 0.48,
+        "nhrc": 0.5,
+        "state human rights commission": 0.5,
+        "custodial abuse": 0.55,
+        "rights violation by public authority": 0.5,
+        "public authority treated me unfairly": 0.32,
+        "government authority treated me unfairly": 0.3,
+    },
+    "contempt": {
+        "contempt of court": 0.55,
+        "disobeyed court order": 0.55,
+        "court order was deliberately disobeyed": 0.55,
+        "scandalising court": 0.48,
+        "scandalizing court": 0.48,
+        "court contempt": 0.55,
+    },
+}
+PUBLIC_AUTHORITY_INTENT_THRESHOLD = 0.25
+PUBLIC_AUTHORITY_INTENT_CLOSE_DELTA = 0.14
+PUBLIC_AUTHORITY_INTENT_PRIMARY_BOOST = 0.13
+PUBLIC_AUTHORITY_INTENT_SECONDARY_BOOST = 0.06
+PUBLIC_AUTHORITY_INTENT_EXPANSIONS = {
+    "rti": "right to information public information officer information request records appeal under RTI",
+    "fundamental_rights": "constitution fundamental rights article equality freedom speech personal liberty state action",
+    "legal_aid": "legal services authority free legal aid free lawyer eligibility NALSA DLSA SLSA",
+    "human_rights": "human rights commission NHRC public authority rights violation complaint custodial abuse",
+    "contempt": "contempt of court disobeyed court order scandalising court",
+}
+CREDENTIAL_MISUSE_CUES = (
+    "identity theft",
+    "password",
+    "login details",
+    "credentials",
+    "account credentials",
+    "personal details",
+    "logged in as me",
+    "pretended to be me",
+    "access my online account",
+    "access account without permission",
+    "used my account",
+)
+PRODUCT_LIABILITY_CUES = (
+    "product liability",
+    "injury",
+    "injured",
+    "harm",
+    "physical harm",
+    "damage caused",
+    "exploded",
+    "fire",
+    "unsafe product",
+    "defective product caused",
+)
+NO_PRODUCT_LIABILITY_CUES = (
+    "no one was injured",
+    "no one injured",
+    "no injury",
+    "not injured",
+    "no physical harm",
+    "no harm",
+    "no property damage",
+    "only seeking refund",
+    "only want refund",
+    "only seeking replacement",
+    "only want replacement",
+    "simply defective",
+    "just defective",
+    "stopped working",
+    "not working",
+)
+ORDINARY_CONSUMER_REMEDY_CUES = (
+    "refund",
+    "replacement",
+    "replace",
+    "repair",
+    "not delivered",
+    "never delivered",
+    "non-delivery",
+    "seller not responding",
+    "refusing refund",
+    "defective",
+    "faulty",
+)
+MULTI_DOMAIN_TRANSACTION_CUES = (
+    "blocked after payment",
+    "took payment and blocked",
+    "disappeared after payment",
+    "online seller took payment",
+    "social media seller",
+    "instagram seller",
+    "fake seller",
+    "never delivered",
+)
+RTI_NO_RESPONSE_CUES = (
+    "no reply",
+    "no response",
+    "did not receive any reply",
+    "did not receive a reply",
+    "did not receive any response",
+    "pio did not reply",
+    "pio did not respond",
+    "rti unanswered",
+    "information not received",
+)
+FUNDAMENTAL_RIGHTS_SPECIFIC_EXPANSIONS = (
+    (("article 14", "equality"), "article 14 equality before law equal protection laws"),
+    (("article 19", "freedom of speech", "speech restriction"), "article 19 freedom of speech expression"),
+    (("article 21", "right to life", "personal liberty"), "article 21 protection of life personal liberty"),
+)
+
 MIN_RELEVANCE_SCORE = 0.30
 LOW_CONFIDENCE_RELEVANCE_SCORE = 0.22
 RELEVANCE_WINDOW = 0.14
@@ -116,17 +415,180 @@ def is_consumer_law_question(question: str) -> bool:
 
 def retrieval_query(question: str) -> str:
     lowered = question.lower()
+    signals = detect_domain_signals(question)
+    consumer_score = signals["scores"]["consumer"]
+    cyber_score = signals["scores"]["cyber"]
     product_problem_terms = {
         "defective", "defect", "damaged", "broken", "faulty", "stopped working",
         "refund", "replacement", "replace", "repair", "warranty", "seller",
-        "phone", "mobile", "goods", "product", "online",
+        "goods", "product",
     }
-    if any(term in lowered for term in product_problem_terms):
+    if consumer_score >= DOMAIN_SIGNAL_THRESHOLD and cyber_score >= DOMAIN_SIGNAL_THRESHOLD:
+        return (
+            f"{question} consumer complaint refund non-delivery seller online marketplace "
+            "consumer remedy return price replacement cyber fraud online scam report cybercrime "
+            "payment blocked account deceptive seller"
+        )
+    if is_product_liability_query(question):
+        return (
+            f"{question} defective product injury harm product liability manufacturer seller "
+            "consumer complaint compensation redressal"
+        )
+    if consumer_score >= DOMAIN_SIGNAL_THRESHOLD and consumer_score >= cyber_score and any(term in lowered for term in product_problem_terms):
         return (
             f"{question} defective product goods seller refund repair replacement warranty "
-            "consumer rights product liability complaint redressal"
+            "consumer complaint remedy redressal return price replace goods"
         )
+    if is_credential_misuse_query(question):
+        return f"{question} identity theft password credentials electronic signature Section 66C account access"
+    intents = detect_public_authority_intents(question)
+    has_public_authority_intent = bool(intents["primary_intents"] or intents["secondary_intents"])
+    if "constitutional_public_authority" in signals["primary_domains"] or (not signals["primary_domains"] and has_public_authority_intent):
+        expansions = public_authority_intent_expansions(question, intents)
+        if expansions:
+            return f"{question} {' '.join(expansions)}"
     return question
+
+
+def is_credential_misuse_query(question: str) -> bool:
+    lowered = question.lower()
+    if not contains_any(lowered, CREDENTIAL_MISUSE_CUES):
+        return False
+    return contains_any(lowered, ("account", "online", "login", "password", "credentials", "personal details", "identity", "pretended"))
+
+
+def is_product_liability_query(question: str) -> bool:
+    lowered = question.lower()
+    if contains_any(lowered, NO_PRODUCT_LIABILITY_CUES) and not contains_any(
+        lowered,
+        ("caused injury", "caused harm", "caused damage", "property was damaged", "injured me", "hurt me"),
+    ):
+        return False
+    return contains_any(lowered, PRODUCT_LIABILITY_CUES)
+
+
+def is_ordinary_consumer_remedy_query(question: str) -> bool:
+    lowered = question.lower()
+    return contains_any(lowered, ORDINARY_CONSUMER_REMEDY_CUES) and not is_product_liability_query(question)
+
+
+def should_suppress_product_liability_for_query(question: str) -> bool:
+    lowered = question.lower()
+    return (
+        contains_any(lowered, NO_PRODUCT_LIABILITY_CUES)
+        or is_ordinary_consumer_remedy_query(question)
+        or contains_any(lowered, ("never delivered", "not delivered", "non-delivery", "no delivery"))
+        or is_online_seller_blocked_payment_query(question)
+    ) and not is_product_liability_query(question)
+
+
+def is_product_liability_chunk(chunk: RetrievedChunk) -> bool:
+    title = f"{chunk.section_title or ''} {chunk.rule_title or ''}".lower()
+    section = str(chunk.section_number or "").strip()
+    if chunk.domain == "consumer" and section in {"82", "83", "84", "85", "86", "87"}:
+        return True
+    return "product liability" in title or "liability of product" in title
+
+
+def is_rti_no_response_query(question: str) -> bool:
+    lowered = question.lower()
+    return ("rti" in lowered or "right to information" in lowered) and contains_any(lowered, RTI_NO_RESPONSE_CUES)
+
+
+def is_online_seller_blocked_payment_query(question: str) -> bool:
+    lowered = question.lower()
+    return (
+        contains_any(lowered, MULTI_DOMAIN_TRANSACTION_CUES)
+        or ("seller" in lowered and "blocked" in lowered and "payment" in lowered)
+        or ("seller" in lowered and "blocked" in lowered and "paid" in lowered)
+    )
+
+
+def detect_domain_signals(query: str) -> dict[str, Any]:
+    lowered = re.sub(r"\s+", " ", query.lower()).strip()
+    scores = {domain: 0.0 for domain in DOMAIN_SIGNAL_CUES}
+    for domain, cues in DOMAIN_SIGNAL_CUES.items():
+        for cue, weight in cues.items():
+            if contains_query_cue(lowered, cue):
+                scores[domain] += weight
+
+    words = set(re.findall(r"[a-zA-Z][a-zA-Z-]+", lowered))
+    if words <= GENERIC_DOMAIN_TERMS:
+        scores = {domain: min(score, 0.12) for domain, score in scores.items()}
+
+    capped_scores = {domain: min(score, 1.0) for domain, score in scores.items()}
+    max_score = max(capped_scores.values()) if capped_scores else 0.0
+    primary_domains = [
+        domain
+        for domain, score in capped_scores.items()
+        if score >= DOMAIN_SIGNAL_THRESHOLD and max_score - score <= DOMAIN_SIGNAL_CLOSE_DELTA
+    ]
+    secondary_domains = [
+        domain
+        for domain, score in capped_scores.items()
+        if score >= DOMAIN_SIGNAL_THRESHOLD and domain not in primary_domains
+    ]
+    return {
+        "scores": capped_scores,
+        "primary_domains": primary_domains,
+        "secondary_domains": secondary_domains,
+    }
+
+
+def detect_public_authority_intents(query: str) -> dict[str, Any]:
+    lowered = re.sub(r"\s+", " ", query.lower()).strip()
+    scores = {intent: 0.0 for intent in PUBLIC_AUTHORITY_INTENT_CUES}
+    for intent, cues in PUBLIC_AUTHORITY_INTENT_CUES.items():
+        for cue, weight in cues.items():
+            if contains_query_cue(lowered, cue):
+                scores[intent] += weight
+    capped_scores = {intent: min(score, 1.0) for intent, score in scores.items()}
+    max_score = max(capped_scores.values()) if capped_scores else 0.0
+    primary_intents = [
+        intent
+        for intent, score in capped_scores.items()
+        if score >= PUBLIC_AUTHORITY_INTENT_THRESHOLD and max_score - score <= PUBLIC_AUTHORITY_INTENT_CLOSE_DELTA
+    ]
+    secondary_intents = [
+        intent
+        for intent, score in capped_scores.items()
+        if score >= PUBLIC_AUTHORITY_INTENT_THRESHOLD and intent not in primary_intents
+    ]
+    return {
+        "scores": capped_scores,
+        "primary_intents": primary_intents,
+        "secondary_intents": secondary_intents,
+    }
+
+
+def contains_query_cue(normalized_query: str, cue: str) -> bool:
+    normalized_cue = re.sub(r"\s+", " ", cue.lower()).strip()
+    if not normalized_cue:
+        return False
+    prefix = r"(?<![a-z0-9])" if normalized_cue[0].isalnum() else ""
+    suffix = r"(?![a-z0-9])" if normalized_cue[-1].isalnum() else ""
+    return bool(re.search(f"{prefix}{re.escape(normalized_cue)}{suffix}", normalized_query))
+
+
+def contains_any(text: str, cues: tuple[str, ...]) -> bool:
+    normalized_text = re.sub(r"\s+", " ", text.lower()).strip()
+    return any(contains_query_cue(normalized_text, cue) for cue in cues)
+
+
+def public_authority_intent_expansions(question: str, intents: dict[str, Any]) -> list[str]:
+    query = re.sub(r"\s+", " ", question.lower()).strip()
+    expansions: list[str] = []
+    for intent in intents["primary_intents"] + intents["secondary_intents"]:
+        if intent == "fundamental_rights":
+            specific = [
+                expansion
+                for cues, expansion in FUNDAMENTAL_RIGHTS_SPECIFIC_EXPANSIONS
+                if any(contains_query_cue(query, cue) for cue in cues)
+            ]
+            expansions.extend(specific or [PUBLIC_AUTHORITY_INTENT_EXPANSIONS[intent]])
+        elif intent in PUBLIC_AUTHORITY_INTENT_EXPANSIONS:
+            expansions.append(PUBLIC_AUTHORITY_INTENT_EXPANSIONS[intent])
+    return expansions
 
 
 @lru_cache(maxsize=2)
@@ -208,17 +670,31 @@ class LegalRAG:
                     document_title=item.get("document_title") or item["source"],
                     page=int(item["page"]),
                     score=float(score),
+                    chunk_id=item.get("chunk_id"),
+                    domain=item.get("domain"),
+                    retrieval_priority=item.get("retrieval_priority"),
+                    authority_level=item.get("authority_level"),
+                    status=item.get("status"),
+                    document_type=item.get("document_type"),
                     chapter=item.get("chapter"),
                     section_number=item.get("section_number"),
                     section_title=item.get("section_title"),
                     rule_number=item.get("rule_number"),
                     rule_title=item.get("rule_title"),
+                    article_number=item.get("article_number"),
+                    article_title=item.get("article_title"),
+                    regulation_number=item.get("regulation_number"),
+                    regulation_title=item.get("regulation_title"),
+                    page_start=item.get("page_start"),
+                    page_end=item.get("page_end"),
                 )
             )
         return candidates
 
     def retrieve(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
-        candidates = self.retrieve_candidates(question, candidate_k=max(top_k * 2, 12))
+        signals = detect_domain_signals(question)
+        candidate_k = max(top_k * 8, 40) if len(signals["primary_domains"] + signals["secondary_domains"]) > 1 else max(top_k * 2, 12)
+        candidates = self.retrieve_candidates(question, candidate_k=candidate_k)
         results = select_relevant_chunks(candidates, question=question, top_k=top_k)
         logger.info(
             "Retrieved %s strong chunks from %s candidates for query=%r. Final sources=%s",
@@ -238,9 +714,9 @@ class LegalRAG:
         )
         return results
 
-    def answer(self, question: str) -> dict[str, Any]:
+    def answer(self, question: str, skip_scope_check: bool = False) -> dict[str, Any]:
         question = validate_question(question)
-        if not is_consumer_law_question(question):
+        if not skip_scope_check and not is_consumer_law_question(question):
             return insufficient_response(
                 "This version of Legal Aid AI currently supports consumer-law questions only."
             )
@@ -257,7 +733,18 @@ class LegalRAG:
         if LLM_PROVIDER == "gemini":
             if not GEMINI_API_KEY:
                 raise ConfigurationError("GEMINI_API_KEY is missing. Add it to backend/.env or set LLM_PROVIDER=local for development tests.")
-            return gemini_grounded_response(question, chunks)
+            try:
+                answer = grounded_answer.generate_grounded_answer(
+                    original_message=question,
+                    normalized_case_summary=question,
+                    domains=sorted({chunk.domain for chunk in chunks if chunk.domain}),
+                    chunks=chunks,
+                )
+                return claim_verifier.verify_and_sanitize_response(answer, chunks)
+            except grounded_answer.GroundedAnswerConfigurationError as exc:
+                raise ConfigurationError(str(exc)) from exc
+            except grounded_answer.GroundedAnswerError as exc:
+                raise LLMError(str(exc)) from exc
 
         raise ConfigurationError(f"Unsupported LLM provider: {LLM_PROVIDER}")
 
@@ -400,13 +887,13 @@ def query_intent_boost(question: str, chunk: RetrievedChunk) -> float:
         if any(term in text for term in ("return to the complainant the price", "return the price", "charges paid")):
             boost += 0.12
         if "findings of district commission" in title:
-            boost += 0.06
+            boost += 0.10
 
     if any(term in query for term in ("replace", "replacement")):
         if "replace the goods" in text or "free from any defect" in text:
             boost += 0.14
 
-    if "seller" in query:
+    if "seller" in query and not is_ordinary_consumer_remedy_query(question):
         if "liability of product sellers" in title or "product seller" in text:
             boost += 0.12
 
@@ -415,20 +902,184 @@ def query_intent_boost(question: str, chunk: RetrievedChunk) -> float:
             boost += 0.06
         if "definitions" in title and "defect" in text:
             boost += 0.09
-        if "product liability" in text:
+        if "product liability" in text and is_product_liability_query(question):
             boost += 0.06
         if "exceptions to product liability" in title and not any(term in query for term in ("exception", "defence", "defense")):
             boost -= 0.20
+
+    if is_ordinary_consumer_remedy_query(question):
+        if "findings of district commission" in title:
+            boost += 0.12
+        if any(term in text for term in ("return to the complainant the price", "replace the goods", "remove the defect")):
+            boost += 0.10
+        if "product liability action" in title or "liability of product" in title:
+            boost -= 0.18
+
+    if should_suppress_product_liability_for_query(question) and is_product_liability_chunk(chunk):
+        boost -= 0.26
+
+    if is_credential_misuse_query(question):
+        if "66c" in title or "identity theft" in title:
+            boost += 0.20
+        elif "identity theft" in text or "password" in text:
+            boost += 0.12
+
+    if is_rti_no_response_query(question) and chunk.domain == "constitutional_public_authority":
+        if str(chunk.section_number or "").strip() == "19" or "appeal" in title:
+            boost += 0.14
+        elif str(chunk.section_number or "").strip() == "18" or "information commissions" in title:
+            boost -= 0.04
+        elif str(chunk.section_number or "").strip() == "20" or "penalties" in title:
+            boost -= 0.08
+
+    if is_online_seller_blocked_payment_query(question) and chunk.domain == "cyber":
+        if chunk.document_type == "procedural_user_guide" or "cybercrime reporting portal" in chunk.document_title.lower():
+            boost += 0.10
+        elif chunk.status == "supporting_only":
+            boost -= 0.06
+
+    if chunk.domain == "tenancy" and contains_any(query, ("electricity", "bijli", "essential supply", "water supply")):
+        if "essential supply" in title or "cutting off or withholding essential supply" in title:
+            boost += 0.18
+        elif "eviction" in title or "standard rent" in title:
+            boost -= 0.05
 
     if any(term in query for term in ("mean", "meaning", "define", "definition")):
         if "definitions" in title or "(10)" in text and "defect" in text:
             boost += 0.16
 
-    return min(boost, 0.22)
+    return max(-0.32, min(boost, 0.28))
+
+
+def domain_signal_boost(question: str, chunk: RetrievedChunk) -> float:
+    signals = detect_domain_signals(question)
+    domain = chunk.domain
+    if not domain:
+        return 0.0
+    if domain in signals["primary_domains"]:
+        return DOMAIN_PRIMARY_BOOST * signals["scores"].get(domain, 0.0)
+    if domain in signals["secondary_domains"]:
+        return DOMAIN_SECONDARY_BOOST * signals["scores"].get(domain, 0.0)
+    if signals["primary_domains"]:
+        return -DOMAIN_MISMATCH_PENALTY * max(signals["scores"].values())
+    return 0.0
+
+
+def domain_debug_info(question: str, chunk: RetrievedChunk | None = None) -> dict[str, Any]:
+    signals = detect_domain_signals(question)
+    debug = {
+        "scores": signals["scores"],
+        "primary_domains": signals["primary_domains"],
+        "secondary_domains": signals["secondary_domains"],
+    }
+    if chunk is not None:
+        debug["chunk_domain"] = chunk.domain
+        debug["domain_boost"] = round(domain_signal_boost(question, chunk), 4)
+        debug["priority_boost"] = round(retrieval_priority_boost(chunk), 4)
+        debug["authority_boost"] = round(authority_level_boost(question, chunk), 4)
+        debug["supporting_status_boost"] = round(supporting_status_boost(question, chunk), 4)
+        debug["source_role_boost"] = round(source_role_boost(question, chunk), 4)
+    return debug
+
+
+def retrieval_priority_boost(chunk: RetrievedChunk) -> float:
+    priority = (chunk.retrieval_priority or "").lower()
+    return RETRIEVAL_PRIORITY_WEIGHTS.get(priority, 0.0)
+
+
+def authority_level_boost(question: str, chunk: RetrievedChunk) -> float:
+    authority = (chunk.authority_level or "").lower()
+    boost = AUTHORITY_LEVEL_WEIGHTS.get(authority, 0.0)
+    if is_procedural_query(question) and chunk.document_type == "procedural_user_guide":
+        boost += PROCEDURAL_QUERY_MANUAL_BOOST
+    return boost
+
+
+def is_procedural_query(question: str) -> bool:
+    lowered = question.lower()
+    return any(term in lowered for term in PROCEDURAL_QUERY_TERMS)
+
+
+def supporting_status_boost(question: str, chunk: RetrievedChunk) -> float:
+    status = (chunk.status or "").lower()
+    document_type = (chunk.document_type or "").lower()
+    if status == "supporting_only" or document_type.startswith("supporting_"):
+        return -SUPPORTING_ONLY_PENALTY
+    if status == "reference_only":
+        if is_procedural_query(question) and document_type == "procedural_user_guide":
+            return 0.0
+        return -REFERENCE_ONLY_PENALTY
+    return 0.0
+
+
+def source_role_boost(question: str, chunk: RetrievedChunk) -> float:
+    return (
+        retrieval_priority_boost(chunk)
+        + authority_level_boost(question, chunk)
+        + supporting_status_boost(question, chunk)
+    )
+
+
+def public_authority_intent_for_chunk(chunk: RetrievedChunk) -> str | None:
+    source = (chunk.source or "").lower()
+    title = (chunk.document_title or "").lower()
+    haystack = f"{source} {title}"
+    if "right_to_information_act" in source or "right to information act" in title:
+        return "rti"
+    if "constitution_of_india" in source or "constitution of india" in title:
+        return "fundamental_rights"
+    if "legal_services_authorities_act" in source or "legal services authorities act" in title:
+        return "legal_aid"
+    if "protection_of_human_rights_act" in source or "protection of human rights act" in title:
+        return "human_rights"
+    if "contempt_of_courts_act" in source or "contempt of courts act" in title:
+        return "contempt"
+    if "human rights" in haystack:
+        return "human_rights"
+    return None
+
+
+def public_authority_intent_boost(question: str, chunk: RetrievedChunk) -> float:
+    signals = detect_domain_signals(question)
+    plausible_public_authority = (
+        "constitutional_public_authority" in signals["primary_domains"]
+        or "constitutional_public_authority" in signals["secondary_domains"]
+        or chunk.domain == "constitutional_public_authority"
+    )
+    if not plausible_public_authority or chunk.domain != "constitutional_public_authority":
+        return 0.0
+    chunk_intent = public_authority_intent_for_chunk(chunk)
+    if not chunk_intent:
+        return 0.0
+    intents = detect_public_authority_intents(question)
+    if chunk_intent in intents["primary_intents"]:
+        return PUBLIC_AUTHORITY_INTENT_PRIMARY_BOOST * intents["scores"].get(chunk_intent, 0.0)
+    if chunk_intent in intents["secondary_intents"]:
+        return PUBLIC_AUTHORITY_INTENT_SECONDARY_BOOST * intents["scores"].get(chunk_intent, 0.0)
+    return 0.0
+
+
+def retrieval_debug_info(question: str, chunk: RetrievedChunk | None = None) -> dict[str, Any]:
+    debug = domain_debug_info(question, chunk)
+    debug["public_authority_intents"] = detect_public_authority_intents(question)
+    if chunk is not None:
+        debug["public_authority_chunk_intent"] = public_authority_intent_for_chunk(chunk)
+        debug["public_authority_intent_boost"] = round(public_authority_intent_boost(question, chunk), 4)
+        debug["credential_misuse_boost"] = round(query_intent_boost(question, chunk), 4)
+        debug["final_rerank_score"] = round(final_rerank_score(question, chunk), 4)
+    return debug
 
 
 def final_rerank_score(question: str, chunk: RetrievedChunk) -> float:
-    return chunk.score + legal_substance_boost(chunk) + lexical_overlap_score(question, chunk) + query_intent_boost(question, chunk)
+    return (
+        chunk.score
+        + legal_substance_boost(chunk)
+        + lexical_overlap_score(question, chunk)
+        + query_intent_boost(question, chunk)
+        + domain_signal_boost(question, chunk)
+        + source_role_boost(question, chunk)
+        + public_authority_intent_boost(question, chunk)
+    )
 
 
 def select_relevant_chunks(candidates: list[RetrievedChunk], question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
@@ -445,6 +1096,8 @@ def select_relevant_chunks(candidates: list[RetrievedChunk], question: str, top_
         key=lambda chunk: (chunk.rerank_score, chunk.score),
         reverse=True,
     )
+    ranked = demote_context_suppressed_product_liability(question, ranked, top_k)
+    ranked = balance_multi_domain_candidates(question, ranked)
     selected: list[RetrievedChunk] = []
     for chunk in ranked:
         if chunk.score < threshold:
@@ -454,7 +1107,98 @@ def select_relevant_chunks(candidates: list[RetrievedChunk], question: str, top_
         selected.append(chunk)
         if len(selected) >= min(top_k, MAX_CONTEXT_CHUNKS):
             break
+    selected = ensure_multi_domain_selection(question, selected, ranked, threshold, top_k)
     return selected
+
+
+def demote_context_suppressed_product_liability(
+    question: str, ranked: list[RetrievedChunk], top_k: int = TOP_K
+) -> list[RetrievedChunk]:
+    if not should_suppress_product_liability_for_query(question):
+        return ranked
+    suppressed = [chunk for chunk in ranked if is_product_liability_chunk(chunk)]
+    if not suppressed:
+        return ranked
+    preferred = [chunk for chunk in ranked if not is_product_liability_chunk(chunk)]
+    if len(preferred) >= min(top_k, MAX_CONTEXT_CHUNKS):
+        return preferred + suppressed
+    return ranked
+
+
+def ensure_multi_domain_selection(
+    question: str,
+    selected: list[RetrievedChunk],
+    ranked: list[RetrievedChunk],
+    threshold: float,
+    top_k: int = TOP_K,
+) -> list[RetrievedChunk]:
+    signals = detect_domain_signals(question)
+    desired_domains = signals["primary_domains"] + signals["secondary_domains"]
+    if len(desired_domains) < 2:
+        return selected
+    selected_domains = {chunk.domain for chunk in selected}
+    if set(desired_domains).issubset(selected_domains):
+        return selected
+    max_slots = min(top_k, MAX_CONTEXT_CHUNKS)
+    output = list(selected)
+    for domain in desired_domains:
+        if domain in {chunk.domain for chunk in output}:
+            continue
+        candidate = next(
+            (
+                chunk
+                for chunk in ranked
+                if chunk.domain == domain
+                and chunk.score >= threshold
+                and not is_near_duplicate(chunk, output)
+            ),
+            None,
+        )
+        if not candidate:
+            continue
+        if len(output) >= max_slots:
+            domain_counts = {item.domain: sum(1 for chunk in output if chunk.domain == item.domain) for item in output}
+            replaceable_indexes = [
+                index
+                for index, item in enumerate(output)
+                if item.domain not in desired_domains or domain_counts.get(item.domain, 0) > 1
+            ]
+            if not replaceable_indexes:
+                continue
+            replace_index = min(replaceable_indexes, key=lambda index: output[index].rerank_score)
+            output[replace_index] = candidate
+        else:
+            output.append(candidate)
+    return sorted(output, key=lambda chunk: (chunk.rerank_score, chunk.score), reverse=True)
+
+
+def balance_multi_domain_candidates(question: str, ranked: list[RetrievedChunk]) -> list[RetrievedChunk]:
+    signals = detect_domain_signals(question)
+    desired_domains = signals["primary_domains"] + signals["secondary_domains"]
+    if len(desired_domains) < 2:
+        return ranked
+    max_score = max((chunk.rerank_score for chunk in ranked), default=0.0)
+    promoted: list[RetrievedChunk] = []
+    for domain in desired_domains:
+        if any(chunk.domain == domain for chunk in ranked[:MAX_CONTEXT_CHUNKS]):
+            continue
+        candidate = next(
+            (
+                chunk
+                for chunk in ranked
+                if chunk.domain == domain
+                and chunk.rerank_score >= max_score - 0.26
+                and chunk.score >= LOW_CONFIDENCE_RELEVANCE_SCORE
+            ),
+            None,
+        )
+        if candidate:
+            promoted.append(candidate)
+    if not promoted:
+        return ranked
+    remaining = [chunk for chunk in ranked if chunk not in promoted]
+    insert_at = min(2, len(remaining))
+    return remaining[:insert_at] + promoted + remaining[insert_at:]
 
 
 def identify_section(text: str) -> str | None:
@@ -629,7 +1373,7 @@ def gemini_grounded_response(question: str, chunks: list[RetrievedChunk]) -> dic
         )
     context = "\n\n".join(context_blocks)
     client = genai.Client(api_key=GEMINI_API_KEY)
-    system_prompt = """You are Legal Aid AI, an informational assistant for Indian consumer law.
+    system_prompt = """You are Legal Aid AI, an informational assistant for Indian legal information.
 
 You must answer the user's question using ONLY the legal source text supplied in the retrieved context.
 Do not use unsupported general legal knowledge to make legal claims.

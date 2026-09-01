@@ -1,0 +1,202 @@
+{
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/document_extraction_cases.json",
+    "gemini_used": false
+  },
+  "failures": [],
+  "metrics": {
+    "average_latency_ms": 3.4,
+    "case_count": 12,
+    "correct_cases": 12,
+    "extraction_success_rate": 0.5,
+    "max_latency_ms": 18,
+    "ocr_required_detection_rate": 1.0,
+    "overall_accuracy": 1.0,
+    "oversized_rejection_rate": 1.0,
+    "processing_failures": 2,
+    "successful_extractions": 6,
+    "unsupported_rejection_rate": 1.0
+  },
+  "results": [
+    {
+      "actual_status": "success",
+      "character_count": 47,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "success"
+      ],
+      "filename": "invoice.pdf",
+      "id": "clean_pdf",
+      "latency_ms": 3,
+      "page_count": 1,
+      "warnings": []
+    },
+    {
+      "actual_status": "success",
+      "character_count": 57,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "success"
+      ],
+      "filename": "legal_notice.pdf",
+      "id": "multi_page_pdf",
+      "latency_ms": 2,
+      "page_count": 2,
+      "warnings": []
+    },
+    {
+      "actual_status": "success",
+      "character_count": 43,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "success"
+      ],
+      "filename": "rent_agreement.docx",
+      "id": "docx_paragraph",
+      "latency_ms": 18,
+      "page_count": null,
+      "warnings": []
+    },
+    {
+      "actual_status": "success",
+      "character_count": 53,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "success"
+      ],
+      "filename": "receipt_table.docx",
+      "id": "docx_table",
+      "latency_ms": 18,
+      "page_count": null,
+      "warnings": []
+    },
+    {
+      "actual_status": "success",
+      "character_count": 44,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "success"
+      ],
+      "filename": "complaint.txt",
+      "id": "txt_simple",
+      "latency_ms": 0,
+      "page_count": null,
+      "warnings": []
+    },
+    {
+      "actual_status": "success",
+      "character_count": 36,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "success"
+      ],
+      "filename": "notice.txt",
+      "id": "txt_whitespace",
+      "latency_ms": 0,
+      "page_count": null,
+      "warnings": []
+    },
+    {
+      "actual_status": "failed",
+      "character_count": 0,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "failed"
+      ],
+      "filename": "empty.txt",
+      "id": "empty_txt",
+      "latency_ms": 0,
+      "page_count": null,
+      "warnings": [
+        "The uploaded file is empty."
+      ]
+    },
+    {
+      "actual_status": "ocr_required",
+      "character_count": 0,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "ocr_required"
+      ],
+      "filename": "scan.pdf",
+      "id": "scan_like_pdf",
+      "latency_ms": 0,
+      "page_count": 1,
+      "warnings": [
+        "This document appears to be scanned or image-based, so reliable text extraction is not available in the current phase."
+      ]
+    },
+    {
+      "actual_status": "unsupported",
+      "character_count": 0,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "unsupported"
+      ],
+      "filename": "photo.png",
+      "id": "unsupported_image",
+      "latency_ms": 0,
+      "page_count": null,
+      "warnings": [
+        "This file type is not supported yet. Please upload PDF, DOCX, or TXT."
+      ]
+    },
+    {
+      "actual_status": "unsupported",
+      "character_count": 0,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "unsupported"
+      ],
+      "filename": "archive.zip",
+      "id": "unsupported_zip",
+      "latency_ms": 0,
+      "page_count": null,
+      "warnings": [
+        "This file type is not supported yet. Please upload PDF, DOCX, or TXT."
+      ]
+    },
+    {
+      "actual_status": "failed",
+      "character_count": 0,
+      "correct": true,
+      "error": null,
+      "expected_status": [
+        "failed"
+      ],
+      "filename": "binary.txt",
+      "id": "binary_txt",
+      "latency_ms": 0,
+      "page_count": null,
+      "warnings": [
+        "This TXT file appears to contain binary or unreadable content."
+      ]
+    },
+    {
+      "actual_status": "rejected_oversized",
+      "character_count": 0,
+      "correct": true,
+      "error": "DocumentExtractionError",
+      "expected_status": [
+        "rejected_oversized"
+      ],
+      "filename": "large.txt",
+      "id": "oversized_txt",
+      "latency_ms": 0,
+      "page_count": null,
+      "warnings": [
+        "File is too large. Maximum supported size is 10 MB."
+      ]
+    }
+  ]
+}

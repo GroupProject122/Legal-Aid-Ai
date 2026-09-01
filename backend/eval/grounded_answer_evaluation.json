@@ -1,0 +1,3108 @@
+{
+  "evaluation_config": {
+    "gemini_model": "gemini-flash-lite-latest",
+    "query_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/grounded_answer_queries.json",
+    "retrieval_unchanged": true
+  },
+  "failures": [
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_equality",
+      "query": "right to equality",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0016",
+          "document": "The Constitution of India",
+          "page": 25,
+          "provision": "Article 14 \u2014 Equality before law",
+          "rerank_score": 1.1018,
+          "score": 0.7672
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_legal_aid",
+      "query": "I want free legal aid",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0022",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 10,
+          "provision": "Section 15 \u2014 National Legal Aid Fund",
+          "rerank_score": 0.8398,
+          "score": 0.5187
+        },
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0023",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 10,
+          "provision": "Section 16 \u2014 State Legal Aid Fund",
+          "rerank_score": 0.8024,
+          "score": 0.4812
+        },
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0009",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 5,
+          "provision": "Section 4 \u2014 Functions of the Central Authority",
+          "rerank_score": 0.772,
+          "score": 0.4328
+        },
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0020",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 10,
+          "provision": "Section 13 \u2014 Entitlement of legal services",
+          "rerank_score": 0.7714,
+          "score": 0.4502
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_human_rights",
+      "query": "human rights complaint against public authority",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0020",
+          "document": "The Protection of Human Rights Act, 1993",
+          "page": 9,
+          "provision": "Section 17 \u2014 Inquiry into complaints",
+          "rerank_score": 1.0196,
+          "score": 0.5166
+        },
+        {
+          "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0013",
+          "document": "The Protection of Human Rights Act, 1993",
+          "page": 6,
+          "provision": "Section 12 \u2014 Functions of the Commission",
+          "rerank_score": 0.9523,
+          "score": 0.4891
+        },
+        {
+          "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0032",
+          "document": "The Protection of Human Rights Act, 1993",
+          "page": 13,
+          "provision": "Section 30 \u2014 Human Rights Courts",
+          "rerank_score": 0.8721,
+          "score": 0.458
+        },
+        {
+          "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0041",
+          "document": "The Right to Information Act, 2005",
+          "page": 17,
+          "provision": "Section 19 \u2014 Appeal",
+          "rerank_score": 0.7928,
+          "score": 0.5017
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_contempt",
+      "query": "court order deliberately disobeyed hai",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0067",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 22,
+          "provision": "Section 37 \u2014 Procedure to be followed by Controller",
+          "rerank_score": 0.6749,
+          "score": 0.5229
+        },
+        {
+          "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0516",
+          "document": "The Constitution of India",
+          "page": 164,
+          "provision": "Article 1 \u2014 Paragraph 2 of the Constitution (Removal of Difficulties) Order No",
+          "rerank_score": 0.6566,
+          "score": 0.5226
+        },
+        {
+          "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0472",
+          "document": "The Bharatiya Nyaya Sanhita, 2023",
+          "page": 69,
+          "provision": "Section 198 \u2014 Public servant disobeying law, with intent to cause injury to any person",
+          "rerank_score": 0.5757,
+          "score": 0.5237
+        },
+        {
+          "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0113",
+          "document": "The Bharatiya Nyaya Sanhita, 2023",
+          "page": 10,
+          "provision": "Section 223 \u2014 Disobedience to order duly promulgated by public servant",
+          "rerank_score": 0.5653,
+          "score": 0.5493
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer",
+        "cyber"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "multi_instagram_seller",
+      "query": "Instagram seller took payment and blocked me",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0144",
+          "document": "The Bharatiya Nagarik Suraksha Sanhita, 2023",
+          "page": 11,
+          "provision": "Section 280 \u2014 Withdrawal of complaint",
+          "rerank_score": 0.4063,
+          "score": 0.3163
+        },
+        {
+          "chunk_id": "consumer_direct_selling_rules_2021__chunk_0013",
+          "document": "The Consumer Protection (Direct Selling) Rules, 2021",
+          "page": 12,
+          "provision": "Rule 6 \u2014 Obligations of direct seller",
+          "rerank_score": 0.358,
+          "score": 0.305
+        }
+      ]
+    },
+    {
+      "domains": [
+        "tenancy",
+        "cyber"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "multi_landlord_threats",
+      "query": "landlord online threats de raha hai aur electricity cut kar di",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0057",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 19,
+          "provision": "Section 1 \u2014 Added by Act 57 of 1988, s",
+          "rerank_score": 0.7241,
+          "score": 0.4141
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0015",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 8,
+          "provision": "Section 7 \u2014 Lawful increase of standard rent in certain cases and recovery of other charges",
+          "rerank_score": 0.7086,
+          "score": 0.3966
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0076",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 24,
+          "provision": "Section 45 \u2014 Cutting off or withholding essential supply or service",
+          "rerank_score": 0.6996,
+          "score": 0.3876
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0054",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 18,
+          "provision": "Section 25C \u2014 Act to have effect in a modified form in relation to certain persons",
+          "rerank_score": 0.6722,
+          "score": 0.4162
+        }
+      ]
+    }
+  ],
+  "latency": {
+    "average_generation_latency_ms": 2588.6,
+    "generation_calls": 15,
+    "max_generation_latency_ms": 3108,
+    "min_generation_latency_ms": 1830,
+    "scenario_count": 24
+  },
+  "metrics": {
+    "disclaimer_presence_rate": 1.0,
+    "expected_document_presence_rate": 1.0,
+    "expected_provision_presence_rate": 1.0,
+    "failed_generation_count": 6,
+    "insufficient_context_handling_rate": 1.0,
+    "overall_heuristic_pass_rate": 0.75,
+    "scenario_count": 24,
+    "source_id_validity_rate": 1.0,
+    "unsafe_certainty_rate": 0.0,
+    "unsupported_source_hallucination_rate": 0.0,
+    "valid_structured_output_rate": 1.0
+  },
+  "results": [
+    {
+      "domains": [
+        "consumer"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "consumer_refund",
+      "query": "online seller refusing refund",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Purchase invoices or receipts.",
+            "Records of payment.",
+            "Written communications and refusal messages from the online seller.",
+            "Photographs or descriptions of any product defects or harms suffered."
+          ],
+          "issue_summary": "The user is facing an issue where an online seller is refusing to provide a refund for a product or transaction.",
+          "limitations": [
+            "The retrieved legal material does not specify exact limitation periods or filing fees for consumer complaints.",
+            "Liability of a product seller depends on specific statutory conditions such as exercising substantial control, making express warranties, or failure to exercise reasonable care."
+          ],
+          "next_steps": [
+            "Review the purchase records, communications with the online seller, and details of the product defect.",
+            "Consider formally approaching the appropriate consumer forum if the seller continues to refuse a refund."
+          ],
+          "possible_legal_position": [
+            "Based on the provisions of the Consumer Protection Act, 2019, a District Commission may issue orders directing the opposite party to return the price paid along with interest, replace defective goods, or pay compensation for loss or injury.",
+            "A product liability action may be brought by a complainant against a product manufacturer, service provider, or product seller for harm caused by a defective product, subject to specific conditions of liability."
+          ],
+          "possible_rights": [
+            "Based on the provisions of the Consumer Protection Act, 2019, a District Commission may issue orders directing the opposite party to return the price paid along with interest, replace defective goods, or pay compensation for loss or injury.",
+            "A product liability action may be brought by a complainant against a product manufacturer, service provider, or product seller for harm caused by a defective product, subject to specific conditions of liability."
+          ],
+          "suggested_next_steps": [
+            "Review the purchase records, communications with the online seller, and details of the product defect.",
+            "Consider formally approaching the appropriate consumer forum if the seller continues to refuse a refund."
+          ],
+          "what_this_may_involve": [
+            "Potential consumer complaints regarding defective goods or unfair trade practices.",
+            "Possible product liability claims if the product caused harm due to defects or lack of instructions."
+          ],
+          "where_to_approach": [
+            "The District Consumer Disputes Redressal Commission having jurisdiction."
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational purposes based on the provided legal extracts and does not constitute formal legal advice. Outcomes cannot be guaranteed.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 3108,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "consumer_consumer_protection_act_2019__chunk_0060",
+          "consumer_consumer_protection_act_2019__chunk_0109",
+          "consumer_consumer_protection_act_2019__chunk_0110",
+          "consumer_consumer_protection_act_2019__chunk_0112"
+        ],
+        "sources": [
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0060",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER IV Section 39 \u2014 Findings of District Commission 39. Findings of District Commission .\u2014(1) Where the District Commission is satisfied that the goods complained against suffer from any of the defects specified in the complaint or that any of the allegations contained in the complaint about the services or any unfa ir trade practices, or claims for...",
+            "page": 22,
+            "page_end": 23,
+            "page_start": 22,
+            "provision": "Section 39 \u2014 Findings of District Commission",
+            "section": "Section 39 \u2014 Findings of District Commission",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 83 \u2014 Product liability action 83. Product liability action.\u2014A product liability action may be brought by a complainant against a product manufacturer or a product service provider or a product seller, as the case may be, for any harm caused to him on account of a defective product.",
+            "page": 31,
+            "page_end": 31,
+            "page_start": 31,
+            "provision": "Section 83 \u2014 Product liability action",
+            "section": "Section 83 \u2014 Product liability action",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0110",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 84 \u2014 Liability of product manufacturer 84. Liability of product manufacturer .\u2014(1) A product manufacturer shall be liable in a product liability action, if\u2014 (a) the product contains a manufacturing defect; or (b) the product is defective in design; or (c) there is a deviation from manufacturing specifications; or (d) the product does not...",
+            "page": 31,
+            "page_end": 32,
+            "page_start": 31,
+            "provision": "Section 84 \u2014 Liability of product manufacturer",
+            "section": "Section 84 \u2014 Liability of product manufacturer",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0112",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 86 \u2014 Liability of product sellers 86. Liability of product sellers.\u2014A product seller who is not a product manufa cturer shall be liable in a product liability action, if\u2014 (a) he has exercised substantial control over the designing, testing, manufacturing, packaging or labelling of a product that caused harm; or (b) he has altered or...",
+            "page": 32,
+            "page_end": 32,
+            "page_start": 32,
+            "provision": "Section 86 \u2014 Liability of product sellers",
+            "section": "Section 86 \u2014 Liability of product sellers",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0060",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 22,
+          "provision": "Section 39 \u2014 Findings of District Commission",
+          "rerank_score": 1.2299,
+          "score": 0.5379
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0112",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 32,
+          "provision": "Section 86 \u2014 Liability of product sellers",
+          "rerank_score": 1.1536,
+          "score": 0.5736
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 83 \u2014 Product liability action",
+          "rerank_score": 1.1516,
+          "score": 0.5536
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0110",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 84 \u2014 Liability of product manufacturer",
+          "rerank_score": 1.0774,
+          "score": 0.6074
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "consumer_defective",
+      "query": "seller refusing refund for defective product",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Purchase receipts or invoices",
+            "Records of communication with the seller",
+            "Photographs or documentation of the product defect"
+          ],
+          "issue_summary": "The user reports that a seller is refusing to provide a refund for a defective product.",
+          "limitations": [
+            "The retrieved legal material does not specify exact limitation periods or filing fees for approaching the consumer commission.",
+            "Liability of a product seller depends on specific conditions such as exercising substantial control, altering the product, or failing to exercise reasonable care as outlined in the statute."
+          ],
+          "next_steps": [
+            "Gather and preserve evidence related to the purchase and the product defect.",
+            "Consider approaching the appropriate consumer forum based on the retrieved provisions."
+          ],
+          "possible_legal_position": [
+            "Based on the retrieved material, a product liability action may be brought by a complainant against a product manufacturer, service provider, or product seller for harm caused by a defective product.",
+            "The District Commission may issue orders to replace the goods, return the price paid along with interest, or award compensation for loss or injury suffered due to negligence."
+          ],
+          "possible_rights": [
+            "Based on the retrieved material, a product liability action may be brought by a complainant against a product manufacturer, service provider, or product seller for harm caused by a defective product.",
+            "The District Commission may issue orders to replace the goods, return the price paid along with interest, or award compensation for loss or injury suffered due to negligence."
+          ],
+          "suggested_next_steps": [
+            "Gather and preserve evidence related to the purchase and the product defect.",
+            "Consider approaching the appropriate consumer forum based on the retrieved provisions."
+          ],
+          "what_this_may_involve": [
+            "A potential consumer dispute regarding a defective product under the Consumer Protection Act, 2019.",
+            "Potential product liability or remedies such as replacement of goods, return of price paid, or compensation for loss or injury."
+          ],
+          "where_to_approach": [
+            "District Commission under the Consumer Protection Act, 2019"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational purposes based on the provided legal text and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2666,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "consumer_consumer_protection_act_2019__chunk_0060",
+          "consumer_consumer_protection_act_2019__chunk_0109",
+          "consumer_consumer_protection_act_2019__chunk_0110",
+          "consumer_consumer_protection_act_2019__chunk_0112"
+        ],
+        "sources": [
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0060",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER IV Section 39 \u2014 Findings of District Commission 39. Findings of District Commission .\u2014(1) Where the District Commission is satisfied that the goods complained against suffer from any of the defects specified in the complaint or that any of the allegations contained in the complaint about the services or any unfa ir trade practices, or claims for...",
+            "page": 22,
+            "page_end": 23,
+            "page_start": 22,
+            "provision": "Section 39 \u2014 Findings of District Commission",
+            "section": "Section 39 \u2014 Findings of District Commission",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 83 \u2014 Product liability action 83. Product liability action.\u2014A product liability action may be brought by a complainant against a product manufacturer or a product service provider or a product seller, as the case may be, for any harm caused to him on account of a defective product.",
+            "page": 31,
+            "page_end": 31,
+            "page_start": 31,
+            "provision": "Section 83 \u2014 Product liability action",
+            "section": "Section 83 \u2014 Product liability action",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0110",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 84 \u2014 Liability of product manufacturer 84. Liability of product manufacturer .\u2014(1) A product manufacturer shall be liable in a product liability action, if\u2014 (a) the product contains a manufacturing defect; or (b) the product is defective in design; or (c) there is a deviation from manufacturing specifications; or (d) the product does not...",
+            "page": 31,
+            "page_end": 32,
+            "page_start": 31,
+            "provision": "Section 84 \u2014 Liability of product manufacturer",
+            "section": "Section 84 \u2014 Liability of product manufacturer",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0112",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 86 \u2014 Liability of product sellers 86. Liability of product sellers.\u2014A product seller who is not a product manufa cturer shall be liable in a product liability action, if\u2014 (a) he has exercised substantial control over the designing, testing, manufacturing, packaging or labelling of a product that caused harm; or (b) he has altered or...",
+            "page": 32,
+            "page_end": 32,
+            "page_start": 32,
+            "provision": "Section 86 \u2014 Liability of product sellers",
+            "section": "Section 86 \u2014 Liability of product sellers",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0060",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 22,
+          "provision": "Section 39 \u2014 Findings of District Commission",
+          "rerank_score": 1.3698,
+          "score": 0.5527
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 83 \u2014 Product liability action",
+          "rerank_score": 1.3671,
+          "score": 0.5857
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0110",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 84 \u2014 Liability of product manufacturer",
+          "rerank_score": 1.3099,
+          "score": 0.6365
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0112",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 32,
+          "provision": "Section 86 \u2014 Liability of product sellers",
+          "rerank_score": 1.3005,
+          "score": 0.5771
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "consumer_damaged",
+      "query": "product delivered to me was damaged",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Photographs or videos of the damaged product",
+            "Purchase invoices, receipts, and delivery records",
+            "Communications with the seller or manufacturer regarding the damaged product"
+          ],
+          "issue_summary": "The user received a damaged product and may seek a remedy under consumer protection laws.",
+          "limitations": [
+            "The retrieved material does not specify exact limitation periods, procedural fees, or detailed jurisdictional rules for filing claims"
+          ],
+          "next_steps": [
+            "Review the condition of the delivered product and gather relevant purchase details",
+            "Approach the appropriate consumer forum or District Commission to file a complaint regarding the defective product"
+          ],
+          "possible_legal_position": [
+            "Based on the Consumer Protection Act, 2019, a complainant may bring a product liability action for harm caused by a defective product",
+            "A product manufacturer may be held liable if the product contains a manufacturing defect, is defective in design, deviates from specifications, fails to conform to an express warranty, or lacks adequate instructions or warnings",
+            "The District Commission may issue orders to replace the goods, return the price paid along with interest, or pay compensation"
+          ],
+          "possible_rights": [
+            "Based on the Consumer Protection Act, 2019, a complainant may bring a product liability action for harm caused by a defective product",
+            "A product manufacturer may be held liable if the product contains a manufacturing defect, is defective in design, deviates from specifications, fails to conform to an express warranty, or lacks adequate instructions or warnings",
+            "The District Commission may issue orders to replace the goods, return the price paid along with interest, or pay compensation"
+          ],
+          "suggested_next_steps": [
+            "Review the condition of the delivered product and gather relevant purchase details",
+            "Approach the appropriate consumer forum or District Commission to file a complaint regarding the defective product"
+          ],
+          "what_this_may_involve": [
+            "Bringing a product liability action against a product manufacturer, product service provider, or product seller for harm caused by a defective product",
+            "Seeking remedies such as replacement of goods, return of price, or compensation for loss or injury suffered"
+          ],
+          "where_to_approach": [
+            "District Commission"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is based on the retrieved legal material and is for educational purposes only. It does not constitute formal legal advice or guarantee any specific outcome.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2754,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "consumer_consumer_protection_act_2019__chunk_0060",
+          "consumer_consumer_protection_act_2019__chunk_0108",
+          "consumer_consumer_protection_act_2019__chunk_0109",
+          "consumer_consumer_protection_act_2019__chunk_0110"
+        ],
+        "sources": [
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0060",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER IV Section 39 \u2014 Findings of District Commission 39. Findings of District Commission .\u2014(1) Where the District Commission is satisfied that the goods complained against suffer from any of the defects specified in the complaint or that any of the allegations contained in the complaint about the services or any unfa ir trade practices, or claims for...",
+            "page": 22,
+            "page_end": 23,
+            "page_start": 22,
+            "provision": "Section 39 \u2014 Findings of District Commission",
+            "section": "Section 39 \u2014 Findings of District Commission",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0108",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 82 \u2014 Application of Chapter 82. Application of Chapter .\u2014This Chapter shall apply to every claim for compensation under a product liability action by a complainant for any harm caused by a defective product manufactured by a product manufacturer or serviced by a product service provider or sold by a product seller.",
+            "page": 31,
+            "page_end": 31,
+            "page_start": 31,
+            "provision": "Section 82 \u2014 Application of Chapter",
+            "section": "Section 82 \u2014 Application of Chapter",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 83 \u2014 Product liability action 83. Product liability action.\u2014A product liability action may be brought by a complainant against a product manufacturer or a product service provider or a product seller, as the case may be, for any harm caused to him on account of a defective product.",
+            "page": 31,
+            "page_end": 31,
+            "page_start": 31,
+            "provision": "Section 83 \u2014 Product liability action",
+            "section": "Section 83 \u2014 Product liability action",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0110",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 84 \u2014 Liability of product manufacturer 84. Liability of product manufacturer .\u2014(1) A product manufacturer shall be liable in a product liability action, if\u2014 (a) the product contains a manufacturing defect; or (b) the product is defective in design; or (c) there is a deviation from manufacturing specifications; or (d) the product does not...",
+            "page": 31,
+            "page_end": 32,
+            "page_start": 31,
+            "provision": "Section 84 \u2014 Liability of product manufacturer",
+            "section": "Section 84 \u2014 Liability of product manufacturer",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 83 \u2014 Product liability action",
+          "rerank_score": 0.9406,
+          "score": 0.4656
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0110",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 84 \u2014 Liability of product manufacturer",
+          "rerank_score": 0.9354,
+          "score": 0.4684
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0060",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 22,
+          "provision": "Section 39 \u2014 Findings of District Commission",
+          "rerank_score": 0.9042,
+          "score": 0.4192
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0108",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 82 \u2014 Application of Chapter",
+          "rerank_score": 0.8755,
+          "score": 0.4505
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "consumer_ecommerce",
+      "query": "ecommerce company not responding to complaint",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Copies of the original complaint sent to the e-commerce company",
+            "Proof of purchase, invoices, or transaction receipts",
+            "Electronic records of communication attempts with the company"
+          ],
+          "issue_summary": "The user is facing an issue where an e-commerce company is not responding to a complaint.",
+          "limitations": [
+            "The Consumer Protection Act generally requires complaints to the District Commission, State Commission, or National Commission to be filed within two years from the date on which the cause of action arose, unless sufficient cause for delay is shown."
+          ],
+          "next_steps": [
+            "Forward the complaint in writing or electronic mode to the District Collector, Commissioner of regional office, or the Central Authority.",
+            "Consider approaching the appropriate consumer forum if the dispute persists, keeping in mind the limitation period."
+          ],
+          "possible_legal_position": [
+            "A complainant may bring a product liability action against a product manufacturer, service provider, or seller for harm caused by a defective product.",
+            "Complaints relating to violation of consumer rights or unfair trade practices may be forwarded to the District Collector, Commissioner of regional office, or the Central Authority."
+          ],
+          "possible_rights": [
+            "A complainant may bring a product liability action against a product manufacturer, service provider, or seller for harm caused by a defective product.",
+            "Complaints relating to violation of consumer rights or unfair trade practices may be forwarded to the District Collector, Commissioner of regional office, or the Central Authority."
+          ],
+          "suggested_next_steps": [
+            "Forward the complaint in writing or electronic mode to the District Collector, Commissioner of regional office, or the Central Authority.",
+            "Consider approaching the appropriate consumer forum if the dispute persists, keeping in mind the limitation period."
+          ],
+          "what_this_may_involve": [
+            "Filing a consumer complaint regarding a potential violation of consumer rights or unfair trade practices.",
+            "Initiating a product liability action if the complaint involves harm caused by a defective product."
+          ],
+          "where_to_approach": [
+            "District Collector",
+            "Commissioner of regional office",
+            "Central Authority",
+            "District Commission"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational purposes only and does not constitute formal legal advice. Please consult a qualified legal professional for guidance specific to your situation.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2664,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "consumer_consumer_protection_act_2019__chunk_0109",
+          "consumer_consumer_protection_act_2019__chunk_0032",
+          "consumer_consumer_protection_act_2019__chunk_0094"
+        ],
+        "sources": [
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VI Section 83 \u2014 Product liability action 83. Product liability action.\u2014A product liability action may be brought by a complainant against a product manufacturer or a product service provider or a product seller, as the case may be, for any harm caused to him on account of a defective product.",
+            "page": 31,
+            "page_end": 31,
+            "page_start": 31,
+            "provision": "Section 83 \u2014 Product liability action",
+            "section": "Section 83 \u2014 Product liability action",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0032",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER III Section 17 \u2014 Complaints to authorities 17. Complaints to authorities.\u2014A complaint relating to violation of consumer rights or unfair trade practices or false or misleading advertisements which are prejudicial to the interests of consumers as a class, may be forwarded either in writing or in electronic mode, to any one of the authorities,...",
+            "page": 14,
+            "page_end": 14,
+            "page_start": 14,
+            "provision": "Section 17 \u2014 Complaints to authorities",
+            "section": "Section 17 \u2014 Complaints to authorities",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0094",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER IV Section 69 \u2014 Limitation period 69. Limitation period .\u2014(1) The District Commission, the State Commission or the Nationa l Commission shall not admit a complaint unless it is filed within two years from the date on which the cause of action has arisen. (2) Notwithstanding anything contained in sub -section (1), a complaint may be entertained...",
+            "page": 28,
+            "page_end": 28,
+            "page_start": 28,
+            "provision": "Section 69 \u2014 Limitation period",
+            "section": "Section 69 \u2014 Limitation period",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0109",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 31,
+          "provision": "Section 83 \u2014 Product liability action",
+          "rerank_score": 0.7121,
+          "score": 0.4021
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0032",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 14,
+          "provision": "Section 17 \u2014 Complaints to authorities",
+          "rerank_score": 0.7066,
+          "score": 0.4566
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0055",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 20,
+          "provision": "Section 38 \u2014 Procedure on admission of complaint",
+          "rerank_score": 0.638,
+          "score": 0.406
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0094",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 28,
+          "provision": "Section 69 \u2014 Limitation period",
+          "rerank_score": 0.6366,
+          "score": 0.4046
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "consumer_dark_pattern",
+      "query": "dark pattern forced me to subscribe",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Screenshots of the subscription flow.",
+            "Emails, receipts, or billing statements confirming the forced subscription."
+          ],
+          "issue_summary": "The user reports being forced to subscribe to a service through the use of a dark pattern.",
+          "limitations": [
+            "The provided retrieved material does not list the specific descriptions of dark patterns contained in Annexure 1.",
+            "Specific remedies, deadlines, and direct procedures are not detailed in the available text."
+          ],
+          "next_steps": [
+            "Review the specific practices listed in Annexure 1 of the Guidelines for Prevention and Regulation of Dark Patterns, 2023, to check if the platform's behavior matches.",
+            "Consider gathering records related to the forced subscription."
+          ],
+          "possible_legal_position": [
+            "Based on the retrieved material, any person or platform engaging in practices specified in Annexure 1 of the Guidelines for Prevention and Regulation of Dark Patterns, 2023, may be considered to be engaging in a dark pattern practice.",
+            "The Central Consumer Protection Authority may issue guidelines and exercise powers conferred by section 18 of the Consumer Protection Act, 2019."
+          ],
+          "possible_rights": [
+            "Based on the retrieved material, any person or platform engaging in practices specified in Annexure 1 of the Guidelines for Prevention and Regulation of Dark Patterns, 2023, may be considered to be engaging in a dark pattern practice.",
+            "The Central Consumer Protection Authority may issue guidelines and exercise powers conferred by section 18 of the Consumer Protection Act, 2019."
+          ],
+          "suggested_next_steps": [
+            "Review the specific practices listed in Annexure 1 of the Guidelines for Prevention and Regulation of Dark Patterns, 2023, to check if the platform's behavior matches.",
+            "Consider gathering records related to the forced subscription."
+          ],
+          "what_this_may_involve": [
+            "Potential engagement in dark pattern practices by a platform or person under the Guidelines for Prevention and Regulation of Dark Patterns, 2023.",
+            "Potential examination by the Central Consumer Protection Authority under the Consumer Protection Act, 2019."
+          ],
+          "where_to_approach": [
+            "The Central Consumer Protection Authority or appropriate consumer forums, depending on further procedural rules."
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational purposes based on the provided legal material and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2469,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "consumer_dark_patterns_guidelines_2023__chunk_0001",
+          "consumer_dark_patterns_guidelines_2023__chunk_0006"
+        ],
+        "sources": [
+          {
+            "chunk_id": "consumer_dark_patterns_guidelines_2023__chunk_0001",
+            "document": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+            "document_title": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+            "excerpt": "CENTRAL CONSUMER PROTECTION AUTHORITY NOTIFICATION New Delhi, the 30th November, 2023 F. No. CCPA-1/1/2023-CCPA -(Reg).\u2014In exercise of the powers conferred by section 18 of the Consumer Protection Act, 2019 (35 of 2019), the Central Consumer Protection Authority hereby issues the following guidelines to provide for the prevention and regulation of dark...",
+            "page": 7,
+            "page_end": 7,
+            "page_start": 7,
+            "provision": null,
+            "section": null,
+            "source_file": "consumer/dark_patterns_guidelines_2023.pdf"
+          },
+          {
+            "chunk_id": "consumer_dark_patterns_guidelines_2023__chunk_0006",
+            "document": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+            "document_title": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+            "excerpt": "Guideline 5 \u2014 Conditions for dark patterns 5. Conditions for dark patterns. - Any person, including any platform, shall be considered to be engaging in a dark pattern practice if it engages in any practice specified in Annexure 1 of the guidelines.",
+            "page": 8,
+            "page_end": 8,
+            "page_start": 8,
+            "provision": null,
+            "section": null,
+            "source_file": "consumer/dark_patterns_guidelines_2023.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "consumer_dark_patterns_guidelines_2023__chunk_0006",
+          "document": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+          "page": 8,
+          "provision": null,
+          "rerank_score": 0.7002,
+          "score": 0.5002
+        },
+        {
+          "chunk_id": "consumer_dark_patterns_guidelines_2023__chunk_0001",
+          "document": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+          "page": 7,
+          "provision": null,
+          "rerank_score": 0.5613,
+          "score": 0.3883
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "consumer_misleading_ads",
+      "query": "misleading advertisement caused me loss",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Copies or recordings of the misleading advertisement",
+            "Proof of purchase, receipts, or transaction details",
+            "Documentation showing the loss suffered as a result of the product, service, or advertisement"
+          ],
+          "issue_summary": "The user experienced financial or material loss due to a misleading advertisement.",
+          "limitations": [
+            "Outcomes cannot be guaranteed, and liability cannot be decided definitively based solely on the preliminary facts provided.",
+            "Unintentional lapses in fulfilling an advertised promise during mass manufacture may not invalidate an advertisement under certain conditions, such as prompt action by the advertiser."
+          ],
+          "next_steps": [
+            "Review the advertisement in question against the conditions for valid and non-misleading advertisements.",
+            "Gather and preserve records of the advertisement and the losses incurred.",
+            "Consider approaching the appropriate consumer forum or authority based on the facts provided."
+          ],
+          "possible_legal_position": [
+            "Under Section 89 of the Consumer Protection Act, 2019, any manufacturer or service provider who causes a false or misleading advertisement to be made which is prejudicial to the interest of consumers may be punished with imprisonment and a fine.",
+            "Advertisements are expected to contain truthful and honest representations and should not mislead consumers by exaggerating accuracy, scientific validity, practical usefulness, capability, performance, or service."
+          ],
+          "possible_rights": [
+            "Under Section 89 of the Consumer Protection Act, 2019, any manufacturer or service provider who causes a false or misleading advertisement to be made which is prejudicial to the interest of consumers may be punished with imprisonment and a fine.",
+            "Advertisements are expected to contain truthful and honest representations and should not mislead consumers by exaggerating accuracy, scientific validity, practical usefulness, capability, performance, or service."
+          ],
+          "suggested_next_steps": [
+            "Review the advertisement in question against the conditions for valid and non-misleading advertisements.",
+            "Gather and preserve records of the advertisement and the losses incurred.",
+            "Consider approaching the appropriate consumer forum or authority based on the facts provided."
+          ],
+          "what_this_may_involve": [
+            "False or misleading advertisements that are prejudicial to the interests of consumers",
+            "Manufacturer or service provider causing a misleading advertisement to be made",
+            "Potential violations of the Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022"
+          ],
+          "where_to_approach": [
+            "Appropriate consumer commission or consumer protection authorities"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational and informational purposes only and does not constitute formal legal advice. Legal Aid AI operates strictly on the provided facts and retrieved materials.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2726,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "consumer_consumer_protection_act_2019__chunk_0115",
+          "consumer_misleading_ads_guidelines_2022__chunk_0005",
+          "consumer_misleading_ads_guidelines_2022__chunk_0013"
+        ],
+        "sources": [
+          {
+            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0115",
+            "document": "The Consumer Protection Act, 2019",
+            "document_title": "The Consumer Protection Act, 2019",
+            "excerpt": "CHAPTER VII Section 89 \u2014 Punishment for false or misleading advertisement 89. Punishment for false or misleading advertisement .\u2014Any manufacturer or service provider who causes a false or misleading advertisement to be made which is prejudicial to the interest of consumers shall be punished with imprisonment for a term which may extend to two years and...",
+            "page": 33,
+            "page_end": 33,
+            "page_start": 33,
+            "provision": "Section 89 \u2014 Punishment for false or misleading advertisement",
+            "section": "Section 89 \u2014 Punishment for false or misleading advertisement",
+            "source_file": "consumer/consumer_protection_act_2019.pdf"
+          },
+          {
+            "chunk_id": "consumer_misleading_ads_guidelines_2022__chunk_0005",
+            "document": "Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022",
+            "document_title": "Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022",
+            "excerpt": "Guideline 4 \u2014 Conditions for non-misleading and valid advertisement 4. Conditions for non-misleading and valid advertisement. \u2013 (1) An advertisement shall be considered to be valid and not misleading, if\u2013 (a) it contains truthful and honest representation; (b) it does not mislead consumers by exaggerati ng the accuracy, scientific validity or practical...",
+            "page": 7,
+            "page_end": 7,
+            "page_start": 7,
+            "provision": null,
+            "section": null,
+            "source_file": "consumer/misleading_ads_guidelines_2022.pdf"
+          },
+          {
+            "chunk_id": "consumer_misleading_ads_guidelines_2022__chunk_0013",
+            "document": "Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022",
+            "document_title": "Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022",
+            "excerpt": "Guideline 11 \u2014 Disclaimers in Advertisements 11. Disclaimers in Advertisements. \u2013 (1) A Disclaimer in advertisement \u2013 (a) may expand or clarify a claim made in such advertisement or make qualifications or resolve ambiguities therein in order to explain such claim in further detail, but such disclaimer s hall not contradict the material claim made in the...",
+            "page": 9,
+            "page_end": 10,
+            "page_start": 9,
+            "provision": null,
+            "section": null,
+            "source_file": "consumer/misleading_ads_guidelines_2022.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0115",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 33,
+          "provision": "Section 89 \u2014 Punishment for false or misleading advertisement",
+          "rerank_score": 0.851,
+          "score": 0.493
+        },
+        {
+          "chunk_id": "consumer_misleading_ads_guidelines_2022__chunk_0005",
+          "document": "Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022",
+          "page": 7,
+          "provision": null,
+          "rerank_score": 0.8428,
+          "score": 0.6248
+        },
+        {
+          "chunk_id": "consumer_dark_patterns_guidelines_2023__chunk_0014",
+          "document": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+          "page": 8,
+          "provision": null,
+          "rerank_score": 0.7623,
+          "score": 0.5623
+        },
+        {
+          "chunk_id": "consumer_misleading_ads_guidelines_2022__chunk_0013",
+          "document": "Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022",
+          "page": 9,
+          "provision": null,
+          "rerank_score": 0.7472,
+          "score": 0.5472
+        }
+      ]
+    },
+    {
+      "domains": [
+        "cyber"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "cyber_fraud",
+      "query": "cyber fraud online payment",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Keep records of transaction details, electronic receipts, chat logs, messages, and any communications related to the online payment and cyber fraud."
+          ],
+          "issue_summary": "The user has reported an issue regarding cyber fraud involving an online payment.",
+          "limitations": [
+            "The retrieved legal material does not cover all possible remedies or specific limitation periods for civil recovery.",
+            "Reporting on the portal does not substitute for an FIR, and appropriate action depends on the review by the respective police authorities."
+          ],
+          "next_steps": [
+            "Consider reporting the incident online through the National Cybercrime Reporting Portal.",
+            "Ensure accuracy when providing details and information on the reporting portal for necessary action by the appropriate State or UT police authorities."
+          ],
+          "possible_legal_position": [
+            "Under Section 66C of the Information Technology Act, 2000, fraudulent or dishonest use of another person's electronic signature, password, or unique identification feature carries potential punishment including imprisonment and a fine.",
+            "State and Union Territory police authorities are responsible for public order and handling cybercrime complaints reported through official portals, as indicated in the retrieved manual."
+          ],
+          "possible_rights": [
+            "Under Section 66C of the Information Technology Act, 2000, fraudulent or dishonest use of another person's electronic signature, password, or unique identification feature carries potential punishment including imprisonment and a fine.",
+            "State and Union Territory police authorities are responsible for public order and handling cybercrime complaints reported through official portals, as indicated in the retrieved manual."
+          ],
+          "suggested_next_steps": [
+            "Consider reporting the incident online through the National Cybercrime Reporting Portal.",
+            "Ensure accuracy when providing details and information on the reporting portal for necessary action by the appropriate State or UT police authorities."
+          ],
+          "what_this_may_involve": [
+            "Potential cyber fraud or unauthorized use related to online transactions based on the facts provided.",
+            "Potential identity theft or fraudulent acquisition of unique identification features if passwords or electronic signatures were compromised, which may fall under Section 66C of the Information Technology Act, 2000."
+          ],
+          "where_to_approach": [
+            "The National Cybercrime Reporting Portal.",
+            "Respective State or UT police authorities."
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational and informational purposes only based on the retrieved material and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2849,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "cyber_information_technology_act_2000__chunk_0071",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0001"
+        ],
+        "sources": [
+          {
+            "chunk_id": "cyber_information_technology_act_2000__chunk_0071",
+            "document": "The Information Technology Act, 2000",
+            "document_title": "The Information Technology Act, 2000",
+            "excerpt": "CHAPTER XI Section 66C \u2014 Punishment for identity theft 66C. Punishment for identity theft .\u2013Whoever, fraud ulently or dishonestly make use of the electronic signature, password or any other unique identification feature of any other person, shall be punished with imprisonment of either description for a term which may extend to three years and shall also...",
+            "page": 24,
+            "page_end": 24,
+            "page_start": 24,
+            "provision": "Section 66C \u2014 Punishment for identity theft",
+            "section": "Section 66C \u2014 Punishment for identity theft",
+            "source_file": "cyber/information_technology_act_2000.pdf"
+          },
+          {
+            "chunk_id": "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0001",
+            "document": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+            "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+            "excerpt": "USER MANUAL FOR NATIONAL CYBERCRIME REPORTING PORTAL 0 USER MANUAL FOR REPORTING CYBER CRIME AGAINST WOMEN AND CHILDREN (CP/RGR) Ministry of Home Affairs CITIZEN MANUAL FOR NATIONAL CYBERCRIME REPORTING PORTAL INDIAN CYBERCRIME COORDINATION CENTRE (I4C) MINISTRY OF HOME AFFAIRS USER MANUAL FOR NATIONAL CYBERCRIME REPORTING PORTAL 1 Document Information...",
+            "page": 1,
+            "page_end": 24,
+            "page_start": 1,
+            "provision": null,
+            "section": null,
+            "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0071",
+          "document": "The Information Technology Act, 2000",
+          "page": 24,
+          "provision": "Section 66C \u2014 Punishment for identity theft",
+          "rerank_score": 0.6927,
+          "score": 0.4397
+        },
+        {
+          "chunk_id": "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0001",
+          "document": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "page": 1,
+          "provision": null,
+          "rerank_score": 0.6085,
+          "score": 0.4705
+        },
+        {
+          "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0033",
+          "document": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+          "page": 7,
+          "provision": null,
+          "rerank_score": 0.5789,
+          "score": 0.4659
+        },
+        {
+          "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0978",
+          "document": "The Bharatiya Nagarik Suraksha Sanhita, 2023",
+          "page": 167,
+          "provision": "Section 499 \u2014 Payment to innocent purchaser of money found on accused",
+          "rerank_score": 0.5664,
+          "score": 0.4314
+        }
+      ]
+    },
+    {
+      "domains": [
+        "cyber"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "cyber_hacked",
+      "query": "my Instagram account was hacked",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Screenshots of the hacked account, notification emails regarding password changes, and any other relevant digital records."
+          ],
+          "issue_summary": "The user reports that their Instagram account has been hacked.",
+          "limitations": [
+            "The retrieved material contains limited specific procedures for social media platform recovery and primarily outlines identity theft penalties and general portal username/mobile recovery steps."
+          ],
+          "next_steps": [
+            "Report the cyber crime incident through the appropriate official reporting channels."
+          ],
+          "possible_legal_position": [
+            "Based on the provisions of Section 66C of the Information Technology Act, 2000, fraudulently or dishonestly making use of the electronic signature, password, or any other unique identification feature of another person is punishable with imprisonment and a fine."
+          ],
+          "possible_rights": [
+            "Based on the provisions of Section 66C of the Information Technology Act, 2000, fraudulently or dishonestly making use of the electronic signature, password, or any other unique identification feature of another person is punishable with imprisonment and a fine."
+          ],
+          "suggested_next_steps": [
+            "Report the cyber crime incident through the appropriate official reporting channels."
+          ],
+          "what_this_may_involve": [
+            "Fraudulent or dishonest use of a password or unique identification feature under Section 66C of the Information Technology Act, 2000."
+          ],
+          "where_to_approach": [
+            "National Cybercrime Reporting Portal"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational purposes based on the provided text and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 1830,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "cyber_information_technology_act_2000__chunk_0071",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0014"
+        ],
+        "sources": [
+          {
+            "chunk_id": "cyber_information_technology_act_2000__chunk_0071",
+            "document": "The Information Technology Act, 2000",
+            "document_title": "The Information Technology Act, 2000",
+            "excerpt": "CHAPTER XI Section 66C \u2014 Punishment for identity theft 66C. Punishment for identity theft .\u2013Whoever, fraud ulently or dishonestly make use of the electronic signature, password or any other unique identification feature of any other person, shall be punished with imprisonment of either description for a term which may extend to three years and shall also...",
+            "page": 24,
+            "page_end": 24,
+            "page_start": 24,
+            "provision": "Section 66C \u2014 Punishment for identity theft",
+            "section": "Section 66C \u2014 Punishment for identity theft",
+            "source_file": "cyber/information_technology_act_2000.pdf"
+          },
+          {
+            "chunk_id": "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0014",
+            "document": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+            "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+            "excerpt": "res 5.1 Recover Your Username If You forgot your username, follow the following steps i. Click on \u201cForget User name\u201d ii. Type security answer for authentication iii. Click Submit button USER MANUAL FOR NATIONAL CYBERCRIME REPORTING PORTAL 22 5.2 Update Mobile Number Following are the steps for updating your mobile number I. In case, you want to update your...",
+            "page": 1,
+            "page_end": 24,
+            "page_start": 1,
+            "provision": null,
+            "section": null,
+            "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0071",
+          "document": "The Information Technology Act, 2000",
+          "page": 24,
+          "provision": "Section 66C \u2014 Punishment for identity theft",
+          "rerank_score": 0.5485,
+          "score": 0.3105
+        },
+        {
+          "chunk_id": "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0014",
+          "document": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "page": 1,
+          "provision": null,
+          "rerank_score": 0.4089,
+          "score": 0.3309
+        }
+      ]
+    },
+    {
+      "domains": [
+        "cyber"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "cyber_identity",
+      "query": "someone used my identity online",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Screenshots or digital records showing the unauthorized use of your identity.",
+            "Any correspondence or logs related to the incident and platform interactions."
+          ],
+          "issue_summary": "Based on the facts provided, someone has used your identity online, which involves potential identity theft and misuse of unique identification features.",
+          "limitations": [
+            "The retrieved legal material does not outline specific procedural deadlines or detailed filing mechanisms beyond the penal provisions.",
+            "Outcomes cannot be guaranteed and liability depends on the specific facts and investigation."
+          ],
+          "next_steps": [
+            "Report the unauthorized use of your identity to the relevant online platform or intermediary immediately.",
+            "Approach the appropriate law enforcement or cyber crime authorities to file a complaint."
+          ],
+          "possible_legal_position": [
+            "Under Section 66C of the Information Technology Act, 2000, anyone who fraudulently or dishonestly makes use of the electronic signature, password, or any other unique identification feature of another person may be punished with imprisonment for a term up to three years and a fine up to rupees one lakh."
+          ],
+          "possible_rights": [
+            "Under Section 66C of the Information Technology Act, 2000, anyone who fraudulently or dishonestly makes use of the electronic signature, password, or any other unique identification feature of another person may be punished with imprisonment for a term up to three years and a fine up to rupees one lakh."
+          ],
+          "suggested_next_steps": [
+            "Report the unauthorized use of your identity to the relevant online platform or intermediary immediately.",
+            "Approach the appropriate law enforcement or cyber crime authorities to file a complaint."
+          ],
+          "what_this_may_involve": [
+            "Fraudulent or dishonest use of electronic signatures, passwords, or other unique identification features under Section 66C of the Information Technology Act, 2000.",
+            "Potential handling of personal information by online intermediaries or digital platforms."
+          ],
+          "where_to_approach": [
+            "Local cyber crime cell or law enforcement authorities.",
+            "The relevant online platform or intermediary where the identity theft occurred."
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational purposes based on the provided legal extracts and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2723,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "cyber_information_technology_act_2000__chunk_0071",
+          "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0019"
+        ],
+        "sources": [
+          {
+            "chunk_id": "cyber_information_technology_act_2000__chunk_0071",
+            "document": "The Information Technology Act, 2000",
+            "document_title": "The Information Technology Act, 2000",
+            "excerpt": "CHAPTER XI Section 66C \u2014 Punishment for identity theft 66C. Punishment for identity theft .\u2013Whoever, fraud ulently or dishonestly make use of the electronic signature, password or any other unique identification feature of any other person, shall be punished with imprisonment of either description for a term which may extend to three years and shall also...",
+            "page": 24,
+            "page_end": 24,
+            "page_start": 24,
+            "provision": "Section 66C \u2014 Punishment for identity theft",
+            "section": "Section 66C \u2014 Punishment for identity theft",
+            "source_file": "cyber/information_technology_act_2000.pdf"
+          },
+          {
+            "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0019",
+            "document": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+            "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+            "excerpt": "PART II such information and associated records for one hundred and eighty days for investigation purposes, or for such longer period as may be required by the court or by Government agencies who are lawfully authorised; (h) where an intermediary collects information from a user for registration on the computer resource, it shall retain his information for...",
+            "page": 7,
+            "page_end": 20,
+            "page_start": 7,
+            "provision": null,
+            "section": null,
+            "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0071",
+          "document": "The Information Technology Act, 2000",
+          "page": 24,
+          "provision": "Section 66C \u2014 Punishment for identity theft",
+          "rerank_score": 0.6249,
+          "score": 0.4819
+        },
+        {
+          "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0019",
+          "document": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+          "page": 7,
+          "provision": null,
+          "rerank_score": 0.5203,
+          "score": 0.4903
+        },
+        {
+          "chunk_id": "cyber_digital_personal_data_protection_rules_2025__chunk_0014",
+          "document": "The Digital Personal Data Protection Rules, 2025",
+          "page": 4,
+          "provision": "Rule 10 \u2014 Verifiable consent for processing of personal data of child",
+          "rerank_score": 0.4586,
+          "score": 0.4486
+        },
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0087",
+          "document": "The Information Technology Act, 2000",
+          "page": 28,
+          "provision": "Section 72 \u2014 Penalty for Breach of confidentiality and privacy",
+          "rerank_score": 0.4454,
+          "score": 0.3834
+        }
+      ]
+    },
+    {
+      "domains": [
+        "cyber"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "cyber_intermediary",
+      "query": "intermediary failed to remove unlawful content",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Screenshots of the chats depicting objectionable content with sender details, date, and time",
+            "URLs where the unlawful content was seen",
+            "Saved pages or screenshots showing the abusive content",
+            "Original messages, emails, attachments, and messenger chats"
+          ],
+          "issue_summary": "The user reports that an intermediary failed to remove unlawful content based on the provided facts.",
+          "limitations": [
+            "The retrieved material does not cover all possible civil or criminal liabilities for every type of unlawful content",
+            "Specific timelines and procedures depend on the nature of the content and applicable rules"
+          ],
+          "next_steps": [
+            "Preserve original evidence such as URLs, screenshots, chats, and emails related to the objectionable content",
+            "Report the incident through appropriate reporting channels or platforms",
+            "Review specific intermediary guidelines to determine compliance procedures"
+          ],
+          "possible_legal_position": [
+            "Intermediaries are subject to due diligence obligations and rules concerning the removal or disabling of access to certain content, such as impersonation or synthetically generated content violating laws",
+            "Failure by an intermediary to comply with preservation and retention requirements under Section 67C of the Information Technology Act, 2000 may attract punishment involving imprisonment and a fine"
+          ],
+          "possible_rights": [
+            "Intermediaries are subject to due diligence obligations and rules concerning the removal or disabling of access to certain content, such as impersonation or synthetically generated content violating laws",
+            "Failure by an intermediary to comply with preservation and retention requirements under Section 67C of the Information Technology Act, 2000 may attract punishment involving imprisonment and a fine"
+          ],
+          "suggested_next_steps": [
+            "Preserve original evidence such as URLs, screenshots, chats, and emails related to the objectionable content",
+            "Report the incident through appropriate reporting channels or platforms",
+            "Review specific intermediary guidelines to determine compliance procedures"
+          ],
+          "what_this_may_involve": [
+            "Intermediaries having responsibilities regarding the removal of or disabling access to certain unlawful or specified content under applicable rules",
+            "Preservation and retention of information by intermediaries as specified under the Information Technology Act"
+          ],
+          "where_to_approach": [
+            "National Cybercrime Reporting Portal",
+            "Law enforcement agencies"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational purposes based on the retrieved legal material and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2790,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "cyber_information_technology_act_2000__chunk_0078",
+          "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0022",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0011"
+        ],
+        "sources": [
+          {
+            "chunk_id": "cyber_information_technology_act_2000__chunk_0078",
+            "document": "The Information Technology Act, 2000",
+            "document_title": "The Information Technology Act, 2000",
+            "excerpt": "CHAPTER XI Section 67C \u2014 Preservation and retention of information by intermediaries 67C. Preservation and retention of information by intermediaries.\u2013(1) Intermediary shall preserve and retain such information as may be specified for such duration and in such manner and format as the Central Government may prescribe. (2) any intermediary who intentionally...",
+            "page": 26,
+            "page_end": 26,
+            "page_start": 26,
+            "provision": "Section 67C \u2014 Preservation and retention of information by intermediaries",
+            "section": "Section 67C \u2014 Preservation and retention of information by intermediaries",
+            "source_file": "cyber/information_technology_act_2000.pdf"
+          },
+          {
+            "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0022",
+            "document": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+            "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+            "excerpt": "PART II . by G.S.R. 120(E), dated 10.02.2026 for \u201cseventy-two hours\u201d. 7 Ins. by G.S.R. 275(E), dated 6.4.2023. 8 Subs. by G.S.R. 120(E), dated 10.02.2026 for \u201ctwenty-four hours\u201d. nature of impersonation in an electronic form, including artificially morphed images of such individual, take all reasonable and practicable measures to remove or disable access...",
+            "page": 7,
+            "page_end": 20,
+            "page_start": 7,
+            "provision": null,
+            "section": null,
+            "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf"
+          },
+          {
+            "chunk_id": "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0011",
+            "document": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+            "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+            "excerpt": "ment/s, then keep the attachment/s ready on your desktop/ device for updating the same as an evidence on the portal iii. If you received or found CP/RGR related content on messaging platform such as WhatsApp, Hike, Skype etc: a. Take the screenshot/s of the chats depicting the objectionable content with sender\u2019s number along with date and time for...",
+            "page": 1,
+            "page_end": 24,
+            "page_start": 1,
+            "provision": null,
+            "section": null,
+            "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0078",
+          "document": "The Information Technology Act, 2000",
+          "page": 26,
+          "provision": "Section 67C \u2014 Preservation and retention of information by intermediaries",
+          "rerank_score": 0.7582,
+          "score": 0.4982
+        },
+        {
+          "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0022",
+          "document": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+          "page": 7,
+          "provision": null,
+          "rerank_score": 0.6663,
+          "score": 0.4563
+        },
+        {
+          "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0050",
+          "document": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+          "page": 24,
+          "provision": "Rule 12 \u2014 Self-regulating body",
+          "rerank_score": 0.6582,
+          "score": 0.4882
+        },
+        {
+          "chunk_id": "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0011",
+          "document": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "page": 1,
+          "provision": null,
+          "rerank_score": 0.647,
+          "score": 0.529
+        }
+      ]
+    },
+    {
+      "domains": [
+        "tenancy"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "tenancy_electricity",
+      "query": "landlord cut electricity",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Records or receipts of electricity payments",
+            "Any communication or notices exchanged with the landlord regarding the electricity cutoff"
+          ],
+          "issue_summary": "The user reports that their landlord has cut off electricity.",
+          "limitations": [
+            "The retrieved material is specific to the Delhi Rent Control Act, 1958, and applicability may depend on jurisdiction and the specific facts of the tenancy."
+          ],
+          "next_steps": [
+            "Consider making an application to the Controller complaining of the contravention under Section 45 of the Delhi Rent Control Act, 1958."
+          ],
+          "possible_legal_position": [
+            "Under Section 45 of the Delhi Rent Control Act, 1958, a landlord is prohibited from cutting off or withholding any essential supply or service enjoyed by the tenant without just and sufficient cause.",
+            "If the Controller is satisfied that the supply was cut off to compel the tenant to vacate or pay enhanced rent, an interim order directing immediate restoration may be passed."
+          ],
+          "possible_rights": [
+            "Under Section 45 of the Delhi Rent Control Act, 1958, a landlord is prohibited from cutting off or withholding any essential supply or service enjoyed by the tenant without just and sufficient cause.",
+            "If the Controller is satisfied that the supply was cut off to compel the tenant to vacate or pay enhanced rent, an interim order directing immediate restoration may be passed."
+          ],
+          "suggested_next_steps": [
+            "Consider making an application to the Controller complaining of the contravention under Section 45 of the Delhi Rent Control Act, 1958."
+          ],
+          "what_this_may_involve": [
+            "Cutting off or withholding an essential supply or service by a landlord without just and sufficient cause."
+          ],
+          "where_to_approach": [
+            "The Controller under the Delhi Rent Control Act"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for legal educational purposes based on the provided text and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2527,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "tenancy_delhi_rent_control_act_1958__chunk_0076"
+        ],
+        "sources": [
+          {
+            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0076",
+            "document": "The Delhi Rent Control Act, 1958",
+            "document_title": "The Delhi Rent Control Act, 1958",
+            "excerpt": "CHAPTER VII Section 45 \u2014 Cutting off or withholding essential supply or service 45. Cutting off or withholding essential supply or service.\u2014(1) No landlord either himself or through any person purporting to act on his behalf shall without just and sufficient cause cut off or withhold any essential supply or service enjoyed by the tenant in respect of the...",
+            "page": 24,
+            "page_end": 25,
+            "page_start": 24,
+            "provision": "Section 45 \u2014 Cutting off or withholding essential supply or service",
+            "section": "Section 45 \u2014 Cutting off or withholding essential supply or service",
+            "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0015",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 8,
+          "provision": "Section 7 \u2014 Lawful increase of standard rent in certain cases and recovery of other charges",
+          "rerank_score": 0.7907,
+          "score": 0.3987
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0076",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 24,
+          "provision": "Section 45 \u2014 Cutting off or withholding essential supply or service",
+          "rerank_score": 0.7573,
+          "score": 0.3653
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0025",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 10,
+          "provision": "Section 14 \u2014 Protection of tenant against eviction",
+          "rerank_score": 0.6315,
+          "score": 0.3175
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0034",
+          "document": "The Delhi Rent Control Rules, 1959",
+          "page": 8,
+          "provision": "Rule 3 \u2014 Name of the tenant",
+          "rerank_score": 0.4516,
+          "score": 0.3126
+        }
+      ]
+    },
+    {
+      "domains": [
+        "tenancy"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "tenancy_eviction",
+      "query": "landlord wants to evict me without proper process",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Rent receipts",
+            "Any written or oral notices received from the landlord regarding eviction or rent demands"
+          ],
+          "issue_summary": "The user reports that their landlord wants to evict them without following proper process.",
+          "limitations": [
+            "The provided legal material is specific to the Delhi Rent Control Act, 1958 and may not apply if the premises are not governed by this legislation or jurisdiction"
+          ],
+          "next_steps": [
+            "Verify if a formal notice of demand or application has been filed by the landlord before the Controller",
+            "Check whether rent payments and arrears are up to date"
+          ],
+          "possible_legal_position": [
+            "The retrieved material indicates that no order or decree for recovery of possession shall be made by any court or Controller in favour of the landlord against a tenant except on specific grounds provided under the law, such as arrears of rent after proper notice",
+            "An application to the Controller in the prescribed manner may be required for the recovery of possession"
+          ],
+          "possible_rights": [
+            "The retrieved material indicates that no order or decree for recovery of possession shall be made by any court or Controller in favour of the landlord against a tenant except on specific grounds provided under the law, such as arrears of rent after proper notice",
+            "An application to the Controller in the prescribed manner may be required for the recovery of possession"
+          ],
+          "suggested_next_steps": [
+            "Verify if a formal notice of demand or application has been filed by the landlord before the Controller",
+            "Check whether rent payments and arrears are up to date"
+          ],
+          "what_this_may_involve": [
+            "Protection of a tenant against eviction under the Delhi Rent Control Act, 1958",
+            "Requirements regarding orders or decrees for recovery of possession by a court or Controller"
+          ],
+          "where_to_approach": [
+            "Rent Controller"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is based on the retrieved legal material and facts provided. It does not constitute formal legal advice or guarantee outcomes.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2597,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "tenancy_delhi_rent_control_act_1958__chunk_0025",
+          "tenancy_delhi_rent_control_act_1958__chunk_0035"
+        ],
+        "sources": [
+          {
+            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0025",
+            "document": "The Delhi Rent Control Act, 1958",
+            "document_title": "The Delhi Rent Control Act, 1958",
+            "excerpt": "CHAPTER III Section 14 \u2014 Protection of tenant against eviction 14. Protection of tenant against eviction.\u2014(1) Notwithstanding anything to the contrary contained in any other law or contract, no order or decree for the recovery of possession of any premises shall be made by any court or Controller in favour of the landlord against a tenant: Provided that...",
+            "page": 10,
+            "page_end": 10,
+            "page_start": 10,
+            "provision": "Section 14 \u2014 Protection of tenant against eviction",
+            "section": "Section 14 \u2014 Protection of tenant against eviction",
+            "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+          },
+          {
+            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0035",
+            "document": "The Delhi Rent Control Act, 1958",
+            "document_title": "The Delhi Rent Control Act, 1958",
+            "excerpt": "CHAPTER III Section 15 \u2014 When a tenant can get the benefit of protection against eviction 15. When a tenant can get the benefit of protection against eviction .\u2014(1) In every proceeding of the recovery of possession of any premises on the ground specified in clause ( a) of the proviso to sub-section (1) of section 14, the Controller shall, after giving the...",
+            "page": 14,
+            "page_end": 15,
+            "page_start": 14,
+            "provision": "Section 15 \u2014 When a tenant can get the benefit of protection against eviction",
+            "section": "Section 15 \u2014 When a tenant can get the benefit of protection against eviction",
+            "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0025",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 10,
+          "provision": "Section 14 \u2014 Protection of tenant against eviction",
+          "rerank_score": 0.7143,
+          "score": 0.5203
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0057",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 19,
+          "provision": "Section 1 \u2014 Added by Act 57 of 1988, s",
+          "rerank_score": 0.7031,
+          "score": 0.4431
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0052",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 17,
+          "provision": "Section 2 \u2014 Chapter IIIA (consisting of sections 25A to 25C ins",
+          "rerank_score": 0.7004,
+          "score": 0.5064
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0035",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 14,
+          "provision": "Section 15 \u2014 When a tenant can get the benefit of protection against eviction",
+          "rerank_score": 0.6828,
+          "score": 0.4888
+        }
+      ]
+    },
+    {
+      "domains": [
+        "tenancy"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "tenancy_deposit",
+      "query": "landlord security deposit return nahi kar raha",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "The retrieved legal material does not contain provisions concerning the return of security deposits. The provided text addresses the deposit of rent by the tenant under the Delhi Rent Control Act, 1958.",
+          "limitations": [
+            "The retrieved legal material is insufficient to address issues concerning security deposits."
+          ],
+          "next_steps": [],
+          "possible_legal_position": [],
+          "possible_rights": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This information is for educational purposes based on the provided text and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2013,
+          "provider": "gemini"
+        },
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0058",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 19,
+          "provision": "Section 1 \u2014 Added by Act 57 of 1988, s",
+          "rerank_score": 0.8937,
+          "score": 0.5883
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0059",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 20,
+          "provision": "Section 29 \u2014 Saving as to acceptance of rent and forfeiture of rent in deposit",
+          "rerank_score": 0.8893,
+          "score": 0.5839
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0056",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 19,
+          "provision": "Section 27 \u2014 Deposit of rent by the tenant",
+          "rerank_score": 0.8614,
+          "score": 0.556
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0032",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 10,
+          "provision": "Section 2 \u2014 Clause (d) has been ins",
+          "rerank_score": 0.8131,
+          "score": 0.4794
+        }
+      ]
+    },
+    {
+      "domains": [
+        "tenancy"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "tenancy_rent",
+      "query": "tenant refusing to pay rent",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "The rental agreement or contract specifying the rent amount and payment terms.",
+            "Any written communications, notices, or payment reminders sent to the tenant regarding the unpaid rent.",
+            "Records of previous rent payments or bank statements showing non-receipt of rent for the disputed months."
+          ],
+          "issue_summary": "The user reported that a tenant is refusing to pay rent.",
+          "limitations": [
+            "The retrieved legal material is limited to specific sections of the Delhi Rent Control Act, 1958 and may not cover all aspects of general tenancy disputes outside this jurisdiction."
+          ],
+          "next_steps": [
+            "Review the rental agreement to verify the time fixed for the payment of rent.",
+            "Calculate any applicable arrears and interest at the rate of fifteen per cent per annum based on the default period.",
+            "Consider approaching the appropriate authority or Controller if required under the relevant provisions of the Delhi Rent Control Act, 1958."
+          ],
+          "possible_legal_position": [
+            "The retrieved material indicates that tenants are required to pay rent within the time fixed by contract or by the fifteenth day of the month next following.",
+            "Where default occurs in the payment of rent, the tenant may be liable to pay simple interest at the rate of fifteen per cent per annum from the due date until the date of payment."
+          ],
+          "possible_rights": [
+            "The retrieved material indicates that tenants are required to pay rent within the time fixed by contract or by the fifteenth day of the month next following.",
+            "Where default occurs in the payment of rent, the tenant may be liable to pay simple interest at the rate of fifteen per cent per annum from the due date until the date of payment."
+          ],
+          "suggested_next_steps": [
+            "Review the rental agreement to verify the time fixed for the payment of rent.",
+            "Calculate any applicable arrears and interest at the rate of fifteen per cent per annum based on the default period.",
+            "Consider approaching the appropriate authority or Controller if required under the relevant provisions of the Delhi Rent Control Act, 1958."
+          ],
+          "what_this_may_involve": [
+            "Default in the payment of rent by a tenant within the time fixed by contract or by the fifteenth day of the month next following.",
+            "Potential liability of the tenant to pay simple interest at the rate of fifteen per cent per annum from the date on which payment was due until the date it is paid."
+          ],
+          "where_to_approach": [
+            "The Rent Controller under the Delhi Rent Control Act, 1958, where applicable."
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is for educational and informational purposes only based on the supplied legal material and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2886,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "tenancy_delhi_rent_control_act_1958__chunk_0055"
+        ],
+        "sources": [
+          {
+            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0055",
+            "document": "The Delhi Rent Control Act, 1958",
+            "document_title": "The Delhi Rent Control Act, 1958",
+            "excerpt": "CHAPTER IV Section 26 \u2014 Receipt to be given for rent paid 26. Receipt to be given for rent paid.\u2014(1) Every tenant shall pay rent within the time fixed by contract or in the absence of such contract, by the fifteenth day of the month next following the month for which it is payable 1[and where any default occurs in the payment of rent, the tenant shall be...",
+            "page": 19,
+            "page_end": 19,
+            "page_start": 19,
+            "provision": "Section 26 \u2014 Receipt to be given for rent paid",
+            "section": "Section 26 \u2014 Receipt to be given for rent paid",
+            "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0057",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 19,
+          "provision": "Section 1 \u2014 Added by Act 57 of 1988, s",
+          "rerank_score": 0.8644,
+          "score": 0.5144
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0055",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 19,
+          "provision": "Section 26 \u2014 Receipt to be given for rent paid",
+          "rerank_score": 0.8243,
+          "score": 0.4923
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0036",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 14,
+          "provision": "Section 15 \u2014 When a tenant can get the benefit of protection against eviction",
+          "rerank_score": 0.7955,
+          "score": 0.4815
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0009",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 6,
+          "provision": "Section 5 \u2014 Unlawful charges not to be claimed or received",
+          "rerank_score": 0.7905,
+          "score": 0.4765
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_rti",
+      "query": "RTI application ka reply nahi mila",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [
+            "Copy of the original RTI application submitted to the public authority",
+            "Proof of dispatch or submission of the RTI application and any prescribed fees paid"
+          ],
+          "issue_summary": "The user has not received a reply to their Right to Information (RTI) application.",
+          "limitations": [
+            "The retrieved legal material does not provide specific limitation periods or procedural rules for filing complaints beyond mentioning the powers and functions of the Information Commissions"
+          ],
+          "next_steps": [
+            "Review the Right to Information Act, 2005 provisions regarding complaints and appeals",
+            "Consider filing a complaint with the appropriate Information Commission if a response has not been received within the time limit"
+          ],
+          "possible_legal_position": [
+            "The retrieved material indicates that an individual who has not been given a response to a request for information or access to information within the specified time limit may submit a complaint to the Central Information Commission or State Information Commission",
+            "The Central Information Commission or State Information Commission has the duty to receive and inquire into such a complaint"
+          ],
+          "possible_rights": [
+            "The retrieved material indicates that an individual who has not been given a response to a request for information or access to information within the specified time limit may submit a complaint to the Central Information Commission or State Information Commission",
+            "The Central Information Commission or State Information Commission has the duty to receive and inquire into such a complaint"
+          ],
+          "suggested_next_steps": [
+            "Review the Right to Information Act, 2005 provisions regarding complaints and appeals",
+            "Consider filing a complaint with the appropriate Information Commission if a response has not been received within the time limit"
+          ],
+          "what_this_may_involve": [
+            "Not receiving a response to a request for information or access to information within the time limit specified under the Right to Information Act, 2005",
+            "Filing a complaint to the Central Information Commission or State Information Commission based on the failure to receive a response"
+          ],
+          "where_to_approach": [
+            "Central Information Commission",
+            "State Information Commission"
+          ]
+        },
+        "confidence": "medium",
+        "disclaimer": "This information is provided for educational and informational purposes only based on the supplied legal texts and does not constitute formal legal advice.",
+        "generation": {
+          "invalid_source_ids": [],
+          "latency_ms": 2227,
+          "provider": "gemini"
+        },
+        "insufficient_context": false,
+        "source_chunk_ids": [
+          "constitutional_public_authority_right_to_information_act_2005__chunk_0037"
+        ],
+        "sources": [
+          {
+            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0037",
+            "document": "The Right to Information Act, 2005",
+            "document_title": "The Right to Information Act, 2005",
+            "excerpt": "CHAPTER V Section 18 \u2014 Powers and functions of Info rmation Commissions 18. Powers and functions of Info rmation Commissions.\u2014(1) Subject to the provisions of this Act, it shall be the duty of the Central Information Commission or State Information Commission, as the case may be, to receive and inquire into a complaint from any person,\u2014 1. Subs. by Act 24...",
+            "page": 16,
+            "page_end": 17,
+            "page_start": 16,
+            "provision": "Section 18 \u2014 Powers and functions of Info rmation Commissions",
+            "section": "Section 18 \u2014 Powers and functions of Info rmation Commissions",
+            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf"
+          }
+        ]
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0037",
+          "document": "The Right to Information Act, 2005",
+          "page": 16,
+          "provision": "Section 18 \u2014 Powers and functions of Info rmation Commissions",
+          "rerank_score": 0.9998,
+          "score": 0.5929
+        },
+        {
+          "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0040",
+          "document": "The Right to Information Act, 2005",
+          "page": 17,
+          "provision": "Section 19 \u2014 Appeal",
+          "rerank_score": 0.9959,
+          "score": 0.5839
+        },
+        {
+          "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0015",
+          "document": "The Right to Information Act, 2005",
+          "page": 9,
+          "provision": "Section 6 \u2014 Request for obtaining information",
+          "rerank_score": 0.9809,
+          "score": 0.6058
+        },
+        {
+          "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0052",
+          "document": "The Right to Information Act, 2005",
+          "page": 20,
+          "provision": "Section 26 \u2014 Appropriate Government to prepare programmes",
+          "rerank_score": 0.9418,
+          "score": 0.5529
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_equality",
+      "query": "right to equality",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0016",
+          "document": "The Constitution of India",
+          "page": 25,
+          "provision": "Article 14 \u2014 Equality before law",
+          "rerank_score": 1.1018,
+          "score": 0.7672
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_legal_aid",
+      "query": "I want free legal aid",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0022",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 10,
+          "provision": "Section 15 \u2014 National Legal Aid Fund",
+          "rerank_score": 0.8398,
+          "score": 0.5187
+        },
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0023",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 10,
+          "provision": "Section 16 \u2014 State Legal Aid Fund",
+          "rerank_score": 0.8024,
+          "score": 0.4812
+        },
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0009",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 5,
+          "provision": "Section 4 \u2014 Functions of the Central Authority",
+          "rerank_score": 0.772,
+          "score": 0.4328
+        },
+        {
+          "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0020",
+          "document": "The Legal Services Authorities Act, 1987",
+          "page": 10,
+          "provision": "Section 13 \u2014 Entitlement of legal services",
+          "rerank_score": 0.7714,
+          "score": 0.4502
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_human_rights",
+      "query": "human rights complaint against public authority",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0020",
+          "document": "The Protection of Human Rights Act, 1993",
+          "page": 9,
+          "provision": "Section 17 \u2014 Inquiry into complaints",
+          "rerank_score": 1.0196,
+          "score": 0.5166
+        },
+        {
+          "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0013",
+          "document": "The Protection of Human Rights Act, 1993",
+          "page": 6,
+          "provision": "Section 12 \u2014 Functions of the Commission",
+          "rerank_score": 0.9523,
+          "score": 0.4891
+        },
+        {
+          "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0032",
+          "document": "The Protection of Human Rights Act, 1993",
+          "page": 13,
+          "provision": "Section 30 \u2014 Human Rights Courts",
+          "rerank_score": 0.8721,
+          "score": 0.458
+        },
+        {
+          "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0041",
+          "document": "The Right to Information Act, 2005",
+          "page": 17,
+          "provision": "Section 19 \u2014 Appeal",
+          "rerank_score": 0.7928,
+          "score": 0.5017
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "public_contempt",
+      "query": "court order deliberately disobeyed hai",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0067",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 22,
+          "provision": "Section 37 \u2014 Procedure to be followed by Controller",
+          "rerank_score": 0.6749,
+          "score": 0.5229
+        },
+        {
+          "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0516",
+          "document": "The Constitution of India",
+          "page": 164,
+          "provision": "Article 1 \u2014 Paragraph 2 of the Constitution (Removal of Difficulties) Order No",
+          "rerank_score": 0.6566,
+          "score": 0.5226
+        },
+        {
+          "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0472",
+          "document": "The Bharatiya Nyaya Sanhita, 2023",
+          "page": 69,
+          "provision": "Section 198 \u2014 Public servant disobeying law, with intent to cause injury to any person",
+          "rerank_score": 0.5757,
+          "score": 0.5237
+        },
+        {
+          "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0113",
+          "document": "The Bharatiya Nyaya Sanhita, 2023",
+          "page": 10,
+          "provision": "Section 223 \u2014 Disobedience to order duly promulgated by public servant",
+          "rerank_score": 0.5653,
+          "score": 0.5493
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer",
+        "cyber"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "multi_instagram_seller",
+      "query": "Instagram seller took payment and blocked me",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0144",
+          "document": "The Bharatiya Nagarik Suraksha Sanhita, 2023",
+          "page": 11,
+          "provision": "Section 280 \u2014 Withdrawal of complaint",
+          "rerank_score": 0.4063,
+          "score": 0.3163
+        },
+        {
+          "chunk_id": "consumer_direct_selling_rules_2021__chunk_0013",
+          "document": "The Consumer Protection (Direct Selling) Rules, 2021",
+          "page": 12,
+          "provision": "Rule 6 \u2014 Obligations of direct seller",
+          "rerank_score": 0.358,
+          "score": 0.305
+        }
+      ]
+    },
+    {
+      "domains": [
+        "tenancy",
+        "cyber"
+      ],
+      "error": "GroundedAnswerError: Gemini could not generate a grounded answer right now.",
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": true,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "multi_landlord_threats",
+      "query": "landlord online threats de raha hai aur electricity cut kar di",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "Gemini could not generate a grounded answer right now.",
+          "limitations": [
+            "Gemini could not generate a grounded answer right now."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0057",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 19,
+          "provision": "Section 1 \u2014 Added by Act 57 of 1988, s",
+          "rerank_score": 0.7241,
+          "score": 0.4141
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0015",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 8,
+          "provision": "Section 7 \u2014 Lawful increase of standard rent in certain cases and recovery of other charges",
+          "rerank_score": 0.7086,
+          "score": 0.3966
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0076",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 24,
+          "provision": "Section 45 \u2014 Cutting off or withholding essential supply or service",
+          "rerank_score": 0.6996,
+          "score": 0.3876
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0054",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 18,
+          "provision": "Section 25C \u2014 Act to have effect in a modified form in relation to certain persons",
+          "rerank_score": 0.6722,
+          "score": 0.4162
+        }
+      ]
+    },
+    {
+      "domains": [
+        "consumer"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "limited_fact_consumer",
+      "query": "consumer complaint karni hai",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "I need a little more factual detail before I can connect your issue to the retrieved legal material reliably.",
+          "limitations": [
+            "I need a little more factual detail before I can connect your issue to the retrieved legal material reliably."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0032",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 14,
+          "provision": "Section 17 \u2014 Complaints to authorities",
+          "rerank_score": 0.9832,
+          "score": 0.5952
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0004",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 4,
+          "provision": "Section 2 \u2014 Definitions",
+          "rerank_score": 0.8636,
+          "score": 0.4576
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0052",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 19,
+          "provision": "Section 35 \u2014 Manner in which complaint shall be made",
+          "rerank_score": 0.8332,
+          "score": 0.4632
+        },
+        {
+          "chunk_id": "consumer_consumer_protection_act_2019__chunk_0001",
+          "document": "The Consumer Protection Act, 2019",
+          "page": 4,
+          "provision": null,
+          "rerank_score": 0.7302,
+          "score": 0.4592
+        }
+      ]
+    },
+    {
+      "domains": [
+        "cyber"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "limited_fact_cyber",
+      "query": "mera cyber issue hai",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "I need a little more factual detail before I can connect your issue to the retrieved legal material reliably.",
+          "limitations": [
+            "I need a little more factual detail before I can connect your issue to the retrieved legal material reliably."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0074",
+          "document": "The Information Technology Act, 2000",
+          "page": 25,
+          "provision": "Section 66F \u2014 Punishment for cyber terrorism",
+          "rerank_score": 0.522,
+          "score": 0.415
+        },
+        {
+          "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0020",
+          "document": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+          "page": 7,
+          "provision": null,
+          "rerank_score": 0.5146,
+          "score": 0.4936
+        },
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0081",
+          "document": "The Information Technology Act, 2000",
+          "page": 27,
+          "provision": "Section 69A \u2014 Power to issue directions for blocking for public access of any information through any",
+          "rerank_score": 0.5084,
+          "score": 0.3834
+        },
+        {
+          "chunk_id": "cyber_information_technology_act_2000__chunk_0008",
+          "document": "The Information Technology Act, 2000",
+          "page": 6,
+          "provision": "Section 5 \u2014 Clause (n) omitted by Act 7 of 2017, s",
+          "rerank_score": 0.5061,
+          "score": 0.3991
+        }
+      ]
+    },
+    {
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "error": null,
+      "evaluation": {
+        "correct": true,
+        "disclaimer_present": true,
+        "expected_document_present": true,
+        "expected_provision_present": true,
+        "generation_failed": false,
+        "insufficient_context_ok": true,
+        "source_id_valid": true,
+        "structured_valid": true,
+        "unsafe_certainty": false,
+        "unsupported_source_hallucination": false
+      },
+      "findings": {
+        "must_not_claim_hits": [],
+        "unsafe_certainty_hits": [],
+        "unsupported_source_claims": []
+      },
+      "id": "unsupported_source_gap",
+      "query": "income tax notice ka reply kaise doon",
+      "response": {
+        "answer": {
+          "evidence_to_preserve": [],
+          "issue_summary": "The retrieved legal material does not contain enough support to answer this issue reliably.",
+          "limitations": [
+            "The retrieved legal material does not contain enough support to answer this issue reliably."
+          ],
+          "possible_legal_position": [],
+          "suggested_next_steps": [],
+          "what_this_may_involve": [],
+          "where_to_approach": []
+        },
+        "confidence": "low",
+        "disclaimer": "This is legal information, not professional legal advice.",
+        "insufficient_context": true,
+        "source_chunk_ids": [],
+        "sources": []
+      },
+      "retrieved_chunks": [
+        {
+          "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0359",
+          "document": "The Constitution of India",
+          "page": 118,
+          "provision": "Article 274 \u2014 Prior recommendation of President required to Bills affecti ng taxation in which States are",
+          "rerank_score": 0.5657,
+          "score": 0.4557
+        },
+        {
+          "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0494",
+          "document": "The Constitution of India",
+          "page": 156,
+          "provision": "Article 366 \u2014 Definitions",
+          "rerank_score": 0.5461,
+          "score": 0.4181
+        },
+        {
+          "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0017",
+          "document": "The Delhi Rent Control Act, 1958",
+          "page": 8,
+          "provision": "Section 4 \u2014 Proviso omitted by s",
+          "rerank_score": 0.5377,
+          "score": 0.4577
+        },
+        {
+          "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0365",
+          "document": "The Constitution of India",
+          "page": 119,
+          "provision": "Article 277 \u2014 Savings",
+          "rerank_score": 0.4993,
+          "score": 0.4193
+        }
+      ]
+    }
+  ]
+}

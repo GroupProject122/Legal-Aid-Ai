@@ -1,0 +1,127 @@
+{
+  "cases": [
+    {
+      "id": "rent_agreement_basic",
+      "filename": "rent_agreement.txt",
+      "text": "RENT AGREEMENT\nLandlord: Ramesh Kumar\nTenant: Priya Sharma\nMonthly rent: Rs. 25,000\nSecurity deposit: Rs. 50,000\nAgreement date: 1 January 2026\nThe tenant shall give two months notice before vacating.",
+      "expected_document_type": "rent_agreement",
+      "expected_values": ["Ramesh Kumar", "Priya Sharma", "Rs. 25,000", "Rs. 50,000", "1 January 2026", "two months notice"],
+      "must_not_include": ["illegal", "unenforceable"]
+    },
+    {
+      "id": "invoice_phone",
+      "filename": "invoice.txt",
+      "text": "Invoice No INV-44\nSeller: ABC Mobiles\nBuyer: Neha Jain\nProduct: Phone Model X\nDate: 12 June 2026\nTotal paid: Rs. 18,999\nOrder ID: OD12345",
+      "expected_document_type": "invoice_or_receipt",
+      "expected_values": ["INV-44", "ABC Mobiles", "Neha Jain", "12 June 2026", "Rs. 18,999", "OD12345"],
+      "must_not_include": ["refund right"]
+    },
+    {
+      "id": "refund_receipt",
+      "filename": "refund_receipt.txt",
+      "text": "Receipt\nRefund processed for Order ID OR-7788 on 2 March 2026. Refund amount: Rs. 4,500.",
+      "expected_document_type": "invoice_or_receipt",
+      "expected_values": ["OR-7788", "2 March 2026", "Rs. 4,500"],
+      "must_not_include": ["valid claim"]
+    },
+    {
+      "id": "legal_notice_consumer",
+      "filename": "legal_notice.txt",
+      "text": "LEGAL NOTICE\nDate: 5 May 2026\nFrom: Anita Rao\nTo: QuickShop Pvt Ltd\nDemand: Replace the damaged mixer grinder or refund Rs. 3,200 within 7 days.",
+      "expected_document_type": "legal_notice",
+      "expected_values": ["5 May 2026", "Anita Rao", "QuickShop Pvt Ltd", "damaged mixer grinder", "Rs. 3,200", "7 days"],
+      "must_not_include": ["must legally refund"]
+    },
+    {
+      "id": "complaint_copy",
+      "filename": "complaint.txt",
+      "text": "Consumer Complaint Draft\nComplainant: Ritu Sen\nOpposite Party: HomeAppliance Store\nIssue: refrigerator stopped working after delivery. Payment made: Rs. 31,000. Complaint number: CC-9001.",
+      "expected_document_type": "complaint",
+      "expected_values": ["Ritu Sen", "HomeAppliance Store", "refrigerator stopped working", "Rs. 31,000", "CC-9001"],
+      "must_not_include": ["definitely entitled"]
+    },
+    {
+      "id": "transaction_record",
+      "filename": "upi_receipt.txt",
+      "text": "UPI Transaction Receipt\nPaid to: InstaSeller99\nAmount: Rs. 10,000\nTransaction ID: UPI998877\nDate: 18 July 2026\nStatus: Success",
+      "expected_document_type": "transaction_record",
+      "expected_values": ["InstaSeller99", "Rs. 10,000", "UPI998877", "18 July 2026", "Success"],
+      "must_not_include": ["fraud"]
+    },
+    {
+      "id": "email_correspondence",
+      "filename": "email.txt",
+      "text": "Dear Support,\nI received the package damaged on 14 April 2026. I requested replacement by email on 15 April 2026. Regards, Kavya.",
+      "expected_document_type": "correspondence",
+      "expected_values": ["damaged", "14 April 2026", "replacement", "15 April 2026", "Kavya"],
+      "must_not_include": ["seller liable"]
+    },
+    {
+      "id": "ambiguous_party_role",
+      "filename": "signed_note.txt",
+      "text": "Signed by Ramesh and Sita. Amount Rs. 12,000 received. No role is stated in this note.",
+      "expected_document_type": "unknown",
+      "expected_values": ["Ramesh", "Sita", "Rs. 12,000"],
+      "expected_uncertain": ["role"],
+      "must_not_include": ["landlord", "tenant"]
+    },
+    {
+      "id": "repeated_amount",
+      "filename": "agreement_repeat.txt",
+      "text": "Rent Agreement. Monthly rent is Rs. 20,000. The rent of Rs. 20,000 shall be paid by the tenant every month.",
+      "expected_document_type": "rent_agreement",
+      "expected_values": ["Rs. 20,000"],
+      "must_not_include": []
+    },
+    {
+      "id": "sensitive_credentials",
+      "filename": "bank_note.txt",
+      "text": "Transaction failed. Card number 4111 1111 1111 1111 was entered. OTP: 123456. Amount Rs. 2,000.",
+      "expected_document_type": "transaction_record",
+      "expected_values": ["Rs. 2,000"],
+      "must_not_include": ["4111 1111 1111 1111", "123456"]
+    },
+    {
+      "id": "legal_notice_tenancy",
+      "filename": "tenant_notice.txt",
+      "text": "Notice dated 9 August 2026 from landlord Mohan to tenant Asha demanding unpaid rent of Rs. 45,000 for three months.",
+      "expected_document_type": "legal_notice",
+      "expected_values": ["9 August 2026", "Mohan", "Asha", "Rs. 45,000", "three months"],
+      "must_not_include": ["eviction valid"]
+    },
+    {
+      "id": "sparse_document",
+      "filename": "note.txt",
+      "text": "Payment issue. Please help.",
+      "expected_document_type": "unknown",
+      "expected_values": [],
+      "expected_uncertain": ["payment"],
+      "must_not_include": ["seller", "cyber fraud"]
+    },
+    {
+      "id": "complaint_number_notice",
+      "filename": "rti_letter.txt",
+      "text": "RTI Application dated 3 February 2026. Application No RTI-2026-55. No reply received as of 10 March 2026.",
+      "expected_document_type": "complaint",
+      "expected_values": ["3 February 2026", "RTI-2026-55", "10 March 2026"],
+      "must_not_include": ["PIO violated"]
+    },
+    {
+      "id": "other_identity_misuse",
+      "filename": "statement.txt",
+      "text": "Statement: Someone used my email account without permission on 6 June 2026. I saw login alert from unknown device.",
+      "expected_document_type": "other",
+      "expected_values": ["email account", "6 June 2026", "unknown device"],
+      "must_not_include": ["offence"]
+    },
+    {
+      "id": "unclear_signature",
+      "filename": "signature.txt",
+      "text": "This paper contains only two signatures: Ajay and Rekha.",
+      "expected_document_type": "unknown",
+      "expected_values": ["Ajay", "Rekha"],
+      "expected_uncertain": ["role"],
+      "must_not_include": ["buyer", "seller"]
+    }
+  ]
+}

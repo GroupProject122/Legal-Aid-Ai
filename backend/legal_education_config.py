@@ -1,0 +1,208 @@
+from __future__ import annotations
+
+CATEGORIES = {
+    "consumer": {
+        "title": "Consumer Rights",
+        "description": "Understand your rights when buying goods or using services.",
+        "icon": "shopping_cart",
+        "overview": [
+            "Consumer law can help with defective goods, deficient services, unfair trade practices, misleading advertisements, and online-sale issues.",
+            "For ordinary refund, replacement, or non-delivery problems, preserve invoices, payment records, messages, and complaint correspondence.",
+            "Product-liability provisions are most relevant where a defective product causes harm, damage, or injury.",
+        ],
+        "common_issues": [
+            {"title": "Defective Product", "description": "Product not working or not matching promised quality."},
+            {"title": "Refund Denied", "description": "Seller or service provider refuses refund or replacement."},
+            {"title": "Order Not Delivered", "description": "Goods or services paid for but not delivered."},
+            {"title": "Unfair Trade Practices", "description": "Misleading claims, hidden charges, or unfair selling practices."},
+        ],
+        "what_you_can_do": [
+            "Preserve invoices, payment records, warranties, screenshots, and communication.",
+            "Contact the seller or service provider in writing.",
+            "Use the available grievance mechanism where the source supports it.",
+            "Consider a consumer complaint where the facts and forum requirements are met.",
+        ],
+        "source_files": [
+            "consumer/consumer_protection_act_2019.pdf",
+            "consumer/ecommerce_rules_2020.pdf",
+            "consumer/misleading_ads_guidelines_2022.pdf",
+            "consumer/dark_patterns_guidelines_2023.pdf",
+            "consumer/cdrc_general_rules_2020.pdf",
+        ],
+    },
+    "cyber": {
+        "title": "Cyber Rights & Safety",
+        "description": "Understand online fraud, identity misuse and cyber reporting options.",
+        "icon": "shield",
+        "overview": [
+            "Cyber-law sources in this corpus cover selected offences, intermediary rules, data-protection rules, and cybercrime reporting guidance.",
+            "Identity misuse, unauthorized account access, phishing, and online payment fraud may involve different legal sources.",
+            "Do not share passwords, OTPs, PINs, CVV, or full banking credentials while seeking help.",
+        ],
+        "common_issues": [
+            {"title": "Identity Misuse", "description": "Someone uses your identity or electronic credentials."},
+            {"title": "Unauthorized Account Access", "description": "Account access without your permission."},
+            {"title": "Online Payment Fraud", "description": "Money lost through online deception or fraudulent transaction."},
+            {"title": "Reporting Cybercrime", "description": "Procedural guidance on using cybercrime reporting channels."},
+        ],
+        "what_you_can_do": [
+            "Secure your account and change credentials through official channels.",
+            "Preserve screenshots, transaction records, URLs, messages, and account notices.",
+            "Use official cybercrime reporting routes where supported by the retrieved source.",
+            "Seek professional help for serious or contested matters.",
+        ],
+        "source_files": [
+            "cyber/information_technology_act_2000.pdf",
+            "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+            "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
+            "cyber/digital_personal_data_protection_rules_2025.pdf",
+        ],
+    },
+    "tenancy": {
+        "title": "Tenant Rights",
+        "description": "Understand common tenancy issues under the current Delhi-focused corpus.",
+        "icon": "home",
+        "limitation": "The current tenancy legal corpus is primarily focused on Delhi.",
+        "overview": [
+            "The tenancy material currently focuses on Delhi rent-control sources and supporting property-law sources.",
+            "Common issues include essential services, rent receipts, eviction, deposit disputes, and landlord-tenant obligations.",
+            "For non-Delhi tenancy issues, the corpus may be insufficient because tenancy law can be state-specific.",
+        ],
+        "common_issues": [
+            {"title": "Essential Services", "description": "Electricity, water, or similar supply issues."},
+            {"title": "Rent Receipt", "description": "Receipt, deposit, or payment-record concerns."},
+            {"title": "Rent / Deposit Dispute", "description": "Disputes around rent, premium, or security deposit."},
+            {"title": "Landlord-Tenant Dispute", "description": "Eviction, possession, or other tenancy disagreements."},
+        ],
+        "what_you_can_do": [
+            "Preserve the rent agreement, receipts, notices, and written communications.",
+            "Record the specific tenancy issue before applying a provision.",
+            "Check whether the Delhi-focused corpus covers the issue.",
+            "Ask a question for case-specific routing and corpus-gap checks.",
+        ],
+        "source_files": [
+            "tenancy/delhi_rent_control_act_1958.pdf",
+            "tenancy/delhi_rent_control_rules_1959.pdf",
+            "tenancy/transfer_of_property_act_1882.pdf",
+        ],
+    },
+    "fundamental_rights": {
+        "title": "Fundamental Rights",
+        "description": "Learn about selected constitutional protections.",
+        "icon": "landmark",
+        "limitation": "This section explains selected constitutional text. Detailed interpretation often depends on case law not comprehensively covered here.",
+        "overview": [
+            "The Constitution source in this corpus includes selected fundamental-rights provisions.",
+            "Plain-language summaries here are educational and do not replace case-law analysis.",
+            "Government action and public-authority issues often require careful factual and legal review.",
+        ],
+        "common_issues": [
+            {"title": "Equality", "description": "Selected protections relating to equal treatment."},
+            {"title": "Freedom-related protections", "description": "Selected freedoms under the Constitution."},
+            {"title": "Life and Personal Liberty", "description": "Selected constitutional protection for life and liberty."},
+        ],
+        "what_you_can_do": [
+            "Identify the public authority or government action involved.",
+            "Preserve notices, orders, communications, and relevant records.",
+            "Avoid assuming complex constitutional doctrine without legal review.",
+            "Ask a question for grounded guidance from the available corpus.",
+        ],
+        "source_files": [
+            "constitutional_public_authority/constitution_of_india.pdf",
+        ],
+    },
+    "public_services": {
+        "title": "Public Services & Remedies",
+        "description": "Understand RTI, free legal aid and public-authority remedies.",
+        "icon": "file_text",
+        "overview": [
+            "This category covers selected public-authority remedies in the current corpus, including RTI, legal aid, human-rights bodies, and contempt.",
+            "RTI appeal and complaint routes are distinct and should not be conflated.",
+            "Eligibility for free legal aid depends on the statutory criteria and facts of the person seeking help.",
+        ],
+        "common_issues": [
+            {"title": "RTI", "description": "Requesting information from public authorities."},
+            {"title": "RTI No Response", "description": "Understanding appeal and complaint mechanisms."},
+            {"title": "Free Legal Aid", "description": "Selected eligibility and entitlement provisions."},
+            {"title": "Human Rights / Public Authority Concerns", "description": "Selected statutory remedies where supported."},
+        ],
+        "what_you_can_do": [
+            "Preserve the application, acknowledgement, reply, or refusal record.",
+            "For RTI, distinguish appeal routes from complaint routes.",
+            "For legal aid, check the statutory eligibility criteria and entitlement conditions.",
+            "Ask a question if you need help applying these sources to your facts.",
+        ],
+        "source_files": [
+            "constitutional_public_authority/right_to_information_act_2005.pdf",
+            "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
+            "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
+            "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
+        ],
+    },
+}
+
+
+IMPORTANT_PROVISIONS = {
+    "consumer/consumer_protection_act_2019.pdf": [
+        ("section", "2"),
+        ("section", "35"),
+        ("section", "39"),
+        ("section", "69"),
+        ("section", "82"),
+        ("section", "83"),
+        ("section", "84"),
+        ("section", "85"),
+        ("section", "86"),
+        ("section", "87"),
+    ],
+    "consumer/ecommerce_rules_2020.pdf": [("rule", "3"), ("rule", "4"), ("rule", "5"), ("rule", "6"), ("rule", "7")],
+    "consumer/misleading_ads_guidelines_2022.pdf": [("guideline", "3"), ("guideline", "4"), ("guideline", "5"), ("guideline", "11"), ("guideline", "12")],
+    "consumer/dark_patterns_guidelines_2023.pdf": [("guideline", "3"), ("guideline", "4"), ("guideline", "5"), ("guideline", "6")],
+    "consumer/cdrc_general_rules_2020.pdf": [("rule", "7"), ("rule", "8"), ("rule", "11"), ("rule", "12"), ("rule", "14")],
+    "cyber/information_technology_act_2000.pdf": [
+        ("section", "43"),
+        ("section", "66"),
+        ("section", "66C"),
+        ("section", "66D"),
+        ("section", "72"),
+        ("section", "72A"),
+    ],
+    "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf": [("rule", "3"), ("rule", "4"), ("rule", "10")],
+    "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf": [],
+    "cyber/digital_personal_data_protection_rules_2025.pdf": [("rule", "3"), ("rule", "6"), ("rule", "7"), ("rule", "14"), ("rule", "22")],
+    "tenancy/delhi_rent_control_act_1958.pdf": [("section", "13"), ("section", "14"), ("section", "26"), ("section", "45")],
+    "tenancy/delhi_rent_control_rules_1959.pdf": [("rule", "7"), ("rule", "9"), ("rule", "10"), ("rule", "17")],
+    "tenancy/transfer_of_property_act_1882.pdf": [("section", "105"), ("section", "106"), ("section", "108")],
+    "constitutional_public_authority/constitution_of_india.pdf": [("article", "14"), ("article", "19"), ("article", "21"), ("article", "32")],
+    "constitutional_public_authority/right_to_information_act_2005.pdf": [
+        ("section", "6"),
+        ("section", "7"),
+        ("section", "18"),
+        ("section", "19"),
+        ("section", "20"),
+    ],
+    "constitutional_public_authority/legal_services_authorities_act_1987.pdf": [("section", "12"), ("section", "13"), ("section", "20"), ("section", "21")],
+    "constitutional_public_authority/protection_of_human_rights_act_1993.pdf": [("section", "12"), ("section", "13"), ("section", "17")],
+    "constitutional_public_authority/contempt_of_courts_act_1971.pdf": [("section", "2"), ("section", "10"), ("section", "12"), ("section", "15"), ("section", "20")],
+}
+
+
+SOURCE_DESCRIPTIONS = {
+    "consumer/consumer_protection_act_2019.pdf": "Core consumer statute covering consumer complaints, defective goods, deficient services, unfair trade practices, remedies, and product liability where applicable.",
+    "consumer/ecommerce_rules_2020.pdf": "Rules covering duties of e-commerce entities and sellers in online consumer transactions.",
+    "consumer/misleading_ads_guidelines_2022.pdf": "Official guidelines on misleading advertisements, endorsements, disclosures, and related duties.",
+    "consumer/dark_patterns_guidelines_2023.pdf": "Official guidelines addressing prohibited dark patterns in digital interfaces.",
+    "consumer/cdrc_general_rules_2020.pdf": "Rules on consumer dispute redressal commission procedure, fees, and appeals.",
+    "cyber/information_technology_act_2000.pdf": "Core cyber-law statute covering selected electronic records, unauthorized access, identity-related offences, and confidentiality provisions.",
+    "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf": "Rules covering selected intermediary duties and grievance mechanisms.",
+    "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf": "Procedural guide for using the National Cybercrime Reporting Portal.",
+    "cyber/digital_personal_data_protection_rules_2025.pdf": "Rules on selected data-protection notices, safeguards, breach intimation, rights, and appeals.",
+    "tenancy/delhi_rent_control_act_1958.pdf": "Delhi-focused rent-control statute covering selected landlord-tenant issues, rent matters, eviction protection, and essential supply provisions.",
+    "tenancy/delhi_rent_control_rules_1959.pdf": "Rules supporting procedures under the Delhi Rent Control Act.",
+    "tenancy/transfer_of_property_act_1882.pdf": "Supporting property-law statute containing selected lease-related provisions.",
+    "constitutional_public_authority/constitution_of_india.pdf": "Constitutional text including selected fundamental-rights provisions.",
+    "constitutional_public_authority/right_to_information_act_2005.pdf": "Statute covering the right to information, public information requests, disposal, complaints, appeals, and penalties.",
+    "constitutional_public_authority/legal_services_authorities_act_1987.pdf": "Statute covering legal services authorities, eligibility criteria, entitlement, and Lok Adalat provisions.",
+    "constitutional_public_authority/protection_of_human_rights_act_1993.pdf": "Statute covering selected National and State Human Rights Commission functions and powers.",
+    "constitutional_public_authority/contempt_of_courts_act_1971.pdf": "Statute covering selected contempt definitions, powers, punishment, and procedure.",
+}

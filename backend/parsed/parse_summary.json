@@ -1,0 +1,245 @@
+{
+  "chunks_by_document_type": {
+    "amendment_rules": 2,
+    "constitution": 1371,
+    "guidelines": 33,
+    "procedural_user_guide": 20,
+    "regulations": 39,
+    "rules": 299,
+    "statute": 554,
+    "supporting_criminal_law": 665,
+    "supporting_criminal_procedure": 1128,
+    "supporting_document_registration_law": 103,
+    "supporting_property_law": 174
+  },
+  "chunks_by_domain": {
+    "constitutional_public_authority": 1572,
+    "consumer": 297,
+    "cyber": 2089,
+    "tenancy": 430
+  },
+  "chunks_by_structure_type": {
+    "annexure": 14,
+    "article": 1321,
+    "fallback": 50,
+    "guideline": 24,
+    "preamble": 1,
+    "regulation": 26,
+    "rule": 246,
+    "schedule": 224,
+    "section": 2482
+  },
+  "documents": [
+    {
+      "document_type": "constitution",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/constitution_of_india.pdf",
+      "structure_aware_chunks": 1370,
+      "total_chunks": 1371
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
+      "structure_aware_chunks": 31,
+      "total_chunks": 32
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
+      "structure_aware_chunks": 44,
+      "total_chunks": 45
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
+      "structure_aware_chunks": 45,
+      "total_chunks": 46
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+      "structure_aware_chunks": 77,
+      "total_chunks": 78
+    },
+    {
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/cdrc_general_rules_2020.pdf",
+      "structure_aware_chunks": 34,
+      "total_chunks": 35
+    },
+    {
+      "document_type": "regulations",
+      "domain": "consumer",
+      "fallback_chunks": 13,
+      "source_file": "consumer/consumer_commission_procedure_regulations_2020.pdf",
+      "structure_aware_chunks": 26,
+      "total_chunks": 39
+    },
+    {
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/consumer_protection_act_2019.pdf",
+      "structure_aware_chunks": 135,
+      "total_chunks": 136
+    },
+    {
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/dark_patterns_guidelines_2023.pdf",
+      "structure_aware_chunks": 14,
+      "total_chunks": 15
+    },
+    {
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/direct_selling_rules_2021.pdf",
+      "structure_aware_chunks": 22,
+      "total_chunks": 23
+    },
+    {
+      "document_type": "amendment_rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/ecommerce_amendment_rules_2021.pdf",
+      "structure_aware_chunks": 1,
+      "total_chunks": 2
+    },
+    {
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/ecommerce_rules_2020.pdf",
+      "structure_aware_chunks": 14,
+      "total_chunks": 15
+    },
+    {
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/jurisdiction_rules_2021.pdf",
+      "structure_aware_chunks": 5,
+      "total_chunks": 6
+    },
+    {
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/mediation_rules_2020.pdf",
+      "structure_aware_chunks": 7,
+      "total_chunks": 8
+    },
+    {
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/misleading_ads_guidelines_2022.pdf",
+      "structure_aware_chunks": 17,
+      "total_chunks": 18
+    },
+    {
+      "document_type": "supporting_criminal_procedure",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "structure_aware_chunks": 1127,
+      "total_chunks": 1128
+    },
+    {
+      "document_type": "supporting_criminal_law",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+      "structure_aware_chunks": 664,
+      "total_chunks": 665
+    },
+    {
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/digital_personal_data_protection_rules_2025.pdf",
+      "structure_aware_chunks": 90,
+      "total_chunks": 91
+    },
+    {
+      "document_type": "statute",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/information_technology_act_2000.pdf",
+      "structure_aware_chunks": 120,
+      "total_chunks": 121
+    },
+    {
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+      "structure_aware_chunks": 63,
+      "total_chunks": 64
+    },
+    {
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 14,
+      "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
+      "structure_aware_chunks": 6,
+      "total_chunks": 20
+    },
+    {
+      "document_type": "statute",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+      "structure_aware_chunks": 95,
+      "total_chunks": 96
+    },
+    {
+      "document_type": "rules",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+      "structure_aware_chunks": 56,
+      "total_chunks": 57
+    },
+    {
+      "document_type": "supporting_document_registration_law",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/registration_act_1908.pdf",
+      "structure_aware_chunks": 102,
+      "total_chunks": 103
+    },
+    {
+      "document_type": "supporting_property_law",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/transfer_of_property_act_1882.pdf",
+      "structure_aware_chunks": 173,
+      "total_chunks": 174
+    }
+  ],
+  "documents_parsed": 25,
+  "documents_skipped": [
+    {
+      "reason": "manual_verification_required",
+      "source_file": "tenancy/delhi_rent_act_1995.pdf"
+    }
+  ],
+  "fallback_chunks": 50,
+  "structure_aware_chunks": 4338,
+  "structure_aware_percentage": 98.86,
+  "total_chunks": 4388
+}

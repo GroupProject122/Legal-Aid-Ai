@@ -1,0 +1,1478 @@
+{
+  "call_counts": {
+    "clarification_gemini_calls": 22,
+    "router_calls": 46
+  },
+  "evaluation_config": {
+    "gemini_model": "gemini-flash-lite-latest",
+    "gemini_used_for_legal_answer_generation": false,
+    "query_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/clarification_queries.json"
+  },
+  "failures": [
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "clarification_calls": 0,
+        "router_calls": 1
+      },
+      "evaluation": {
+        "clarification_trigger_correct": false,
+        "correct": false,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "consumer"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "medium",
+        "domains": [
+          "consumer"
+        ],
+        "issue_summary": "User expresses a grievance against a company for alleged wrongdoing.",
+        "latency_ms": 1598,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "consumer_03",
+      "initial_message": "company ne galat kiya",
+      "initial_route": {
+        "confidence": "medium",
+        "domains": [
+          "consumer"
+        ],
+        "issue_summary": "User expresses a grievance against a company for alleged wrongdoing.",
+        "latency_ms": 1598,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "latency": {
+        "clarification_latency_ms": []
+      },
+      "replies": [
+        "direct selling company refund nahi de rahi"
+      ],
+      "stopped_reason": "initial_route"
+    }
+  ],
+  "latency": {
+    "average_clarification_latency_ms": 1627.8,
+    "max_clarification_latency_ms": 1940,
+    "min_clarification_latency_ms": 1261
+  },
+  "metrics": {
+    "clarification_trigger_accuracy": 0.958,
+    "final_domain_accuracy": 1.0,
+    "final_status_accuracy": 1.0,
+    "one_turn_resolution_rate": 0.9,
+    "overall_accuracy": 0.958,
+    "repeated_question_rate": 0.0,
+    "scenario_count": 24,
+    "stuck_safety_success_rate": 1.0,
+    "supported_domain_accuracy": 1.0
+  },
+  "results": [
+    {
+      "asked_questions": [
+        "Kya ye paise kisi online fraud, bank scam, ya kisi business transaction mein fase hain?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "consumer",
+        "cyber"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "consumer",
+          "cyber"
+        ],
+        "issue_summary": "The user made a payment to an Instagram seller who is now unresponsive.",
+        "latency_ms": 1835,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "consumer_01",
+      "initial_message": "mere paise fas gaye",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user states that their money is stuck, but the context is not specified.",
+        "latency_ms": 2069,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1940
+        ]
+      },
+      "replies": [
+        "Instagram seller ko payment ki thi aur ab reply nahi kar raha"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Aapka refund kis cheez se related hai, jaise ki online shopping, train ticket, ya koi service?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "consumer"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "consumer"
+        ],
+        "issue_summary": "The user is facing a refund issue because an online product arrived defective.",
+        "latency_ms": 1149,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "consumer_02",
+      "initial_message": "mujhe refund issue hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The message may describe a legal issue, but more context is needed to identify the supported area.",
+        "latency_ms": 1221,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1322
+        ]
+      },
+      "replies": [
+        "online product defective nikla"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "clarification_calls": 0,
+        "router_calls": 1
+      },
+      "evaluation": {
+        "clarification_trigger_correct": false,
+        "correct": false,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "consumer"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "medium",
+        "domains": [
+          "consumer"
+        ],
+        "issue_summary": "User expresses a grievance against a company for alleged wrongdoing.",
+        "latency_ms": 1598,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "consumer_03",
+      "initial_message": "company ne galat kiya",
+      "initial_route": {
+        "confidence": "medium",
+        "domains": [
+          "consumer"
+        ],
+        "issue_summary": "User expresses a grievance against a company for alleged wrongdoing.",
+        "latency_ms": 1598,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "latency": {
+        "clarification_latency_ms": []
+      },
+      "replies": [
+        "direct selling company refund nahi de rahi"
+      ],
+      "stopped_reason": "initial_route"
+    },
+    {
+      "asked_questions": [
+        "Kya yeh online fraud, bank scam, ya kisi consumer transaction se juda hai?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "cyber"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "cyber"
+        ],
+        "issue_summary": "Monetary loss resulting from entering an OTP on a phishing link.",
+        "latency_ms": 1862,
+        "needs_clarification": false,
+        "primary_domain": "cyber",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "cyber_01",
+      "initial_message": "paise chale gaye",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The message may describe a legal issue, but more context is needed to identify the supported area.",
+        "latency_ms": 1218,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1603
+        ]
+      },
+      "replies": [
+        "phishing link pe OTP daal diya tha"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Aapka account kis cheez se related hai, jaise ki bank, online shopping, ya koi social media/email?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "cyber"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "cyber"
+        ],
+        "issue_summary": "The user reports that their Instagram account has been hacked.",
+        "latency_ms": 1612,
+        "needs_clarification": false,
+        "primary_domain": "cyber",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "cyber_02",
+      "initial_message": "account problem hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user reported an account problem without specifying details.",
+        "latency_ms": 1730,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1610
+        ]
+      },
+      "replies": [
+        "mera Instagram hack ho gaya"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Are your personal details being misused online or on social media, or is someone using them for a purchase or financial transaction?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "cyber"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "cyber"
+        ],
+        "issue_summary": "The user reports that someone is misusing their personal details by creating a fake online account.",
+        "latency_ms": 1833,
+        "needs_clarification": false,
+        "primary_domain": "cyber",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "cyber_03",
+      "initial_message": "someone is misusing my details",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The message may describe a legal issue, but more context is needed to identify the supported area.",
+        "latency_ms": 1869,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1529
+        ]
+      },
+      "replies": [
+        "online fake account bana ke personal details use kar raha hai"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Kya koi aapko online pareshan kar raha hai ya yeh kisi personal ya rent se juda mamla hai?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "tenancy"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "tenancy"
+        ],
+        "issue_summary": "The user reports that their landlord is cutting off electricity.",
+        "latency_ms": 1422,
+        "needs_clarification": false,
+        "primary_domain": "tenancy",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "tenancy_01",
+      "initial_message": "someone is troubling me",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user reports being troubled by someone without providing further context regarding the nature of the issue.",
+        "latency_ms": 1324,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1732
+        ]
+      },
+      "replies": [
+        "landlord electricity cut kar raha hai"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Kya yeh deposit kisi rented apartment ka hai ya phir kisi online transaction ya product booking ka?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "tenancy"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "tenancy"
+        ],
+        "issue_summary": "The landlord is not returning the security deposit.",
+        "latency_ms": 1823,
+        "needs_clarification": false,
+        "primary_domain": "tenancy",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "tenancy_02",
+      "initial_message": "deposit nahi mil raha",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The message may describe a legal issue, but more context is needed to identify the supported area.",
+        "latency_ms": 1426,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1425
+        ]
+      },
+      "replies": [
+        "landlord security deposit return nahi kar raha"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Kya yeh ghar ke malik aur kirayedaar ke beech ka vivad hai?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "tenancy"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "tenancy"
+        ],
+        "issue_summary": "The user reports a tenancy dispute regarding a tenant not paying rent.",
+        "latency_ms": 1631,
+        "needs_clarification": false,
+        "primary_domain": "tenancy",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "tenancy_03",
+      "initial_message": "ghar ka issue hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user mentions a household issue without providing specific details regarding a tenancy dispute or legal context.",
+        "latency_ms": 1231,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1933
+        ]
+      },
+      "replies": [
+        "tenant rent pay nahi kar raha"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Kya yeh sarkari daftar ya kisi public authority ke kisi faisle ya kaam se juda hai?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "issue_summary": "The user did not receive a reply to an RTI application submitted to a government office.",
+        "latency_ms": 1639,
+        "needs_clarification": false,
+        "primary_domain": "constitutional_public_authority",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "public_01",
+      "initial_message": "government office problem hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The message may describe a legal issue, but more context is needed to identify the supported area.",
+        "latency_ms": 1631,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1732
+        ]
+      },
+      "replies": [
+        "RTI application ka reply nahi mila"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Aapko kis cheez mein help chahiye? Jaise ki online fraud, kiske sath tenant-landlord ka koi mamla, ya kuch aur?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "medium",
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "issue_summary": "The message contains enough context to identify the supported legal area.",
+        "latency_ms": 1445,
+        "needs_clarification": false,
+        "primary_domain": "constitutional_public_authority",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "public_02",
+      "initial_message": "mujhe help chahiye",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": null,
+        "latency_ms": 1409,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1703
+        ]
+      },
+      "replies": [
+        "free legal aid chahiye"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Kya yeh rights violation kisi online scam, landlord ya tenant se, ya kisi product/service kharidne se juda hai?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "issue_summary": "The user reports a rights violation involving alleged discrimination by a government authority.",
+        "latency_ms": 1324,
+        "needs_clarification": false,
+        "primary_domain": "constitutional_public_authority",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "public_03",
+      "initial_message": "rights violation hua",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user reported a rights violation without providing specific context or details regarding the nature of the issue.",
+        "latency_ms": 1332,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1321
+        ]
+      },
+      "replies": [
+        "government authority ne discriminate kiya"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Yeh notice kis cheez se juda hai, jaise ki rent ya ghar se, ya kisi khareede hue saman ya online dhokhadhadi se?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [],
+      "expected_final_status": "unsupported",
+      "final_route": {
+        "confidence": "high",
+        "domains": [],
+        "issue_summary": "The issue appears legal, but outside the currently supported Legal Aid AI corpus.",
+        "latency_ms": 1512,
+        "needs_clarification": false,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unsupported"
+      },
+      "id": "unsupported_01",
+      "initial_message": "mujhe notice mila hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user states they have received a legal notice but provided no further details.",
+        "latency_ms": 1426,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1647
+        ]
+      },
+      "replies": [
+        "income tax department se notice hai"
+      ],
+      "stopped_reason": "unsupported"
+    },
+    {
+      "asked_questions": [
+        "Kya yeh matter divorce, child custody, ya property dispute se juda hai?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [],
+      "expected_final_status": "unsupported",
+      "final_route": {
+        "confidence": "high",
+        "domains": [],
+        "issue_summary": "The issue appears legal, but outside the currently supported Legal Aid AI corpus.",
+        "latency_ms": 1304,
+        "needs_clarification": false,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unsupported"
+      },
+      "id": "unsupported_02",
+      "initial_message": "family matter hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": null,
+        "latency_ms": 1193,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1261
+        ]
+      },
+      "replies": [
+        "divorce chahiye"
+      ],
+      "stopped_reason": "unsupported"
+    },
+    {
+      "asked_questions": [
+        "Yeh court matter kis cheez se juda hai? Jaise ki rent, khareed-bech, ya online dhokhadhadi?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [],
+      "expected_final_status": "unsupported",
+      "final_route": {
+        "confidence": "high",
+        "domains": [],
+        "issue_summary": "The issue appears legal, but outside the currently supported Legal Aid AI corpus.",
+        "latency_ms": 1728,
+        "needs_clarification": false,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unsupported"
+      },
+      "id": "unsupported_03",
+      "initial_message": "court matter hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user stated that there is a court matter, but provided no further details regarding the subject or domain.",
+        "latency_ms": 1630,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1741
+        ]
+      },
+      "replies": [
+        "bail kaise milegi"
+      ],
+      "stopped_reason": "unsupported"
+    },
+    {
+      "asked_questions": [
+        "Aapka sawal kis cheez se juda hai - jaise ki online fraud ya cyber crime, samaan ya service ki khariddari (consumer), ya fir kiraye aur ghar ka mamla (tenancy)?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [],
+      "expected_final_status": "out_of_scope",
+      "final_route": {
+        "confidence": "high",
+        "domains": [],
+        "issue_summary": "Inquiry about tomorrow's weather.",
+        "latency_ms": 2043,
+        "needs_clarification": false,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "out_of_scope"
+      },
+      "id": "out_01",
+      "initial_message": "mujhe kuch puchna hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user is asking to ask a question without specifying the legal issue.",
+        "latency_ms": 1236,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1820
+        ]
+      },
+      "replies": [
+        "weather tomorrow"
+      ],
+      "stopped_reason": "out_of_scope"
+    },
+    {
+      "asked_questions": [
+        "Aapka yeh mamla kis cheez se juda hai - kya yeh khareed-farokht (consumer), cyber crime, kiraye ke makaan (tenancy), ya sarkari vibhag se sambandhit hai?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [],
+      "expected_final_status": "out_of_scope",
+      "final_route": {
+        "confidence": "high",
+        "domains": [],
+        "issue_summary": null,
+        "latency_ms": 1127,
+        "needs_clarification": false,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "out_of_scope"
+      },
+      "id": "out_02",
+      "initial_message": "help karo",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": null,
+        "latency_ms": 1666,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1787
+        ]
+      },
+      "replies": [
+        "Python code likho"
+      ],
+      "stopped_reason": "out_of_scope"
+    },
+    {
+      "asked_questions": [
+        "Aapka online paise ka issue kisse juda hai - kisi online shopping fraud se, banking transaction ya UPI se, ya kisi cyber crime se?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "consumer",
+        "cyber"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "consumer",
+          "cyber"
+        ],
+        "issue_summary": "The user made an online payment to an Instagram seller who subsequently blocked them without delivering the goods or services.",
+        "latency_ms": 1409,
+        "needs_clarification": false,
+        "primary_domain": "cyber",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "multi_01",
+      "initial_message": "online paise ka issue hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The message may describe a legal issue, but more context is needed to identify the supported area.",
+        "latency_ms": 1217,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1520
+        ]
+      },
+      "replies": [
+        "Instagram seller ne payment li aur block kar diya"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Aapka landlord ke saath kis baat par jhagda chal raha hai, jaise ki rent, deposit, ya ghar khali karne ko lekar?"
+      ],
+      "call_counts": {
+        "clarification_calls": 1,
+        "router_calls": 2
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "cyber",
+        "tenancy"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "tenancy",
+          "cyber"
+        ],
+        "issue_summary": "Dispute with landlord involving alleged online threats and disconnection of electricity.",
+        "latency_ms": 26218,
+        "needs_clarification": false,
+        "primary_domain": "tenancy",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "multi_02",
+      "initial_message": "landlord trouble kar raha hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The message may describe a legal issue, but more context is needed to identify the supported area.",
+        "latency_ms": 1234,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1723
+        ]
+      },
+      "replies": [
+        "online threats de raha hai aur electricity cut kar di"
+      ],
+      "stopped_reason": "classified"
+    },
+    {
+      "asked_questions": [
+        "Aapka matter kis cheez se juda hai, jaise ki koi shopping issue, online fraud, ya landlord-tenant ki koi baat?",
+        "Briefly, who is involved and what happened?"
+      ],
+      "call_counts": {
+        "clarification_calls": 2,
+        "router_calls": 3
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": true,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "resolved": false,
+        "status_match": true,
+        "stuck_safety_success": true
+      },
+      "expected_domains": [],
+      "expected_final_status": "unclear",
+      "final_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": null,
+        "latency_ms": 1430,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "id": "stuck_01",
+      "initial_message": "mera matter hai",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": "The user stated they have a matter without providing any details regarding the issue.",
+        "latency_ms": 1630,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1934
+        ]
+      },
+      "replies": [
+        "matter hai bas",
+        "same matter hai"
+      ],
+      "stopped_reason": "stuck_exit"
+    },
+    {
+      "asked_questions": [
+        "Kya aap bata sakte hain ki yeh mamla kis cheez se juda hai, jaise ki kisse kharidne se, online dhokhe se, ya kiraye ke makaan se?",
+        "Briefly, who is involved and what happened?"
+      ],
+      "call_counts": {
+        "clarification_calls": 2,
+        "router_calls": 3
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": true,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "resolved": false,
+        "status_match": true,
+        "stuck_safety_success": true
+      },
+      "expected_domains": [],
+      "expected_final_status": "unclear",
+      "final_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": null,
+        "latency_ms": 1420,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "id": "stuck_02",
+      "initial_message": "mere saath galat hua",
+      "initial_route": {
+        "confidence": "low",
+        "domains": [],
+        "issue_summary": null,
+        "latency_ms": 1156,
+        "needs_clarification": true,
+        "primary_domain": null,
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "unclear"
+      },
+      "latency": {
+        "clarification_latency_ms": [
+          1273
+        ]
+      },
+      "replies": [
+        "galat hua bas",
+        "pata nahi"
+      ],
+      "stopped_reason": "unclear"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "clarification_calls": 0,
+        "router_calls": 1
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "tenancy"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "tenancy"
+        ],
+        "issue_summary": "The user reports that their landlord is cutting off the electricity supply.",
+        "latency_ms": 1632,
+        "needs_clarification": false,
+        "primary_domain": "tenancy",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "classified_no_clarification_01",
+      "initial_message": "landlord electricity cut kar raha hai",
+      "initial_route": {
+        "confidence": "high",
+        "domains": [
+          "tenancy"
+        ],
+        "issue_summary": "The user reports that their landlord is cutting off the electricity supply.",
+        "latency_ms": 1632,
+        "needs_clarification": false,
+        "primary_domain": "tenancy",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "latency": {
+        "clarification_latency_ms": []
+      },
+      "replies": [],
+      "stopped_reason": "initial_route"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "clarification_calls": 0,
+        "router_calls": 1
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "consumer"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "consumer"
+        ],
+        "issue_summary": "The user is reporting that a seller is refusing to provide a refund for a defective product.",
+        "latency_ms": 1744,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "classified_no_clarification_02",
+      "initial_message": "seller refund nahi de raha defective product ke liye",
+      "initial_route": {
+        "confidence": "high",
+        "domains": [
+          "consumer"
+        ],
+        "issue_summary": "The user is reporting that a seller is refusing to provide a refund for a defective product.",
+        "latency_ms": 1744,
+        "needs_clarification": false,
+        "primary_domain": "consumer",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "latency": {
+        "clarification_latency_ms": []
+      },
+      "replies": [],
+      "stopped_reason": "initial_route"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "clarification_calls": 0,
+        "router_calls": 1
+      },
+      "evaluation": {
+        "clarification_trigger_correct": true,
+        "correct": true,
+        "domain_match": true,
+        "multi_turn_behavior": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "resolved": true,
+        "status_match": true,
+        "stuck_safety_success": false
+      },
+      "expected_domains": [
+        "constitutional_public_authority"
+      ],
+      "expected_final_status": "classified",
+      "final_route": {
+        "confidence": "high",
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "issue_summary": "Non-receipt of a reply to a Right to Information (RTI) application.",
+        "latency_ms": 1540,
+        "needs_clarification": false,
+        "primary_domain": "constitutional_public_authority",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "id": "classified_no_clarification_03",
+      "initial_message": "RTI application ka reply nahi mila",
+      "initial_route": {
+        "confidence": "high",
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "issue_summary": "Non-receipt of a reply to a Right to Information (RTI) application.",
+        "latency_ms": 1540,
+        "needs_clarification": false,
+        "primary_domain": "constitutional_public_authority",
+        "provider": "gemini",
+        "routing_error": false,
+        "status": "classified"
+      },
+      "latency": {
+        "clarification_latency_ms": []
+      },
+      "replies": [],
+      "stopped_reason": "initial_route"
+    }
+  ],
+  "status_confusion": {
+    "classified -> classified": 17,
+    "out_of_scope -> out_of_scope": 2,
+    "unclear -> unclear": 2,
+    "unsupported -> unsupported": 3
+  }
+}

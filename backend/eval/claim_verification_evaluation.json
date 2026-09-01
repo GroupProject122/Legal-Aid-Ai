@@ -1,0 +1,2718 @@
+{
+  "confusion_matrix": {
+    "partially_supported": {
+      "partially_supported": 6,
+      "supported": 0,
+      "unsupported": 0
+    },
+    "supported": {
+      "partially_supported": 0,
+      "supported": 12,
+      "unsupported": 0
+    },
+    "unsupported": {
+      "partially_supported": 0,
+      "supported": 0,
+      "unsupported": 9
+    }
+  },
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/claim_verification_cases.json",
+    "gemini_model": "gemini-flash-lite-latest",
+    "max_cases": null,
+    "stop_on_call_failure": true
+  },
+  "failures": [],
+  "high_risk_results": [
+    {
+      "actual_support": "partially_supported",
+      "claim": "The RTI Act allows a written information request and requires the reply within 7 days.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "partial_extra_deadline",
+      "latency_ms": 1223,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: The RTI Act allows a written information request and requires the reply within 7 days."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "rti_section_6"
+            ],
+            "text": "The RTI Act allows a written information request and requires the reply within 7 days."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1223,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text supports that a request can be made in writing, but it does not contain any information about requiring a reply within 7 days.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "rti_section_6"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A consumer complaint for defective goods must be filed within 30 days.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_30_day_deadline",
+      "latency_ms": 1529,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39"
+            ],
+            "text": "A consumer complaint for defective goods must be filed within 30 days."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1528,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states what the District Commission may direct (removal of defect, replacement of goods, return of price, or compensation), but contains no information regarding a time limit of 30 days for filing a consumer complaint.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A landlord electricity dispute must be filed before the Income Tax Department.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_wrong_forum",
+      "latency_ms": 1240,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "drc_section_45"
+            ],
+            "text": "A landlord electricity dispute must be filed before the Income Tax Department."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1239,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text discusses landlords cutting off or withholding essential supplies or services and does not mention filing electricity disputes before the Income Tax Department.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A defective product always gives the consumer a guaranteed refund.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_guaranteed_refund",
+      "latency_ms": 1704,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39"
+            ],
+            "text": "A defective product always gives the consumer a guaranteed refund."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1703,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the District Commission may direct the return of price where appropriate, but it does not state that a defective product always gives the consumer a guaranteed refund.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The District Commission may direct replacement of goods where the legal conditions are met.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "supported_consumer_replacement",
+      "latency_ms": 1868,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The District Commission may direct replacement of goods where the legal conditions are met."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39_replace"
+            ],
+            "text": "The District Commission may direct replacement of goods where the legal conditions are met."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1867,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that where the District Commission is satisfied that the goods suffer from defects specified in the complaint, it may issue an order to replace the goods with new goods of similar description free from defect.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "cpa_section_39_replace"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The District Commission may direct return of the price paid where appropriate.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "supported_consumer_return_price",
+      "latency_ms": 1747,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The District Commission may direct return of the price paid where appropriate."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39_return"
+            ],
+            "text": "The District Commission may direct return of the price paid where appropriate."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1747,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the District Commission may issue an order to return the price or charges paid by the complainant, which supports the claim.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "cpa_section_39_return"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The Human Rights Commission may inquire into complaints of violation of human rights or negligence by a public servant.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "supported_human_rights_commission",
+      "latency_ms": 1351,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The Human Rights Commission may inquire into complaints of violation of human rights or negligence by a public servant."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "phra_section_12"
+            ],
+            "text": "The Human Rights Commission may inquire into complaints of violation of human rights or negligence by a public servant."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1350,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the Commission shall perform functions to inquire into complaints of violation of human rights or abetment thereof or negligence in the prevention of such violation by a public servant, which clearly supports the claim.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "phra_section_12"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "The District Commission may direct replacement and the seller must replace the goods immediately.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "partial_consumer_replacement_plus_immediate",
+      "latency_ms": 1567,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: The District Commission may direct replacement and the seller must replace the goods immediately."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39_replace"
+            ],
+            "text": "The District Commission may direct replacement and the seller must replace the goods immediately."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1566,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the District Commission may issue an order to replace the goods with new goods of similar description free from defect, but does not mention that the seller must replace them immediately.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "cpa_section_39_replace"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "The RTI Act allows written or electronic requests and says no fee is ever payable.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "partial_rti_request_plus_no_fee",
+      "latency_ms": 1431,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: The RTI Act allows written or electronic requests and says no fee is ever payable."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "rti_section_6_fee"
+            ],
+            "text": "The RTI Act allows written or electronic requests and says no fee is ever payable."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1430,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text confirms that requests can be made in writing or through electronic means, but it contradicts the claim that no fee is ever payable by explicitly stating that requests must be accompanied by such fee as may be prescribed.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "rti_section_6_fee"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "Cyber fraud complaints must be filed only on the Consumer Refund Portal.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_fake_portal",
+      "latency_ms": 1180,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cybercrime_manual"
+            ],
+            "text": "Cyber fraud complaints must be filed only on the Consumer Refund Portal."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1179,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that cyber crime may be reported through the National Cybercrime Reporting Portal, and does not mention the Consumer Refund Portal or state that complaints must be filed there.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A seller refusing a refund must pay a fixed penalty of 50000 rupees.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_fake_penalty",
+      "latency_ms": 1423,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39"
+            ],
+            "text": "A seller refusing a refund must pay a fixed penalty of 50000 rupees."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1423,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text does not mention any fixed penalty of 50000 rupees for sellers refusing a refund.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A cyber fraud victim is required to share their OTP and password with the portal.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_password_request",
+      "latency_ms": 1458,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cybercrime_manual"
+            ],
+            "text": "A cyber fraud victim is required to share their OTP and password with the portal."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1457,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text only states that the manual explains registration and reporting workflow for cyber crime complaints through the portal, and does not mention any requirement to share OTP and passwords.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    }
+  ],
+  "latency": {
+    "average_latency_ms": 1511.6,
+    "max_latency_ms": 1930,
+    "min_latency_ms": 1153,
+    "successful_verifier_calls": 27
+  },
+  "metrics": {
+    "case_count": 27,
+    "false_acceptance_rate": 0.0,
+    "false_rejection_rate": 0.0,
+    "final_unsupported_claim_leakage_rate": 0.0,
+    "high_risk_case_count": 12,
+    "high_risk_safe_handling_rate": 1.0,
+    "overall_classification_accuracy": 1.0,
+    "overall_verified_accuracy": 1.0,
+    "partially_supported_detection_rate": 1.0,
+    "sanitization_correct_rate": 1.0,
+    "supported_claim_precision": 1.0,
+    "supported_claim_recall": 1.0,
+    "unsupported_claim_detection_rate": 1.0,
+    "verified_case_count": 27,
+    "verifier_call_failure_rate": 0.0,
+    "verifier_structured_output_success_rate": 1.0
+  },
+  "results": [
+    {
+      "actual_support": "supported",
+      "claim": "Article 14 provides for equality before law and equal protection of the laws.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_article_14",
+      "latency_ms": 1657,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "Article 14 provides for equality before law and equal protection of the laws."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "constitution_article_14"
+            ],
+            "text": "Article 14 provides for equality before law and equal protection of the laws."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1656,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text explicitly states that the State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "constitution_article_14"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "Section 45 addresses a landlord cutting off or withholding an essential supply or service.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_essential_supply",
+      "latency_ms": 1531,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "Section 45 addresses a landlord cutting off or withholding an essential supply or service."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "drc_section_45"
+            ],
+            "text": "Section 45 addresses a landlord cutting off or withholding an essential supply or service."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1531,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that no landlord shall cut off or withhold any essential supply or service enjoyed by the tenant, which directly supports the claim.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "drc_section_45"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "Section 66C concerns punishment for identity theft involving fraudulent or dishonest use of another person's electronic signature, password, or unique identification feature.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_identity_theft",
+      "latency_ms": 1215,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "Section 66C concerns punishment for identity theft involving fraudulent or dishonest use of another person's electronic signature, password, or unique identification feature."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "it_act_section_66c"
+            ],
+            "text": "Section 66C concerns punishment for identity theft involving fraudulent or dishonest use of another person's electronic signature, password, or unique identification feature."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1214,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that Section 66C is the punishment for identity theft by fraudulently or dishonestly making use of the electronic signature, password, or any other unique identification feature of any other person.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "it_act_section_66c"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The RTI Act allows a person who desires information to make a request in writing or through electronic means.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_rti_request",
+      "latency_ms": 1330,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The RTI Act allows a person who desires information to make a request in writing or through electronic means."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "rti_section_6"
+            ],
+            "text": "The RTI Act allows a person who desires information to make a request in writing or through electronic means."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1330,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text explicitly states that a person who desires to obtain any information under this Act shall make a request in writing or through electronic means.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "rti_section_6"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "The RTI Act allows a written information request and requires the reply within 7 days.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "partial_extra_deadline",
+      "latency_ms": 1223,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: The RTI Act allows a written information request and requires the reply within 7 days."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "rti_section_6"
+            ],
+            "text": "The RTI Act allows a written information request and requires the reply within 7 days."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1223,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text supports that a request can be made in writing, but it does not contain any information about requiring a reply within 7 days.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "rti_section_6"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "Section 45 addresses cutting off essential supply and guarantees compensation to the tenant.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "partial_essential_supply_plus_compensation",
+      "latency_ms": 1536,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: Section 45 addresses cutting off essential supply and guarantees compensation to the tenant."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "drc_section_45"
+            ],
+            "text": "Section 45 addresses cutting off essential supply and guarantees compensation to the tenant."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1535,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that section 45 addresses cutting off or withholding an essential supply or service without just and sufficient cause, but it does not mention anything about guaranteeing compensation to the tenant.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "drc_section_45"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A consumer complaint for defective goods must be filed within 30 days.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_30_day_deadline",
+      "latency_ms": 1529,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39"
+            ],
+            "text": "A consumer complaint for defective goods must be filed within 30 days."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1528,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states what the District Commission may direct (removal of defect, replacement of goods, return of price, or compensation), but contains no information regarding a time limit of 30 days for filing a consumer complaint.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A landlord electricity dispute must be filed before the Income Tax Department.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_wrong_forum",
+      "latency_ms": 1240,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "drc_section_45"
+            ],
+            "text": "A landlord electricity dispute must be filed before the Income Tax Department."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1239,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text discusses landlords cutting off or withholding essential supplies or services and does not mention filing electricity disputes before the Income Tax Department.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A defective product always gives the consumer a guaranteed refund.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_guaranteed_refund",
+      "latency_ms": 1704,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39"
+            ],
+            "text": "A defective product always gives the consumer a guaranteed refund."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1703,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the District Commission may direct the return of price where appropriate, but it does not state that a defective product always gives the consumer a guaranteed refund.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "Section 66C gives a consumer the right to replacement of defective goods.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "unsupported_wrong_section_meaning",
+      "latency_ms": 1486,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "it_act_section_66c"
+            ],
+            "text": "Section 66C gives a consumer the right to replacement of defective goods."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1486,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that Section 66C covers the punishment for identity theft, not the right to replacement of defective goods.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The District Commission may direct replacement of goods where the legal conditions are met.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "supported_consumer_replacement",
+      "latency_ms": 1868,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The District Commission may direct replacement of goods where the legal conditions are met."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39_replace"
+            ],
+            "text": "The District Commission may direct replacement of goods where the legal conditions are met."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1867,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that where the District Commission is satisfied that the goods suffer from defects specified in the complaint, it may issue an order to replace the goods with new goods of similar description free from defect.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "cpa_section_39_replace"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The District Commission may direct return of the price paid where appropriate.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "supported_consumer_return_price",
+      "latency_ms": 1747,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The District Commission may direct return of the price paid where appropriate."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39_return"
+            ],
+            "text": "The District Commission may direct return of the price paid where appropriate."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1747,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the District Commission may issue an order to return the price or charges paid by the complainant, which supports the claim.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "cpa_section_39_return"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The Intermediary Rules refer to a grievance officer mechanism for user complaints.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_intermediary_grievance",
+      "latency_ms": 1531,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The Intermediary Rules refer to a grievance officer mechanism for user complaints."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "intermediary_grievance"
+            ],
+            "text": "The Intermediary Rules refer to a grievance officer mechanism for user complaints."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1530,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the intermediary shall prominently publish the name and contact details of the Grievance Officer and the mechanism by which a user or victim may make a complaint, which supports the claim that the rules refer to a grievance officer mechanism for user c",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "intermediary_grievance"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The Legal Services Authorities Act concerns providing free and competent legal services to eligible persons.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_legal_aid_authority",
+      "latency_ms": 1930,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The Legal Services Authorities Act concerns providing free and competent legal services to eligible persons."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "lsa_object"
+            ],
+            "text": "The Legal Services Authorities Act concerns providing free and competent legal services to eligible persons."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1929,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the object of the Legal Services Authorities Act, 1987 is to provide free and competent legal services to the weaker sections of the society.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "lsa_object"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The Human Rights Commission may inquire into complaints of violation of human rights or negligence by a public servant.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "supported_human_rights_commission",
+      "latency_ms": 1351,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The Human Rights Commission may inquire into complaints of violation of human rights or negligence by a public servant."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "phra_section_12"
+            ],
+            "text": "The Human Rights Commission may inquire into complaints of violation of human rights or negligence by a public servant."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1350,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the Commission shall perform functions to inquire into complaints of violation of human rights or abetment thereof or negligence in the prevention of such violation by a public servant, which clearly supports the claim.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "phra_section_12"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "The District Commission may direct replacement and the seller must replace the goods immediately.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "partial_consumer_replacement_plus_immediate",
+      "latency_ms": 1567,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: The District Commission may direct replacement and the seller must replace the goods immediately."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39_replace"
+            ],
+            "text": "The District Commission may direct replacement and the seller must replace the goods immediately."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1566,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that the District Commission may issue an order to replace the goods with new goods of similar description free from defect, but does not mention that the seller must replace them immediately.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "cpa_section_39_replace"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "Section 66C concerns identity theft and guarantees arrest of the offender.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "partial_identity_theft_plus_arrest",
+      "latency_ms": 1661,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: Section 66C concerns identity theft and guarantees arrest of the offender."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "it_act_section_66c"
+            ],
+            "text": "Section 66C concerns identity theft and guarantees arrest of the offender."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1660,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text confirms that Section 66C concerns the punishment for identity theft, but it does not mention anything about guaranteeing the arrest of the offender.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "it_act_section_66c"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "The RTI Act allows written or electronic requests and says no fee is ever payable.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "partial_rti_request_plus_no_fee",
+      "latency_ms": 1431,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: The RTI Act allows written or electronic requests and says no fee is ever payable."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "rti_section_6_fee"
+            ],
+            "text": "The RTI Act allows written or electronic requests and says no fee is ever payable."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1430,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text confirms that requests can be made in writing or through electronic means, but it contradicts the claim that no fee is ever payable by explicitly stating that requests must be accompanied by such fee as may be prescribed.",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "rti_section_6_fee"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "partially_supported",
+      "claim": "Legal aid law supports free legal services for eligible people and guarantees a free lawyer in every type of case.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "partially_supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "partial_legal_aid_plus_all_cases",
+      "latency_ms": 1665,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some points are qualified because the retrieved sources support them only in part."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The retrieved sources partly support this point: Legal aid law supports free legal services for eligible people and guarantees a free lawyer in every type of case."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "lsa_eligibility"
+            ],
+            "text": "Legal aid law supports free legal services for eligible people and guarantees a free lawyer in every type of case."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1664,
+        "partially_supported_claim_count": 1,
+        "provider": "gemini",
+        "qualified_claim_count": 1,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text confirms that members of Scheduled Castes/Tribes, victims of trafficking, women, children, and those in specified categories are entitled to legal services under the Act. However, the source text does not state that it guarantees a 'free lawyer in every type of ca",
+            "support": "partially_supported",
+            "supporting_chunk_ids": [
+              "lsa_eligibility"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "The Constitution states that tomorrow's weather will be rainy.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "unsupported_weather_claim",
+      "latency_ms": 1153,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "constitution_article_14"
+            ],
+            "text": "The Constitution states that tomorrow's weather will be rainy."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1152,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text discusses equality before the law and equal protection of the laws within the territory of India, and contains no information about tomorrow's weather.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "Cyber fraud complaints must be filed only on the Consumer Refund Portal.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_fake_portal",
+      "latency_ms": 1180,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cybercrime_manual"
+            ],
+            "text": "Cyber fraud complaints must be filed only on the Consumer Refund Portal."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1179,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that cyber crime may be reported through the National Cybercrime Reporting Portal, and does not mention the Consumer Refund Portal or state that complaints must be filed there.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A seller refusing a refund must pay a fixed penalty of 50000 rupees.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_fake_penalty",
+      "latency_ms": 1423,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39"
+            ],
+            "text": "A seller refusing a refund must pay a fixed penalty of 50000 rupees."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1423,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text does not mention any fixed penalty of 50000 rupees for sellers refusing a refund.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "Article 14 gives a right to file an RTI application.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "unsupported_wrong_article",
+      "latency_ms": 1732,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "constitution_article_14"
+            ],
+            "text": "Article 14 gives a right to file an RTI application."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1732,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text discusses equality before the law and equal protection of the laws, but does not mention the right to file an RTI application.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A cyber fraud victim is required to share their OTP and password with the portal.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_password_request",
+      "latency_ms": 1458,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cybercrime_manual"
+            ],
+            "text": "A cyber fraud victim is required to share their OTP and password with the portal."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1457,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text only states that the manual explains registration and reporting workflow for cyber crime complaints through the portal, and does not mention any requirement to share OTP and passwords.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The dark patterns guidelines address practices that mislead users or impair user autonomy.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_dark_pattern_guideline",
+      "latency_ms": 1508,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The dark patterns guidelines address practices that mislead users or impair user autonomy."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "dark_patterns_definition"
+            ],
+            "text": "The dark patterns guidelines address practices that mislead users or impair user autonomy."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1507,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text defines dark patterns as practices designed to mislead or trick users or subvert/impair consumer autonomy, decision making, or choice.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "dark_patterns_definition"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The misleading advertisement guidelines address advertisements that mislead consumers about a product or service.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_misleading_ad",
+      "latency_ms": 1631,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The misleading advertisement guidelines address advertisements that mislead consumers about a product or service."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "misleading_ads_definition"
+            ],
+            "text": "The misleading advertisement guidelines address advertisements that mislead consumers about a product or service."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1630,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text explicitly defines a misleading advertisement as one that falsely describes a product or service or is likely to mislead consumers as to its nature, substance, quantity, or quality.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "misleading_ads_definition"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "supported",
+      "claim": "The Direct Selling Rules contain obligations for direct sellers.",
+      "claim_visible_after_sanitization": true,
+      "correct": true,
+      "expected_support": "supported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "supported_direct_selling_obligation",
+      "latency_ms": 1527,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [
+          "The Direct Selling Rules contain obligations for direct sellers."
+        ],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "direct_selling_rule_6"
+            ],
+            "text": "The Direct Selling Rules contain obligations for direct sellers."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1527,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 0,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text is titled 'Obligations of direct sellers' under the Consumer Protection (Direct Selling) Rules, 2021, and specifies that every direct seller shall have a prior written contract.",
+            "support": "supported",
+            "supporting_chunk_ids": [
+              "direct_selling_rule_6"
+            ]
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 0,
+        "verified_claim_count": 1
+      },
+      "verification_status": "verified"
+    }
+  ],
+  "wrong_source_or_section_results": [
+    {
+      "actual_support": "unsupported",
+      "claim": "A landlord electricity dispute must be filed before the Income Tax Department.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_wrong_forum",
+      "latency_ms": 1240,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "drc_section_45"
+            ],
+            "text": "A landlord electricity dispute must be filed before the Income Tax Department."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1239,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text discusses landlords cutting off or withholding essential supplies or services and does not mention filing electricity disputes before the Income Tax Department.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "Section 66C gives a consumer the right to replacement of defective goods.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "unsupported_wrong_section_meaning",
+      "latency_ms": 1486,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "it_act_section_66c"
+            ],
+            "text": "Section 66C gives a consumer the right to replacement of defective goods."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1486,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that Section 66C covers the punishment for identity theft, not the right to replacement of defective goods.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "Cyber fraud complaints must be filed only on the Consumer Refund Portal.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_fake_portal",
+      "latency_ms": 1180,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cybercrime_manual"
+            ],
+            "text": "Cyber fraud complaints must be filed only on the Consumer Refund Portal."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1179,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text states that cyber crime may be reported through the National Cybercrime Reporting Portal, and does not mention the Consumer Refund Portal or state that complaints must be filed there.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "A seller refusing a refund must pay a fixed penalty of 50000 rupees.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": true,
+      "id": "unsupported_fake_penalty",
+      "latency_ms": 1423,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": true,
+            "source_chunk_ids": [
+              "cpa_section_39"
+            ],
+            "text": "A seller refusing a refund must pay a fixed penalty of 50000 rupees."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1423,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text does not mention any fixed penalty of 50000 rupees for sellers refusing a refund.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    },
+    {
+      "actual_support": "unsupported",
+      "claim": "Article 14 gives a right to file an RTI application.",
+      "claim_visible_after_sanitization": false,
+      "correct": true,
+      "expected_support": "unsupported",
+      "false_acceptance": false,
+      "false_rejection": false,
+      "high_risk": false,
+      "id": "unsupported_wrong_article",
+      "latency_ms": 1732,
+      "output_answer": {
+        "evidence_to_preserve": [],
+        "issue_summary": "Evaluation case.",
+        "limitations": [
+          "Some generated points were removed because the retrieved sources did not clearly support them."
+        ],
+        "next_steps": [],
+        "possible_legal_position": [],
+        "possible_rights": [],
+        "suggested_next_steps": [],
+        "what_this_may_involve": [],
+        "where_to_approach": []
+      },
+      "sanitization_correct": true,
+      "unsupported_claim_leaked": false,
+      "verification": {
+        "claim_count": 1,
+        "claims": [
+          {
+            "claim_id": "claim_001",
+            "field": "what_this_may_involve",
+            "high_risk": false,
+            "source_chunk_ids": [
+              "constitution_article_14"
+            ],
+            "text": "Article 14 gives a right to file an RTI application."
+          }
+        ],
+        "deterministic_rejections": {},
+        "latency_ms": 1732,
+        "partially_supported_claim_count": 0,
+        "provider": "gemini",
+        "qualified_claim_count": 0,
+        "removed_claim_count": 1,
+        "results": [
+          {
+            "claim_id": "claim_001",
+            "reason": "The source text discusses equality before the law and equal protection of the laws, but does not mention the right to file an RTI application.",
+            "support": "unsupported",
+            "supporting_chunk_ids": []
+          }
+        ],
+        "status": "verified",
+        "unsupported_claim_count": 1,
+        "verified_claim_count": 0
+      },
+      "verification_status": "verified"
+    }
+  ]
+}

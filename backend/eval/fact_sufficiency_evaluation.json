@@ -1,0 +1,1898 @@
+{
+  "call_counts": {
+    "fact_sufficiency_gemini_calls": 16
+  },
+  "evaluation_config": {
+    "gemini_model": "gemini-flash-lite-latest",
+    "gemini_used_for_legal_answer_generation": false,
+    "query_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/fact_sufficiency_queries.json"
+  },
+  "failures": [],
+  "latency": {
+    "average_fact_latency_ms": 1593.3,
+    "max_fact_latency_ms": 1949,
+    "min_fact_latency_ms": 1240
+  },
+  "metrics": {
+    "final_sufficiency_accuracy": 1.0,
+    "missing_question_rate": 0.0,
+    "one_turn_resolution_rate": 0.833,
+    "overall_accuracy": 1.0,
+    "repeated_question_rate": 0.0,
+    "scenario_count": 26,
+    "stuck_safety_success_rate": 1.0,
+    "sufficiency_decision_accuracy": 1.0,
+    "unnecessary_question_rate": 0.0
+  },
+  "results": [
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "consumer"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "seller refusing refund for defective product"
+        ],
+        "issue_summary": "Possible consumer dispute about defective goods and refund refusal.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible consumer dispute about defective goods and refund refusal.",
+        "original_message": "seller refusing refund for defective product",
+        "state_id": "2b0df20ea5a948c39c69beccc7431b5e"
+      },
+      "domains": [
+        "consumer"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "seller refusing refund for defective product",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "seller refusing refund for defective product",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "consumer_sufficient_01",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "seller refusing refund for defective product",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "consumer"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "online product damaged deliver hua aur seller replace nahi kar raha"
+        ],
+        "issue_summary": "Possible consumer dispute about damaged goods.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible consumer dispute about damaged goods.",
+        "original_message": "online product damaged deliver hua aur seller replace nahi kar raha",
+        "state_id": "72481ea9faf5420d9b31c0b7712b5f6e"
+      },
+      "domains": [
+        "consumer"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "online product damaged deliver hua aur seller replace nahi kar raha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "online product damaged deliver hua aur seller replace nahi kar raha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "consumer_sufficient_02",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "online product damaged deliver hua aur seller replace nahi kar raha",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "What product or service did you purchase, and what specific issue did you face with the seller or service provider?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "consumer"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "phone defective tha aur seller refund nahi de raha",
+            "question": "What product or service did you purchase, and what specific issue did you face with the seller or service provider?"
+          }
+        ],
+        "facts": [
+          "consumer complaint karni hai",
+          "phone defective tha aur seller refund nahi de raha"
+        ],
+        "issue_summary": "Possible consumer issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "consumer complaint karni hai phone defective tha aur seller refund nahi de raha",
+        "original_message": "consumer complaint karni hai",
+        "state_id": "f077163878624672a984732415bea105"
+      },
+      "domains": [
+        "consumer"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "consumer complaint karni hai phone defective tha aur seller refund nahi de raha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1945,
+        "missing_facts": [
+          "product or service type",
+          "seller or provider behavior"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "User wants to file a consumer complaint regarding an unspecified product or service issue.",
+        "provider": "gemini",
+        "question": "What product or service did you purchase, and what specific issue did you face with the seller or service provider?",
+        "reason": "The facts are too vague because the user only stated the intent to file a complaint without specifying the product, service, or the nature of the dispute with the provider.",
+        "status": "insufficient"
+      },
+      "id": "consumer_insufficient_01",
+      "latency": {
+        "fact_latency_ms": [
+          1945
+        ]
+      },
+      "message": "consumer complaint karni hai",
+      "replies": [
+        "phone defective tha aur seller refund nahi de raha"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "What product or service did you purchase, and what issue did you face with the seller or provider?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "consumer"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "service provider ne service complete nahi ki",
+            "question": "What product or service did you purchase, and what issue did you face with the seller or provider?"
+          }
+        ],
+        "facts": [
+          "consumer issue hai",
+          "service provider ne service complete nahi ki"
+        ],
+        "issue_summary": "Possible consumer issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "consumer issue hai service provider ne service complete nahi ki",
+        "original_message": "consumer issue hai",
+        "state_id": "f50dcaa088d4483cb636b06f0ebb40ef"
+      },
+      "domains": [
+        "consumer"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "consumer issue hai service provider ne service complete nahi ki",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1323,
+        "missing_facts": [
+          "specific product or service involved",
+          "nature of the seller or provider behavior"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "The user reports a consumer issue but has not specified the product, service, or seller behavior involved.",
+        "provider": "gemini",
+        "question": "What product or service did you purchase, and what issue did you face with the seller or provider?",
+        "reason": "The provided facts only state that a consumer issue exists without detailing the product, service, or specific behavior of the seller.",
+        "status": "insufficient"
+      },
+      "id": "consumer_insufficient_02",
+      "latency": {
+        "fact_latency_ms": [
+          1323
+        ]
+      },
+      "message": "consumer issue hai",
+      "replies": [
+        "service provider ne service complete nahi ki"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "cyber"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "my Instagram account was hacked"
+        ],
+        "issue_summary": "Possible account hacking issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible account hacking issue.",
+        "original_message": "my Instagram account was hacked",
+        "state_id": "31e13a53bafa495bb020e855839960ff"
+      },
+      "domains": [
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "my Instagram account was hacked",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "my Instagram account was hacked",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "cyber_sufficient_01",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "my Instagram account was hacked",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "cyber"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "phishing link se paise chale gaye"
+        ],
+        "issue_summary": "Possible phishing/payment fraud issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible phishing/payment fraud issue.",
+        "original_message": "phishing link se paise chale gaye",
+        "state_id": "39b462d05fe64a1eb159a7c31144c5d9"
+      },
+      "domains": [
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "phishing link se paise chale gaye",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "phishing link se paise chale gaye",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "cyber_sufficient_02",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "phishing link se paise chale gaye",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you briefly describe what happened, such as whether this involves unauthorized transactions, hacking, or phishing?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "cyber"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "someone made fake account using my personal details",
+            "question": "Could you briefly describe what happened, such as whether this involves unauthorized transactions, hacking, or phishing?"
+          }
+        ],
+        "facts": [
+          "mera cyber issue hai",
+          "someone made fake account using my personal details"
+        ],
+        "issue_summary": "Possible cyber issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "mera cyber issue hai someone made fake account using my personal details",
+        "original_message": "mera cyber issue hai",
+        "state_id": "78c051e35cab4a4280312d528375c8b1"
+      },
+      "domains": [
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "mera cyber issue hai someone made fake account using my personal details",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1611,
+        "missing_facts": [
+          "nature of the digital incident"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "User reports a general cyber issue without specific details.",
+        "provider": "gemini",
+        "question": "Could you briefly describe what happened, such as whether this involves unauthorized transactions, hacking, or phishing?",
+        "reason": "The provided statement only mentions a cyber issue generally without describing the specific digital incident or event pattern required for retrieval.",
+        "status": "insufficient"
+      },
+      "id": "cyber_insufficient_01",
+      "latency": {
+        "fact_latency_ms": [
+          1611
+        ]
+      },
+      "message": "mera cyber issue hai",
+      "replies": [
+        "someone made fake account using my personal details"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you please specify what happened online, such as whether it was unauthorized access, payment fraud, phishing, or another issue?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "cyber"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "bank transaction unauthorized tha",
+            "question": "Could you please specify what happened online, such as whether it was unauthorized access, payment fraud, phishing, or another issue?"
+          }
+        ],
+        "facts": [
+          "online problem hai",
+          "bank transaction unauthorized tha"
+        ],
+        "issue_summary": "Possible online issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "online problem hai bank transaction unauthorized tha",
+        "original_message": "online problem hai",
+        "state_id": "3dab51531b024ba5880a4e75b85d2ae1"
+      },
+      "domains": [
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "online problem hai bank transaction unauthorized tha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1240,
+        "missing_facts": [
+          "nature of the online incident"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "The user reports experiencing an unspecified online problem.",
+        "provider": "gemini",
+        "question": "Could you please specify what happened online, such as whether it was unauthorized access, payment fraud, phishing, or another issue?",
+        "reason": "The description 'online problem hai' is too vague to determine the specific digital incident type needed for legal-source retrieval.",
+        "status": "insufficient"
+      },
+      "id": "cyber_insufficient_02",
+      "latency": {
+        "fact_latency_ms": [
+          1240
+        ]
+      },
+      "message": "online problem hai",
+      "replies": [
+        "bank transaction unauthorized tha"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "tenancy"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "landlord cut electricity"
+        ],
+        "issue_summary": "Possible tenancy dispute about essential supply.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible tenancy dispute about essential supply.",
+        "original_message": "landlord cut electricity",
+        "state_id": "69094adaf6e34137a6096517a476822c"
+      },
+      "domains": [
+        "tenancy"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "landlord cut electricity",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "landlord cut electricity",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "tenancy_sufficient_01",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "landlord cut electricity",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "tenancy"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "landlord security deposit return nahi kar raha"
+        ],
+        "issue_summary": "Possible tenancy dispute about security deposit.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible tenancy dispute about security deposit.",
+        "original_message": "landlord security deposit return nahi kar raha",
+        "state_id": "8ad1b5dca1b840dd854fc1acd2ef4379"
+      },
+      "domains": [
+        "tenancy"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "landlord security deposit return nahi kar raha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "landlord security deposit return nahi kar raha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "tenancy_sufficient_02",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "landlord security deposit return nahi kar raha",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you briefly describe what the dispute with your landlord is about, such as issues related to rent, eviction, or deposit?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "tenancy"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "landlord eviction without notice kar raha hai",
+            "question": "Could you briefly describe what the dispute with your landlord is about, such as issues related to rent, eviction, or deposit?"
+          }
+        ],
+        "facts": [
+          "landlord dispute hai",
+          "landlord eviction without notice kar raha hai"
+        ],
+        "issue_summary": "Possible tenancy issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "landlord dispute hai landlord eviction without notice kar raha hai",
+        "original_message": "landlord dispute hai",
+        "state_id": "a5d3d029c38d45c6848b453665d4167d"
+      },
+      "domains": [
+        "tenancy"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "landlord dispute hai landlord eviction without notice kar raha hai",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1795,
+        "missing_facts": [
+          "specific nature of the tenancy dispute"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "Tenant reports a dispute with their landlord but has not specified the nature of the issue.",
+        "provider": "gemini",
+        "question": "Could you briefly describe what the dispute with your landlord is about, such as issues related to rent, eviction, or deposit?",
+        "reason": "The known fact only states there is a landlord dispute without indicating the specific nature of the issue.",
+        "status": "insufficient"
+      },
+      "id": "tenancy_insufficient_01",
+      "latency": {
+        "fact_latency_ms": [
+          1795
+        ]
+      },
+      "message": "landlord dispute hai",
+      "replies": [
+        "landlord eviction without notice kar raha hai"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you please specify what the rent issue is about, such as a rent increase, eviction, or unpaid rent?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "tenancy"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "tenant rent pay nahi kar raha",
+            "question": "Could you please specify what the rent issue is about, such as a rent increase, eviction, or unpaid rent?"
+          }
+        ],
+        "facts": [
+          "rent matter hai",
+          "tenant rent pay nahi kar raha"
+        ],
+        "issue_summary": "Possible rent issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "rent matter hai tenant rent pay nahi kar raha",
+        "original_message": "rent matter hai",
+        "state_id": "39ae40f6ffc749f8992c84516959f199"
+      },
+      "domains": [
+        "tenancy"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "rent matter hai tenant rent pay nahi kar raha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1424,
+        "missing_facts": [
+          "nature of the rent dispute",
+          "landlord-tenant relationship context"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "Rent dispute between landlord and tenant.",
+        "provider": "gemini",
+        "question": "Could you please specify what the rent issue is about, such as a rent increase, eviction, or unpaid rent?",
+        "reason": "The issue summary is too vague as it only states that it is a rent matter without indicating the specific nature of the dispute between the landlord and tenant.",
+        "status": "insufficient"
+      },
+      "id": "tenancy_insufficient_02",
+      "latency": {
+        "fact_latency_ms": [
+          1424
+        ]
+      },
+      "message": "rent matter hai",
+      "replies": [
+        "tenant rent pay nahi kar raha"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "RTI application ka reply nahi mila"
+        ],
+        "issue_summary": "Possible RTI issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible RTI issue.",
+        "original_message": "RTI application ka reply nahi mila",
+        "state_id": "8f5742a546044180ac5e081644de4554"
+      },
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "RTI application ka reply nahi mila",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "RTI application ka reply nahi mila",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "public_sufficient_01",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "RTI application ka reply nahi mila",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "I want free legal aid"
+        ],
+        "issue_summary": "Possible legal aid issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible legal aid issue.",
+        "original_message": "I want free legal aid",
+        "state_id": "8176ff9774874d9c97eb80f37f643552"
+      },
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "I want free legal aid",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "I want free legal aid",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "public_sufficient_02",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "I want free legal aid",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you briefly specify what action or decision by the government authority led to this issue?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "public authority refused to give information under RTI",
+            "question": "Could you briefly specify what action or decision by the government authority led to this issue?"
+          }
+        ],
+        "facts": [
+          "government authority ke against issue hai",
+          "public authority refused to give information under RTI"
+        ],
+        "issue_summary": "Possible public-authority issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "government authority ke against issue hai public authority refused to give information under RTI",
+        "original_message": "government authority ke against issue hai",
+        "state_id": "1e118007e08349f386455e601bc241af"
+      },
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "government authority ke against issue hai public authority refused to give information under RTI",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1718,
+        "missing_facts": [
+          "nature of the issue or action involving the government authority"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "User has an issue against a government authority but the specific action or subject matter is not specified.",
+        "provider": "gemini",
+        "question": "Could you briefly specify what action or decision by the government authority led to this issue?",
+        "reason": "The issue summary is too broad to identify which specific public-authority domain or statutory mechanism applies for retrieval.",
+        "status": "insufficient"
+      },
+      "id": "public_insufficient_01",
+      "latency": {
+        "fact_latency_ms": [
+          1718
+        ]
+      },
+      "message": "government authority ke against issue hai",
+      "replies": [
+        "public authority refused to give information under RTI"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you briefly describe the specific action or authority involved in the rights issue?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "government authority discriminated against me",
+            "question": "Could you briefly describe the specific action or authority involved in the rights issue?"
+          }
+        ],
+        "facts": [
+          "rights issue hai",
+          "government authority discriminated against me"
+        ],
+        "issue_summary": "Possible rights issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "rights issue hai government authority discriminated against me",
+        "original_message": "rights issue hai",
+        "state_id": "4114788c5180439eadece8df543d3d97"
+      },
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "rights issue hai government authority discriminated against me",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1338,
+        "missing_facts": [
+          "specific nature of the rights issue",
+          "public authority or entity involved"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "The user reports a possible rights issue.",
+        "provider": "gemini",
+        "question": "Could you briefly describe the specific action or authority involved in the rights issue?",
+        "reason": "The description is too broad to identify the specific fundamental right, public authority, or constitutional issue for accurate legal source retrieval.",
+        "status": "insufficient"
+      },
+      "id": "public_insufficient_02",
+      "latency": {
+        "fact_latency_ms": [
+          1338
+        ]
+      },
+      "message": "rights issue hai",
+      "replies": [
+        "government authority discriminated against me"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "consumer",
+          "cyber"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "Instagram seller took payment and blocked me"
+        ],
+        "issue_summary": "Possible online seller dispute with cyber element.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible online seller dispute with cyber element.",
+        "original_message": "Instagram seller took payment and blocked me",
+        "state_id": "7e075ca3d42b4829a127916efe18dbd1"
+      },
+      "domains": [
+        "consumer",
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": 1624,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "The user paid an online seller on Instagram for a product or service, after which the seller blocked the user and failed to deliver.",
+        "provider": "gemini",
+        "question": null,
+        "reason": "The core issue involves an online seller accepting payment via Instagram and subsequently blocking the user, which provides enough factual basis for retrieving relevant consumer and cyber legal sources.",
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1624,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "The user paid an online seller on Instagram for a product or service, after which the seller blocked the user and failed to deliver.",
+        "provider": "gemini",
+        "question": null,
+        "reason": "The core issue involves an online seller accepting payment via Instagram and subsequently blocking the user, which provides enough factual basis for retrieving relevant consumer and cyber legal sources.",
+        "status": "sufficient"
+      },
+      "id": "multi_sufficient_01",
+      "latency": {
+        "fact_latency_ms": [
+          1624
+        ]
+      },
+      "message": "Instagram seller took payment and blocked me",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you briefly describe what went wrong during the online payment, such as a failed transaction, unauthorized deduction, or a fraud incident?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "consumer",
+          "cyber"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "Instagram seller ne paise liye aur product nahi bheja",
+            "question": "Could you briefly describe what went wrong during the online payment, such as a failed transaction, unauthorized deduction, or a fraud incident?"
+          }
+        ],
+        "facts": [
+          "online payment issue hai",
+          "Instagram seller ne paise liye aur product nahi bheja"
+        ],
+        "issue_summary": "Possible online payment issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "online payment issue hai Instagram seller ne paise liye aur product nahi bheja",
+        "original_message": "online payment issue hai",
+        "state_id": "ada9716ca1b74b3dae0b9558ab9e1508"
+      },
+      "domains": [
+        "consumer",
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "online payment issue hai Instagram seller ne paise liye aur product nahi bheja",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1949,
+        "missing_facts": [
+          "nature of the payment issue"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "The user reported an online payment issue.",
+        "provider": "gemini",
+        "question": "Could you briefly describe what went wrong during the online payment, such as a failed transaction, unauthorized deduction, or a fraud incident?",
+        "reason": "The issue is broadly categorized as an online payment problem, but specific details regarding the nature of the incident are missing to narrow down the retrieval context.",
+        "status": "insufficient"
+      },
+      "id": "multi_insufficient_01",
+      "latency": {
+        "fact_latency_ms": [
+          1949
+        ]
+      },
+      "message": "online payment issue hai",
+      "replies": [
+        "Instagram seller ne paise liye aur product nahi bheja"
+      ],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "What product or service was purchased, and what specific issue occurred with the seller or provider?",
+        "What product or service was purchased, and what specific problem occurred with the seller or provider?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 2
+      },
+      "case_context": {
+        "domains": [
+          "consumer"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "issue hai bas",
+            "question": "What product or service was purchased, and what specific issue occurred with the seller or provider?"
+          },
+          {
+            "answer": "same issue",
+            "question": "What product or service was purchased, and what specific problem occurred with the seller or provider?"
+          }
+        ],
+        "facts": [
+          "consumer issue hai",
+          "issue hai bas",
+          "same issue"
+        ],
+        "issue_summary": "Possible consumer issue.",
+        "no_progress_count": 2,
+        "normalized_case_summary": "consumer issue hai issue hai bas same issue",
+        "original_message": "consumer issue hai",
+        "state_id": "6522a5fff19044bcafc6d5b69bc103d8"
+      },
+      "domains": [
+        "consumer"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": true,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "insufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [
+          "basic event details"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": null,
+        "provider": "deterministic",
+        "question": "Please briefly describe what happened.",
+        "reason": "More factual detail is needed before Legal Aid AI can retrieve useful legal sources.",
+        "status": "insufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1644,
+        "missing_facts": [
+          "product or service details",
+          "seller or provider behavior"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "The user reports a consumer issue without specifying the product, service, or the nature of the dispute with the provider.",
+        "provider": "gemini",
+        "question": "What product or service was purchased, and what specific issue occurred with the seller or provider?",
+        "reason": "The provided fact is too vague to determine the nature of the consumer issue or the behavior of the seller.",
+        "status": "insufficient"
+      },
+      "id": "stuck_01",
+      "latency": {
+        "fact_latency_ms": [
+          1644,
+          1248
+        ]
+      },
+      "message": "consumer issue hai",
+      "replies": [
+        "issue hai bas",
+        "same issue"
+      ],
+      "stopped_reason": "stuck_exit"
+    },
+    {
+      "asked_questions": [
+        "Could you briefly describe what happened, such as whether it involves online fraud, unauthorized access, or social media hacking?",
+        "Could you please specify the exact type of cyber issue you are facing, such as online financial fraud, unauthorized account access, or cyberbullying?",
+        "Could you briefly mention what happened on your device or account, such as receiving an unexpected transaction message or losing access to your profile?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 3
+      },
+      "case_context": {
+        "domains": [
+          "cyber"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "problem hai",
+            "question": "Could you briefly describe what happened, such as whether it involves online fraud, unauthorized access, or social media hacking?"
+          },
+          {
+            "answer": "pata nahi",
+            "question": "Could you please specify the exact type of cyber issue you are facing, such as online financial fraud, unauthorized account access, or cyberbullying?"
+          },
+          {
+            "answer": null,
+            "question": "Could you briefly mention what happened on your device or account, such as receiving an unexpected transaction message or losing access to your profile?"
+          }
+        ],
+        "facts": [
+          "mera cyber issue hai",
+          "problem hai",
+          "pata nahi"
+        ],
+        "issue_summary": "Possible cyber issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "mera cyber issue hai problem hai pata nahi",
+        "original_message": "mera cyber issue hai",
+        "state_id": "a1954aef64ac4a64bddb15cb4b86bda1"
+      },
+      "domains": [
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": true,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "insufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": 1735,
+        "missing_facts": [
+          "nature of the cyber incident"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "The user reports a cyber issue with no details provided about the nature of the incident.",
+        "provider": "gemini",
+        "question": "Could you briefly mention what happened on your device or account, such as receiving an unexpected transaction message or losing access to your profile?",
+        "reason": "The user has not provided any details about the nature of the cyber issue, making retrieval impossible.",
+        "status": "insufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1575,
+        "missing_facts": [
+          "nature of the cyber incident"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "User reports a cyber issue with no further details.",
+        "provider": "gemini",
+        "question": "Could you briefly describe what happened, such as whether it involves online fraud, unauthorized access, or social media hacking?",
+        "reason": "The user only stated they have a cyber issue without providing any details about the incident itself.",
+        "status": "insufficient"
+      },
+      "id": "stuck_02",
+      "latency": {
+        "fact_latency_ms": [
+          1575,
+          1625,
+          1735
+        ]
+      },
+      "message": "mera cyber issue hai",
+      "replies": [
+        "problem hai",
+        "pata nahi"
+      ],
+      "stopped_reason": "insufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "cyber"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "phishing link se paise chale gaye, OTP 123456 tha"
+        ],
+        "issue_summary": "Possible phishing/payment fraud issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible phishing/payment fraud issue.",
+        "original_message": "phishing link se paise chale gaye, OTP 123456 tha",
+        "state_id": "3c97447792874adcabeb083ce105876b"
+      },
+      "domains": [
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "phishing link se paise chale gaye, OTP [redacted] tha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "phishing link se paise chale gaye, OTP [redacted] tha",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "privacy_01",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "phishing link se paise chale gaye, OTP 123456 tha",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "court order deliberately disobeyed hai"
+        ],
+        "issue_summary": "Possible contempt issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible contempt issue.",
+        "original_message": "court order deliberately disobeyed hai",
+        "state_id": "51b5d9d6adaa4a9189460298253b12a9"
+      },
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "court order deliberately disobeyed hai",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "court order deliberately disobeyed hai",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "public_sufficient_03",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "court order deliberately disobeyed hai",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "cyber"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "someone used my identity online"
+        ],
+        "issue_summary": "Possible identity misuse issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible identity misuse issue.",
+        "original_message": "someone used my identity online",
+        "state_id": "63a853be568b46aa8604ee13033e57c8"
+      },
+      "domains": [
+        "cyber"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "someone used my identity online",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "someone used my identity online",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "cyber_sufficient_03",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "someone used my identity online",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "tenancy"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "landlord wants to evict me without proper process"
+        ],
+        "issue_summary": "Possible eviction dispute.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible eviction dispute.",
+        "original_message": "landlord wants to evict me without proper process",
+        "state_id": "d10083efc39d4155b001e27fe218b84c"
+      },
+      "domains": [
+        "tenancy"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "landlord wants to evict me without proper process",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "landlord wants to evict me without proper process",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "tenancy_sufficient_03",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "landlord wants to evict me without proper process",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [],
+      "call_counts": {
+        "fact_gemini_calls": 0
+      },
+      "case_context": {
+        "domains": [
+          "consumer"
+        ],
+        "fact_clarification_history": [],
+        "facts": [
+          "dark pattern forced me to subscribe"
+        ],
+        "issue_summary": "Possible consumer issue involving dark patterns.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "Possible consumer issue involving dark patterns.",
+        "original_message": "dark pattern forced me to subscribe",
+        "state_id": "7806bc9dfc4a43199a35b4d8666102b3"
+      },
+      "domains": [
+        "consumer"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": false,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": false,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "dark pattern forced me to subscribe",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "dark pattern forced me to subscribe",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "id": "consumer_sufficient_03",
+      "latency": {
+        "fact_latency_ms": []
+      },
+      "message": "dark pattern forced me to subscribe",
+      "replies": [],
+      "stopped_reason": "sufficient"
+    },
+    {
+      "asked_questions": [
+        "Could you briefly describe the specific action or inaction by the public authority that led to this issue?"
+      ],
+      "call_counts": {
+        "fact_gemini_calls": 1
+      },
+      "case_context": {
+        "domains": [
+          "constitutional_public_authority"
+        ],
+        "fact_clarification_history": [
+          {
+            "answer": "human rights complaint against public authority",
+            "question": "Could you briefly describe the specific action or inaction by the public authority that led to this issue?"
+          }
+        ],
+        "facts": [
+          "public authority problem hai",
+          "human rights complaint against public authority"
+        ],
+        "issue_summary": "Possible public authority issue.",
+        "no_progress_count": 0,
+        "normalized_case_summary": "public authority problem hai human rights complaint against public authority",
+        "original_message": "public authority problem hai",
+        "state_id": "9582a862a9864d25a0485775189cdf82"
+      },
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "evaluation": {
+        "correct": true,
+        "final_sufficiency_correct": true,
+        "missing_question": false,
+        "one_turn_resolved": true,
+        "repeated_question": false,
+        "stuck_safety_success": false,
+        "sufficiency_decision_correct": true,
+        "unnecessary_question": false
+      },
+      "expected_final_status": "sufficient",
+      "expected_needs_clarification": true,
+      "final_result": {
+        "evaluation_error": false,
+        "latency_ms": null,
+        "missing_facts": [],
+        "needs_fact_clarification": false,
+        "normalized_case_summary": "public authority problem hai human rights complaint against public authority",
+        "provider": "deterministic",
+        "question": null,
+        "reason": null,
+        "status": "sufficient"
+      },
+      "first_result": {
+        "evaluation_error": false,
+        "latency_ms": 1699,
+        "missing_facts": [
+          "nature of the public authority issue"
+        ],
+        "needs_fact_clarification": true,
+        "normalized_case_summary": "The user reports a public authority problem but has not provided details regarding the specific nature of the issue.",
+        "provider": "gemini",
+        "question": "Could you briefly describe the specific action or inaction by the public authority that led to this issue?",
+        "reason": "The known user fact only states that there is a public authority problem without providing any details about the nature of the issue, such as an RTI denial, grievance, or fundamental rights violation, which is necessary for effective legal source retrieval.",
+        "status": "insufficient"
+      },
+      "id": "public_insufficient_03",
+      "latency": {
+        "fact_latency_ms": [
+          1699
+        ]
+      },
+      "message": "public authority problem hai",
+      "replies": [
+        "human rights complaint against public authority"
+      ],
+      "stopped_reason": "sufficient"
+    }
+  ]
+}

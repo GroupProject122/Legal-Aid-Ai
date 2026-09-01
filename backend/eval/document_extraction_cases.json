@@ -1,0 +1,16 @@
+{
+  "cases": [
+    {"id": "clean_pdf", "kind": "pdf", "filename": "invoice.pdf", "pages": ["Invoice for phone purchase and payment receipt."], "expected_status": ["success"], "expected_text": ["Invoice for phone purchase"], "expected_page_count": 1},
+    {"id": "multi_page_pdf", "kind": "pdf", "filename": "legal_notice.pdf", "pages": ["Legal notice first page.", "Second page with reply details."], "expected_status": ["success"], "expected_text": ["Second page"], "expected_page_count": 2},
+    {"id": "docx_paragraph", "kind": "docx", "filename": "rent_agreement.docx", "paragraphs": ["Rent agreement between landlord and tenant."], "expected_status": ["success"], "expected_text": ["Rent agreement"]},
+    {"id": "docx_table", "kind": "docx", "filename": "receipt_table.docx", "paragraphs": ["Payment details."], "table": [["Amount", "5000"], ["Seller", "Online shop"]], "expected_status": ["success"], "expected_text": ["Amount | 5000", "Seller | Online shop"]},
+    {"id": "txt_simple", "kind": "txt", "filename": "complaint.txt", "text": "Seller refused refund for defective product.", "expected_status": ["success"], "expected_text": ["refused refund"]},
+    {"id": "txt_whitespace", "kind": "txt", "filename": "notice.txt", "text": "Notice\\r\\n\\r\\n\\r\\n\\r\\nReply pending.", "expected_status": ["success"], "expected_text": ["Reply pending"]},
+    {"id": "empty_txt", "kind": "txt", "filename": "empty.txt", "text": "", "expected_status": ["failed"]},
+    {"id": "scan_like_pdf", "kind": "blank_pdf", "filename": "scan.pdf", "expected_status": ["ocr_required"], "expected_page_count": 1},
+    {"id": "unsupported_image", "kind": "bytes", "filename": "photo.png", "content_type": "image/png", "payload": "PNG", "expected_status": ["unsupported"]},
+    {"id": "unsupported_zip", "kind": "bytes", "filename": "archive.zip", "content_type": "application/zip", "payload": "PK\\u0003\\u0004binary", "expected_status": ["unsupported"]},
+    {"id": "binary_txt", "kind": "byte_values", "filename": "binary.txt", "content_type": "text/plain", "payload_bytes": [0, 1, 2, 3, 98, 97, 100], "expected_status": ["failed"]},
+    {"id": "oversized_txt", "kind": "oversized", "filename": "large.txt", "content_type": "text/plain", "expected_status": ["rejected_oversized"]}
+  ]
+}

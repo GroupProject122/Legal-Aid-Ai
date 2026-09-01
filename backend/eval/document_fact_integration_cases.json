@@ -1,0 +1,25 @@
+{
+  "cases": [
+    {"id": "rent_agreement_electricity", "kind": "confirmed_acceptance", "question": "landlord cut electricity", "document_type": "rent_agreement", "facts": {"amounts": ["Rs. 25,000"], "locations": ["Delhi"], "terms": ["2 months notice"]}, "expected_values": ["Rs. 25,000", "Delhi"]},
+    {"id": "invoice_refund", "kind": "confirmed_acceptance", "question": "seller refusing refund", "document_type": "invoice_or_receipt", "facts": {"amounts": ["Rs. 18,999"], "identifiers": ["OD12345"], "parties": ["ABC Mobiles"]}, "expected_values": ["Rs. 18,999", "OD12345"]},
+    {"id": "receipt_instagram_blocked", "kind": "confirmed_acceptance", "question": "Instagram seller took payment and blocked me", "document_type": "transaction_record", "facts": {"amounts": ["Rs. 10,000"], "identifiers": ["UPI998877"], "parties": ["InstaSeller99"]}, "expected_values": ["Rs. 10,000", "UPI998877"]},
+    {"id": "legal_notice_response", "kind": "confirmed_acceptance", "question": "how should I respond to this notice", "document_type": "legal_notice", "facts": {"dates": ["5 May 2026"], "amounts": ["Rs. 3,200"], "events": ["demand for refund"]}, "expected_values": ["5 May 2026", "Rs. 3,200"]},
+    {"id": "vague_resolved_by_rent_agreement", "kind": "fact_sufficiency", "question": "Can they do this?", "document_type": "rent_agreement", "facts": {"terms": ["landlord tenant rent agreement"], "amounts": ["Rs. 25,000"]}, "expected_sufficient": true},
+    {"id": "deposit_fact_sufficiency", "kind": "fact_sufficiency", "question": "Can I get it back?", "document_type": "rent_agreement", "facts": {"amounts": ["security deposit Rs. 50,000"], "terms": ["rent agreement"]}, "expected_sufficient": true},
+    {"id": "consumer_fact_sufficiency", "kind": "fact_sufficiency", "question": "seller is refusing refund", "document_type": "invoice_or_receipt", "facts": {"events": ["defective phone delivered"], "parties": ["online seller"]}, "expected_sufficient": true},
+    {"id": "cyber_fact_sufficiency", "kind": "fact_sufficiency", "question": "what can I do?", "document_type": "transaction_record", "facts": {"events": ["UPI fraud transaction"], "amounts": ["Rs. 8,000"]}, "expected_sufficient": true},
+    {"id": "mumbai_tenancy_gap", "kind": "corpus_gap", "question": "landlord cut electricity", "document_type": "rent_agreement", "facts": {"locations": ["Mumbai"], "terms": ["rent agreement"]}, "expected_gap": "insufficient"},
+    {"id": "delhi_tenancy_no_gap", "kind": "corpus_gap", "question": "landlord cut electricity", "document_type": "rent_agreement", "facts": {"locations": ["Delhi"], "terms": ["rent agreement"]}, "expected_gap": "sufficient"},
+    {"id": "amount_conflict", "kind": "conflict", "question": "rent is Rs. 20,000 can landlord do this?", "document_type": "rent_agreement", "facts": {"amounts": ["Rs. 25,000"]}, "expected_conflict": true},
+    {"id": "date_conflict", "kind": "conflict", "question": "purchase was 15 June 2026", "document_type": "invoice_or_receipt", "facts": {"dates": ["10 June 2026"]}, "expected_conflict": true},
+    {"id": "no_conflict_same_amount", "kind": "conflict", "question": "rent is Rs. 25,000", "document_type": "rent_agreement", "facts": {"amounts": ["Rs. 25,000"]}, "expected_conflict": false},
+    {"id": "corrected_amount_priority", "kind": "correction_priority", "question": "seller refusing refund", "document_type": "invoice_or_receipt", "original_value": "Rs. 50,000", "corrected_value": "Rs. 45,000"},
+    {"id": "unconfirmed_rejected", "kind": "unconfirmed_rejection", "question": "seller refusing refund", "document_type": "invoice_or_receipt", "facts": {"amounts": ["Rs. 9,000"]}},
+    {"id": "document_evidence_separate", "kind": "separation", "question": "seller refusing refund", "document_type": "invoice_or_receipt", "facts": {"amounts": ["Rs. 9,000"], "identifiers": ["INV-9"]}},
+    {"id": "no_document_normal", "kind": "no_document", "question": "right to equality"},
+    {"id": "detached_context", "kind": "detach", "question": "seller refusing refund", "document_type": "invoice_or_receipt", "facts": {"amounts": ["Rs. 9,000"]}},
+    {"id": "raw_extraction_not_context", "kind": "unconfirmed_rejection", "question": "landlord cut electricity", "document_type": "rent_agreement", "facts": {"amounts": ["Rs. 25,000"]}},
+    {"id": "legal_notice_no_auto_answer", "kind": "confirmation_only", "question": "", "document_type": "legal_notice", "facts": {"dates": ["9 August 2026"], "amounts": ["Rs. 45,000"]}},
+    {"id": "user_correction_no_original_leak", "kind": "correction_priority", "question": "Can I claim deposit?", "document_type": "rent_agreement", "original_value": "Rs. 50,000", "corrected_value": "Rs. 45,000"}
+  ]
+}

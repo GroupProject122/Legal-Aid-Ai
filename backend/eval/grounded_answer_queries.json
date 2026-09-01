@@ -1,0 +1,28 @@
+{
+  "scenarios": [
+    {"id": "consumer_refund", "query": "online seller refusing refund", "domains": ["consumer"], "expected_documents": ["Consumer Protection Act, 2019"], "must_not_claim": ["guaranteed refund", "you will win"]},
+    {"id": "consumer_defective", "query": "seller refusing refund for defective product", "domains": ["consumer"], "expected_documents": ["Consumer Protection Act, 2019"], "must_not_claim": ["seller is guilty"]},
+    {"id": "consumer_damaged", "query": "product delivered to me was damaged", "domains": ["consumer"], "expected_documents": ["Consumer Protection Act, 2019"], "must_not_claim": ["must compensate"]},
+    {"id": "consumer_ecommerce", "query": "ecommerce company not responding to complaint", "domains": ["consumer"], "expected_documents": ["Consumer Protection"], "must_not_claim": ["deadline is"]},
+    {"id": "consumer_dark_pattern", "query": "dark pattern forced me to subscribe", "domains": ["consumer"], "expected_documents": ["Dark Patterns"], "must_not_claim": ["you will win"]},
+    {"id": "consumer_misleading_ads", "query": "misleading advertisement caused me loss", "domains": ["consumer"], "expected_documents": ["Misleading Advertisements"], "must_not_claim": ["definitely illegal"]},
+    {"id": "cyber_fraud", "query": "cyber fraud online payment", "domains": ["cyber"], "expected_documents": ["Information Technology Act", "National Cybercrime"], "must_not_claim": ["police station required"]},
+    {"id": "cyber_hacked", "query": "my Instagram account was hacked", "domains": ["cyber"], "expected_documents": ["Information Technology Act"], "must_not_claim": ["hacker is convicted"]},
+    {"id": "cyber_identity", "query": "someone used my identity online", "domains": ["cyber"], "expected_documents": ["Information Technology Act", "Digital Personal Data Protection"], "must_not_claim": ["guaranteed arrest"]},
+    {"id": "cyber_intermediary", "query": "intermediary failed to remove unlawful content", "domains": ["cyber"], "expected_documents": ["Intermediary"], "must_not_claim": ["must remove immediately"]},
+    {"id": "tenancy_electricity", "query": "landlord cut electricity", "domains": ["tenancy"], "expected_documents": ["Delhi Rent Control Act"], "expected_provisions": ["45"], "must_not_claim": ["landlord is guilty"]},
+    {"id": "tenancy_eviction", "query": "landlord wants to evict me without proper process", "domains": ["tenancy"], "expected_documents": ["Delhi Rent Control Act"], "must_not_claim": ["cannot evict ever"]},
+    {"id": "tenancy_deposit", "query": "landlord security deposit return nahi kar raha", "domains": ["tenancy"], "expected_documents": ["Delhi Rent Control Act"], "must_not_claim": ["guaranteed recovery"]},
+    {"id": "tenancy_rent", "query": "tenant refusing to pay rent", "domains": ["tenancy"], "expected_documents": ["Delhi Rent Control Act"], "must_not_claim": ["tenant is guilty"]},
+    {"id": "public_rti", "query": "RTI application ka reply nahi mila", "domains": ["constitutional_public_authority"], "expected_documents": ["Right to Information Act"], "must_not_claim": ["fine will be imposed"]},
+    {"id": "public_equality", "query": "right to equality", "domains": ["constitutional_public_authority"], "expected_documents": ["Constitution of India"], "expected_provisions": ["14"], "must_not_claim": ["violation definitely happened"]},
+    {"id": "public_legal_aid", "query": "I want free legal aid", "domains": ["constitutional_public_authority"], "expected_documents": ["Legal Services Authorities Act"], "must_not_claim": ["you are definitely eligible"]},
+    {"id": "public_human_rights", "query": "human rights complaint against public authority", "domains": ["constitutional_public_authority"], "expected_documents": ["Protection of Human Rights Act"], "must_not_claim": ["compensation guaranteed"]},
+    {"id": "public_contempt", "query": "court order deliberately disobeyed hai", "domains": ["constitutional_public_authority"], "expected_documents": ["Contempt of Courts Act"], "must_not_claim": ["contempt definitely committed"]},
+    {"id": "multi_instagram_seller", "query": "Instagram seller took payment and blocked me", "domains": ["consumer", "cyber"], "expected_documents": ["Consumer Protection", "Information Technology Act"], "must_not_claim": ["fraud definitely occurred"]},
+    {"id": "multi_landlord_threats", "query": "landlord online threats de raha hai aur electricity cut kar di", "domains": ["tenancy", "cyber"], "expected_documents": ["Delhi Rent Control Act"], "must_not_claim": ["criminal offence definitely occurred"]},
+    {"id": "limited_fact_consumer", "query": "consumer complaint karni hai", "domains": ["consumer"], "expected_documents": ["Consumer Protection"], "should_mark_insufficient": true, "must_not_claim": ["refund", "replacement"]},
+    {"id": "limited_fact_cyber", "query": "mera cyber issue hai", "domains": ["cyber"], "expected_documents": ["Information Technology Act"], "should_mark_insufficient": true, "must_not_claim": ["hacking occurred"]},
+    {"id": "unsupported_source_gap", "query": "income tax notice ka reply kaise doon", "domains": ["constitutional_public_authority"], "expected_documents": [], "should_mark_insufficient": true, "must_not_claim": ["Income Tax Act", "appeal deadline"]}
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "scenarios": [
+    {
+      "id": "consumer_sufficient_01",
+      "message": "seller refusing refund for defective product",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer dispute about defective goods and refund refusal.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "consumer_sufficient_02",
+      "message": "online product damaged deliver hua aur seller replace nahi kar raha",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer dispute about damaged goods.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "consumer_insufficient_01",
+      "message": "consumer complaint karni hai",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer issue.",
+      "expected_needs_clarification": true,
+      "replies": ["phone defective tha aur seller refund nahi de raha"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "consumer_insufficient_02",
+      "message": "consumer issue hai",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer issue.",
+      "expected_needs_clarification": true,
+      "replies": ["service provider ne service complete nahi ki"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "cyber_sufficient_01",
+      "message": "my Instagram account was hacked",
+      "domains": ["cyber"],
+      "issue_summary": "Possible account hacking issue.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "cyber_sufficient_02",
+      "message": "phishing link se paise chale gaye",
+      "domains": ["cyber"],
+      "issue_summary": "Possible phishing/payment fraud issue.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "cyber_insufficient_01",
+      "message": "mera cyber issue hai",
+      "domains": ["cyber"],
+      "issue_summary": "Possible cyber issue.",
+      "expected_needs_clarification": true,
+      "replies": ["someone made fake account using my personal details"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "cyber_insufficient_02",
+      "message": "online problem hai",
+      "domains": ["cyber"],
+      "issue_summary": "Possible online issue.",
+      "expected_needs_clarification": true,
+      "replies": ["bank transaction unauthorized tha"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "tenancy_sufficient_01",
+      "message": "landlord cut electricity",
+      "domains": ["tenancy"],
+      "issue_summary": "Possible tenancy dispute about essential supply.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "tenancy_sufficient_02",
+      "message": "landlord security deposit return nahi kar raha",
+      "domains": ["tenancy"],
+      "issue_summary": "Possible tenancy dispute about security deposit.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "tenancy_insufficient_01",
+      "message": "landlord dispute hai",
+      "domains": ["tenancy"],
+      "issue_summary": "Possible tenancy issue.",
+      "expected_needs_clarification": true,
+      "replies": ["landlord eviction without notice kar raha hai"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "tenancy_insufficient_02",
+      "message": "rent matter hai",
+      "domains": ["tenancy"],
+      "issue_summary": "Possible rent issue.",
+      "expected_needs_clarification": true,
+      "replies": ["tenant rent pay nahi kar raha"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "public_sufficient_01",
+      "message": "RTI application ka reply nahi mila",
+      "domains": ["constitutional_public_authority"],
+      "issue_summary": "Possible RTI issue.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "public_sufficient_02",
+      "message": "I want free legal aid",
+      "domains": ["constitutional_public_authority"],
+      "issue_summary": "Possible legal aid issue.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "public_insufficient_01",
+      "message": "government authority ke against issue hai",
+      "domains": ["constitutional_public_authority"],
+      "issue_summary": "Possible public-authority issue.",
+      "expected_needs_clarification": true,
+      "replies": ["public authority refused to give information under RTI"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "public_insufficient_02",
+      "message": "rights issue hai",
+      "domains": ["constitutional_public_authority"],
+      "issue_summary": "Possible rights issue.",
+      "expected_needs_clarification": true,
+      "replies": ["government authority discriminated against me"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "multi_sufficient_01",
+      "message": "Instagram seller took payment and blocked me",
+      "domains": ["consumer", "cyber"],
+      "issue_summary": "Possible online seller dispute with cyber element.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "multi_insufficient_01",
+      "message": "online payment issue hai",
+      "domains": ["consumer", "cyber"],
+      "issue_summary": "Possible online payment issue.",
+      "expected_needs_clarification": true,
+      "replies": ["Instagram seller ne paise liye aur product nahi bheja"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "stuck_01",
+      "message": "consumer issue hai",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer issue.",
+      "expected_needs_clarification": true,
+      "replies": ["issue hai bas", "same issue"],
+      "expected_final_status": "insufficient"
+    },
+    {
+      "id": "stuck_02",
+      "message": "mera cyber issue hai",
+      "domains": ["cyber"],
+      "issue_summary": "Possible cyber issue.",
+      "expected_needs_clarification": true,
+      "replies": ["problem hai", "pata nahi"],
+      "expected_final_status": "insufficient"
+    },
+    {
+      "id": "privacy_01",
+      "message": "phishing link se paise chale gaye, OTP 123456 tha",
+      "domains": ["cyber"],
+      "issue_summary": "Possible phishing/payment fraud issue.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "public_sufficient_03",
+      "message": "court order deliberately disobeyed hai",
+      "domains": ["constitutional_public_authority"],
+      "issue_summary": "Possible contempt issue.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "cyber_sufficient_03",
+      "message": "someone used my identity online",
+      "domains": ["cyber"],
+      "issue_summary": "Possible identity misuse issue.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "tenancy_sufficient_03",
+      "message": "landlord wants to evict me without proper process",
+      "domains": ["tenancy"],
+      "issue_summary": "Possible eviction dispute.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "consumer_sufficient_03",
+      "message": "dark pattern forced me to subscribe",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer issue involving dark patterns.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "public_insufficient_03",
+      "message": "public authority problem hai",
+      "domains": ["constitutional_public_authority"],
+      "issue_summary": "Possible public authority issue.",
+      "expected_needs_clarification": true,
+      "replies": ["human rights complaint against public authority"],
+      "expected_final_status": "sufficient"
+    }
+  ]
+}

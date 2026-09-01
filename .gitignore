@@ -6,5 +6,8 @@ __pycache__/
 backend/vectorstore/
 backend/.env
 backend/.venv/
+backend/legal_aid.db
+backend/user_uploads/*
+!backend/user_uploads/.gitkeep
 dist/
 node_modules/

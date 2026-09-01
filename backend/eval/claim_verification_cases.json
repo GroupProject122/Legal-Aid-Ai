@@ -1,0 +1,220 @@
+{
+  "cases": [
+    {
+      "id": "supported_article_14",
+      "expected_support": "supported",
+      "claim": "Article 14 provides for equality before law and equal protection of the laws.",
+      "source_text": "14. Equality before law. The State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India.",
+      "document_title": "The Constitution of India",
+      "chunk_id": "constitution_article_14"
+    },
+    {
+      "id": "supported_essential_supply",
+      "expected_support": "supported",
+      "claim": "Section 45 addresses a landlord cutting off or withholding an essential supply or service.",
+      "source_text": "45. Cutting off or withholding essential supply or service. No landlord either himself or through any person purporting to act on his behalf shall without just and sufficient cause cut off or withhold any essential supply or service enjoyed by the tenant.",
+      "document_title": "The Delhi Rent Control Act, 1958",
+      "chunk_id": "drc_section_45"
+    },
+    {
+      "id": "supported_identity_theft",
+      "expected_support": "supported",
+      "claim": "Section 66C concerns punishment for identity theft involving fraudulent or dishonest use of another person's electronic signature, password, or unique identification feature.",
+      "source_text": "66C. Punishment for identity theft. Whoever, fraudulently or dishonestly make use of the electronic signature, password or any other unique identification feature of any other person, shall be punished...",
+      "document_title": "The Information Technology Act, 2000",
+      "chunk_id": "it_act_section_66c"
+    },
+    {
+      "id": "supported_rti_request",
+      "expected_support": "supported",
+      "claim": "The RTI Act allows a person who desires information to make a request in writing or through electronic means.",
+      "source_text": "6. Request for obtaining information. A person, who desires to obtain any information under this Act, shall make a request in writing or through electronic means...",
+      "document_title": "The Right to Information Act, 2005",
+      "chunk_id": "rti_section_6"
+    },
+    {
+      "id": "partial_extra_deadline",
+      "expected_support": "partially_supported",
+      "claim": "The RTI Act allows a written information request and requires the reply within 7 days.",
+      "source_text": "6. Request for obtaining information. A person, who desires to obtain any information under this Act, shall make a request in writing or through electronic means...",
+      "document_title": "The Right to Information Act, 2005",
+      "chunk_id": "rti_section_6"
+    },
+    {
+      "id": "partial_essential_supply_plus_compensation",
+      "expected_support": "partially_supported",
+      "claim": "Section 45 addresses cutting off essential supply and guarantees compensation to the tenant.",
+      "source_text": "45. Cutting off or withholding essential supply or service. No landlord either himself or through any person purporting to act on his behalf shall without just and sufficient cause cut off or withhold any essential supply or service enjoyed by the tenant.",
+      "document_title": "The Delhi Rent Control Act, 1958",
+      "chunk_id": "drc_section_45"
+    },
+    {
+      "id": "unsupported_30_day_deadline",
+      "expected_support": "unsupported",
+      "claim": "A consumer complaint for defective goods must be filed within 30 days.",
+      "source_text": "The District Commission may direct removal of defect, replacement of goods, return of price, or compensation where appropriate.",
+      "document_title": "The Consumer Protection Act, 2019",
+      "chunk_id": "cpa_section_39"
+    },
+    {
+      "id": "unsupported_wrong_forum",
+      "expected_support": "unsupported",
+      "claim": "A landlord electricity dispute must be filed before the Income Tax Department.",
+      "source_text": "45. Cutting off or withholding essential supply or service. No landlord shall without just and sufficient cause cut off or withhold essential supply or service enjoyed by the tenant.",
+      "document_title": "The Delhi Rent Control Act, 1958",
+      "chunk_id": "drc_section_45"
+    },
+    {
+      "id": "unsupported_guaranteed_refund",
+      "expected_support": "unsupported",
+      "claim": "A defective product always gives the consumer a guaranteed refund.",
+      "source_text": "The District Commission may direct removal of defect, replacement of goods, return of price, or compensation where appropriate.",
+      "document_title": "The Consumer Protection Act, 2019",
+      "chunk_id": "cpa_section_39"
+    },
+    {
+      "id": "unsupported_wrong_section_meaning",
+      "expected_support": "unsupported",
+      "claim": "Section 66C gives a consumer the right to replacement of defective goods.",
+      "source_text": "66C. Punishment for identity theft. Whoever fraudulently or dishonestly makes use of the electronic signature, password or any other unique identification feature of any other person...",
+      "document_title": "The Information Technology Act, 2000",
+      "chunk_id": "it_act_section_66c"
+    },
+    {
+      "id": "supported_consumer_replacement",
+      "expected_support": "supported",
+      "claim": "The District Commission may direct replacement of goods where the legal conditions are met.",
+      "source_text": "Where the District Commission is satisfied that the goods complained against suffer from any of the defects specified in the complaint, it may issue an order to replace the goods with new goods of similar description which shall be free from any defect.",
+      "document_title": "The Consumer Protection Act, 2019",
+      "chunk_id": "cpa_section_39_replace"
+    },
+    {
+      "id": "supported_consumer_return_price",
+      "expected_support": "supported",
+      "claim": "The District Commission may direct return of the price paid where appropriate.",
+      "source_text": "The District Commission may issue an order to return to the complainant the price, or as the case may be, the charges paid by the complainant.",
+      "document_title": "The Consumer Protection Act, 2019",
+      "chunk_id": "cpa_section_39_return"
+    },
+    {
+      "id": "supported_intermediary_grievance",
+      "expected_support": "supported",
+      "claim": "The Intermediary Rules refer to a grievance officer mechanism for user complaints.",
+      "source_text": "The intermediary shall prominently publish on its website, mobile based application or both, the name of the Grievance Officer and his contact details as well as mechanism by which a user or a victim may make complaint.",
+      "document_title": "Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+      "chunk_id": "intermediary_grievance"
+    },
+    {
+      "id": "supported_legal_aid_authority",
+      "expected_support": "supported",
+      "claim": "The Legal Services Authorities Act concerns providing free and competent legal services to eligible persons.",
+      "source_text": "The object is to provide free and competent legal services to the weaker sections of the society to ensure that opportunities for securing justice are not denied to any citizen by reason of economic or other disabilities.",
+      "document_title": "The Legal Services Authorities Act, 1987",
+      "chunk_id": "lsa_object"
+    },
+    {
+      "id": "supported_human_rights_commission",
+      "expected_support": "supported",
+      "claim": "The Human Rights Commission may inquire into complaints of violation of human rights or negligence by a public servant.",
+      "source_text": "The Commission shall perform functions including to inquire, suo motu or on a petition presented to it by a victim or any person on his behalf, into complaint of violation of human rights or abetment thereof or negligence in the prevention of such violation by a public servant.",
+      "document_title": "The Protection of Human Rights Act, 1993",
+      "chunk_id": "phra_section_12"
+    },
+    {
+      "id": "partial_consumer_replacement_plus_immediate",
+      "expected_support": "partially_supported",
+      "claim": "The District Commission may direct replacement and the seller must replace the goods immediately.",
+      "source_text": "The District Commission may issue an order to replace the goods with new goods of similar description which shall be free from any defect.",
+      "document_title": "The Consumer Protection Act, 2019",
+      "chunk_id": "cpa_section_39_replace"
+    },
+    {
+      "id": "partial_identity_theft_plus_arrest",
+      "expected_support": "partially_supported",
+      "claim": "Section 66C concerns identity theft and guarantees arrest of the offender.",
+      "source_text": "66C. Punishment for identity theft. Whoever, fraudulently or dishonestly make use of the electronic signature, password or any other unique identification feature of any other person, shall be punished...",
+      "document_title": "The Information Technology Act, 2000",
+      "chunk_id": "it_act_section_66c"
+    },
+    {
+      "id": "partial_rti_request_plus_no_fee",
+      "expected_support": "partially_supported",
+      "claim": "The RTI Act allows written or electronic requests and says no fee is ever payable.",
+      "source_text": "A person who desires to obtain any information under this Act shall make a request in writing or through electronic means in English or Hindi or in the official language of the area in which the application is being made, accompanying such fee as may be prescribed.",
+      "document_title": "The Right to Information Act, 2005",
+      "chunk_id": "rti_section_6_fee"
+    },
+    {
+      "id": "partial_legal_aid_plus_all_cases",
+      "expected_support": "partially_supported",
+      "claim": "Legal aid law supports free legal services for eligible people and guarantees a free lawyer in every type of case.",
+      "source_text": "Every person who has to file or defend a case shall be entitled to legal services under this Act if that person is a member of a Scheduled Caste or Scheduled Tribe, a victim of trafficking, a woman or a child, or otherwise falls within the specified categories.",
+      "document_title": "The Legal Services Authorities Act, 1987",
+      "chunk_id": "lsa_eligibility"
+    },
+    {
+      "id": "unsupported_weather_claim",
+      "expected_support": "unsupported",
+      "claim": "The Constitution states that tomorrow's weather will be rainy.",
+      "source_text": "The State shall not deny to any person equality before the law or equal protection of the laws within the territory of India.",
+      "document_title": "The Constitution of India",
+      "chunk_id": "constitution_article_14"
+    },
+    {
+      "id": "unsupported_fake_portal",
+      "expected_support": "unsupported",
+      "claim": "Cyber fraud complaints must be filed only on the Consumer Refund Portal.",
+      "source_text": "This user manual explains how citizens may report cyber crime through the National Cybercrime Reporting Portal.",
+      "document_title": "User Manual for National Cybercrime Reporting Portal",
+      "chunk_id": "cybercrime_manual"
+    },
+    {
+      "id": "unsupported_fake_penalty",
+      "expected_support": "unsupported",
+      "claim": "A seller refusing a refund must pay a fixed penalty of 50000 rupees.",
+      "source_text": "The District Commission may direct removal of defects, replacement of goods, return of price, or compensation where appropriate.",
+      "document_title": "The Consumer Protection Act, 2019",
+      "chunk_id": "cpa_section_39"
+    },
+    {
+      "id": "unsupported_wrong_article",
+      "expected_support": "unsupported",
+      "claim": "Article 14 gives a right to file an RTI application.",
+      "source_text": "14. Equality before law. The State shall not deny to any person equality before the law or equal protection of the laws within the territory of India.",
+      "document_title": "The Constitution of India",
+      "chunk_id": "constitution_article_14"
+    },
+    {
+      "id": "unsupported_password_request",
+      "expected_support": "unsupported",
+      "claim": "A cyber fraud victim is required to share their OTP and password with the portal.",
+      "source_text": "This user manual explains registration and reporting workflow for cyber crime complaints through the National Cybercrime Reporting Portal.",
+      "document_title": "User Manual for National Cybercrime Reporting Portal",
+      "chunk_id": "cybercrime_manual"
+    },
+    {
+      "id": "supported_dark_pattern_guideline",
+      "expected_support": "supported",
+      "claim": "The dark patterns guidelines address practices that mislead users or impair user autonomy.",
+      "source_text": "dark patterns means any practices or deceptive design pattern using user interface or user experience interactions on any platform that is designed to mislead or trick users to do something they originally did not intend or want to do by subverting or impairing the consumer autonomy, decision making or choice.",
+      "document_title": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+      "chunk_id": "dark_patterns_definition"
+    },
+    {
+      "id": "supported_misleading_ad",
+      "expected_support": "supported",
+      "claim": "The misleading advertisement guidelines address advertisements that mislead consumers about a product or service.",
+      "source_text": "misleading advertisement in relation to any product or service means an advertisement which falsely describes such product or service or gives a false guarantee to, or is likely to mislead the consumers as to the nature, substance, quantity or quality of such product or service.",
+      "document_title": "Guidelines for Prevention of Misleading Advertisements, 2022",
+      "chunk_id": "misleading_ads_definition"
+    },
+    {
+      "id": "supported_direct_selling_obligation",
+      "expected_support": "supported",
+      "claim": "The Direct Selling Rules contain obligations for direct sellers.",
+      "source_text": "Obligations of direct sellers. Every direct seller shall have a prior written contract with the direct selling entity for undertaking sale of, or offer to sell, any goods or services.",
+      "document_title": "Consumer Protection (Direct Selling) Rules, 2021",
+      "chunk_id": "direct_selling_rule_6"
+    }
+  ]
+}

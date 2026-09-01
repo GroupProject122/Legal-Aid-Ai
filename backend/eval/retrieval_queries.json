@@ -1,0 +1,308 @@
+{
+  "single_domain_queries": [
+    {
+      "id": "consumer_01",
+      "query": "online seller refusing refund",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection Act, 2019", "The Consumer Protection (E-Commerce) Rules, 2020"],
+      "expected_primary_sources": ["consumer/consumer_protection_act_2019.pdf", "consumer/ecommerce_rules_2020.pdf"],
+      "expected_provision_numbers": ["39", "83", "86"]
+    },
+    {
+      "id": "consumer_02",
+      "query": "defective product and seller not replacing it",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection Act, 2019"],
+      "expected_primary_sources": ["consumer/consumer_protection_act_2019.pdf"],
+      "expected_provision_numbers": ["39", "83", "86"]
+    },
+    {
+      "id": "consumer_03",
+      "query": "ecommerce company not responding to my complaint",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection (E-Commerce) Rules, 2020"],
+      "expected_primary_sources": ["consumer/ecommerce_rules_2020.pdf"]
+    },
+    {
+      "id": "consumer_04",
+      "query": "misleading advertisement caused me loss",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022", "The Consumer Protection Act, 2019"],
+      "expected_primary_sources": ["consumer/misleading_ads_guidelines_2022.pdf", "consumer/consumer_protection_act_2019.pdf"]
+    },
+    {
+      "id": "consumer_05",
+      "query": "dark pattern forced me to subscribe",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["Guidelines for Prevention and Regulation of Dark Patterns, 2023"],
+      "expected_primary_sources": ["consumer/dark_patterns_guidelines_2023.pdf"]
+    },
+    {
+      "id": "consumer_06",
+      "query": "direct selling company refusing refund",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection (Direct Selling) Rules, 2021"],
+      "expected_primary_sources": ["consumer/direct_selling_rules_2021.pdf"]
+    },
+    {
+      "id": "consumer_07",
+      "query": "where can I file consumer complaint",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection Act, 2019", "The Consumer Protection (Consumer Disputes Redressal Commissions) Rules, 2020"],
+      "expected_primary_sources": ["consumer/consumer_protection_act_2019.pdf", "consumer/cdrc_general_rules_2020.pdf"]
+    },
+    {
+      "id": "consumer_08",
+      "query": "limitation period for consumer complaint",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection Act, 2019"],
+      "expected_primary_sources": ["consumer/consumer_protection_act_2019.pdf"],
+      "expected_provision_numbers": ["69"]
+    },
+    {
+      "id": "consumer_09",
+      "query": "can consumer commission order repair or replacement",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection Act, 2019"],
+      "expected_primary_sources": ["consumer/consumer_protection_act_2019.pdf"],
+      "expected_provision_numbers": ["39"]
+    },
+    {
+      "id": "cyber_01",
+      "query": "cyber fraud online payment",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000", "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf", "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"]
+    },
+    {
+      "id": "cyber_02",
+      "query": "phishing link stole my money",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000", "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf", "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"]
+    },
+    {
+      "id": "cyber_03",
+      "query": "someone hacked my social media account",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000", "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf", "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"]
+    },
+    {
+      "id": "cyber_04",
+      "query": "identity theft using my personal details",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000", "The Digital Personal Data Protection Rules, 2025"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf", "cyber/digital_personal_data_protection_rules_2025.pdf"]
+    },
+    {
+      "id": "cyber_05",
+      "query": "intermediary failed to remove unlawful content",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021"],
+      "expected_primary_sources": ["cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf"]
+    },
+    {
+      "id": "cyber_06",
+      "query": "how to report online cybercrime",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"]
+    },
+    {
+      "id": "cyber_07",
+      "query": "someone shared private data online",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Digital Personal Data Protection Rules, 2025", "The Information Technology Act, 2000"],
+      "expected_primary_sources": ["cyber/digital_personal_data_protection_rules_2025.pdf", "cyber/information_technology_act_2000.pdf"]
+    },
+    {
+      "id": "cyber_08",
+      "query": "unauthorized access to computer account",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf"],
+      "expected_provision_numbers": ["43", "66"]
+    },
+    {
+      "id": "cyber_09",
+      "query": "platform grievance officer not replying",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021"],
+      "expected_primary_sources": ["cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf"]
+    },
+    {
+      "id": "tenancy_01",
+      "query": "landlord cut electricity",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf"],
+      "expected_provision_numbers": ["45"]
+    },
+    {
+      "id": "tenancy_02",
+      "query": "landlord wants to evict me without proper process",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf"],
+      "expected_provision_numbers": ["14"]
+    },
+    {
+      "id": "tenancy_03",
+      "query": "tenant refusing to pay rent",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf"]
+    },
+    {
+      "id": "tenancy_04",
+      "query": "landlord not returning security deposit",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958", "The Transfer of Property Act, 1882"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf", "tenancy/transfer_of_property_act_1882.pdf"]
+    },
+    {
+      "id": "tenancy_05",
+      "query": "essential supply stopped by landlord",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf"],
+      "expected_provision_numbers": ["45"]
+    },
+    {
+      "id": "tenancy_06",
+      "query": "dispute over rent agreement",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958", "The Registration Act, 1908"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf", "tenancy/registration_act_1908.pdf"]
+    },
+    {
+      "id": "tenancy_07",
+      "query": "landlord increased rent suddenly",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf"]
+    },
+    {
+      "id": "tenancy_08",
+      "query": "tenant and landlord dispute in Delhi",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf"]
+    },
+    {
+      "id": "tenancy_09",
+      "query": "notice to quit rented property",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Transfer of Property Act, 1882", "The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/transfer_of_property_act_1882.pdf", "tenancy/delhi_rent_control_act_1958.pdf"]
+    },
+    {
+      "id": "constitutional_01",
+      "query": "right to equality",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Constitution of India"],
+      "expected_primary_sources": ["constitutional_public_authority/constitution_of_india.pdf"],
+      "expected_provision_numbers": ["14"]
+    },
+    {
+      "id": "constitutional_02",
+      "query": "government authority treated me unfairly",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Constitution of India", "The Protection of Human Rights Act, 1993"],
+      "expected_primary_sources": ["constitutional_public_authority/constitution_of_india.pdf", "constitutional_public_authority/protection_of_human_rights_act_1993.pdf"]
+    },
+    {
+      "id": "constitutional_03",
+      "query": "freedom of speech restriction",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Constitution of India"],
+      "expected_primary_sources": ["constitutional_public_authority/constitution_of_india.pdf"],
+      "expected_provision_numbers": ["19"]
+    },
+    {
+      "id": "constitutional_04",
+      "query": "right to life and personal liberty",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Constitution of India"],
+      "expected_primary_sources": ["constitutional_public_authority/constitution_of_india.pdf"],
+      "expected_provision_numbers": ["21"]
+    },
+    {
+      "id": "constitutional_05",
+      "query": "public authority refusing information",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Right to Information Act, 2005"],
+      "expected_primary_sources": ["constitutional_public_authority/right_to_information_act_2005.pdf"]
+    },
+    {
+      "id": "constitutional_06",
+      "query": "RTI application issue",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Right to Information Act, 2005"],
+      "expected_primary_sources": ["constitutional_public_authority/right_to_information_act_2005.pdf"]
+    },
+    {
+      "id": "constitutional_07",
+      "query": "free legal aid eligibility",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Legal Services Authorities Act, 1987"],
+      "expected_primary_sources": ["constitutional_public_authority/legal_services_authorities_act_1987.pdf"]
+    },
+    {
+      "id": "constitutional_08",
+      "query": "human rights complaint against public authority",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Protection of Human Rights Act, 1993"],
+      "expected_primary_sources": ["constitutional_public_authority/protection_of_human_rights_act_1993.pdf"]
+    },
+    {
+      "id": "constitutional_09",
+      "query": "can I ask government office for records under RTI",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Right to Information Act, 2005"],
+      "expected_primary_sources": ["constitutional_public_authority/right_to_information_act_2005.pdf"]
+    }
+  ],
+  "cross_domain_queries": [
+    {
+      "id": "cross_01",
+      "query": "Instagram seller took payment and blocked me",
+      "expected_domains": ["consumer", "cyber"]
+    },
+    {
+      "id": "cross_02",
+      "query": "online marketplace account hacked and money lost",
+      "expected_domains": ["consumer", "cyber"]
+    },
+    {
+      "id": "cross_03",
+      "query": "public authority leaked my personal information",
+      "expected_domains": ["constitutional_public_authority", "cyber"]
+    },
+    {
+      "id": "cross_04",
+      "query": "government website did not respond to my RTI and exposed my data",
+      "expected_domains": ["constitutional_public_authority", "cyber"]
+    },
+    {
+      "id": "cross_05",
+      "query": "landlord used online threats to force me to leave",
+      "expected_domains": ["tenancy", "cyber"]
+    }
+  ],
+  "non_legal_queries": [
+    {
+      "id": "nonlegal_01",
+      "query": "weather tomorrow"
+    },
+    {
+      "id": "nonlegal_02",
+      "query": "best pizza recipe"
+    },
+    {
+      "id": "nonlegal_03",
+      "query": "how to learn Python"
+    }
+  ]
+}

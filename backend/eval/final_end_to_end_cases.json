@@ -1,0 +1,677 @@
+{
+  "description": "Curated final end-to-end benchmark for the complete Legal Aid AI pipeline. Cases use expected properties, not exact answer wording.",
+  "cases": [
+    {
+      "case_id": "consumer_001_refund_refusal",
+      "category": "consumer",
+      "query": "online seller refusing refund",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act", "Consumer Protection (E-Commerce) Rules"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["refund", "consumer"],
+      "must_not_claim": ["guaranteed", "will win"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_002_defective_product",
+      "category": "consumer",
+      "query": "seller sold me a defective phone and is not replacing it",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["defective", "replacement"],
+      "must_not_claim": ["criminal offence"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_003_hinglish_refund",
+      "category": "consumer",
+      "query": "seller refund nahi de raha",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["refund"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_004_dark_pattern",
+      "category": "consumer",
+      "query": "dark pattern forced me to subscribe to an online service",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Guidelines for Prevention and Regulation of Dark Patterns"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["dark pattern"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_005_misleading_ad",
+      "category": "consumer",
+      "query": "misleading advertisement caused me loss",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Guidelines for Prevention of Misleading Advertisements"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["advertisement", "misleading"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_006_complaint_forum",
+      "category": "consumer",
+      "query": "where can I file a consumer complaint",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act", "Consumer Commission"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["complaint"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_007_limitation",
+      "category": "consumer",
+      "query": "limitation period for consumer complaint",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "expected_provision_numbers": ["69"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["limitation"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_008_direct_selling",
+      "category": "consumer",
+      "query": "direct selling company refusing refund",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection (Direct Selling) Rules"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["direct selling", "refund"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_009_vague_needs_fact",
+      "category": "consumer",
+      "query": "consumer complaint karni hai",
+      "expected_status": "clarification",
+      "expected_clarification_needed": true,
+      "clarification_replies": ["phone defective tha aur seller refund nahi de raha"],
+      "expected_final_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "consumer_010_invoice_document_refund",
+      "category": "document_assisted",
+      "query": "seller is refusing refund",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": true,
+      "confirmed_document_context": {
+        "document_type": "invoice_or_receipt",
+        "facts": {
+          "parties": ["Seller: Bright Mobiles", "Buyer: user"],
+          "dates": ["Purchase date: 10 July 2026"],
+          "amounts": ["Price: Rs. 18000"],
+          "identifiers": ["Invoice number: INV-101"],
+          "events": ["User purchased a mobile phone from Bright Mobiles"]
+        }
+      }
+    },
+    {
+      "case_id": "cyber_001_payment_fraud",
+      "category": "cyber",
+      "query": "cyber fraud online payment",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["cyber", "fraud"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_002_phishing",
+      "category": "cyber",
+      "query": "phishing link stole my money",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act", "National Cybercrime Reporting Portal"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["phishing"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_003_instagram_hacked",
+      "category": "cyber",
+      "query": "mera Instagram hack ho gaya",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act", "National Cybercrime Reporting Portal"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["hacked"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_004_identity_theft",
+      "category": "cyber",
+      "query": "identity theft using my personal details",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act"],
+      "expected_provision_numbers": ["66C"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["identity"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_005_unauthorized_access",
+      "category": "cyber",
+      "query": "unauthorized access to my computer account",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["unauthorized access"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_006_intermediary",
+      "category": "cyber",
+      "query": "intermediary failed to remove unlawful content",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["intermediary"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_007_report_cybercrime",
+      "category": "cyber",
+      "query": "how do I report online cybercrime",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["National Cybercrime Reporting Portal"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["report"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_008_data_breach_limited",
+      "category": "corpus_gap",
+      "query": "company leaked my personal data and I want DPDP Act details",
+      "expected_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Digital Personal Data Protection Rules"],
+      "expected_corpus_status": "limited",
+      "must_include_concepts": ["limited", "corpus"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_009_vague_needs_fact",
+      "category": "cyber",
+      "query": "mera cyber issue hai",
+      "expected_status": "clarification",
+      "expected_clarification_needed": true,
+      "clarification_replies": ["phishing link se paise chale gaye"],
+      "expected_final_status": "answered",
+      "expected_domains": ["cyber"],
+      "expected_primary_documents": ["Information Technology Act", "National Cybercrime Reporting Portal"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "cyber_010_receipt_document_blocked",
+      "category": "document_assisted",
+      "query": "Instagram seller took payment and blocked me",
+      "expected_status": "answered",
+      "expected_domains": ["consumer", "cyber"],
+      "expected_primary_documents": ["Consumer Protection Act", "Information Technology Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": true,
+      "confirmed_document_context": {
+        "document_type": "transaction_record",
+        "facts": {
+          "parties": ["Payee: insta_deals_shop"],
+          "dates": ["Payment date: 4 August 2026"],
+          "amounts": ["Transaction amount: Rs. 10000"],
+          "identifiers": ["UPI reference: UPI-555"],
+          "events": ["Payment was made to an Instagram seller"]
+        }
+      }
+    },
+    {
+      "case_id": "tenancy_001_electricity",
+      "category": "tenancy",
+      "query": "landlord cut electricity",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "expected_provision_numbers": ["45"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["electricity", "essential supply"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "tenancy_002_hinglish_electricity",
+      "category": "tenancy",
+      "query": "landlord bijli kaat raha hai",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "expected_provision_numbers": ["45"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "tenancy_003_eviction",
+      "category": "tenancy",
+      "query": "landlord wants to evict me without proper process",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["evict"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "tenancy_004_security_deposit",
+      "category": "tenancy",
+      "query": "landlord not returning security deposit",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act", "Transfer of Property Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["deposit"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "tenancy_005_rent_dispute",
+      "category": "tenancy",
+      "query": "tenant refusing to pay rent",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["rent"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "tenancy_006_vague_needs_fact",
+      "category": "tenancy",
+      "query": "landlord dispute hai",
+      "expected_status": "clarification",
+      "expected_clarification_needed": true,
+      "clarification_replies": ["landlord electricity cut kar raha hai"],
+      "expected_final_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "tenancy_007_rent_agreement_document",
+      "category": "document_assisted",
+      "query": "landlord cut electricity",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": true,
+      "confirmed_document_context": {
+        "document_type": "rent_agreement",
+        "facts": {
+          "parties": ["Landlord: Ramesh Kumar", "Tenant: user"],
+          "dates": ["Agreement date: 12 July 2026"],
+          "amounts": ["Monthly rent: Rs. 25000", "Security deposit: Rs. 50000"],
+          "locations": ["Premises: Delhi"],
+          "important_terms": ["Notice period stated in document: 2 months"]
+        }
+      }
+    },
+    {
+      "case_id": "tenancy_008_mumbai_gap",
+      "category": "corpus_gap",
+      "query": "my landlord in Mumbai cut electricity",
+      "expected_status": "abstained",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": [],
+      "expected_corpus_status": "insufficient",
+      "expected_reason_codes": ["jurisdiction_not_covered"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "tenancy_009_mumbai_document_gap",
+      "category": "document_assisted",
+      "query": "landlord cut electricity",
+      "expected_status": "abstained",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": [],
+      "expected_corpus_status": "insufficient",
+      "expected_reason_codes": ["jurisdiction_not_covered"],
+      "document_context_expected": true,
+      "confirmed_document_context": {
+        "document_type": "rent_agreement",
+        "facts": {
+          "parties": ["Landlord: Asha Mehta", "Tenant: user"],
+          "locations": ["Premises: Mumbai"],
+          "amounts": ["Monthly rent: Rs. 30000"],
+          "important_terms": ["Residential lease agreement"]
+        }
+      }
+    },
+    {
+      "case_id": "tenancy_010_document_resolves_vague",
+      "category": "document_assisted",
+      "query": "Can they do this?",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy"],
+      "expected_primary_documents": ["Delhi Rent Control Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": true,
+      "confirmed_document_context": {
+        "document_type": "rent_agreement",
+        "facts": {
+          "parties": ["Landlord: Mohan", "Tenant: user"],
+          "locations": ["Premises: Delhi"],
+          "important_terms": ["Electricity supply is included for the rented premises"],
+          "events": ["User reports electricity was disconnected"]
+        }
+      }
+    },
+    {
+      "case_id": "public_001_equality",
+      "category": "constitutional_public_authority",
+      "query": "right to equality",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Constitution of India"],
+      "expected_provision_numbers": ["14"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["equality"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_002_article_21",
+      "category": "constitutional_public_authority",
+      "query": "right to life and personal liberty",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Constitution of India"],
+      "expected_provision_numbers": ["21"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["personal liberty"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_003_rti_hinglish",
+      "category": "constitutional_public_authority",
+      "query": "RTI ka jawab nahi mila",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Right to Information Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["RTI"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_004_free_legal_aid",
+      "category": "constitutional_public_authority",
+      "query": "can I get a free lawyer",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Legal Services Authorities Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["legal aid"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_005_human_rights",
+      "category": "constitutional_public_authority",
+      "query": "human rights complaint against public authority",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Protection of Human Rights Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["human rights"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_006_contempt",
+      "category": "constitutional_public_authority",
+      "query": "court order was deliberately disobeyed",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Contempt of Courts Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["contempt"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_007_public_authority_vague",
+      "category": "constitutional_public_authority",
+      "query": "government authority ke against issue hai",
+      "expected_status": "clarification",
+      "expected_clarification_needed": true,
+      "clarification_replies": ["public authority refused to give information under RTI"],
+      "expected_final_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Right to Information Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_008_specific_case_gap",
+      "category": "corpus_gap",
+      "query": "What did the Supreme Court hold in Kesavananda Bharati case?",
+      "expected_status": "abstained",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": [],
+      "expected_corpus_status": "insufficient",
+      "expected_reason_codes": ["missing_current_law"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "public_009_notice_document",
+      "category": "document_assisted",
+      "query": "What should I understand from this notice?",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Right to Information Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": true,
+      "confirmed_document_context": {
+        "document_type": "legal_notice",
+        "facts": {
+          "parties": ["Sender: Public Information Officer"],
+          "dates": ["Notice date: 2 August 2026"],
+          "events": ["Notice states that the RTI request has been rejected"],
+          "identifiers": ["RTI reference: RTI-44"]
+        }
+      }
+    },
+    {
+      "case_id": "public_010_unavailable_case_law_limited",
+      "category": "corpus_gap",
+      "query": "latest High Court case law on free speech restrictions",
+      "expected_status": "abstained",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": [],
+      "expected_corpus_status": "insufficient",
+      "expected_reason_codes": ["missing_current_law"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "multi_001_instagram_seller",
+      "category": "multi_domain",
+      "query": "Instagram seller took payment and blocked me",
+      "expected_status": "answered",
+      "expected_domains": ["consumer", "cyber"],
+      "expected_primary_documents": ["Consumer Protection Act", "Information Technology Act"],
+      "expected_corpus_status": "sufficient",
+      "must_include_concepts": ["seller", "payment"],
+      "document_context_expected": false
+    },
+    {
+      "case_id": "multi_002_landlord_online_threats",
+      "category": "multi_domain",
+      "query": "landlord online threats de raha hai aur electricity bhi cut ki",
+      "expected_status": "answered",
+      "expected_domains": ["tenancy", "cyber"],
+      "expected_primary_documents": ["Delhi Rent Control Act", "Information Technology Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "multi_003_marketplace_hacked_money",
+      "category": "multi_domain",
+      "query": "online marketplace account hacked and money lost",
+      "expected_status": "answered",
+      "expected_domains": ["consumer", "cyber"],
+      "expected_primary_documents": ["Information Technology Act", "Consumer Protection Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "multi_004_public_data_leak",
+      "category": "multi_domain",
+      "query": "public authority leaked my personal information online",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority", "cyber"],
+      "expected_primary_documents": ["Protection of Human Rights Act", "Information Technology Act", "Digital Personal Data Protection Rules"],
+      "expected_corpus_status": "limited",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "multi_005_delivery_app_refund_data",
+      "category": "multi_domain",
+      "query": "delivery app refused refund and exposed my phone number",
+      "expected_status": "answered",
+      "expected_domains": ["consumer", "cyber"],
+      "expected_primary_documents": ["Consumer Protection Act", "Digital Personal Data Protection Rules"],
+      "expected_corpus_status": "limited",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "multi_006_vague_fraud_clarify",
+      "category": "multi_domain",
+      "query": "Mere saath fraud hua hai",
+      "expected_status": "clarification",
+      "expected_clarification_needed": true,
+      "clarification_replies": ["Instagram seller ne payment le kar block kar diya"],
+      "expected_final_status": "answered",
+      "expected_domains": ["consumer", "cyber"],
+      "expected_primary_documents": ["Consumer Protection Act", "Information Technology Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "gap_001_unsupported_divorce",
+      "category": "corpus_gap",
+      "query": "mujhe divorce chahiye",
+      "expected_status": "abstained",
+      "expected_domains": [],
+      "expected_corpus_status": "unsupported",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "gap_002_out_of_scope_python",
+      "category": "corpus_gap",
+      "query": "Python code likho",
+      "expected_status": "abstained",
+      "expected_domains": [],
+      "expected_corpus_status": "out_of_scope",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "gap_003_bail_unsupported",
+      "category": "corpus_gap",
+      "query": "bail kaise milegi",
+      "expected_status": "abstained",
+      "expected_domains": [],
+      "expected_corpus_status": "unsupported",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "gap_004_weather_out_scope",
+      "category": "corpus_gap",
+      "query": "weather tomorrow",
+      "expected_status": "abstained",
+      "expected_domains": [],
+      "expected_corpus_status": "out_of_scope",
+      "document_context_expected": false
+    },
+    {
+      "case_id": "doc_001_corrected_amount",
+      "category": "document_assisted",
+      "query": "Can I claim refund for Rs. 45000?",
+      "expected_status": "answered",
+      "expected_domains": ["consumer"],
+      "expected_primary_documents": ["Consumer Protection Act"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": true,
+      "expected_preserved_fact_values": ["Rs. 45000"],
+      "confirmed_document_context": {
+        "document_type": "invoice_or_receipt",
+        "facts": {
+          "parties": ["Seller: Laptop Hub"],
+          "dates": ["Purchase date: 1 August 2026"],
+          "amounts": ["Price: Rs. 45000"],
+          "events": ["Laptop was purchased and refund was requested"]
+        }
+      }
+    },
+    {
+      "case_id": "doc_002_date_conflict",
+      "category": "document_assisted",
+      "query": "I bought it on 15 June 2026 and seller refuses refund",
+      "expected_status": "clarification",
+      "expected_clarification_needed": true,
+      "expected_domains": ["consumer"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": true,
+      "confirmed_document_context": {
+        "document_type": "invoice_or_receipt",
+        "facts": {
+          "dates": ["Purchase date: 10 June 2026"],
+          "amounts": ["Price: Rs. 9000"],
+          "events": ["Invoice records product purchase"]
+        }
+      }
+    },
+    {
+      "case_id": "doc_003_unconfirmed_rejected",
+      "category": "document_assisted",
+      "query": "Can I use this invoice for refund?",
+      "expected_status": "abstained",
+      "expected_domains": ["consumer"],
+      "expected_corpus_status": "unconfirmed_context_rejected",
+      "document_context_expected": false,
+      "use_unconfirmed_document_context": true,
+      "confirmed_document_context": {
+        "document_type": "invoice_or_receipt",
+        "facts": {
+          "amounts": ["Price: Rs. 12000"],
+          "events": ["Product purchase recorded"]
+        }
+      }
+    },
+    {
+      "case_id": "doc_004_no_document_control",
+      "category": "document_assisted",
+      "query": "right to equality",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Constitution of India"],
+      "expected_corpus_status": "sufficient",
+      "document_context_expected": false
+    }
+  ]
+}
