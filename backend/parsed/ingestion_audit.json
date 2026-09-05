@@ -4,17 +4,30 @@
     "severity_counts": {
       "HIGH": 0,
       "LOW": 3,
-      "MEDIUM": 143
+      "MEDIUM": 84
     },
     "status": "PASS WITH WARNINGS",
-    "total_chunks_checked": 4388,
-    "unique_chunk_ids": 4388
+    "total_chunks_checked": 3695,
+    "unique_chunk_ids": 3695
   },
   "child_chunk_issues": [],
   "duplicate_findings": {
-    "exact_duplicate_group_count": 0,
-    "exact_duplicate_groups": [],
-    "near_duplicate_group_count": 3,
+    "exact_duplicate_group_count": 1,
+    "exact_duplicate_groups": [
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0120",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0030"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.4 — How to save email in PDF 8.4 How to save email in PDF",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      }
+    ],
+    "near_duplicate_group_count": 12,
     "near_duplicate_groups": [
       {
         "chunk_ids": [
@@ -48,6 +61,114 @@
         "source_files": [
           "cyber/bharatiya_nyaya_sanhita_2023.pdf"
         ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0109",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0019"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 1.1 — Android screenshot 1.1 Android screenshot Following are the steps to take screenshot from your android smartphone: I. Navigate to the scree",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0110",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0020"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 2.1 — From desktop or laptop View 2.1 From desktop or laptop View I. Click on the image/video/post whose URL you want to view. II. The full URL w",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0112",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0022"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 3.1 — From desktop or laptop view 3.1 From desktop or laptop view I. Click on the video whose URL you want to view. II. The full URL will be seen",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0113",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0023"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 3.2 — From mobile view 3.2 From mobile view I. Open the YouTube app on mobile II. Look or search for the video you want to copy III. Find the tri",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0115",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0025"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 6.2 — Export Chat from Android 6.2 Export Chat from Android To export a copy of the history of an individual chat or group, use the Export chat f",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0116",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0026"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 6.3 — Export chat from iPhone 6.3 Export chat from iPhone You can email yourself a chat history if you'd like to save a chat: I. Open the WhatsAp",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0118",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0028"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.2 — NIC mail Header 8.2 NIC mail Header Following are the steps to copy email header of NIC mails I. Open the NIC email within your web browser",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0119",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0029"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.3 — ProtonMail email Header 8.3 ProtonMail email Header Following are the steps to export ProtonMail email headers in (.eml) format I. Open the",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0122",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0032"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.4.2 — Using the Mail App on a Mac 8.4.2 Using the Mail App on a Mac I. Open the Mail app. It’s the icon of a stamp with an eagle inside. You’ll",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
       }
     ]
   },
@@ -56,12 +177,12 @@
       {
         "document_type": "procedural_user_guide",
         "domain": "cyber",
-        "fallback_chunks": 14,
-        "fallback_percentage": 70.0,
-        "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
-        "structure_aware_chunks": 6,
-        "structure_aware_percentage": 30.0,
-        "total_chunks": 20
+        "fallback_chunks": 6,
+        "fallback_percentage": 100.0,
+        "source_file": "cyber/sanchar_saathi_ceir_user_manual.pdf",
+        "structure_aware_chunks": 0,
+        "structure_aware_percentage": 0.0,
+        "total_chunks": 6
       },
       {
         "document_type": "amendment_rules",
@@ -72,6 +193,16 @@
         "structure_aware_chunks": 1,
         "structure_aware_percentage": 50.0,
         "total_chunks": 2
+      },
+      {
+        "document_type": "rules",
+        "domain": "cyber",
+        "fallback_chunks": 5,
+        "fallback_percentage": 50.0,
+        "source_file": "cyber/cert_in_directions_2022.pdf",
+        "structure_aware_chunks": 5,
+        "structure_aware_percentage": 50.0,
+        "total_chunks": 10
       },
       {
         "document_type": "regulations",
@@ -104,6 +235,26 @@
         "total_chunks": 8
       },
       {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 3,
+        "fallback_percentage": 9.38,
+        "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
+        "structure_aware_chunks": 29,
+        "structure_aware_percentage": 90.62,
+        "total_chunks": 32
+      },
+      {
+        "document_type": "rules",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 9.09,
+        "source_file": "cyber/it_spdi_rules_2011.pdf",
+        "structure_aware_chunks": 10,
+        "structure_aware_percentage": 90.91,
+        "total_chunks": 11
+      },
+      {
         "document_type": "guidelines",
         "domain": "consumer",
         "fallback_chunks": 1,
@@ -122,6 +273,26 @@
         "structure_aware_chunks": 14,
         "structure_aware_percentage": 93.33,
         "total_chunks": 15
+      },
+      {
+        "document_type": "guidelines",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 6.25,
+        "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
+        "structure_aware_chunks": 15,
+        "structure_aware_percentage": 93.75,
+        "total_chunks": 16
+      },
+      {
+        "document_type": "amendment_rules",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 5.88,
+        "source_file": "cyber/it_intermediary_amendment_rules_2023.pdf",
+        "structure_aware_chunks": 16,
+        "structure_aware_percentage": 94.12,
+        "total_chunks": 17
       },
       {
         "document_type": "guidelines",
@@ -144,6 +315,16 @@
         "total_chunks": 23
       },
       {
+        "document_type": "rules",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 3.45,
+        "source_file": "cyber/it_interception_rules_2009.pdf",
+        "structure_aware_chunks": 28,
+        "structure_aware_percentage": 96.55,
+        "total_chunks": 29
+      },
+      {
         "document_type": "statute",
         "domain": "constitutional_public_authority",
         "fallback_chunks": 1,
@@ -154,6 +335,16 @@
         "total_chunks": 32
       },
       {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 3,
+        "fallback_percentage": 2.94,
+        "source_file": "cyber/npci_upi_procedural_guidelines.pdf",
+        "structure_aware_chunks": 99,
+        "structure_aware_percentage": 97.06,
+        "total_chunks": 102
+      },
+      {
         "document_type": "rules",
         "domain": "consumer",
         "fallback_chunks": 1,
@@ -162,6 +353,16 @@
         "structure_aware_chunks": 34,
         "structure_aware_percentage": 97.14,
         "total_chunks": 35
+      },
+      {
+        "document_type": "rules",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 2.27,
+        "source_file": "cyber/it_blocking_rules_2009.pdf",
+        "structure_aware_chunks": 43,
+        "structure_aware_percentage": 97.73,
+        "total_chunks": 44
       },
       {
         "document_type": "statute",
@@ -184,6 +385,16 @@
         "total_chunks": 46
       },
       {
+        "document_type": "statute",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 2.04,
+        "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
+        "structure_aware_chunks": 48,
+        "structure_aware_percentage": 97.96,
+        "total_chunks": 49
+      },
+      {
         "document_type": "rules",
         "domain": "tenancy",
         "fallback_chunks": 1,
@@ -202,6 +413,16 @@
         "structure_aware_chunks": 63,
         "structure_aware_percentage": 98.44,
         "total_chunks": 64
+      },
+      {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 2,
+        "fallback_percentage": 1.44,
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_aware_chunks": 137,
+        "structure_aware_percentage": 98.56,
+        "total_chunks": 139
       },
       {
         "document_type": "statute",
@@ -284,16 +505,6 @@
         "total_chunks": 665
       },
       {
-        "document_type": "supporting_criminal_procedure",
-        "domain": "cyber",
-        "fallback_chunks": 1,
-        "fallback_percentage": 0.09,
-        "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-        "structure_aware_chunks": 1127,
-        "structure_aware_percentage": 99.91,
-        "total_chunks": 1128
-      },
-      {
         "document_type": "constitution",
         "domain": "constitutional_public_authority",
         "fallback_chunks": 1,
@@ -304,7 +515,7 @@
         "total_chunks": 1371
       }
     ],
-    "total_fallback_chunks": 50
+    "total_fallback_chunks": 60
   },
   "header_footer_noise": {
     "patterns": [
@@ -334,6 +545,15 @@
         "text": "(2) They shall come into force on the date of their publication in the Official Gazette."
       },
       {
+        "count": 3,
+        "source_file_count": 2,
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ],
+        "text": "MINISTRY OF HOME AFFAIRS"
+      },
+      {
         "count": 2,
         "source_file_count": 2,
         "source_files": [
@@ -346,607 +566,34 @@
         "count": 2,
         "source_file_count": 2,
         "source_files": [
-          "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-          "tenancy/delhi_rent_control_act_1958.pdf"
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
         ],
-        "text": "Gazette, appoint."
+        "text": "Ministry of Home Affairs"
+      },
+      {
+        "count": 2,
+        "source_file_count": 2,
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ],
+        "text": "Owner Ministry of Home Affairs, Government of India"
+      },
+      {
+        "count": 2,
+        "source_file_count": 2,
+        "source_files": [
+          "cyber/it_blocking_rules_2009.pdf",
+          "cyber/it_intermediary_amendment_rules_2023.pdf"
+        ],
+        "text": "publication in the Official Gazette."
       }
     ],
-    "suspicious_pattern_count": 4
+    "suspicious_pattern_count": 7
   },
   "manifest_inconsistencies": [],
-  "page_range_issues": [
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1065",
-      "line_number": 2934,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1066",
-      "line_number": 2935,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1067",
-      "line_number": 2936,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1068",
-      "line_number": 2937,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1069",
-      "line_number": 2938,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1070",
-      "line_number": 2939,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1071",
-      "line_number": 2940,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1072",
-      "line_number": 2941,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1073",
-      "line_number": 2942,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1074",
-      "line_number": 2943,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1075",
-      "line_number": 2944,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1076",
-      "line_number": 2945,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1077",
-      "line_number": 2946,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1078",
-      "line_number": 2947,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1079",
-      "line_number": 2948,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1080",
-      "line_number": 2949,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1081",
-      "line_number": 2950,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1082",
-      "line_number": 2951,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1083",
-      "line_number": 2952,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1084",
-      "line_number": 2953,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1085",
-      "line_number": 2954,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1086",
-      "line_number": 2955,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1087",
-      "line_number": 2956,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1088",
-      "line_number": 2957,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1089",
-      "line_number": 2958,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1090",
-      "line_number": 2959,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1091",
-      "line_number": 2960,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1092",
-      "line_number": 2961,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1093",
-      "line_number": 2962,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1094",
-      "line_number": 2963,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1095",
-      "line_number": 2964,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1096",
-      "line_number": 2965,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1097",
-      "line_number": 2966,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1098",
-      "line_number": 2967,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1099",
-      "line_number": 2968,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1100",
-      "line_number": 2969,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1101",
-      "line_number": 2970,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1102",
-      "line_number": 2971,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1103",
-      "line_number": 2972,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1104",
-      "line_number": 2973,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1105",
-      "line_number": 2974,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1106",
-      "line_number": 2975,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1107",
-      "line_number": 2976,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1108",
-      "line_number": 2977,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1109",
-      "line_number": 2978,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1110",
-      "line_number": 2979,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1111",
-      "line_number": 2980,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1112",
-      "line_number": 2981,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1113",
-      "line_number": 2982,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1114",
-      "line_number": 2983,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1115",
-      "line_number": 2984,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1116",
-      "line_number": 2985,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1117",
-      "line_number": 2986,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1118",
-      "line_number": 2987,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1119",
-      "line_number": 2988,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1120",
-      "line_number": 2989,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1121",
-      "line_number": 2990,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1122",
-      "line_number": 2991,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1123",
-      "line_number": 2992,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 282,
-      "page_start": 222,
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "type": "large_page_range"
-    }
-  ],
+  "page_range_issues": [],
   "per_document_quality_metrics": [
     {
       "counts_by_structure_type": {
@@ -1152,20 +799,6 @@
     {
       "counts_by_structure_type": {
         "fallback": 1,
-        "schedule": 116,
-        "section": 1011
-      },
-      "document_type": "supporting_criminal_procedure",
-      "domain": "cyber",
-      "fallback_chunks": 1,
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "structure_aware_chunks": 1127,
-      "structure_aware_percentage": 99.91,
-      "total_chunks": 1128
-    },
-    {
-      "counts_by_structure_type": {
-        "fallback": 1,
         "section": 664
       },
       "document_type": "supporting_criminal_law",
@@ -1175,6 +808,47 @@
       "structure_aware_chunks": 664,
       "structure_aware_percentage": 99.85,
       "total_chunks": 665
+    },
+    {
+      "counts_by_structure_type": {
+        "annexure": 5,
+        "fallback": 5
+      },
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 5,
+      "source_file": "cyber/cert_in_directions_2022.pdf",
+      "structure_aware_chunks": 5,
+      "structure_aware_percentage": 50.0,
+      "total_chunks": 10
+    },
+    {
+      "counts_by_structure_type": {
+        "annexure": 11,
+        "fallback": 2,
+        "manual_section": 126
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 2,
+      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+      "structure_aware_chunks": 137,
+      "structure_aware_percentage": 98.56,
+      "total_chunks": 139
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 7,
+        "section": 41
+      },
+      "document_type": "statute",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
+      "structure_aware_chunks": 48,
+      "structure_aware_percentage": 97.96,
+      "total_chunks": 49
     },
     {
       "counts_by_structure_type": {
@@ -1207,6 +881,45 @@
     {
       "counts_by_structure_type": {
         "fallback": 1,
+        "rule": 43
+      },
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/it_blocking_rules_2009.pdf",
+      "structure_aware_chunks": 43,
+      "structure_aware_percentage": 97.73,
+      "total_chunks": 44
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 28
+      },
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/it_interception_rules_2009.pdf",
+      "structure_aware_chunks": 28,
+      "structure_aware_percentage": 96.55,
+      "total_chunks": 29
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 16
+      },
+      "document_type": "amendment_rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/it_intermediary_amendment_rules_2023.pdf",
+      "structure_aware_chunks": 16,
+      "structure_aware_percentage": 94.12,
+      "total_chunks": 17
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
         "rule": 31,
         "schedule": 32
       },
@@ -1220,16 +933,69 @@
     },
     {
       "counts_by_structure_type": {
-        "annexure": 6,
-        "fallback": 14
+        "fallback": 1,
+        "rule": 10
+      },
+      "document_type": "rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/it_spdi_rules_2011.pdf",
+      "structure_aware_chunks": 10,
+      "structure_aware_percentage": 90.91,
+      "total_chunks": 11
+    },
+    {
+      "counts_by_structure_type": {
+        "annexure": 4,
+        "fallback": 3,
+        "manual_section": 25
       },
       "document_type": "procedural_user_guide",
       "domain": "cyber",
-      "fallback_chunks": 14,
+      "fallback_chunks": 3,
       "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
-      "structure_aware_chunks": 6,
-      "structure_aware_percentage": 30.0,
-      "total_chunks": 20
+      "structure_aware_chunks": 29,
+      "structure_aware_percentage": 90.62,
+      "total_chunks": 32
+    },
+    {
+      "counts_by_structure_type": {
+        "annexure": 21,
+        "fallback": 3,
+        "manual_section": 78
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 3,
+      "source_file": "cyber/npci_upi_procedural_guidelines.pdf",
+      "structure_aware_chunks": 99,
+      "structure_aware_percentage": 97.06,
+      "total_chunks": 102
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "guideline": 15
+      },
+      "document_type": "guidelines",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
+      "structure_aware_chunks": 15,
+      "structure_aware_percentage": 93.75,
+      "total_chunks": 16
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 6
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 6,
+      "source_file": "cyber/sanchar_saathi_ceir_user_manual.pdf",
+      "structure_aware_chunks": 0,
+      "structure_aware_percentage": 0.0,
+      "total_chunks": 6
     },
     {
       "counts_by_structure_type": {
@@ -1821,26 +1587,6 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0398",
-      "current_number": "1",
-      "previous_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0395",
-      "previous_number": "531",
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "structure_type": "section",
-      "type": "sequence_reverse_jump"
-    },
-    {
-      "current_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1124",
-      "current_number": "2",
-      "previous_chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_1011",
-      "previous_number": "531",
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "structure_type": "section",
-      "type": "sequence_reverse_jump"
-    },
-    {
       "current_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0249",
       "current_number": "1",
       "previous_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0248",
@@ -1908,6 +1654,16 @@
       "severity": "MEDIUM",
       "source_file": "cyber/information_technology_act_2000.pdf",
       "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "cyber_it_blocking_rules_2009__chunk_0020",
+      "current_number": "1",
+      "previous_chunk_id": "cyber_it_blocking_rules_2009__chunk_0019",
+      "previous_number": "16",
+      "severity": "MEDIUM",
+      "source_file": "cyber/it_blocking_rules_2009.pdf",
+      "structure_type": "rule",
       "type": "sequence_reverse_jump"
     },
     {
@@ -2226,6 +1982,13 @@
         "structure_type": "article"
       },
       {
+        "char_count": 2108,
+        "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0041",
+        "provision_number": "5.1.7.1",
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_type": "manual_section"
+      },
+      {
         "char_count": 2107,
         "chunk_id": "consumer_cdrc_general_rules_2020__chunk_0019",
         "provision_number": "14",
@@ -2241,13 +2004,6 @@
       },
       {
         "char_count": 2106,
-        "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0438",
-        "provision_number": "34",
-        "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-        "structure_type": "section"
-      },
-      {
-        "char_count": 2106,
         "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0529",
         "provision_number": "253",
         "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
@@ -2255,17 +2011,17 @@
       },
       {
         "char_count": 2106,
-        "chunk_id": "cyber_information_technology_act_2000__chunk_0084",
-        "provision_number": "70B",
-        "source_file": "cyber/information_technology_act_2000.pdf",
+        "chunk_id": "cyber_digital_personal_data_protection_act_2023__chunk_0042",
+        "provision_number": "39",
+        "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
         "structure_type": "section"
       },
       {
-        "char_count": 2105,
-        "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0432",
-        "provision_number": "332",
-        "source_file": "constitutional_public_authority/constitution_of_india.pdf",
-        "structure_type": "article"
+        "char_count": 2106,
+        "chunk_id": "cyber_digital_personal_data_protection_act_2023__chunk_0043",
+        "provision_number": "39",
+        "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
+        "structure_type": "section"
       }
     ]
   },
@@ -2273,15 +2029,18 @@
     "counts_by_source": {
       "constitutional_public_authority/constitution_of_india.pdf": 171,
       "constitutional_public_authority/right_to_information_act_2005.pdf": 9,
-      "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf": 118,
       "cyber/bharatiya_nyaya_sanhita_2023.pdf": 59,
+      "cyber/cybercrime_portal_citizen_manual_latest.pdf": 13,
       "cyber/digital_personal_data_protection_rules_2025.pdf": 3,
+      "cyber/it_blocking_rules_2009.pdf": 1,
+      "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf": 2,
+      "cyber/npci_upi_procedural_guidelines.pdf": 5,
       "tenancy/delhi_rent_control_act_1958.pdf": 1,
       "tenancy/delhi_rent_control_rules_1959.pdf": 9,
       "tenancy/registration_act_1908.pdf": 2,
       "tenancy/transfer_of_property_act_1882.pdf": 4
     },
-    "review_40_to_100_count": 367,
+    "review_40_to_100_count": 269,
     "review_samples": [
       {
         "char_count": 53,
@@ -2524,13 +2283,6 @@
         "structure_type": "article"
       },
       {
-        "char_count": 32,
-        "chunk_id": "cyber_bharatiya_nagarik_suraksha_sanhita_2023__chunk_0396",
-        "snippet": "CHAPTER XXXIX THE FIRST SCHEDULE",
-        "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-        "structure_type": "schedule"
-      },
-      {
         "char_count": 31,
         "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0018",
         "snippet": "Section 128 — Force 128. Force.",
@@ -2552,6 +2304,20 @@
         "structure_type": "section"
       },
       {
+        "char_count": 19,
+        "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0015",
+        "snippet": "ANNEXURE B: HELP 57",
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_type": "annexure"
+      },
+      {
+        "char_count": 23,
+        "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0023",
+        "snippet": "Annexure C, Section 3.1",
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_type": "annexure"
+      },
+      {
         "char_count": 35,
         "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0056",
         "snippet": "Annexure to this Form may be used).",
@@ -2559,7 +2325,7 @@
         "structure_type": "annexure"
       }
     ],
-    "very_suspicious_under_40_count": 9
+    "very_suspicious_under_40_count": 10
   },
   "validation_failures": []
 }

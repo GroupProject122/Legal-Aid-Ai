@@ -1,0 +1,480 @@
+{
+  "purpose": "Acquisition list for missing consumer/cyber legal sources. Download each PDF from the official source, save to source_file under backend/documents/, then merge the manifest fields (everything except the 'acquisition' object) into backend/documents/corpus_manifest.json.",
+  "schema_note": "Fields mirror corpus_manifest.json entries. 'acquisition' is metadata for collection only and must be removed before merging.",
+  "generated_for": "Legal Aid AI - consumer & cyber corpus completion",
+  "documents_to_acquire": [
+    {
+      "source_file": "cyber/information_technology_act_2000.pdf",
+      "document_title": "The Information Technology Act, 2000 (as amended)",
+      "short_title": "Information Technology Act, 2000",
+      "domain": "cyber",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2000,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "high",
+      "notes": "REPLACE existing file. Current copy is missing s.43 (damage/unauthorised access) and s.66 (computer-related offences); must contain Chapter IX ss.43-47 and Chapter XI ss.65-74.",
+      "acquisition": {
+        "priority": "P0",
+        "official_source": "https://www.indiacode.nic.in - search 'Information Technology Act 2000' (consolidated/amended version)",
+        "format": "PDF, digital-native",
+        "verify_after_ingest": "sections 43, 43A, 66, 66C, 66D, 66E present as section_number in backend/parsed/legal_chunks.jsonl"
+      }
+    },
+    {
+      "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
+      "document_title": "The Digital Personal Data Protection Act, 2023",
+      "short_title": "DPDP Act, 2023",
+      "domain": "cyber",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2023,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "high",
+      "notes": "Corpus holds only the DPDP Rules, 2025. Listed in manifest missing_expected_documents.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.indiacode.nic.in - 'Digital Personal Data Protection Act 2023'",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/it_spdi_rules_2011.pdf",
+      "document_title": "The Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011",
+      "short_title": "IT SPDI Rules, 2011",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2011,
+      "cross_domain_relevance": ["consumer"],
+      "retrieval_priority": "medium",
+      "notes": "Body-corporate data-security duties under IT Act s.43A.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.meity.gov.in - Rules & Regulations under the IT Act",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/it_blocking_rules_2009.pdf",
+      "document_title": "The Information Technology (Procedure and Safeguards for Blocking for Access of Information by Public) Rules, 2009",
+      "short_title": "IT Blocking Rules, 2009",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2009,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Lawful takedown/blocking process; relevant to unlawful-content and NCII removal.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.meity.gov.in - Rules & Regulations under the IT Act",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/it_interception_rules_2009.pdf",
+      "document_title": "The Information Technology (Procedure and Safeguards for Interception, Monitoring and Decryption) Rules, 2009",
+      "short_title": "IT Interception Rules, 2009",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2009,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Lawful interception safeguards; supporting context only.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.meity.gov.in - Rules & Regulations under the IT Act",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/cert_in_rules_2013.pdf",
+      "document_title": "The Information Technology (The Indian Computer Emergency Response Team and Manner of Performing Functions and Duties) Rules, 2013",
+      "short_title": "CERT-In Rules, 2013",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2013,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "CERT-In statutory functions and incident-handling role.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.meity.gov.in or https://www.cert-in.org.in",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/cert_in_directions_2022.pdf",
+      "document_title": "CERT-In Directions under section 70B(6) of the Information Technology Act, 2000, dated 28 April 2022",
+      "short_title": "CERT-In Directions, 2022",
+      "domain": "cyber",
+      "document_type": "directions",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2022,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "6-hour cyber-incident reporting, log retention. Listed in manifest missing_expected_documents.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.cert-in.org.in - 'Directions dated 28.04.2022'",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
+      "document_title": "Reserve Bank of India - Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (2017)",
+      "short_title": "RBI Limited Liability Circular, 2017",
+      "domain": "cyber",
+      "document_type": "circular",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2017,
+      "cross_domain_relevance": ["consumer"],
+      "retrieval_priority": "high",
+      "notes": "Zero / limited liability windows for online payment fraud. No current corpus coverage of payment-fraud liability.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.rbi.org.in - Notification DBR.No.Leg.BC.78/09.07.005/2017-18 dated 06-Jul-2017",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/rbi_digital_payment_security_controls_2021.pdf",
+      "document_title": "Reserve Bank of India - Master Direction on Digital Payment Security Controls (2021)",
+      "short_title": "RBI Digital Payment Security Controls, 2021",
+      "domain": "cyber",
+      "document_type": "master_direction",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2021,
+      "cross_domain_relevance": ["consumer"],
+      "retrieval_priority": "medium",
+      "notes": "Bank obligations for digital payment security and fraud monitoring.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.rbi.org.in - Master Direction dated 18-Feb-2021",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/npci_upi_procedural_guidelines.pdf",
+      "document_title": "National Payments Corporation of India - UPI Procedural Guidelines (dispute redressal and chargeback)",
+      "short_title": "NPCI UPI Procedural Guidelines",
+      "domain": "cyber",
+      "document_type": "procedural_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": null,
+      "cross_domain_relevance": ["consumer"],
+      "retrieval_priority": "medium",
+      "notes": "Dispute-raising and chargeback path for UPI fraud. Use the latest published version; note version/date in this field.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://www.npci.org.in - What We Do > UPI > Circulars / Procedural Guidelines",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+      "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (latest)",
+      "short_title": "Cybercrime Portal Citizen Manual",
+      "domain": "cyber",
+      "document_type": "procedural_user_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": null,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Updates the 2019 women/children manual already present; should cover financial-fraud reporting and the 1930 helpline flow. Record version/date.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://cybercrime.gov.in - Resources / User Manual",
+        "format": "PDF, may be scanned - OCR may be required"
+      }
+    },
+    {
+      "source_file": "cyber/it_intermediary_amendment_rules_2022_2023.pdf",
+      "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2022 and 2023",
+      "short_title": "IT Intermediary Amendment Rules, 2022/2023",
+      "domain": "cyber",
+      "document_type": "amendment_rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2023,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Base 2021 rules present; amendments (grievance appellate committees, due-diligence changes) are not. May be two separate gazette PDFs.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://www.meity.gov.in or https://egazette.gov.in",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "cyber/bns_2023_cyber_extract.pdf",
+      "document_title": "The Bharatiya Nyaya Sanhita, 2023 - cyber-relevant sections extract",
+      "short_title": "BNS 2023 (cyber extract)",
+      "domain": "cyber",
+      "document_type": "supporting_criminal_law",
+      "jurisdiction": "India",
+      "status": "supporting_only",
+      "authority_level": "primary",
+      "year": 2023,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Curate from existing cyber/bharatiya_nyaya_sanhita_2023.pdf: ss.77 (voyeurism), 78 (stalking), 294/296 (obscene acts), 318 (cheating), 319 (cheating by personation), 336-340 (forgery), 351 (criminal intimidation), 356 (defamation). Purpose: replace the 665-chunk full dump with a scoped subset to reduce retrieval noise.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "derive locally from existing corpus file; no download",
+        "format": "PDF extract, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/consumer_protection_general_rules_2020.pdf",
+      "document_title": "The Consumer Protection (General) Rules, 2020",
+      "short_title": "Consumer Protection (General) Rules, 2020",
+      "domain": "consumer",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2020,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "high",
+      "notes": "VERIFY FIRST - may be partly bundled in consumer/cdrc_general_rules_2020.pdf. 0 chunks currently reference 'General Rules, 2020'. Add only the non-duplicated portion.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.indiacode.nic.in or https://consumeraffairs.nic.in",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/legal_metrology_act_2009.pdf",
+      "document_title": "The Legal Metrology Act, 2009",
+      "short_title": "Legal Metrology Act, 2009",
+      "domain": "consumer",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2009,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "MRP, net-quantity, mandatory declarations, weights-and-measures offences. Only 2 incidental chunks today.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.indiacode.nic.in - 'Legal Metrology Act 2009'",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+      "document_title": "The Legal Metrology (Packaged Commodities) Rules, 2011",
+      "short_title": "Packaged Commodities Rules, 2011",
+      "domain": "consumer",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2011,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Pre-packaged goods labelling, declarations, MRP display, penalties.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://consumeraffairs.nic.in - Legal Metrology division; or India Code subordinate legislation",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/sale_of_goods_act_1930.pdf",
+      "document_title": "The Sale of Goods Act, 1930",
+      "short_title": "Sale of Goods Act, 1930",
+      "domain": "consumer",
+      "document_type": "supporting_contract_law",
+      "jurisdiction": "India",
+      "status": "supporting_only",
+      "authority_level": "primary",
+      "year": 1930,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Implied conditions and warranties, passing of title, delivery, caveat emptor exceptions - foundational for defective-goods reasoning.",
+      "acquisition": {
+        "priority": "P1",
+        "official_source": "https://www.indiacode.nic.in - 'Sale of Goods Act 1930'",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/bureau_of_indian_standards_act_2016.pdf",
+      "document_title": "The Bureau of Indian Standards Act, 2016",
+      "short_title": "BIS Act, 2016",
+      "domain": "consumer",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2016,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Compulsory certification, standard marks, product recall powers.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://www.indiacode.nic.in or https://www.bis.gov.in",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/greenwashing_guidelines_2024.pdf",
+      "document_title": "Guidelines for Prevention and Regulation of Greenwashing, 2024",
+      "short_title": "Greenwashing Guidelines, 2024",
+      "domain": "consumer",
+      "document_type": "guidelines",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2024,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "CCPA guidelines on misleading environmental claims.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://consumeraffairs.nic.in - Guidelines / CCPA",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/coaching_sector_ads_guidelines_2024.pdf",
+      "document_title": "Guidelines for Prevention of Misleading Advertisements in Coaching Sector, 2024",
+      "short_title": "Coaching Sector Ads Guidelines, 2024",
+      "domain": "consumer",
+      "document_type": "guidelines",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2024,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Common complaint pattern - false success claims, refund denial by coaching institutes.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://consumeraffairs.nic.in - Guidelines / CCPA",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/is_19000_2022_online_reviews.pdf",
+      "document_title": "IS 19000:2022 - Online Consumer Reviews - Principles and Requirements for their Collection, Moderation and Publication",
+      "short_title": "IS 19000:2022 Online Reviews",
+      "domain": "consumer",
+      "document_type": "guidelines",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2022,
+      "cross_domain_relevance": ["cyber"],
+      "retrieval_priority": "low",
+      "notes": "BIS standard on fake/paid reviews. Access may require BIS portal login.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://www.bis.gov.in - standard IS 19000:2022",
+        "format": "PDF, may require BIS login"
+      }
+    },
+    {
+      "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+      "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021",
+      "short_title": "RBI Integrated Ombudsman Scheme, 2021",
+      "domain": "consumer",
+      "document_type": "scheme",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2021,
+      "cross_domain_relevance": ["cyber"],
+      "retrieval_priority": "medium",
+      "notes": "Remedy route for deficiency in banking and payment services.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://www.rbi.org.in - Integrated Ombudsman Scheme 2021",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/insurance_ombudsman_rules_2017.pdf",
+      "document_title": "The Insurance Ombudsman Rules, 2017",
+      "short_title": "Insurance Ombudsman Rules, 2017",
+      "domain": "consumer",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2017,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Insurance claim-repudiation and mis-selling disputes.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://egazette.gov.in or https://irdai.gov.in or https://www.cioins.co.in",
+        "format": "PDF, digital-native"
+      }
+    },
+    {
+      "source_file": "consumer/edaakhil_user_manual.pdf",
+      "document_title": "e-Daakhil - Consumer Commission e-Filing User Manual",
+      "short_title": "e-Daakhil User Manual",
+      "domain": "consumer",
+      "document_type": "procedural_user_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": null,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "0 chunks reference 'e-Daakhil' or 'pecuniary jurisdiction' - 'how/where to file' is currently ungroundable. Record version/date.",
+      "acquisition": {
+        "priority": "P2",
+        "official_source": "https://edaakhil.nic.in - User Manual / FAQ",
+        "format": "PDF, may be scanned - OCR may be required"
+      }
+    }
+  ],
+  "case_law_to_acquire": {
+    "note": "Do after statutes. Needs a judgment parser in ingest.py and OCR. Save under backend/documents/<domain>/case_law/. Manifest fields: document_type=case_law, court, citation, date, good_law:true. Cite the official report; use indiankanoon.org only as a locator.",
+    "cyber": [
+      {"title": "Shreya Singhal v. Union of India", "citation": "(2015) 5 SCC 1", "point": "s.66A void; s.69A upheld; safe-harbour reading", "source": "https://main.sci.gov.in/judgments"},
+      {"title": "K.S. Puttaswamy v. Union of India", "citation": "(2017) 10 SCC 1", "point": "privacy a fundamental right", "source": "https://main.sci.gov.in/judgments"},
+      {"title": "Anuradha Bhasin v. Union of India", "citation": "(2020) 3 SCC 637", "point": "internet-shutdown proportionality", "source": "https://main.sci.gov.in/judgments"},
+      {"title": "Selected High Court NCII / right-to-be-forgotten takedown orders", "citation": "curate 3-5", "point": "non-consensual intimate image removal, de-indexing", "source": "respective High Court websites"}
+    ],
+    "consumer": [
+      {"title": "Indian Medical Association v. V.P. Shantha", "citation": "(1995) 6 SCC 651", "point": "services incl. medical fall under consumer law", "source": "https://main.sci.gov.in/judgments"},
+      {"title": "Lucknow Development Authority v. M.K. Gupta", "citation": "(1994) 1 SCC 243", "point": "deficiency in service, compensation for harassment", "source": "https://main.sci.gov.in/judgments"},
+      {"title": "Experion Developers Pvt Ltd v. Sushma Ashok Shiroor", "citation": "(2022) 5 SCC 484", "point": "builder-delay refund with interest", "source": "https://main.sci.gov.in/judgments"},
+      {"title": "Rohit Chaudhary v. Vipul Ltd", "citation": "(2023) SCC OnLine SC 1131", "point": "'commercial purpose' exclusion test", "source": "https://main.sci.gov.in/judgments"},
+      {"title": "Selected NCDRC orders", "citation": "curate 5-10", "point": "e-commerce non-delivery, airline cancellation, banking deficiency", "source": "https://ncdrc.nic.in (confonet)"}
+    ]
+  }
+}

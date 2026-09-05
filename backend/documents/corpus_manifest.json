@@ -222,21 +222,153 @@
       "year": 2023,
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
-      "notes": "Broad criminal law retained only as supporting material for cyber/criminal issues."
+      "notes": "Broad criminal law retained as supporting material for cyber-adjacent offences (identity, cheating by personation, obscenity, voyeurism, stalking, extortion, criminal intimidation). Candidate for replacement by a curated cyber-sections extract to cut retrieval noise."
     },
     {
-      "source_file": "cyber/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
-      "document_title": "The Bharatiya Nagarik Suraksha Sanhita, 2023",
-      "short_title": "Bharatiya Nagarik Suraksha Sanhita, 2023",
+      "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
+      "document_title": "The Digital Personal Data Protection Act, 2023",
+      "short_title": "DPDP Act, 2023",
       "domain": "cyber",
-      "document_type": "supporting_criminal_procedure",
+      "document_type": "statute",
       "jurisdiction": "India",
-      "status": "supporting_only",
+      "status": "active",
       "authority_level": "primary",
       "year": 2023,
       "cross_domain_relevance": [],
+      "retrieval_priority": "high",
+      "notes": "Primary data-protection statute (No. 22 of 2023). Pairs with the DPDP Rules, 2025 already in the corpus."
+    },
+    {
+      "source_file": "cyber/it_spdi_rules_2011.pdf",
+      "document_title": "The Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011",
+      "short_title": "IT SPDI Rules, 2011",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2011,
+      "cross_domain_relevance": [
+        "consumer"
+      ],
+      "retrieval_priority": "medium",
+      "notes": "Body-corporate data-security and sensitive-personal-data obligations under IT Act s.43A."
+    },
+    {
+      "source_file": "cyber/it_blocking_rules_2009.pdf",
+      "document_title": "The Information Technology (Procedure and Safeguards for Blocking for Access of Information by Public) Rules, 2009",
+      "short_title": "IT Blocking Rules, 2009",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2009,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Government process for blocking unlawful online content under IT Act s.69A; relevant to takedown of NCII and unlawful material."
+    },
+    {
+      "source_file": "cyber/it_interception_rules_2009.pdf",
+      "document_title": "The Information Technology (Procedure and Safeguards for Interception, Monitoring and Decryption of Information) Rules, 2009",
+      "short_title": "IT Interception Rules, 2009",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2009,
+      "cross_domain_relevance": [],
       "retrieval_priority": "low",
-      "notes": "Broad criminal procedure retained only as supporting material for cyber/criminal issues."
+      "notes": "Lawful interception, monitoring and decryption safeguards under IT Act s.69; supporting context."
+    },
+    {
+      "source_file": "cyber/cert_in_directions_2022.pdf",
+      "document_title": "CERT-In Directions under sub-section (6) of section 70B of the Information Technology Act, 2000, dated 28 April 2022",
+      "short_title": "CERT-In Directions, 2022",
+      "domain": "cyber",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2022,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Mandatory cyber-incident reporting (six-hour window) and log-retention directions issued by CERT-In."
+    },
+    {
+      "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
+      "document_title": "Reserve Bank of India - Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (DBR.No.Leg.BC.78/09.07.005/2017-18, 6 July 2017)",
+      "short_title": "RBI Limited Liability Circular, 2017",
+      "domain": "cyber",
+      "document_type": "guidelines",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2017,
+      "cross_domain_relevance": [
+        "consumer"
+      ],
+      "retrieval_priority": "high",
+      "notes": "Zero and limited customer liability plus reporting and credit-back timelines for unauthorised electronic banking and online payment fraud."
+    },
+    {
+      "source_file": "cyber/it_intermediary_amendment_rules_2023.pdf",
+      "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2023",
+      "short_title": "IT Intermediary Amendment Rules, 2023",
+      "domain": "cyber",
+      "document_type": "amendment_rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2023,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Amends the 2021 Intermediary Rules (online gaming intermediaries, fact-check unit, due-diligence changes). The 2022 amendment is not yet in the corpus."
+    },
+    {
+      "source_file": "cyber/npci_upi_procedural_guidelines.pdf",
+      "document_title": "National Payments Corporation of India - Unified Payments Interface (UPI) Procedural Guidelines",
+      "short_title": "NPCI UPI Procedural Guidelines",
+      "domain": "cyber",
+      "document_type": "procedural_user_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": null,
+      "cross_domain_relevance": [
+        "consumer"
+      ],
+      "retrieval_priority": "medium",
+      "notes": "UPI dispute-redressal and chargeback mechanics. Mirror copy; verify version and date before production use."
+    },
+    {
+      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+      "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+      "short_title": "National Cybercrime Reporting Portal Citizen Manual",
+      "domain": "cyber",
+      "document_type": "procedural_user_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": null,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "MHA / I4C portal manual covering financial fraud, SIM-swap, e-wallet, ransomware reporting and the 1930 helpline. Supplements the 2019 women and children manual."
+    },
+    {
+      "source_file": "cyber/sanchar_saathi_ceir_user_manual.pdf",
+      "document_title": "Sanchar Saathi / CEIR - Citizen User Manual (blocking a lost or stolen mobile, SIM verification, fraud reporting)",
+      "short_title": "Sanchar Saathi / CEIR User Manual",
+      "domain": "cyber",
+      "document_type": "procedural_user_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": null,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Department of Telecommunications portal guide: block a lost or stolen phone (CEIR), check SIMs registered in your name (TAFCOP), report fraud communications (Chakshu)."
     },
     {
       "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
@@ -393,26 +525,109 @@
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
       "notes": "Archived from active use because it is state-specific and not part of the current active corpus."
+    },
+    {
+      "source_file": "archive/bharatiya_nagarik_suraksha_sanhita_2023.pdf",
+      "document_title": "The Bharatiya Nagarik Suraksha Sanhita, 2023",
+      "short_title": "Bharatiya Nagarik Suraksha Sanhita, 2023",
+      "domain": "cyber",
+      "document_type": "supporting_criminal_procedure",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "primary",
+      "year": 2023,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Archived from active retrieval: broad criminal procedure (~1,128 chunks) that added retrieval noise without grounding cyber legal-information queries. Re-introduce only as a curated FIR / e-FIR extract if needed."
     }
   ],
   "missing_expected_documents": [
-    {
-      "document_title": "CERT-In Directions under section 70B(6) of the Information Technology Act, 2000, dated 28 April 2022",
-      "domain": "cyber",
-      "expected_filename": "cert_in_directions_2022.pdf",
-      "notes": "Not present as a standalone PDF in the current corpus."
-    },
-    {
-      "document_title": "The Digital Personal Data Protection Act, 2023",
-      "domain": "cyber",
-      "expected_filename": "digital_personal_data_protection_act_2023.pdf",
-      "notes": "Not present as a standalone PDF. The DPDP Rules, 2025 are present."
-    },
     {
       "document_title": "The Model Tenancy Act, 2021",
       "domain": "tenancy",
       "expected_filename": "model_tenancy_act_2021.pdf",
       "notes": "Not present in the current corpus."
+    },
+    {
+      "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2022",
+      "domain": "cyber",
+      "expected_filename": "it_intermediary_amendment_rules_2022.pdf",
+      "notes": "Only the 2023 amendment is present. The 2022 amendment (grievance appellate committees) is not."
+    }
+  ],
+  "pending_case_law_note": "Case-law PDFs are staged under backend/documents/cyber/case_law/ and are NOT part of the active retrieval index. They are excluded from ingest.py because judgments need a dedicated judgment parser (headnote / holding / ratio) and good-law metadata. Move them into 'documents' only after that parser exists.",
+  "pending_case_law": [
+    {
+      "source_file": "cyber/case_law/case1_shreya_singhal_v_union_of_india_2015.pdf",
+      "case_name": "Shreya Singhal v. Union of India",
+      "citation": "(2015) 5 SCC 1",
+      "court": "Supreme Court of India",
+      "date": "2015-03-24",
+      "domain": "cyber",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Struck down IT Act s.66A; upheld s.69A with safeguards; read down s.79(3)(b) intermediary safe harbour. The assistant must never cite s.66A as valid law."
+    },
+    {
+      "source_file": "cyber/case_law/case2_ks_puttaswamy_v_union_of_india_2017.pdf",
+      "case_name": "Justice K.S. Puttaswamy (Retd) v. Union of India",
+      "citation": "(2017) 10 SCC 1",
+      "court": "Supreme Court of India (nine-judge bench)",
+      "date": "2017-08-24",
+      "domain": "cyber",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Right to privacy is a fundamental right under Article 21; basis for personal-data-misuse claims."
+    },
+    {
+      "source_file": "cyber/case_law/case3_anuradha_bhasin_v_union_of_india_2020.pdf",
+      "case_name": "Anuradha Bhasin v. Union of India",
+      "citation": "(2020) 3 SCC 637",
+      "court": "Supreme Court of India",
+      "date": "2020-01-10",
+      "domain": "cyber",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "medium",
+      "notes": "Internet access is protected under Article 19(1)(a); restrictions and shutdowns must be necessary, proportionate, published and reviewable."
+    },
+    {
+      "source_file": "cyber/case_law/case4_mrs_x_v_union_of_india_2023_ncii.pdf",
+      "case_name": "Mrs X v. Union of India",
+      "citation": "2023:DHC:2806",
+      "court": "High Court of Delhi",
+      "date": "2023-04-26",
+      "domain": "cyber",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "medium",
+      "notes": "Non-consensual intimate images: intermediaries must proactively remove all instances, not only user-supplied URLs; directions to MeitY and Delhi Police; cybercrime-portal status tracker."
+    },
+    {
+      "source_file": "cyber/case_law/case5_subhranshu_rout_v_state_of_odisha_2020_rtbf.pdf",
+      "case_name": "Subhranshu Rout @ Gugul v. State of Odisha",
+      "citation": "2020 SCC OnLine Ori 878",
+      "court": "High Court of Orissa",
+      "date": "2020-11-23",
+      "domain": "cyber",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "low",
+      "notes": "Right to be forgotten within Article 21; a victim's right to have objectionable images removed from social media. Bail order with extended discussion."
+    },
+    {
+      "source_file": "cyber/case_law/case6_sharat_babu_digumarti_v_nct_delhi_2016.pdf",
+      "case_name": "Sharat Babu Digumarti v. Government (NCT of Delhi)",
+      "citation": "(2017) 2 SCC 18",
+      "court": "Supreme Court of India",
+      "date": "2016-12-14",
+      "domain": "cyber",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "low",
+      "notes": "The IT Act is a special law and displaces general IPC/BNS provisions for obscene content in electronic form (s.67 / s.79 context)."
     }
   ]
 }
