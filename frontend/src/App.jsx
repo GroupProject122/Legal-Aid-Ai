@@ -4,6 +4,7 @@ import {
   Bell,
   Bot,
   BriefcaseBusiness,
+  Check,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
@@ -435,14 +436,14 @@ function HeaderControls() {
   return (
     <header className="top-controls" aria-label="Page controls">
       <button aria-label="Toggle theme">
-        <Moon size={24} />
+        <Moon size={18} />
       </button>
       <button aria-label="Notifications">
-        <Bell size={24} />
+        <Bell size={18} />
         <span className="notify-dot" />
       </button>
       <div className="avatar" aria-label="Profile" role="img">
-        <CircleUserRound size={31} strokeWidth={1.55} />
+        <CircleUserRound size={20} strokeWidth={1.6} />
       </div>
     </header>
   );
@@ -451,18 +452,11 @@ function HeaderControls() {
 function Hero() {
   return (
     <section className="hero">
-      <div className="welcome-line">
-        <span />
-        <i>⌘</i>
-        <p>Welcome to</p>
-        <i>⌘</i>
-        <span />
-      </div>
-      <div className="hero-title-wrap">
-        <h2>Legal Aid AI</h2>
-      </div>
-      <LegalMark className="hero-mark" />
-      <p className="hero-subtitle">Get clear answers. Know your rights. Take action.</p>
+      <p className="hero-kicker">Welcome to</p>
+      <h2><span className="hero-title-inner">Legal Aid AI</span></h2>
+      <p className="hero-subtitle">
+        Understand your rights, draft complaints, and know what to do next — explained in plain language.
+      </p>
     </section>
   );
 }
@@ -477,12 +471,8 @@ function QueryBox() {
 
   return (
     <form className="query-box" onSubmit={handleSubmit}>
-      <div className="corner top-left" />
-      <div className="corner top-right" />
-      <div className="corner bottom-left" />
-      <div className="corner bottom-right" />
       <div className="query-icon">
-        <Sparkles size={24} />
+        <Sparkles size={20} />
       </div>
       <input
         name="legal-query"
@@ -491,10 +481,10 @@ function QueryBox() {
         aria-label="Describe your legal issue"
       />
       <button className="attach-button" type="button" aria-label="Attach document">
-        <Paperclip size={27} />
+        <Paperclip size={20} />
       </button>
-      <button className="ask-button" type="submit">
-        <Sparkles size={18} />
+      <button className="ask-button query-submit" type="submit">
+        <Sparkles size={15} />
         <span>Ask AI</span>
       </button>
     </form>
@@ -503,44 +493,49 @@ function QueryBox() {
 
 function CategoryPills() {
   return (
-    <div className="category-pills" aria-label="Legal categories">
-      {categories.map(({ label, icon: Icon }) => (
-        <button type="button" className="category-pill" key={label}>
-          <Icon size={20} strokeWidth={1.65} />
-          <span>{label}</span>
-        </button>
-      ))}
-    </div>
+    <section className="home-section" aria-label="Legal categories">
+      <h3 className="home-section-title">Browse by topic</h3>
+      <div className="category-pills">
+        {categories.map(({ label, icon: Icon }) => (
+          <button type="button" className="category-pill" key={label}>
+            <Icon size={17} strokeWidth={1.65} />
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
 function FeatureCard({ title, description, button, icon: Icon, href }) {
   return (
     <article className="feature-card">
-      <div className="ornament corner-a" />
-      <div className="ornament corner-b" />
-      <div className="ornament corner-c" />
-      <div className="ornament corner-d" />
       <div className="feature-icon">
-        <Icon size={44} strokeWidth={1.5} />
+        <Icon size={22} strokeWidth={1.6} />
       </div>
       <h3>{title}</h3>
       <p>{description}</p>
-      <div className="card-separator">◇</div>
-      <button type="button" className="card-button" onClick={() => { window.location.hash = href; }}>
-        <span>{button}</span>
-        <ChevronRight size={18} />
-      </button>
+      <a
+        className="feature-link"
+        href={href}
+        onClick={(event) => { event.preventDefault(); window.location.hash = href; }}
+      >
+        {button}
+        <ChevronRight size={15} strokeWidth={2} />
+      </a>
     </article>
   );
 }
 
 function FeatureCards() {
   return (
-    <section className="features" aria-label="Homepage feature cards">
-      {features.map((feature) => (
-        <FeatureCard {...feature} key={feature.title} />
-      ))}
+    <section className="home-section features-section" aria-label="Homepage feature cards">
+      <h3 className="home-section-title">How Legal Aid AI helps</h3>
+      <div className="features">
+        {features.map((feature) => (
+          <FeatureCard {...feature} key={feature.title} />
+        ))}
+      </div>
     </section>
   );
 }
@@ -548,25 +543,49 @@ function FeatureCards() {
 function FooterQuote() {
   return (
     <footer className="footer-quote">
-      <blockquote>
-        <span>“</span>
-        Knowledge of your rights empowers you to protect them.
-      </blockquote>
-      <LegalMark />
+      <p>“Knowledge of your rights empowers you to protect them.”</p>
     </footer>
   );
 }
 
+function useParallax(speed = 0.12) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    if (typeof window === 'undefined') return undefined;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = el.getBoundingClientRect();
+      const mid = rect.top + rect.height / 2 - window.innerHeight / 2;
+      el.style.transform = `translate3d(0, ${(mid * -speed).toFixed(1)}px, 0)`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [speed]);
+  return ref;
+}
+
 function BackgroundArt() {
+  const parallaxRef = useParallax(0.1);
   return (
-    <div className="background-art" aria-hidden="true">
-      <VintageScales className="watermark sketch scale-mark" />
-      <VintageGavel className="watermark sketch gavel-mark" />
-      <VintageCourthouse className="watermark sketch court-mark" />
-      <VintageDocuments className="watermark sketch doc-mark" />
-      <VintageLawBook className="watermark sketch book-mark" />
-      <ShieldCheck className="watermark shield-mark" size={112} strokeWidth={0.75} />
-      <span className="section-symbol">§</span>
+    <div className="background-art home-background-art" aria-hidden="true">
+      <span className="home-bg-parallax" ref={parallaxRef}>
+        <VintageScales className="watermark sketch scale-mark" />
+      </span>
     </div>
   );
 }
@@ -2502,18 +2521,488 @@ function summaryStatusMessage(status) {
   return 'The summary could not be generated right now. Please try again later.';
 }
 
+const aboutFeatures = [
+  ['Ask a Question', 'Describe your issue in plain words and get an answer grounded in real legal sources.'],
+  ['My Cases', 'Save a conversation and pick it up again later.'],
+  ['Documents', 'Upload a notice, receipt, or contract and pull out the key facts.'],
+  ['Summarize Document', 'Get a short, plain-language summary of a legal document.'],
+  ['Know Your Rights', 'Browse common rights and the laws behind them, by topic.'],
+  ['Schemes', 'Find government schemes and services you may be able to use.']
+];
+
 function AboutUsPage() {
   return (
     <>
+      <DocumentsBackgroundArt />
       <HeaderControls />
+      <div className="rights-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>◇</i></div>
+          <h2>About Us</h2>
+          <div className="header-ornament-line"><i>◇</i><span /></div>
+          <p>Plain-language legal help for everyday problems in India.</p>
+          <PageDivider />
+        </header>
+
+        <section className="rights-panel">
+          <h3>What is Legal Aid AI?</h3>
+          <p>
+            A free tool that explains your legal rights in simple words, helps you prepare
+            complaints, and points you to the right authority. It provides legal information,
+            not professional legal advice.
+          </p>
+        </section>
+
+        <section className="rights-panel">
+          <h3>What you can do here</h3>
+          <ul>
+            {aboutFeatures.map(([name, detail]) => (
+              <li key={name}><strong>{name}</strong> — {detail}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="rights-panel">
+          <h3>How it works</h3>
+          <ol>
+            <li>You describe the problem in your own words.</li>
+            <li>We search official legal sources and government material.</li>
+            <li>You get a short answer, suggested next steps, and where to go.</li>
+          </ol>
+        </section>
+
+        <section className="rights-panel">
+          <h3>Privacy</h3>
+          <p>Your questions and documents are used only to answer you. They are not shared or sold.</p>
+        </section>
+
+        <RightsAskCta label="Ready to start?" />
+        <RightsDisclaimerCard />
+      </div>
     </>
   );
 }
 
+const schemes = [
+  {
+    name: 'Free Legal Aid (NALSA)',
+    detail: 'Free legal services for women, children, SC/ST, persons with disabilities, and people below the income limit.',
+    href: 'https://nalsa.gov.in'
+  },
+  {
+    name: 'National Consumer Helpline',
+    detail: 'Register complaints against sellers and service providers. Helpline 1915.',
+    href: 'https://consumerhelpline.gov.in'
+  },
+  {
+    name: 'Cyber Crime Reporting Portal',
+    detail: 'Report online fraud, financial scams, and cyber harassment. Helpline 1930.',
+    href: 'https://cybercrime.gov.in'
+  },
+  {
+    name: 'Tele-Law',
+    detail: 'Free advice from panel lawyers through Common Service Centres.',
+    href: 'https://tele-law.in'
+  },
+  {
+    name: 'e-Daakhil',
+    detail: 'File consumer cases online without visiting the commission.',
+    href: 'https://edaakhil.nic.in'
+  },
+  {
+    name: 'State Legal Services Authority',
+    detail: 'District Lok Adalats and mediation for quick, low-cost settlement of disputes.',
+    href: ''
+  }
+];
+
 function SchemesPage() {
   return (
     <>
+      <DocumentsBackgroundArt />
       <HeaderControls />
+      <div className="rights-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>◇</i></div>
+          <h2>Schemes</h2>
+          <div className="header-ornament-line"><i>◇</i><span /></div>
+          <p>Government schemes and services that may help with your legal issue.</p>
+          <PageDivider />
+        </header>
+
+        <section className="rights-panel">
+          <h3>Legal help &amp; benefits</h3>
+          <div className="rights-category-list">
+            {schemes.map((scheme) => {
+              const Wrapper = scheme.href ? 'a' : 'div';
+              const linkProps = scheme.href
+                ? { href: scheme.href, target: '_blank', rel: 'noreferrer' }
+                : {};
+              return (
+                <Wrapper className="rights-source-card" key={scheme.name} {...linkProps}>
+                  <FileText size={22} strokeWidth={1.5} />
+                  <span>
+                    <strong>{scheme.name}</strong>
+                    <small>{scheme.detail}</small>
+                  </span>
+                  {scheme.href ? <ArrowUpRight size={16} strokeWidth={1.7} /> : <span />}
+                </Wrapper>
+              );
+            })}
+          </div>
+        </section>
+
+        <RightsAskCta label="Not sure which applies to you?" />
+        <RightsDisclaimerCard text="These are official public schemes. Eligibility and process may change — check the official website before applying." />
+      </div>
+    </>
+  );
+}
+
+function RevealSection({ className = '', id, children }) {
+  const ref = React.useRef(null);
+  const [visible, setVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const node = ref.current;
+    if (!node) return undefined;
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section ref={ref} id={id} className={`reveal ${visible ? 'is-visible' : ''} ${className}`.trim()}>
+      {children}
+    </section>
+  );
+}
+
+const homeSections = [
+  {
+    id: 'documents',
+    kicker: '01',
+    label: 'Documents',
+    href: '#/documents',
+    cta: 'Open Documents',
+    summary: 'Upload a legal document and let Legal Aid AI read it for you. It pulls out the facts that matter so you can use them in a question.',
+    points: [
+      'Upload a PDF, DOCX or TXT file (up to 10 MB)',
+      'Extract the text, then the key facts — parties, dates, amounts, notices',
+      'Review and confirm the facts, then ask a question that uses them'
+    ]
+  },
+  {
+    id: 'summarize',
+    kicker: '02',
+    label: 'Summarize Document',
+    href: '#/summarize-document',
+    cta: 'Summarize a document',
+    summary: 'A long notice or contract you do not follow? Get a short, plain-language summary of what it says and what it means for you.',
+    points: [
+      'Pick a document you already uploaded, or add a new one',
+      'Get a clear summary written in everyday words',
+      'Open the original document alongside the summary'
+    ]
+  },
+  {
+    id: 'cases',
+    kicker: '03',
+    label: 'My Cases',
+    href: '#/cases',
+    cta: 'View my cases',
+    summary: 'Every conversation you have is saved as a case, so you never lose your place. Come back later, rename it, or clear it out.',
+    points: [
+      'Each question thread is saved automatically',
+      'Reopen a case and carry on where you left off',
+      'Rename or delete a case, or clear them all'
+    ]
+  },
+  {
+    id: 'rights',
+    kicker: '04',
+    label: 'Know Your Rights',
+    href: '#/rights',
+    cta: 'Explore rights',
+    summary: 'Browse your rights by topic — consumer, cyber, tenancy, public services — with the real laws behind them explained in plain words.',
+    points: [
+      'Common issues and what usually applies',
+      'The actual sections and Acts, with plain-language notes',
+      'Clear next steps and where to go'
+    ],
+    topics: ['Defective product', 'Refund & replacement', 'Online fraud', 'Identity misuse', 'Rent & services', 'RTI application']
+  },
+  {
+    id: 'schemes',
+    kicker: '05',
+    label: 'Schemes',
+    href: '#/schemes',
+    cta: 'See schemes',
+    summary: 'Government help you may be entitled to — free legal aid, national helplines, and portals to file a complaint without a lawyer.',
+    points: [
+      'Free Legal Aid (NALSA) if you qualify',
+      'Consumer (1915) and Cyber Crime (1930) helplines',
+      'Tele-Law advice and online case filing (e-Daakhil)'
+    ]
+  }
+];
+
+function jumpToSection(id) {
+  const el = typeof document !== 'undefined' ? document.getElementById(id) : null;
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function HomeInfoSections() {
+  return (
+    <div className="home-info">
+      <RevealSection className="home-lead">
+        <h3 className="home-section-title">What you can do here</h3>
+        <div className="home-jump">
+          {homeSections.map((section) => (
+            <button
+              type="button"
+              key={section.id}
+              className="home-jump-link"
+              onClick={() => jumpToSection(`sec-${section.id}`)}
+            >
+              {section.label}
+            </button>
+          ))}
+        </div>
+      </RevealSection>
+
+      <div className="home-feature-list">
+        {homeSections.map((section) => (
+          <RevealSection id={`sec-${section.id}`} className="home-feature" key={section.id}>
+            <div className="home-feature-text">
+              <span className="home-feature-kicker">{section.kicker}</span>
+              <h3>{section.label}</h3>
+              <p>{section.summary}</p>
+              <a className="home-cta" href={section.href}>
+                <span>{section.cta}</span>
+                <ChevronRight size={16} strokeWidth={2} />
+              </a>
+            </div>
+            <div className="home-feature-panel">
+              <ul>
+                {section.points.map((point) => (
+                  <li key={point}>
+                    <Check size={15} strokeWidth={2.6} />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+              {section.topics && (
+                <div className="home-feature-topics">
+                  {section.topics.map((topic) => (
+                    <span key={topic}>{topic}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </RevealSection>
+        ))}
+      </div>
+
+      <div className="home-marquee" aria-hidden="true">
+        <div className="home-marquee-track">
+          {[0, 1].map((copy) => (
+            <span key={copy}>
+              Consumer rights <i>◆</i> Tenancy <i>◆</i> Cyber fraud <i>◆</i> Consumer courts
+              <i>◆</i> RTI <i>◆</i> Free legal aid <i>◆</i> Know your rights <i>◆</i>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <RevealSection className="home-steps-section">
+        <h3 className="home-section-title">How it works</h3>
+        <ol className="home-steps">
+          <li><span>1</span>Describe the problem in your own words.</li>
+          <li><span>2</span>We search official legal sources and government material.</li>
+          <li><span>3</span>You get a short answer, next steps, and where to go.</li>
+        </ol>
+      </RevealSection>
+
+      <RevealSection className="home-assure">
+        <div className="home-assure-card">
+          <span className="home-assure-icon"><LockKeyhole size={24} strokeWidth={1.6} /></span>
+          <h4>Why your privacy matters</h4>
+          <p>
+            Legal problems are personal. What you type here is used only to answer your
+            question — it is never sold, shared, or used to build a profile of you.
+          </p>
+          <ul>
+            <li>Your questions and uploads stay tied to your session.</li>
+            <li>Documents are read to help you, not kept for anyone else.</li>
+            <li>You can delete a saved case any time from My Cases.</li>
+          </ul>
+        </div>
+        <div className="home-assure-card">
+          <span className="home-assure-icon"><Bot size={24} strokeWidth={1.6} /></span>
+          <h4>Need help?</h4>
+          <p>
+            This tool gives legal information, not a lawyer&rsquo;s advice. For your specific
+            situation you can talk to a real advisor — many services are free.
+          </p>
+          <ul>
+            <li>Free Legal Aid (NALSA) if you qualify.</li>
+            <li>Tele-Law advice through Common Service Centres.</li>
+            <li>State Legal Services Authority for mediation and Lok Adalats.</li>
+          </ul>
+          <a className="home-assure-cta" href="#/schemes">See all schemes <ChevronRight size={14} strokeWidth={2} /></a>
+        </div>
+      </RevealSection>
+    </div>
+  );
+}
+
+function HomeFooter() {
+  return (
+    <footer className="home-footer">
+      <div className="home-footer-inner">
+        <div className="home-footer-brand">
+          <div className="home-footer-mark"><Scale size={22} strokeWidth={1.5} /></div>
+          <div>
+            <strong>Legal Aid AI</strong>
+            <span>Your Rights. Our Guidance.</span>
+          </div>
+        </div>
+        <p className="home-footer-about">
+          A free tool that explains your legal rights in simple words, helps you prepare
+          complaints, and points you to the right authority. It gives legal information,
+          not professional legal advice.
+        </p>
+        <nav className="home-footer-links" aria-label="Footer">
+          <a href="#/ask">Ask a Question</a>
+          <a href="#/rights">Know Your Rights</a>
+          <a href="#/schemes">Schemes</a>
+          <a href="#/about">About Us</a>
+        </nav>
+      </div>
+    </footer>
+  );
+}
+
+function InteractiveCursor() {
+  const dotRef = React.useRef(null);
+  const ringRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!fine) return undefined;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    const body = document.body;
+    body.classList.add('has-custom-cursor');
+
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let rx = mx;
+    let ry = my;
+    let raf = 0;
+
+    const place = (el, x, y) => {
+      if (el) el.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0)`;
+    };
+
+    const onMove = (event) => {
+      mx = event.clientX;
+      my = event.clientY;
+      place(dot, mx, my);
+      if (reduced) place(ring, mx, my);
+      body.classList.remove('cursor-hidden');
+    };
+    const onOut = (event) => {
+      if (!event.relatedTarget && !event.toElement) body.classList.add('cursor-hidden');
+    };
+    const onDown = () => body.classList.add('cursor-down');
+    const onUp = () => body.classList.remove('cursor-down');
+
+    const interactiveSel =
+      'a, button, input, textarea, select, [role="button"], .feature-card, .category-pill, .home-feature-panel, .home-jump-link, .home-cta, .source-card, .rights-source-card';
+    const onOver = (event) => {
+      const t = event.target;
+      if (t && t.closest && t.closest(interactiveSel)) body.classList.add('cursor-active');
+    };
+    const onLeaveInteractive = (event) => {
+      const t = event.target;
+      if (t && t.closest && t.closest(interactiveSel)) body.classList.remove('cursor-active');
+    };
+
+    const tick = () => {
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      place(ring, rx, ry);
+      raf = window.requestAnimationFrame(tick);
+    };
+    if (!reduced) raf = window.requestAnimationFrame(tick);
+    place(dot, mx, my);
+    place(ring, mx, my);
+
+    // Magnetic pull on primary buttons
+    const magnets = Array.from(document.querySelectorAll('.home-cta'));
+    const magnetCleanups = magnets.map((el) => {
+      const move = (event) => {
+        if (reduced) return;
+        const r = el.getBoundingClientRect();
+        const dx = event.clientX - (r.left + r.width / 2);
+        const dy = event.clientY - (r.top + r.height / 2);
+        el.style.transform = `translate(${(dx * 0.28).toFixed(1)}px, ${(dy * 0.4).toFixed(1)}px)`;
+      };
+      const reset = () => {
+        el.style.transform = '';
+      };
+      el.addEventListener('mousemove', move);
+      el.addEventListener('mouseleave', reset);
+      return () => {
+        el.removeEventListener('mousemove', move);
+        el.removeEventListener('mouseleave', reset);
+        el.style.transform = '';
+      };
+    });
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('mouseout', onOut);
+    window.addEventListener('mousedown', onDown);
+    window.addEventListener('mouseup', onUp);
+    document.addEventListener('mouseover', onOver, true);
+    document.addEventListener('mouseout', onLeaveInteractive, true);
+
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseout', onOut);
+      window.removeEventListener('mousedown', onDown);
+      window.removeEventListener('mouseup', onUp);
+      document.removeEventListener('mouseover', onOver, true);
+      document.removeEventListener('mouseout', onLeaveInteractive, true);
+      magnetCleanups.forEach((fn) => fn());
+      body.classList.remove('has-custom-cursor', 'cursor-hidden', 'cursor-active', 'cursor-down');
+    };
+  }, []);
+
+  return (
+    <>
+      <div ref={ringRef} className="cursor-ring" aria-hidden="true" />
+      <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
     </>
   );
 }
@@ -2521,6 +3010,7 @@ function SchemesPage() {
 function HomePage() {
   return (
     <>
+      <InteractiveCursor />
       <BackgroundArt />
       <HeaderControls />
       <div className="content-frame">
@@ -2528,8 +3018,9 @@ function HomePage() {
         <QueryBox />
         <CategoryPills />
         <FeatureCards />
-        <FooterQuote />
+        <HomeInfoSections />
       </div>
+      <HomeFooter />
     </>
   );
 }
