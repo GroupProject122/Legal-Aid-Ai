@@ -79,6 +79,60 @@ npm run dev
 
 Open the Vite URL, then use the Ask Question page. The frontend calls `POST /api/ask` through the Vite dev proxy.
 
+The **Schemes** page (`#/schemes`) is served by the same frontend but talks to a
+**separate** backend — see the next section. If the schemes backend isn't
+running, every other page still works; only the Schemes search fails (with a
+clear error).
+
+## Schemes & Legal Support (second backend)
+
+`schemes-legal-support/` is a self-contained service: a **Node/Express** API
+(`schemes-legal-support/backend`, port **4000**) backed by **PostgreSQL**, plus
+an internal-only admin tool (`schemes-legal-support/frontend`, not linked from
+the main app). The main `frontend/` **Schemes** page consumes its `POST /match`
+endpoint.
+
+One-time setup (needs a local Postgres — on macOS: `brew install postgresql@17
+&& brew services start postgresql@17 && createdb schemes_legal_support`):
+
+```bash
+cd schemes-legal-support/backend
+npm install
+cp .env.example .env          # then set DATABASE_URL for your Postgres
+npx prisma migrate dev        # create tables
+npm run prisma:seed           # load the sample schemes
+```
+
+Run it (third terminal):
+
+```bash
+cd schemes-legal-support/backend
+npm run dev                   # Express API on http://localhost:4000
+```
+
+### All services at once (3 terminals)
+
+| Terminal | Command | Port | Serves |
+|----------|---------|------|--------|
+| 1 | `cd backend && source .venv/bin/activate && uvicorn main:app --reload --port 8000` | **8000** | Python RAG API (`/api/*`) |
+| 2 | `cd schemes-legal-support/backend && npm run dev` | **4000** | Node schemes API (`/match`, `/schemes`) |
+| 3 | `cd frontend && npm run dev` | **5173** | the single React app |
+
+Ports 8000, 4000 and 5173 don't overlap, so all three run together. The Vite
+dev server proxies both backends, so the browser only ever talks to `:5173`:
+
+- `/api/*`         → `http://localhost:8000` (Python)
+- `/schemes-api/*` → `http://localhost:4000` (Node; the `/schemes-api` prefix is
+  stripped before forwarding)
+
+To point the Schemes page at a non-default schemes backend (e.g. in
+production), set `VITE_SCHEMES_API_BASE_URL` in `frontend/.env` — see
+`frontend/.env.example`. Left unset, it uses the `/schemes-api` proxy path.
+
+The admin scheme-entry tool stays in `schemes-legal-support/frontend`
+(`npm run dev` there, then open `#/admin`) and is deliberately not linked from
+the main app's navigation. **It has no authentication — do not expose it.**
+
 ## Local Development Fallback
 
 For a local smoke test without a Gemini API key, you may use the development-only response template:

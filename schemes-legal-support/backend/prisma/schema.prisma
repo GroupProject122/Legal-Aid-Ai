@@ -1,0 +1,243 @@
+// Prisma schema for the Schemes & Legal Support app.
+// Scaffolding only: models + enums. No seed data, no matching logic here.
+// See ../../docs/data-model.md for the field-by-field rationale and the
+// grammar of the `eligibility` JSON condition tree.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+/// The profile a user fills in during intake. The first 8 fields are required;
+/// the 4 below them are optional/nullable (null = unknown / not provided).
+/// The matching engine reads these fields and compares them against the leaf
+/// conditions in Scheme.eligibility. Leaf-condition `field` values MUST be one
+/// of the snake_case names below (see @map annotations): state, age, gender,
+/// annual_family_income, occupation, education_level, category,
+/// support_type_needed, land_holding, paid_income_tax_last_year,
+/// monthly_pension, government_employee_grade.
+model UserProfile {
+  id String @id @default(cuid())
+
+  state              IndianState
+  age                Int
+  gender             Gender
+  /// Annual family income in INR (whole rupees).
+  annualFamilyIncome Int            @map("annual_family_income")
+  occupation         Occupation
+  educationLevel     EducationLevel @map("education_level")
+  /// Social category, used for reservation-based scheme eligibility.
+  category           SocialCategory
+  supportTypeNeeded  SupportType    @map("support_type_needed")
+
+  /// Optional / nullable. null = unknown / not provided.
+  landHolding             LandHolding?             @map("land_holding")
+  paidIncomeTaxLastYear   Boolean?                 @map("paid_income_tax_last_year")
+  /// Monthly pension received, INR whole rupees. 0 is a real value.
+  monthlyPension          Int?                     @map("monthly_pension")
+  governmentEmployeeGrade GovernmentEmployeeGrade? @map("government_employee_grade")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_profiles")
+}
+
+/// A government scheme plus its structured eligibility data.
+model Scheme {
+  id String @id @default(cuid())
+
+  /// Stable human-readable identifier, e.g. "pm-kisan". Used in URLs and as
+  /// the external reference for a scheme.
+  schemeId     String @unique @map("scheme_id")
+  name         String
+  shortSummary String @map("short_summary")
+
+  level SchemeLevel
+  /// Set only when level = State; must be null for Central schemes.
+  /// Not enforced by the DB yet — see data-model.md ("Open items").
+  state IndianState?
+
+  /// Free-form domain tags, e.g. ["agriculture", "income-support"].
+  category String[]
+
+  /// Nested eligibility condition tree. Shape:
+  ///   { "hard": <ConditionNode>, "soft": <ConditionNode> | null }
+  /// A ConditionNode is one of:
+  ///   { "op": "AND" | "OR", "children": ConditionNode[] }
+  ///   { "op": "NOT", "child": ConditionNode }
+  ///   { "field": <UserProfile field>, "operator": <Operator>, "value": <JSON> }
+  /// Operators: equals, not_equals, in, not_in, gte, lte, exists, not_exists.
+  /// `hard` conditions exclude a user when unmatched; `soft` conditions only
+  /// affect ranking. Full grammar: data-model.md.
+  eligibility Json
+
+  benefits           String   @db.Text
+  documentsRequired  String[] @map("documents_required")
+  applicationProcess String   @map("application_process") @db.Text
+
+  officialSourceUrl String  @map("official_source_url")
+  /// Direct link to the application portal, if one exists.
+  applyUrl          String? @map("apply_url")
+
+  lastVerifiedDate   DateTime?          @map("last_verified_date") @db.Date
+  verificationStatus VerificationStatus @default(needs_review) @map("verification_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([level])
+  @@index([state])
+  @@index([verificationStatus])
+  @@map("schemes")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+/// The 28 states + 8 union territories of India.
+/// Stored value = official name with spaces replaced by underscores.
+enum IndianState {
+  Andhra_Pradesh
+  Arunachal_Pradesh
+  Assam
+  Bihar
+  Chhattisgarh
+  Goa
+  Gujarat
+  Haryana
+  Himachal_Pradesh
+  Jharkhand
+  Karnataka
+  Kerala
+  Madhya_Pradesh
+  Maharashtra
+  Manipur
+  Meghalaya
+  Mizoram
+  Nagaland
+  Odisha
+  Punjab
+  Rajasthan
+  Sikkim
+  Tamil_Nadu
+  Telangana
+  Tripura
+  Uttar_Pradesh
+  Uttarakhand
+  West_Bengal
+  Andaman_and_Nicobar_Islands
+  Chandigarh
+  Dadra_and_Nagar_Haveli_and_Daman_and_Diu
+  Delhi
+  Jammu_and_Kashmir
+  Ladakh
+  Lakshadweep
+  Puducherry
+
+  @@map("indian_state")
+}
+
+enum Gender {
+  male
+  female
+  other
+
+  @@map("gender")
+}
+
+/// Extend by adding members here (and in data-model.md). `other` is the
+/// catch-all until a value earns its own member.
+enum Occupation {
+  farmer
+  student
+  unemployed
+  salaried
+  self_employed
+  other
+
+  @@map("occupation")
+}
+
+enum EducationLevel {
+  below_10th
+  tenth_pass   @map("10th_pass")
+  twelfth_pass @map("12th_pass")
+  graduate
+  postgraduate
+  other
+
+  @@map("education_level")
+}
+
+/// Social category for reservation-based eligibility.
+/// `ebc` (Economically Backward Class) and `dnt` (Denotified / Nomadic Tribes)
+/// are legally distinct groups with their own schemes, not subsets of `obc`.
+enum SocialCategory {
+  general
+  obc
+  sc
+  st
+  ebc
+  dnt
+  other
+
+  @@map("social_category")
+}
+
+enum SupportType {
+  financial_aid
+  education
+  healthcare
+  housing
+  employment
+  agriculture
+  business
+  other
+
+  @@map("support_type")
+}
+
+/// Whether the family holds cultivable land and in what capacity.
+enum LandHolding {
+  none
+  individual
+  institutional
+
+  @@map("land_holding")
+}
+
+/// Serving/retired government post grade. `not_applicable` = not a government
+/// employee. `group_d_mts` (Group D / Multi-Tasking Staff) is often exempted
+/// from exclusions that hit `group_a_b_c`.
+enum GovernmentEmployeeGrade {
+  not_applicable
+  group_a_b_c
+  group_d_mts
+
+  @@map("government_employee_grade")
+}
+
+enum SchemeLevel {
+  Central
+  State
+
+  @@map("scheme_level")
+}
+
+enum VerificationStatus {
+  verified
+  needs_review
+  stale
+
+  @@map("verification_status")
+}

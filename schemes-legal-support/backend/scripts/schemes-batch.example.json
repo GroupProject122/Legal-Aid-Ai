@@ -1,0 +1,39 @@
+[
+  {
+    "scheme_id": "example-scheme-001",
+    "name": "Example State Tuition Waiver",
+    "short_summary": "Illustrative entry showing the shape bulk-load expects. Copy this file to scripts/schemes-batch.json and replace with real data.",
+    "level": "State",
+    "state": "Karnataka",
+    "category": ["education", "scholarship"],
+    "eligibility": {
+      "hard": {
+        "op": "AND",
+        "children": [
+          { "field": "state", "operator": "equals", "value": "Karnataka" },
+          { "field": "annual_family_income", "operator": "lte", "value": 250000 },
+          {
+            "op": "OR",
+            "children": [
+              { "field": "category", "operator": "in", "value": ["sc", "st", "obc"] },
+              { "field": "education_level", "operator": "in", "value": ["12th_pass", "graduate"] }
+            ]
+          }
+        ]
+      },
+      "soft": { "field": "category", "operator": "in", "value": ["sc", "st"] }
+    },
+    "benefits": "Full tuition-fee waiver for one academic year at a state-run institution.",
+    "documents_required": [
+      "Aadhaar card",
+      "Income certificate",
+      "Previous year marksheet",
+      "Karnataka domicile certificate"
+    ],
+    "application_process": "Apply on the state education portal each academic year; the institution verifies enrolment before the waiver is applied.",
+    "official_source_url": "https://example.karnataka.gov.in/tuition-waiver",
+    "apply_url": null,
+    "last_verified_date": null,
+    "verification_status": "needs_review"
+  }
+]

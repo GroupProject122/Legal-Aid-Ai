@@ -47,6 +47,10 @@ import {
   X
 } from 'lucide-react';
 
+import { IntakeForm } from './schemes/IntakeForm.jsx';
+import { ResultsList } from './schemes/ResultsList.jsx';
+import { ApiError, postMatch } from './schemes/api.js';
+
 const navItems = [
   { label: 'Home', icon: Home, page: 'home', href: '#/' },
   { label: 'Ask Question', icon: MessageCircle, page: 'ask', href: '#/ask' },
@@ -2616,7 +2620,58 @@ const schemes = [
   }
 ];
 
+function OtherLegalAidServices() {
+  return (
+    <section className="rights-panel">
+      <h3>Other free legal-aid services</h3>
+      <div className="rights-category-list">
+        {schemes.map((scheme) => {
+          const Wrapper = scheme.href ? 'a' : 'div';
+          const linkProps = scheme.href
+            ? { href: scheme.href, target: '_blank', rel: 'noreferrer' }
+            : {};
+          return (
+            <Wrapper className="rights-source-card" key={scheme.name} {...linkProps}>
+              <FileText size={22} strokeWidth={1.5} />
+              <span>
+                <strong>{scheme.name}</strong>
+                <small>{scheme.detail}</small>
+              </span>
+              {scheme.href ? <ArrowUpRight size={16} strokeWidth={1.7} /> : <span />}
+            </Wrapper>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function SchemesPage() {
+  const [screen, setScreen] = React.useState('form');
+  const [profile, setProfile] = React.useState({});
+  const [results, setResults] = React.useState([]);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState(null);
+
+  async function handleSubmit(nextProfile) {
+    setProfile(nextProfile);
+    setSubmitting(true);
+    setErrorMessage(null);
+    try {
+      const matches = await postMatch(nextProfile);
+      setResults(matches);
+      setScreen('results');
+    } catch (error) {
+      setErrorMessage(
+        error instanceof ApiError
+          ? error.message
+          : 'Something went wrong while searching. Please try again.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <>
       <DocumentsBackgroundArt />
@@ -2626,34 +2681,31 @@ function SchemesPage() {
           <div className="header-ornament-line"><span /><i>◇</i></div>
           <h2>Schemes</h2>
           <div className="header-ornament-line"><i>◇</i><span /></div>
-          <p>Government schemes and services that may help with your legal issue.</p>
+          <p>
+            Answer a few optional questions to see which Indian government schemes you may
+            qualify for. Nothing is saved and no sign-in is needed.
+          </p>
           <PageDivider />
         </header>
 
-        <section className="rights-panel">
-          <h3>Legal help &amp; benefits</h3>
-          <div className="rights-category-list">
-            {schemes.map((scheme) => {
-              const Wrapper = scheme.href ? 'a' : 'div';
-              const linkProps = scheme.href
-                ? { href: scheme.href, target: '_blank', rel: 'noreferrer' }
-                : {};
-              return (
-                <Wrapper className="rights-source-card" key={scheme.name} {...linkProps}>
-                  <FileText size={22} strokeWidth={1.5} />
-                  <span>
-                    <strong>{scheme.name}</strong>
-                    <small>{scheme.detail}</small>
-                  </span>
-                  {scheme.href ? <ArrowUpRight size={16} strokeWidth={1.7} /> : <span />}
-                </Wrapper>
-              );
-            })}
-          </div>
-        </section>
+        {screen === 'form' ? (
+          <>
+            <section className="rights-panel">
+              <h3>Find schemes for you</h3>
+              <IntakeForm
+                initialProfile={profile}
+                submitting={submitting}
+                errorMessage={errorMessage}
+                onSubmit={handleSubmit}
+              />
+            </section>
+            <OtherLegalAidServices />
+          </>
+        ) : (
+          <ResultsList results={results} onRefine={() => setScreen('form')} />
+        )}
 
-        <RightsAskCta label="Not sure which applies to you?" />
-        <RightsDisclaimerCard text="These are official public schemes. Eligibility and process may change — check the official website before applying." />
+        <RightsDisclaimerCard text="Eligibility shown here is an automated estimate, not an official decision. Always confirm on the scheme's official government website before applying." />
       </div>
     </>
   );
