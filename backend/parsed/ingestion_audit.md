@@ -2,24 +2,24 @@
 
 ## Overall Results
 - Status: PASS WITH WARNINGS
-- Total chunks checked: 3695
-- Unique chunk IDs: 3695
+- Total chunks checked: 4074
+- Unique chunk IDs: 4074
 - HIGH findings: 0
-- MEDIUM findings: 84
+- MEDIUM findings: 88
 - LOW findings: 3
 
 ## High-Priority Issues
 - None found.
 
 ## Medium-Priority Issues
-- 84 medium-priority finding(s), mainly review-scale quality signals.
+- 88 medium-priority finding(s), mainly review-scale quality signals.
 - Large chunks over 8,000 characters: 0
 - Exact duplicate text groups: 1
 - Near-duplicate text groups: 12
 
 ## Low-Priority / Informational Findings
-- Very short chunks under 40 characters: 10
-- Review-candidate chunks from 40 to 100 characters: 269
+- Very short chunks under 40 characters: 12
+- Review-candidate chunks from 40 to 100 characters: 291
 - Suspicious recurring header/footer patterns: 7
 
 ## Documents Requiring Attention
@@ -29,7 +29,7 @@
 - `consumer/consumer_commission_procedure_regulations_2020.pdf`: 13 fallback chunks (33.33%)
 
 ## Fallback Analysis
-- Total fallback chunks: 60
+- Total fallback chunks: 66
 - `cyber/sanchar_saathi_ceir_user_manual.pdf`: 6/6 fallback (100.0%)
 - `consumer/ecommerce_amendment_rules_2021.pdf`: 1/2 fallback (50.0%)
 - `cyber/cert_in_directions_2022.pdf`: 5/10 fallback (50.0%)

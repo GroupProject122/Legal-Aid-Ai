@@ -3,6 +3,62 @@
 Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives in
 [`frontend/CHANGELOG.md`](frontend/CHANGELOG.md).
 
+> **Known corpus gaps (consumer)** — two CCPA instruments are **not** in the corpus. The only
+> official PDFs published for them are scanned images (no extractable text) and no OCR was run:
+> - **Guidelines for Prevention and Regulation of Greenwashing or Misleading Environmental Claims, 2024**
+> - **Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024**
+>
+> Both are P2 / low priority. Add later via OCR, or if a text-native version is published.
+> Also pending: **e-Jagriti** filing user manual (the e-Daakhil portal it replaced was retired 1 Jan 2025).
+
+## Unreleased — consumer corpus expansion
+
+Uncommitted working-tree change on `main`. Staging/source area:
+[`datasetcybernconsumer/consumer/`](datasetcybernconsumer/consumer/) (kept as-is, mirrors the cyber round).
+
+**Where it reflects:** `backend/documents/consumer/`, `backend/documents/corpus_manifest.json`,
+`backend/parsed/*`. `backend/vectorstore/` is git-ignored — rebuild locally with
+`cd backend && python ingest.py --parse-only && python ingest.py`.
+
+**Added to `backend/documents/consumer/` (now in the active retrieval index):**
+
+| File | Type | Why | Chunks |
+|---|---|---|---:|
+| `legal_metrology_act_2009.pdf` | statute | MRP as a ceiling, net-quantity/declaration duties, instrument verification, offences — basis for overcharging-above-MRP and short-weight complaints | 67 |
+| `legal_metrology_packaged_commodities_rules_2011.pdf` | rules | Pre-packaged goods: mandatory label declarations, dual-MRP ban, permissible error, penalties | 126 |
+| `sale_of_goods_act_1930.pdf` | statute (supporting) | Implied conditions/warranties, merchantable quality, passing of property/risk, buyer/seller remedies — contract-law backing for defective-goods reasoning | 67 |
+| `bureau_of_indian_standards_act_2016.pdf` | statute | ISI / Standard Mark, compulsory certification for notified goods, hallmarking, product recall, penalties | 53 |
+| `insurance_ombudsman_rules_2017.pdf` | rules | Remedy route for claim repudiation / delay / mis-selling; Ombudsman jurisdiction, procedure, award, limits (consolidated to the 18 May 2021 amendments) | 29 |
+| `rbi_integrated_ombudsman_scheme_2021.pdf` | guidelines | Cost-free remedy for deficiency in banking / NBFC / digital-payment services; grounds unauthorised-transaction complaints. `cross_domain_relevance: ["cyber"]`. `document_type` is `guidelines` because `ingest.py` has no scheme parser (text unaffected) | 37 |
+
+**Not added (already covered — kept in staging only):**
+
+- `consumer_protection_act_2019.pdf` — already in the corpus.
+- `consumer_protection_general_rules_2020.pdf` (G.S.R. 449(E)) — its full text is already inside
+  `cdrc_general_rules_2020.pdf` (verified: "public utility service", "games of chance",
+  "customer care number or e-mail" all present). Adding it would duplicate indexed content.
+  A standalone PDF was still produced from the source `.txt` and left in the staging folder.
+
+**`corpus_manifest.json`:** +6 consumer `documents` entries (full metadata), inserted after the
+existing consumer block. `documents` total 35 → 41.
+
+**Re-parse + re-embed:**
+
+| | Before (cyber round) | After |
+|---|---:|---:|
+| Documents parsed | 34 | 40 |
+| Total chunks | 3,695 | 4,074 |
+| Consumer chunks | 297 | 676 |
+| Structure-aware | 98.38% | 98.38% |
+| Ingestion audit | PASS, HIGH=0, MEDIUM=84 | PASS, HIGH=0, MEDIUM=88, LOW=3 |
+
+All 6 new docs parsed 96.5–99.2% structure-aware (1 fallback chunk each). The +4 MEDIUM are
+benign `sequence_anomalies` in the Packaged Commodities Rules (rule numbering restarts per
+chapter/schedule). Retrieval smoke test: MRP-overcharge → Packaged Commodities Rules 6/8/23;
+missing net-quantity → Rules 6/12/21; rejected mediclaim → Insurance Ombudsman Rules 14/15/9.
+
+---
+
 ## Unreleased — branch `chore/move-frontend-folder`
 
 Three independent pieces of work, all on this branch, not yet merged to `main`.

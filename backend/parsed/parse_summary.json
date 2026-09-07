@@ -2,32 +2,32 @@
   "chunks_by_document_type": {
     "amendment_rules": 19,
     "constitution": 1371,
-    "guidelines": 49,
+    "guidelines": 86,
     "procedural_user_guide": 279,
     "regulations": 39,
-    "rules": 393,
-    "statute": 603,
+    "rules": 548,
+    "statute": 790,
     "supporting_criminal_law": 665,
     "supporting_document_registration_law": 103,
     "supporting_property_law": 174
   },
   "chunks_by_domain": {
     "constitutional_public_authority": 1572,
-    "consumer": 297,
+    "consumer": 676,
     "cyber": 1396,
     "tenancy": 430
   },
   "chunks_by_structure_type": {
     "annexure": 49,
     "article": 1321,
-    "fallback": 60,
-    "guideline": 39,
+    "fallback": 66,
+    "guideline": 75,
     "manual_section": 229,
     "preamble": 1,
     "regulation": 26,
-    "rule": 343,
-    "schedule": 115,
-    "section": 1512
+    "rule": 489,
+    "schedule": 122,
+    "section": 1696
   },
   "documents": [
     {
@@ -69,6 +69,14 @@
       "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
       "structure_aware_chunks": 77,
       "total_chunks": 78
+    },
+    {
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/bureau_of_indian_standards_act_2016.pdf",
+      "structure_aware_chunks": 52,
+      "total_chunks": 53
     },
     {
       "document_type": "rules",
@@ -130,9 +138,33 @@
       "document_type": "rules",
       "domain": "consumer",
       "fallback_chunks": 1,
+      "source_file": "consumer/insurance_ombudsman_rules_2017.pdf",
+      "structure_aware_chunks": 28,
+      "total_chunks": 29
+    },
+    {
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
       "source_file": "consumer/jurisdiction_rules_2021.pdf",
       "structure_aware_chunks": 5,
       "total_chunks": 6
+    },
+    {
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/legal_metrology_act_2009.pdf",
+      "structure_aware_chunks": 66,
+      "total_chunks": 67
+    },
+    {
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+      "structure_aware_chunks": 125,
+      "total_chunks": 126
     },
     {
       "document_type": "rules",
@@ -149,6 +181,22 @@
       "source_file": "consumer/misleading_ads_guidelines_2022.pdf",
       "structure_aware_chunks": 17,
       "total_chunks": 18
+    },
+    {
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+      "structure_aware_chunks": 36,
+      "total_chunks": 37
+    },
+    {
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/sale_of_goods_act_1930.pdf",
+      "structure_aware_chunks": 66,
+      "total_chunks": 67
     },
     {
       "document_type": "supporting_criminal_law",
@@ -303,15 +351,15 @@
       "total_chunks": 174
     }
   ],
-  "documents_parsed": 34,
+  "documents_parsed": 40,
   "documents_skipped": [
     {
       "reason": "manual_verification_required",
       "source_file": "tenancy/delhi_rent_act_1995.pdf"
     }
   ],
-  "fallback_chunks": 60,
-  "structure_aware_chunks": 3635,
+  "fallback_chunks": 66,
+  "structure_aware_chunks": 4008,
   "structure_aware_percentage": 98.38,
-  "total_chunks": 3695
+  "total_chunks": 4074
 }

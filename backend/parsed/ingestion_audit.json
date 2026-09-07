@@ -4,11 +4,11 @@
     "severity_counts": {
       "HIGH": 0,
       "LOW": 3,
-      "MEDIUM": 84
+      "MEDIUM": 88
     },
     "status": "PASS WITH WARNINGS",
-    "total_chunks_checked": 3695,
-    "unique_chunk_ids": 3695
+    "total_chunks_checked": 4074,
+    "unique_chunk_ids": 4074
   },
   "child_chunk_issues": [],
   "duplicate_findings": {
@@ -316,6 +316,16 @@
       },
       {
         "document_type": "rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 3.45,
+        "source_file": "consumer/insurance_ombudsman_rules_2017.pdf",
+        "structure_aware_chunks": 28,
+        "structure_aware_percentage": 96.55,
+        "total_chunks": 29
+      },
+      {
+        "document_type": "rules",
         "domain": "cyber",
         "fallback_chunks": 1,
         "fallback_percentage": 3.45,
@@ -353,6 +363,16 @@
         "structure_aware_chunks": 34,
         "structure_aware_percentage": 97.14,
         "total_chunks": 35
+      },
+      {
+        "document_type": "guidelines",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 2.7,
+        "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+        "structure_aware_chunks": 36,
+        "structure_aware_percentage": 97.3,
+        "total_chunks": 37
       },
       {
         "document_type": "rules",
@@ -395,6 +415,16 @@
         "total_chunks": 49
       },
       {
+        "document_type": "statute",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.89,
+        "source_file": "consumer/bureau_of_indian_standards_act_2016.pdf",
+        "structure_aware_chunks": 52,
+        "structure_aware_percentage": 98.11,
+        "total_chunks": 53
+      },
+      {
         "document_type": "rules",
         "domain": "tenancy",
         "fallback_chunks": 1,
@@ -413,6 +443,26 @@
         "structure_aware_chunks": 63,
         "structure_aware_percentage": 98.44,
         "total_chunks": 64
+      },
+      {
+        "document_type": "statute",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.49,
+        "source_file": "consumer/legal_metrology_act_2009.pdf",
+        "structure_aware_chunks": 66,
+        "structure_aware_percentage": 98.51,
+        "total_chunks": 67
+      },
+      {
+        "document_type": "statute",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.49,
+        "source_file": "consumer/sale_of_goods_act_1930.pdf",
+        "structure_aware_chunks": 66,
+        "structure_aware_percentage": 98.51,
+        "total_chunks": 67
       },
       {
         "document_type": "procedural_user_guide",
@@ -475,6 +525,16 @@
         "total_chunks": 121
       },
       {
+        "document_type": "rules",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.79,
+        "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+        "structure_aware_chunks": 125,
+        "structure_aware_percentage": 99.21,
+        "total_chunks": 126
+      },
+      {
         "document_type": "statute",
         "domain": "consumer",
         "fallback_chunks": 1,
@@ -515,7 +575,7 @@
         "total_chunks": 1371
       }
     ],
-    "total_fallback_chunks": 60
+    "total_fallback_chunks": 66
   },
   "header_footer_noise": {
     "patterns": [
@@ -666,6 +726,19 @@
     {
       "counts_by_structure_type": {
         "fallback": 1,
+        "section": 52
+      },
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/bureau_of_indian_standards_act_2016.pdf",
+      "structure_aware_chunks": 52,
+      "structure_aware_percentage": 98.11,
+      "total_chunks": 53
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
         "rule": 32,
         "schedule": 2
       },
@@ -760,6 +833,19 @@
     {
       "counts_by_structure_type": {
         "fallback": 1,
+        "rule": 28
+      },
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/insurance_ombudsman_rules_2017.pdf",
+      "structure_aware_chunks": 28,
+      "structure_aware_percentage": 96.55,
+      "total_chunks": 29
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
         "rule": 5
       },
       "document_type": "rules",
@@ -769,6 +855,33 @@
       "structure_aware_chunks": 5,
       "structure_aware_percentage": 83.33,
       "total_chunks": 6
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "section": 66
+      },
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/legal_metrology_act_2009.pdf",
+      "structure_aware_chunks": 66,
+      "structure_aware_percentage": 98.51,
+      "total_chunks": 67
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "rule": 118,
+        "schedule": 7
+      },
+      "document_type": "rules",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+      "structure_aware_chunks": 125,
+      "structure_aware_percentage": 99.21,
+      "total_chunks": 126
     },
     {
       "counts_by_structure_type": {
@@ -795,6 +908,32 @@
       "structure_aware_chunks": 17,
       "structure_aware_percentage": 94.44,
       "total_chunks": 18
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "guideline": 36
+      },
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+      "structure_aware_chunks": 36,
+      "structure_aware_percentage": 97.3,
+      "total_chunks": 37
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "section": 66
+      },
+      "document_type": "statute",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/sale_of_goods_act_1930.pdf",
+      "structure_aware_chunks": 66,
+      "structure_aware_percentage": 98.51,
+      "total_chunks": 67
     },
     {
       "counts_by_structure_type": {
@@ -1587,6 +1726,46 @@
       "type": "sequence_reverse_jump"
     },
     {
+      "current_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0054",
+      "current_number": "1",
+      "previous_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0053",
+      "previous_number": "32A",
+      "severity": "MEDIUM",
+      "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0058",
+      "current_number": "1",
+      "previous_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0056",
+      "previous_number": "34",
+      "severity": "MEDIUM",
+      "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0077",
+      "current_number": "1",
+      "previous_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0075",
+      "previous_number": "19",
+      "severity": "MEDIUM",
+      "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0109",
+      "current_number": "1",
+      "previous_chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0107",
+      "previous_number": "26",
+      "severity": "MEDIUM",
+      "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+      "structure_type": "rule",
+      "type": "sequence_reverse_jump"
+    },
+    {
       "current_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0249",
       "current_number": "1",
       "previous_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0248",
@@ -2029,6 +2208,7 @@
     "counts_by_source": {
       "constitutional_public_authority/constitution_of_india.pdf": 171,
       "constitutional_public_authority/right_to_information_act_2005.pdf": 9,
+      "consumer/legal_metrology_packaged_commodities_rules_2011.pdf": 24,
       "cyber/bharatiya_nyaya_sanhita_2023.pdf": 59,
       "cyber/cybercrime_portal_citizen_manual_latest.pdf": 13,
       "cyber/digital_personal_data_protection_rules_2025.pdf": 3,
@@ -2040,7 +2220,7 @@
       "tenancy/registration_act_1908.pdf": 2,
       "tenancy/transfer_of_property_act_1882.pdf": 4
     },
-    "review_40_to_100_count": 269,
+    "review_40_to_100_count": 291,
     "review_samples": [
       {
         "char_count": 53,
@@ -2283,6 +2463,20 @@
         "structure_type": "article"
       },
       {
+        "char_count": 27,
+        "chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0078",
+        "snippet": "Rule 2 — Lotions 2. Lotions",
+        "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+        "structure_type": "rule"
+      },
+      {
+        "char_count": 35,
+        "chunk_id": "consumer_legal_metrology_packaged_commodities_rules_2011__chunk_0085",
+        "snippet": "Rule 4 — Curd Weight 4. Curd Weight",
+        "source_file": "consumer/legal_metrology_packaged_commodities_rules_2011.pdf",
+        "structure_type": "rule"
+      },
+      {
         "char_count": 31,
         "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0018",
         "snippet": "Section 128 — Force 128. Force.",
@@ -2325,7 +2519,7 @@
         "structure_type": "annexure"
       }
     ],
-    "very_suspicious_under_40_count": 10
+    "very_suspicious_under_40_count": 12
   },
   "validation_failures": []
 }
