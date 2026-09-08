@@ -468,7 +468,7 @@
       "year": 1958,
       "cross_domain_relevance": [],
       "retrieval_priority": "high",
-      "notes": "Core Delhi rent-control statute."
+      "notes": "Core Delhi rent-control statute. Consolidated text as amended up to the Delhi Rent Control (Amendment) Act, 1988 (Act 57 of 1988): s.3(c) excludes premises let at monthly rent above Rs. 3,500, and s.3(d) excludes premises for 10 years from completion of construction, so most present-day Delhi tenancies fall outside this Act and are governed by contract and the Transfer of Property Act, 1882. Key provisions: standard rent (s.4-9), protection against eviction and grounds (s.14), bona-fide-need summary procedure (s.25B), deposit of rent with the Controller (s.26-28), landlord's duty to repair (s.44), and cutting off essential supply or service (s.45)."
     },
     {
       "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
@@ -496,7 +496,7 @@
       "year": 1995,
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
-      "notes": "Manual verification required for current legal status, enforceability, and source authenticity before production use."
+      "notes": "Enacted but its commencement notification was never issued, so it has never been brought into force and is not operative law. The Delhi Rent Control Act, 1958 remains the governing rent-control statute for Delhi. Retained for reference only; do not cite its provisions as applicable law."
     },
     {
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -527,6 +527,48 @@
       "notes": "Supporting document-registration law relevant to lease and property documents."
     },
     {
+      "source_file": "tenancy/specific_relief_act_1963.pdf",
+      "document_title": "The Specific Relief Act, 1963",
+      "short_title": "Specific Relief Act, 1963",
+      "domain": "tenancy",
+      "document_type": "supporting_property_law",
+      "jurisdiction": "India",
+      "status": "supporting_only",
+      "authority_level": "primary",
+      "year": 1963,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Supporting civil-remedy statute. s.6: a person dispossessed of immovable property without consent and otherwise than in due course of law may sue to recover possession within six months (no such suit against the Government); s.5 recovery of possession on title; s.38-39 perpetual and mandatory injunctions to restrain or undo interference. Core remedy for illegal lockout or forcible eviction by a landlord. Original 1963 text; later amendments (Act 18 of 2018) not reflected."
+    },
+    {
+      "source_file": "tenancy/indian_easements_act_1882.pdf",
+      "document_title": "The Indian Easements Act, 1882",
+      "short_title": "Indian Easements Act, 1882",
+      "domain": "tenancy",
+      "document_type": "supporting_property_law",
+      "jurisdiction": "India",
+      "status": "supporting_only",
+      "authority_level": "primary",
+      "year": 1882,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Supporting property law. s.52 defines a licence (a right to use another's immovable property that is not a lease or interest in land); s.60 licence revocability and the exception for a licensee who has acted on it with permanent works; s.62-64 deemed revocation and the licensee's rights on revocation or eviction. Relevant to distinguishing a tenant from a paying-guest / licensee, who has weaker protection. The Delhi Rent Control Act, 1958 expressly excludes a s.52 licensee from the definition of tenant."
+    },
+    {
+      "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
+      "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
+      "short_title": "Slum Areas Act, 1956",
+      "domain": "tenancy",
+      "document_type": "statute",
+      "jurisdiction": "Delhi",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 1956,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Applies to declared slum areas in Union territories including Delhi. s.19: no suit or proceeding for eviction of a tenant from a building or land in a slum area may be instituted (or an existing decree executed) without the competent authority's prior written permission, which turns on whether alternative accommodation within the tenant's means is available; s.20 appeal to the Administrator. Preserved by DRC Act 1958 s.54. Does not apply to premises belonging to the Government, DDA or a local authority (s.21). Consolidated text incl. the 1964 amendment."
+    },
+    {
       "source_file": "constitutional_public_authority/constitution_of_india.pdf",
       "document_title": "The Constitution of India",
       "short_title": "Constitution of India",
@@ -552,7 +594,7 @@
       "year": 1993,
       "cross_domain_relevance": [],
       "retrieval_priority": "medium",
-      "notes": "Public-authority and human-rights institutional statute."
+      "notes": "Public-authority and human-rights institutional statute. Consolidated text as amended up to the Protection of Human Rights (Amendment) Act, 2019 (Act 19 of 2019)."
     },
     {
       "source_file": "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
@@ -595,6 +637,160 @@
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
       "notes": "Specialized court-authority statute."
+    },
+    {
+      "source_file": "constitutional_public_authority/right_to_education_act_2009.pdf",
+      "document_title": "The Right of Children to Free and Compulsory Education Act, 2009",
+      "short_title": "Right to Education Act, 2009",
+      "domain": "constitutional_public_authority",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2009,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Article 21A implementation: free and compulsory elementary education for children aged 6-14; decentralised grievance redressal to local authority and State Commission for Protection of Child Rights. Consolidated text as amended up to Act 1 of 2019."
+    },
+    {
+      "source_file": "constitutional_public_authority/rights_of_persons_with_disabilities_act_2016.pdf",
+      "document_title": "The Rights of Persons with Disabilities Act, 2016",
+      "short_title": "Rights of Persons with Disabilities Act, 2016",
+      "domain": "constitutional_public_authority",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2016,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Rights and entitlements of persons with disabilities against public authorities: equality and non-discrimination, accessibility duties, reservation, Grievance Redressal Officers in every Government establishment, Chief/State Commissioners, and Special Courts."
+    },
+    {
+      "source_file": "constitutional_public_authority/maintenance_and_welfare_of_parents_and_senior_citizens_act_2007.pdf",
+      "document_title": "The Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+      "short_title": "Senior Citizens Maintenance Act, 2007",
+      "domain": "constitutional_public_authority",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2007,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Citizen entitlement enforced through public Maintenance Tribunals and Appellate Tribunals: monthly maintenance from children/relatives, protection of life and property, revocation of property transfers, old-age homes. No legal practitioner permitted before the Tribunal."
+    },
+    {
+      "source_file": "constitutional_public_authority/lokpal_and_lokayuktas_act_2013.pdf",
+      "document_title": "The Lokpal and Lokayuktas Act, 2013",
+      "short_title": "Lokpal and Lokayuktas Act, 2013",
+      "domain": "constitutional_public_authority",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2013,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Anti-corruption grievance mechanism against public servants: Lokpal for the Union and Lokayukta for States, complaint procedure, preliminary inquiry and investigation, Special Courts, and penalty for false complaints. Consolidated text as amended up to Act 37 of 2016."
+    },
+    {
+      "source_file": "constitutional_public_authority/prevention_of_corruption_act_1988.pdf",
+      "document_title": "The Prevention of Corruption Act, 1988",
+      "short_title": "Prevention of Corruption Act, 1988",
+      "domain": "constitutional_public_authority",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 1988,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Core statute on bribery and criminal misconduct by public servants: offences, Special Judges, prior sanction for prosecution (s.19) and prior approval for inquiry (s.17A). Consolidated text as amended up to the Prevention of Corruption (Amendment) Act, 2018 (Act 16 of 2018)."
+    },
+    {
+      "source_file": "constitutional_public_authority/administrative_tribunals_act_1985.pdf",
+      "document_title": "The Administrative Tribunals Act, 1985",
+      "short_title": "Administrative Tribunals Act, 1985",
+      "domain": "constitutional_public_authority",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 1985,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "Article 323-A adjudication of public-service recruitment and conditions-of-service disputes by the Central Administrative Tribunal and State Administrative Tribunals: applications under s.19, exhaustion of remedies (s.20), limitation (s.21), right to a legal practitioner (s.23). Consolidated text as amended up to Act 1 of 2007."
+    },
+    {
+      "source_file": "constitutional_public_authority/commissions_for_protection_of_child_rights_act_2005.pdf",
+      "document_title": "The Commissions for Protection of Child Rights Act, 2005",
+      "short_title": "Commissions for Protection of Child Rights Act, 2005",
+      "domain": "constitutional_public_authority",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2005,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Constitutes the National Commission and State Commissions for Protection of Child Rights: functions (s.13), civil-court powers of inquiry into complaints of deprivation or violation of child rights (s.14), steps after inquiry incl. recommending prosecution and approaching the High Court/Supreme Court (s.15), and Children's Courts (s.25). This is the body the Right to Education Act, 2009 s.31-32 routes child-education grievances to. Consolidated text incl. Act 4 of 2007."
+    },
+    {
+      "source_file": "constitutional_public_authority/rti_rules_2012.pdf",
+      "document_title": "The Right to Information Rules, 2012",
+      "short_title": "RTI Rules, 2012",
+      "domain": "constitutional_public_authority",
+      "document_type": "rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2012,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "high",
+      "notes": "Central rules under s.27 of the RTI Act, 2005 (G.S.R. 603(E)), superseding the 2005 fee and appeal-procedure rules. r.3 Rs. 10 application fee (max 500 words); r.4 fee schedule for copies, inspection (first hour free, Rs. 5/hour thereafter) and postal charges; r.5 no fee for a person below the poverty line; r.6 modes of payment; r.8 second appeal to the Central Information Commission with the format of appeal in the Appendix; rr.9-15 return, process, hearing and disposal of the second appeal. Governs Central public authorities; States have their own RTI rules."
+    },
+    {
+      "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
+      "document_title": "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
+      "short_title": "NALSA (Free and Competent Legal Services) Regulations, 2010",
+      "domain": "constitutional_public_authority",
+      "document_type": "regulations",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2010,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "high",
+      "notes": "Regulations under s.29 of the Legal Services Authorities Act, 1987 governing how free legal aid is actually applied for and delivered. reg.3 application for legal services (Form-I, oral/e-mail requests accepted); reg.4 front office; reg.5 a self-certificate that the applicant falls within s.12 of the Act is ordinarily sufficient proof of entitlement; reg.7 scrutiny and a decision within seven days, with an appeal to the Executive Chairman; reg.8 empanelment, assignment and honorarium of panel and retainer lawyers; reg.10-12 Monitoring and Mentoring Committees; reg.13 financial assistance for court fees and copies. As amended up to 2019."
+    },
+    {
+      "source_file": "constitutional_public_authority/nalsa_legal_services_clinics_regulations_2011.pdf",
+      "document_title": "The National Legal Services Authority (Legal Services Clinics) Regulations, 2011",
+      "short_title": "NALSA (Legal Services Clinics) Regulations, 2011",
+      "domain": "constitutional_public_authority",
+      "document_type": "regulations",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2011,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Regulations under s.29 of the Legal Services Authorities Act, 1987 for District Legal Services Authority legal services clinics (Village Legal Care and Support Centres) as the first point of contact for legal help. reg.3 establishment in villages, jails, protection homes and other areas of barriered access; reg.4 eligibility is the s.12 criteria; reg.5-10 para-legal volunteers and deputed panel/retainer lawyers, including help drafting petitions and applications for MGNREGA job cards, identity documents and other Government-scheme benefits; reg.16-18 amicable settlement and referral to Lok Adalats. As amended in 2014."
+    },
+    {
+      "source_file": "constitutional_public_authority/nalsa_lok_adalats_regulations_2009.pdf",
+      "document_title": "The National Legal Services Authority (Lok Adalats) Regulations, 2009",
+      "short_title": "NALSA (Lok Adalats) Regulations, 2009",
+      "domain": "constitutional_public_authority",
+      "document_type": "regulations",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "official_guidance",
+      "year": 2009,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Regulations under s.29 of the Legal Services Authorities Act, 1987 on organising Lok Adalats. reg.6 composition of benches; reg.10 reference of pending cases (s.20 of the Act / s.89 CPC) and of pre-litigation matters, with non-compoundable criminal cases and contested divorce excluded; reg.13 members act as statutory conciliators only, cannot coerce a settlement, and cannot grant bail or divorce by mutual consent; reg.17 the signed settlement becomes an award (deemed a civil-court decree, final, no appeal) and any court fee paid is refunded; reg.18 confidentiality. As amended up to 2019."
     }
   ],
   "archived_documents": [

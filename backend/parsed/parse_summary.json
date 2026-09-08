@@ -3,33 +3,49 @@
     "amendment_rules": 19,
     "constitution": 1371,
     "guidelines": 86,
-    "procedural_user_guide": 279,
-    "regulations": 39,
-    "rules": 548,
-    "statute": 790,
+    "procedural_user_guide": 187,
+    "regulations": 113,
+    "rules": 572,
+    "statute": 1282,
     "supporting_criminal_law": 665,
     "supporting_document_registration_law": 103,
-    "supporting_property_law": 174
+    "supporting_property_law": 296
   },
   "chunks_by_domain": {
-    "constitutional_public_authority": 1572,
+    "constitutional_public_authority": 2112,
     "consumer": 676,
-    "cyber": 1396,
-    "tenancy": 430
+    "cyber": 1304,
+    "tenancy": 602
   },
   "chunks_by_structure_type": {
-    "annexure": 49,
+    "annexure": 44,
     "article": 1321,
-    "fallback": 66,
+    "fallback": 156,
     "guideline": 75,
-    "manual_section": 229,
+    "manual_section": 78,
     "preamble": 1,
-    "regulation": 26,
-    "rule": 489,
-    "schedule": 122,
-    "section": 1696
+    "regulation": 97,
+    "rule": 512,
+    "schedule": 127,
+    "section": 2283
   },
   "documents": [
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 4,
+      "source_file": "constitutional_public_authority/administrative_tribunals_act_1985.pdf",
+      "structure_aware_chunks": 55,
+      "total_chunks": 59
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/commissions_for_protection_of_child_rights_act_2005.pdf",
+      "structure_aware_chunks": 38,
+      "total_chunks": 39
+    },
     {
       "document_type": "constitution",
       "domain": "constitutional_public_authority",
@@ -58,9 +74,65 @@
       "document_type": "statute",
       "domain": "constitutional_public_authority",
       "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/lokpal_and_lokayuktas_act_2013.pdf",
+      "structure_aware_chunks": 82,
+      "total_chunks": 83
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/maintenance_and_welfare_of_parents_and_senior_citizens_act_2007.pdf",
+      "structure_aware_chunks": 34,
+      "total_chunks": 35
+    },
+    {
+      "document_type": "regulations",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
+      "structure_aware_chunks": 29,
+      "total_chunks": 30
+    },
+    {
+      "document_type": "regulations",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/nalsa_legal_services_clinics_regulations_2011.pdf",
+      "structure_aware_chunks": 15,
+      "total_chunks": 16
+    },
+    {
+      "document_type": "regulations",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/nalsa_lok_adalats_regulations_2009.pdf",
+      "structure_aware_chunks": 27,
+      "total_chunks": 28
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 2,
+      "source_file": "constitutional_public_authority/prevention_of_corruption_act_1988.pdf",
+      "structure_aware_chunks": 41,
+      "total_chunks": 43
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 5,
       "source_file": "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
-      "structure_aware_chunks": 45,
-      "total_chunks": 46
+      "structure_aware_chunks": 46,
+      "total_chunks": 51
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 3,
+      "source_file": "constitutional_public_authority/right_to_education_act_2009.pdf",
+      "structure_aware_chunks": 49,
+      "total_chunks": 52
     },
     {
       "document_type": "statute",
@@ -69,6 +141,22 @@
       "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
       "structure_aware_chunks": 77,
       "total_chunks": 78
+    },
+    {
+      "document_type": "statute",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 3,
+      "source_file": "constitutional_public_authority/rights_of_persons_with_disabilities_act_2016.pdf",
+      "structure_aware_chunks": 123,
+      "total_chunks": 126
+    },
+    {
+      "document_type": "rules",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 1,
+      "source_file": "constitutional_public_authority/rti_rules_2012.pdf",
+      "structure_aware_chunks": 23,
+      "total_chunks": 24
     },
     {
       "document_type": "statute",
@@ -217,10 +305,10 @@
     {
       "document_type": "procedural_user_guide",
       "domain": "cyber",
-      "fallback_chunks": 2,
+      "fallback_chunks": 55,
       "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "structure_aware_chunks": 137,
-      "total_chunks": 139
+      "structure_aware_chunks": 4,
+      "total_chunks": 59
     },
     {
       "document_type": "statute",
@@ -289,10 +377,10 @@
     {
       "document_type": "procedural_user_guide",
       "domain": "cyber",
-      "fallback_chunks": 3,
+      "fallback_chunks": 14,
       "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
-      "structure_aware_chunks": 29,
-      "total_chunks": 32
+      "structure_aware_chunks": 6,
+      "total_chunks": 20
     },
     {
       "document_type": "procedural_user_guide",
@@ -323,8 +411,8 @@
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
-      "structure_aware_chunks": 95,
-      "total_chunks": 96
+      "structure_aware_chunks": 92,
+      "total_chunks": 93
     },
     {
       "document_type": "rules",
@@ -335,12 +423,36 @@
       "total_chunks": 57
     },
     {
+      "document_type": "supporting_property_law",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/indian_easements_act_1882.pdf",
+      "structure_aware_chunks": 72,
+      "total_chunks": 73
+    },
+    {
       "document_type": "supporting_document_registration_law",
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/registration_act_1908.pdf",
       "structure_aware_chunks": 102,
       "total_chunks": 103
+    },
+    {
+      "document_type": "statute",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
+      "structure_aware_chunks": 52,
+      "total_chunks": 53
+    },
+    {
+      "document_type": "supporting_property_law",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/specific_relief_act_1963.pdf",
+      "structure_aware_chunks": 48,
+      "total_chunks": 49
     },
     {
       "document_type": "supporting_property_law",
@@ -351,15 +463,15 @@
       "total_chunks": 174
     }
   ],
-  "documents_parsed": 40,
+  "documents_parsed": 54,
   "documents_skipped": [
     {
       "reason": "manual_verification_required",
       "source_file": "tenancy/delhi_rent_act_1995.pdf"
     }
   ],
-  "fallback_chunks": 66,
-  "structure_aware_chunks": 4008,
-  "structure_aware_percentage": 98.38,
-  "total_chunks": 4074
+  "fallback_chunks": 156,
+  "structure_aware_chunks": 4538,
+  "structure_aware_percentage": 96.68,
+  "total_chunks": 4694
 }
