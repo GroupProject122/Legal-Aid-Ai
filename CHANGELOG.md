@@ -3,13 +3,85 @@
 Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives in
 [`frontend/CHANGELOG.md`](frontend/CHANGELOG.md).
 
-> **Known corpus gaps (consumer)** — two CCPA instruments are **not** in the corpus. The only
-> official PDFs published for them are scanned images (no extractable text) and no OCR was run:
-> - **Guidelines for Prevention and Regulation of Greenwashing or Misleading Environmental Claims, 2024**
-> - **Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024**
+> **Known corpus caveat (consumer)** — two CCPA instruments have no official machine-readable
+> source (only scanned-image PDFs exist and no OCR was run), so they are in the corpus as
+> **compiled summaries**, not verbatim law:
+> - `consumer/greenwashing_guidelines_2024_summary.pdf` — Guidelines for Prevention and Regulation
+>   of Greenwashing or Misleading Environmental Claims, 2024
+> - `consumer/coaching_sector_ads_guidelines_2024_summary.pdf` — Guidelines for Prevention of
+>   Misleading Advertisement in Coaching Sector, 2024
 >
-> Both are P2 / low priority. Add later via OCR, or if a text-native version is published.
-> Also pending: **e-Jagriti** filing user manual (the e-Daakhil portal it replaced was retired 1 Jan 2025).
+> Each is compiled from the CCPA's official notification announcement + PIB press releases, with
+> a `COMPILED SUMMARY — NOT THE OFFICIAL VERBATIM TEXT` disclaimer as the first line of the
+> document itself, and `authority_level: "secondary_summary"` / `status:
+> "compiled_summary_pending_official_text"` in the manifest so retrieval and citation code can
+> tell them apart from primary sources. Replace with the official Gazette text (or an OCR'd scan)
+> if either becomes available.
+>
+> **Skipped, deliberately:** e-Jagriti filing user manual. Unlike the two guidelines above, a
+> "how to file" walkthrough is step-by-step UI instruction on a portal that only launched
+> 1 Jan 2025 and is still actively changing — a compiled secondary-source summary risks being
+> wrong about live steps, which actively misleads a user filing a real case. Left out rather than
+> risk that.
+
+## Unreleased — corpus completion round (Stamp Act, 2022 IT amendment, CCPA summaries)
+
+Closes the remaining gaps identified after the teammate pull (`91dba0d`/`19ca62d`) that added
+constitutional/public-authority and tenancy statutes.
+
+**Added:**
+
+| File | Domain | Type | Why |
+|---|---|---|---:|
+| `tenancy/indian_stamp_act_1899.pdf` | tenancy | statute | Schedule I Article 35 (Lease) — stamp duty on rent/lease agreements. Delhi has no separate Stamp Act; the central Act applies. Distinct from the archived Uttarakhand-specific copy. 178 chunks, 99% structure-aware. |
+| `cyber/it_intermediary_amendment_rules_2022.pdf` | cyber | amendment_rules | G.S.R. 794(E), 28 Oct 2022 — Grievance Appellate Committees, updated terms-of-use/privacy-policy duties. Fills the gap between the 2021 base rules and the 2023 amendment already in the corpus. 6 chunks. |
+| `consumer/greenwashing_guidelines_2024_summary.pdf` | consumer | guidelines (compiled summary — see caveat above) | 9 chunks |
+| `consumer/coaching_sector_ads_guidelines_2024_summary.pdf` | consumer | guidelines (compiled summary — see caveat above) | 10 chunks |
+
+`missing_expected_documents`: the 2022 Intermediary Amendment entry removed (resolved). Model
+Tenancy Act, 2021 stays flagged — not operative in Delhi, so treated as optional context rather
+than a real gap.
+
+**Re-parse + re-embed + audit:**
+
+| | Before this round | After |
+|---|---:|---:|
+| Documents | 56 (post teammate pull) | 58 |
+| Total chunks | 4,694 | 4,989 |
+| Audit | PASS, HIGH=0 | PASS, HIGH=0, MEDIUM=92, LOW=3 |
+
+Retrieval-tested: Stamp Act's Lease article ranks top-3 for on-topic stamp-duty queries; the 2022
+amendment ranks #2 for a Grievance Appellate Committee query; both CCPA summaries rank #1 for
+on-topic queries (greenwashing claim, coaching-institute refund/rank dispute).
+
+## Unreleased — consumer case law staged
+
+Adds 4 Supreme Court judgments to `backend/documents/consumer/case_law/`, tracked in the
+manifest's `pending_case_law` array (now 10 entries: 6 cyber + 4 consumer). **Not in the active
+retrieval index** — same reason as the 6 cyber judgments: `ingest.py` has no judgment parser
+(`case_law` is not a supported `document_type`), and `pending_case_law` entries are never read by
+`ingest.py`'s document discovery (confirmed: it only iterates the `documents` array). No
+re-parse/re-embed needed for this change.
+
+| File | Case | Citation | Holds |
+|---|---|---|---|
+| `case1_indian_medical_association_v_vp_shantha_1995.pdf` | Indian Medical Association v. V.P. Shantha | (1995) 6 SCC 651 | Medical services for consideration are "service" under the Act — negligence complaints are maintainable before consumer fora |
+| `case2_lucknow_development_authority_v_mk_gupta_1994.pdf` | Lucknow Development Authority v. M.K. Gupta | (1994) 1 SCC 243 | Statutory/development authorities are service providers; possession delay attracts compensation for harassment, not just refund |
+| `case3_experion_developers_v_sushma_ashok_shiroor_2022.pdf` | Experion Developers Pvt. Ltd. v. Sushma Ashok Shiroor | Civil Appeal No. 6044 of 2019 (7 Apr 2022) | CPA and RERA remedies are concurrent; builder must refund with interest for delayed possession |
+| `case4_rohit_chaudhary_v_vipul_ltd_2023.pdf` | Rohit Chaudhary v. M/S Vipul Ltd. | 2023 INSC 807 | Clarifies the "commercial purpose" exclusion (s.2(7)) — self-employment/livelihood purchases aren't automatically excluded; fact-specific test |
+
+All 4 verified against Indian Kanoon before download (case name, court, date, citation match).
+Staging copies in `datasetcybernconsumer/consumer/` kept as-is.
+
+**Deliberately not collected:** curated NCDRC orders (e-commerce non-delivery, airline
+cancellation, banking deficiency). Reasoning: NCDRC orders are fact-specific applications, not
+precedent-setting like the SC cases above; no canonical shortlist exists so any selection would be
+arbitrary; and citing a specific lower-forum order risks a user reading it as "my case must match
+this one" rather than the general rule. The 4 SC cases already cover the load-bearing principles.
+
+**Next step for case law (all domains):** none of the 10 staged judgments (6 cyber + 4 consumer)
+are retrievable yet — needs the judgment parser built and validated first. Tenancy and
+constitutional/public-authority have no case-law PDFs collected at all yet.
 
 ## Unreleased — consumer corpus expansion
 

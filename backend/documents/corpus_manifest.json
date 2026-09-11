@@ -241,6 +241,34 @@
       "notes": "Cost-free remedy for deficiency in banking, NBFC and digital-payment services (subsumes the earlier Banking / NBFC / Digital Transactions ombudsman schemes). Grounds unauthorised-transaction and payment-service complaints; document_type set to guidelines because ingest.py has no scheme parser."
     },
     {
+      "source_file": "consumer/greenwashing_guidelines_2024_summary.pdf",
+      "document_title": "Guidelines for Prevention and Regulation of Greenwashing or Misleading Environmental Claims, 2024 (compiled summary)",
+      "short_title": "Greenwashing Guidelines, 2024 (summary)",
+      "domain": "consumer",
+      "document_type": "guidelines",
+      "jurisdiction": "India",
+      "status": "compiled_summary_pending_official_text",
+      "authority_level": "secondary_summary",
+      "year": 2024,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "NOT the verbatim official text. The CCPA's only published PDF for this instrument is a scanned image with no extractable text and no OCR was performed. This entry is a summary compiled from the CCPA's notification announcement, PIB releases (PRID 2064963, PRID 2007403), and corroborating legal commentary, with an explicit 'COMPILED SUMMARY' disclaimer as the first line of the document itself. Replace with the official Gazette text (or an OCR'd version of the scan) if either becomes available. Do not cite this as primary law without flagging its secondary/summary status; grounded-answer generation should attribute claims from this document to 'a compiled summary of the CCPA guidelines', not to the guidelines' own wording."
+    },
+    {
+      "source_file": "consumer/coaching_sector_ads_guidelines_2024_summary.pdf",
+      "document_title": "Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024 (compiled summary)",
+      "short_title": "Coaching Sector Ads Guidelines, 2024 (summary)",
+      "domain": "consumer",
+      "document_type": "guidelines",
+      "jurisdiction": "India",
+      "status": "compiled_summary_pending_official_text",
+      "authority_level": "secondary_summary",
+      "year": 2024,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "notes": "NOT the verbatim official text. The only file obtained for this instrument was a 76-page scanned 'CCPA Coaching E-Book' with no extractable text (and likely a handbook, not the notification itself). This entry is a summary compiled from the CCPA's notification announcement, PIB releases (PRID 2073013, PRID 2122361), and corroborating legal commentary, with an explicit 'COMPILED SUMMARY' disclaimer as the first line of the document itself. Replace with the official Gazette text if it becomes available. Do not cite this as primary law without flagging its secondary/summary status; grounded-answer generation should attribute claims from this document to 'a compiled summary of the CCPA guidelines', not to the guidelines' own wording."
+    },
+    {
       "source_file": "cyber/information_technology_act_2000.pdf",
       "document_title": "The Information Technology Act, 2000",
       "short_title": "Information Technology Act, 2000",
@@ -457,6 +485,20 @@
       "notes": "Department of Telecommunications portal guide: block a lost or stolen phone (CEIR), check SIMs registered in your name (TAFCOP), report fraud communications (Chakshu)."
     },
     {
+      "source_file": "cyber/it_intermediary_amendment_rules_2022.pdf",
+      "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2022",
+      "short_title": "IT Intermediary Amendment Rules, 2022",
+      "domain": "cyber",
+      "document_type": "amendment_rules",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 2022,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "G.S.R. 794(E), 28 Oct 2022. Introduces Grievance Appellate Committees (appeal against an intermediary's Grievance Officer within 30 days) and updated terms-of-use/privacy-policy duties. Sits between the base 2021 rules and the 2023 amendment already in the corpus."
+    },
+    {
       "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
       "document_title": "The Delhi Rent Control Act, 1958",
       "short_title": "Delhi Rent Control Act, 1958",
@@ -567,6 +609,20 @@
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
       "notes": "Applies to declared slum areas in Union territories including Delhi. s.19: no suit or proceeding for eviction of a tenant from a building or land in a slum area may be instituted (or an existing decree executed) without the competent authority's prior written permission, which turns on whether alternative accommodation within the tenant's means is available; s.20 appeal to the Administrator. Preserved by DRC Act 1958 s.54. Does not apply to premises belonging to the Government, DDA or a local authority (s.21). Consolidated text incl. the 1964 amendment."
+    },
+    {
+      "source_file": "tenancy/indian_stamp_act_1899.pdf",
+      "document_title": "The Indian Stamp Act, 1899 (as amended)",
+      "short_title": "Indian Stamp Act, 1899",
+      "domain": "tenancy",
+      "document_type": "statute",
+      "jurisdiction": "India",
+      "status": "active",
+      "authority_level": "primary",
+      "year": 1899,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "medium",
+      "notes": "Stamp duty framework, including Schedule I Article 35 (Lease) — the basis for stamp duty on rent/lease agreements. Central Act applicable in Delhi (no separate Delhi Stamp Act). Distinct from the archived Uttarakhand-specific copy in archive/."
     },
     {
       "source_file": "constitutional_public_authority/constitution_of_india.pdf",
@@ -829,12 +885,6 @@
       "domain": "tenancy",
       "expected_filename": "model_tenancy_act_2021.pdf",
       "notes": "Not present in the current corpus."
-    },
-    {
-      "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2022",
-      "domain": "cyber",
-      "expected_filename": "it_intermediary_amendment_rules_2022.pdf",
-      "notes": "Only the 2023 amendment is present. The 2022 amendment (grievance appellate committees) is not."
     }
   ],
   "pending_case_law_note": "Case-law PDFs are staged under backend/documents/cyber/case_law/ and are NOT part of the active retrieval index. They are excluded from ingest.py because judgments need a dedicated judgment parser (headnote / holding / ratio) and good-law metadata. Move them into 'documents' only after that parser exists.",
@@ -910,6 +960,54 @@
       "good_law": true,
       "retrieval_priority": "low",
       "notes": "The IT Act is a special law and displaces general IPC/BNS provisions for obscene content in electronic form (s.67 / s.79 context)."
+    },
+    {
+      "source_file": "consumer/case_law/case1_indian_medical_association_v_vp_shantha_1995.pdf",
+      "case_name": "Indian Medical Association v. V.P. Shantha",
+      "citation": "(1995) 6 SCC 651",
+      "court": "Supreme Court of India",
+      "date": "1995-11-13",
+      "domain": "consumer",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Held that medical services rendered for consideration fall within 'service' under the Consumer Protection Act; medical negligence complaints are maintainable before consumer fora. Foundational for whether a professional/medical service dispute belongs in the consumer forum."
+    },
+    {
+      "source_file": "consumer/case_law/case2_lucknow_development_authority_v_mk_gupta_1994.pdf",
+      "case_name": "Lucknow Development Authority v. M.K. Gupta",
+      "citation": "(1994) 1 SCC 243",
+      "court": "Supreme Court of India",
+      "date": "1993-11-05",
+      "domain": "consumer",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Statutory/development authorities are 'service providers' under the Act; deficiency in housing/possession delay attracts compensation for harassment and mental agony, not merely a refund. Basis for compensation-beyond-refund reasoning in delayed-possession disputes."
+    },
+    {
+      "source_file": "consumer/case_law/case3_experion_developers_v_sushma_ashok_shiroor_2022.pdf",
+      "case_name": "Experion Developers Pvt. Ltd. v. Sushma Ashok Shiroor",
+      "citation": "Civil Appeal No. 6044 of 2019, decided 7 April 2022",
+      "court": "Supreme Court of India",
+      "date": "2022-04-07",
+      "domain": "consumer",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Consumer Protection Act and RERA remedies are concurrent, not mutually exclusive — a homebuyer is not confined to RERA. Builder must refund the full amount paid, with interest, for possession delayed beyond the agreed timeline. Key precedent for builder-delay refund disputes."
+    },
+    {
+      "source_file": "consumer/case_law/case4_rohit_chaudhary_v_vipul_ltd_2023.pdf",
+      "case_name": "Rohit Chaudhary v. M/S Vipul Ltd.",
+      "citation": "2023 INSC 807",
+      "court": "Supreme Court of India",
+      "date": "2023-09-06",
+      "domain": "consumer",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "medium",
+      "notes": "Clarifies the 'commercial purpose' exclusion under s.2(7) of the Consumer Protection Act, 2019 (s.2(1)(d) of the 1986 Act): a purchase made for self-employment/livelihood is not automatically excluded as 'commercial purpose'. Fact-specific test, not a rigid formula — relevant whenever a complainant's consumer status is disputed because the goods/services were bought for business use."
     }
   ]
 }

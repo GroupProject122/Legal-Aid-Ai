@@ -1,33 +1,33 @@
 {
   "chunks_by_document_type": {
-    "amendment_rules": 19,
+    "amendment_rules": 25,
     "constitution": 1371,
-    "guidelines": 86,
-    "procedural_user_guide": 187,
+    "guidelines": 105,
+    "procedural_user_guide": 279,
     "regulations": 113,
     "rules": 572,
-    "statute": 1282,
+    "statute": 1460,
     "supporting_criminal_law": 665,
     "supporting_document_registration_law": 103,
     "supporting_property_law": 296
   },
   "chunks_by_domain": {
     "constitutional_public_authority": 2112,
-    "consumer": 676,
-    "cyber": 1304,
-    "tenancy": 602
+    "consumer": 695,
+    "cyber": 1402,
+    "tenancy": 780
   },
   "chunks_by_structure_type": {
-    "annexure": 44,
+    "annexure": 49,
     "article": 1321,
-    "fallback": 156,
-    "guideline": 75,
-    "manual_section": 78,
+    "fallback": 96,
+    "guideline": 92,
+    "manual_section": 229,
     "preamble": 1,
     "regulation": 97,
-    "rule": 512,
-    "schedule": 127,
-    "section": 2283
+    "rule": 517,
+    "schedule": 129,
+    "section": 2458
   },
   "documents": [
     {
@@ -175,6 +175,14 @@
       "total_chunks": 35
     },
     {
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/coaching_sector_ads_guidelines_2024_summary.pdf",
+      "structure_aware_chunks": 9,
+      "total_chunks": 10
+    },
+    {
       "document_type": "regulations",
       "domain": "consumer",
       "fallback_chunks": 13,
@@ -221,6 +229,14 @@
       "source_file": "consumer/ecommerce_rules_2020.pdf",
       "structure_aware_chunks": 14,
       "total_chunks": 15
+    },
+    {
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/greenwashing_guidelines_2024_summary.pdf",
+      "structure_aware_chunks": 8,
+      "total_chunks": 9
     },
     {
       "document_type": "rules",
@@ -305,10 +321,10 @@
     {
       "document_type": "procedural_user_guide",
       "domain": "cyber",
-      "fallback_chunks": 55,
+      "fallback_chunks": 2,
       "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "structure_aware_chunks": 4,
-      "total_chunks": 59
+      "structure_aware_chunks": 137,
+      "total_chunks": 139
     },
     {
       "document_type": "statute",
@@ -354,6 +370,14 @@
       "document_type": "amendment_rules",
       "domain": "cyber",
       "fallback_chunks": 1,
+      "source_file": "cyber/it_intermediary_amendment_rules_2022.pdf",
+      "structure_aware_chunks": 5,
+      "total_chunks": 6
+    },
+    {
+      "document_type": "amendment_rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
       "source_file": "cyber/it_intermediary_amendment_rules_2023.pdf",
       "structure_aware_chunks": 16,
       "total_chunks": 17
@@ -377,10 +401,10 @@
     {
       "document_type": "procedural_user_guide",
       "domain": "cyber",
-      "fallback_chunks": 14,
+      "fallback_chunks": 3,
       "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
-      "structure_aware_chunks": 6,
-      "total_chunks": 20
+      "structure_aware_chunks": 29,
+      "total_chunks": 32
     },
     {
       "document_type": "procedural_user_guide",
@@ -431,6 +455,14 @@
       "total_chunks": 73
     },
     {
+      "document_type": "statute",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/indian_stamp_act_1899.pdf",
+      "structure_aware_chunks": 177,
+      "total_chunks": 178
+    },
+    {
       "document_type": "supporting_document_registration_law",
       "domain": "tenancy",
       "fallback_chunks": 1,
@@ -463,15 +495,15 @@
       "total_chunks": 174
     }
   ],
-  "documents_parsed": 54,
+  "documents_parsed": 58,
   "documents_skipped": [
     {
       "reason": "manual_verification_required",
       "source_file": "tenancy/delhi_rent_act_1995.pdf"
     }
   ],
-  "fallback_chunks": 156,
-  "structure_aware_chunks": 4538,
-  "structure_aware_percentage": 96.68,
-  "total_chunks": 4694
+  "fallback_chunks": 96,
+  "structure_aware_chunks": 4893,
+  "structure_aware_percentage": 98.08,
+  "total_chunks": 4989
 }

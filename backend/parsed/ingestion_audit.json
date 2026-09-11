@@ -4,17 +4,30 @@
     "severity_counts": {
       "HIGH": 0,
       "LOW": 3,
-      "MEDIUM": 144
+      "MEDIUM": 92
     },
     "status": "PASS WITH WARNINGS",
-    "total_chunks_checked": 4694,
-    "unique_chunk_ids": 4694
+    "total_chunks_checked": 4989,
+    "unique_chunk_ids": 4989
   },
   "child_chunk_issues": [],
   "duplicate_findings": {
-    "exact_duplicate_group_count": 0,
-    "exact_duplicate_groups": [],
-    "near_duplicate_group_count": 7,
+    "exact_duplicate_group_count": 1,
+    "exact_duplicate_groups": [
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0120",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0030"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.4 — How to save email in PDF 8.4 How to save email in PDF",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      }
+    ],
+    "near_duplicate_group_count": 13,
     "near_duplicate_groups": [
       {
         "chunk_ids": [
@@ -63,35 +76,110 @@
       },
       {
         "chunk_ids": [
-          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0026",
-          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0041"
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0109",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0019"
         ],
         "count": 2,
-        "snippet": "ml format or take the screenshot/s of the received e-mail and the same needs to be uploaded on the portal as evidence b. If the received e-mails had an attachme",
+        "snippet": "Manual Section 1.1 — Android screenshot 1.1 Android screenshot Following are the steps to take screenshot from your android smartphone: I. Navigate to the scree",
         "source_files": [
-          "cyber/cybercrime_portal_citizen_manual_latest.pdf"
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
         ]
       },
       {
         "chunk_ids": [
-          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0031",
-          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0046"
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0110",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0020"
         ],
         "count": 2,
-        "snippet": "about the incident (which you think can be included in the complaint and could help in investigation). (Mandatory) xix. Click on Save and Next to proceed To pro",
+        "snippet": "Manual Section 2.1 — From desktop or laptop View 2.1 From desktop or laptop View I. Click on the image/video/post whose URL you want to view. II. The full URL w",
         "source_files": [
-          "cyber/cybercrime_portal_citizen_manual_latest.pdf"
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
         ]
       },
       {
         "chunk_ids": [
-          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0040",
-          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0042"
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0112",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0022"
         ],
         "count": 2,
-        "snippet": "er (Mandatory) viii. Upload evidence (Maximum allowable limit is 5 MB) as applicable. (Refer to 5.4.2.1) (Mandatory) ix. Provide any additional information abou",
+        "snippet": "Manual Section 3.1 — From desktop or laptop view 3.1 From desktop or laptop view I. Click on the video whose URL you want to view. II. The full URL will be seen",
         "source_files": [
-          "cyber/cybercrime_portal_citizen_manual_latest.pdf"
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0113",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0023"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 3.2 — From mobile view 3.2 From mobile view I. Open the YouTube app on mobile II. Look or search for the video you want to copy III. Find the tri",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0115",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0025"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 6.2 — Export Chat from Android 6.2 Export Chat from Android To export a copy of the history of an individual chat or group, use the Export chat f",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0116",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0026"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 6.3 — Export chat from iPhone 6.3 Export chat from iPhone You can email yourself a chat history if you'd like to save a chat: I. Open the WhatsAp",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0118",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0028"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.2 — NIC mail Header 8.2 NIC mail Header Following are the steps to copy email header of NIC mails I. Open the NIC email within your web browser",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0119",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0029"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.3 — ProtonMail email Header 8.3 ProtonMail email Header Following are the steps to export ProtonMail email headers in (.eml) format I. Open the",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "cyber_cybercrime_portal_citizen_manual_latest__chunk_0122",
+          "cyber_national_cybercrime_reporting_portal_user_manual_2019__chunk_0032"
+        ],
+        "count": 2,
+        "snippet": "Manual Section 8.4.2 — Using the Mail App on a Mac 8.4.2 Using the Mail App on a Mac I. Open the Mail app. It’s the icon of a stamp with an eagle inside. You’ll",
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
         ]
       }
     ]
@@ -107,26 +195,6 @@
         "structure_aware_chunks": 0,
         "structure_aware_percentage": 0.0,
         "total_chunks": 6
-      },
-      {
-        "document_type": "procedural_user_guide",
-        "domain": "cyber",
-        "fallback_chunks": 55,
-        "fallback_percentage": 93.22,
-        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-        "structure_aware_chunks": 4,
-        "structure_aware_percentage": 6.78,
-        "total_chunks": 59
-      },
-      {
-        "document_type": "procedural_user_guide",
-        "domain": "cyber",
-        "fallback_chunks": 14,
-        "fallback_percentage": 70.0,
-        "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
-        "structure_aware_chunks": 6,
-        "structure_aware_percentage": 30.0,
-        "total_chunks": 20
       },
       {
         "document_type": "amendment_rules",
@@ -169,6 +237,16 @@
         "total_chunks": 6
       },
       {
+        "document_type": "amendment_rules",
+        "domain": "cyber",
+        "fallback_chunks": 1,
+        "fallback_percentage": 16.67,
+        "source_file": "cyber/it_intermediary_amendment_rules_2022.pdf",
+        "structure_aware_chunks": 5,
+        "structure_aware_percentage": 83.33,
+        "total_chunks": 6
+      },
+      {
         "document_type": "rules",
         "domain": "consumer",
         "fallback_chunks": 1,
@@ -179,6 +257,26 @@
         "total_chunks": 8
       },
       {
+        "document_type": "guidelines",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 11.11,
+        "source_file": "consumer/greenwashing_guidelines_2024_summary.pdf",
+        "structure_aware_chunks": 8,
+        "structure_aware_percentage": 88.89,
+        "total_chunks": 9
+      },
+      {
+        "document_type": "guidelines",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 10.0,
+        "source_file": "consumer/coaching_sector_ads_guidelines_2024_summary.pdf",
+        "structure_aware_chunks": 9,
+        "structure_aware_percentage": 90.0,
+        "total_chunks": 10
+      },
+      {
         "document_type": "statute",
         "domain": "constitutional_public_authority",
         "fallback_chunks": 5,
@@ -187,6 +285,16 @@
         "structure_aware_chunks": 46,
         "structure_aware_percentage": 90.2,
         "total_chunks": 51
+      },
+      {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 3,
+        "fallback_percentage": 9.38,
+        "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
+        "structure_aware_chunks": 29,
+        "structure_aware_percentage": 90.62,
+        "total_chunks": 32
       },
       {
         "document_type": "rules",
@@ -519,6 +627,16 @@
         "total_chunks": 67
       },
       {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 2,
+        "fallback_percentage": 1.44,
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_aware_chunks": 137,
+        "structure_aware_percentage": 98.56,
+        "total_chunks": 139
+      },
+      {
         "document_type": "supporting_property_law",
         "domain": "tenancy",
         "fallback_chunks": 1,
@@ -619,6 +737,16 @@
         "total_chunks": 174
       },
       {
+        "document_type": "statute",
+        "domain": "tenancy",
+        "fallback_chunks": 1,
+        "fallback_percentage": 0.56,
+        "source_file": "tenancy/indian_stamp_act_1899.pdf",
+        "structure_aware_chunks": 177,
+        "structure_aware_percentage": 99.44,
+        "total_chunks": 178
+      },
+      {
         "document_type": "supporting_criminal_law",
         "domain": "cyber",
         "fallback_chunks": 1,
@@ -639,7 +767,7 @@
         "total_chunks": 1371
       }
     ],
-    "total_fallback_chunks": 156
+    "total_fallback_chunks": 96
   },
   "header_footer_noise": {
     "patterns": [
@@ -698,6 +826,25 @@
         "text": "4 Inserted vide notification dated 22/10/2018, published in the Gazette of India on 25/10/2018."
       },
       {
+        "count": 3,
+        "source_file_count": 2,
+        "source_files": [
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
+        ],
+        "text": "MINISTRY OF HOME AFFAIRS"
+      },
+      {
+        "count": 3,
+        "source_file_count": 3,
+        "source_files": [
+          "cyber/it_blocking_rules_2009.pdf",
+          "cyber/it_intermediary_amendment_rules_2022.pdf",
+          "cyber/it_intermediary_amendment_rules_2023.pdf"
+        ],
+        "text": "publication in the Official Gazette."
+      },
+      {
         "count": 2,
         "source_file_count": 2,
         "source_files": [
@@ -719,6 +866,24 @@
         "count": 2,
         "source_file_count": 2,
         "source_files": [
+          "constitutional_public_authority/prevention_of_corruption_act_1988.pdf",
+          "tenancy/indian_stamp_act_1899.pdf"
+        ],
+        "text": "(1)The Central Government may, by notification in the Official Gazette, make rules for carrying out"
+      },
+      {
+        "count": 2,
+        "source_file_count": 2,
+        "source_files": [
+          "consumer/coaching_sector_ads_guidelines_2024_summary.pdf",
+          "consumer/greenwashing_guidelines_2024_summary.pdf"
+        ],
+        "text": "replace, the Gazette notification. For binding wording, consult the official Gazette of India"
+      },
+      {
+        "count": 2,
+        "source_file_count": 2,
+        "source_files": [
           "consumer/dark_patterns_guidelines_2023.pdf",
           "consumer/misleading_ads_guidelines_2022.pdf"
         ],
@@ -731,573 +896,22 @@
           "cyber/cybercrime_portal_citizen_manual_latest.pdf",
           "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
         ],
-        "text": "INDIAN CYBERCRIME COORDINATION CENTRE (I4C) MINISTRY OF HOME AFFAIRS"
+        "text": "Ministry of Home Affairs"
       },
       {
         "count": 2,
         "source_file_count": 2,
         "source_files": [
-          "cyber/it_blocking_rules_2009.pdf",
-          "cyber/it_intermediary_amendment_rules_2023.pdf"
+          "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+          "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"
         ],
-        "text": "publication in the Official Gazette."
+        "text": "Owner Ministry of Home Affairs, Government of India"
       }
     ],
-    "suspicious_pattern_count": 10
+    "suspicious_pattern_count": 14
   },
   "manifest_inconsistencies": [],
-  "page_range_issues": [
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0001",
-      "line_number": 3464,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0002",
-      "line_number": 3465,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0003",
-      "line_number": 3466,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0004",
-      "line_number": 3467,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0005",
-      "line_number": 3468,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0006",
-      "line_number": 3469,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0007",
-      "line_number": 3470,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0008",
-      "line_number": 3471,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0009",
-      "line_number": 3472,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0010",
-      "line_number": 3473,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0011",
-      "line_number": 3474,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0012",
-      "line_number": 3475,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0013",
-      "line_number": 3476,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0014",
-      "line_number": 3477,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0015",
-      "line_number": 3478,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0016",
-      "line_number": 3479,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0017",
-      "line_number": 3480,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0018",
-      "line_number": 3481,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0019",
-      "line_number": 3482,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0020",
-      "line_number": 3483,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0021",
-      "line_number": 3484,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0022",
-      "line_number": 3485,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0023",
-      "line_number": 3486,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0024",
-      "line_number": 3487,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0025",
-      "line_number": 3488,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0026",
-      "line_number": 3489,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0027",
-      "line_number": 3490,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0028",
-      "line_number": 3491,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0029",
-      "line_number": 3492,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0030",
-      "line_number": 3493,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0031",
-      "line_number": 3494,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0032",
-      "line_number": 3495,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0033",
-      "line_number": 3496,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0034",
-      "line_number": 3497,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0035",
-      "line_number": 3498,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0036",
-      "line_number": 3499,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0037",
-      "line_number": 3500,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0038",
-      "line_number": 3501,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0039",
-      "line_number": 3502,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0040",
-      "line_number": 3503,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0041",
-      "line_number": 3504,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0042",
-      "line_number": 3505,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0043",
-      "line_number": 3506,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0044",
-      "line_number": 3507,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0045",
-      "line_number": 3508,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0046",
-      "line_number": 3509,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0047",
-      "line_number": 3510,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0048",
-      "line_number": 3511,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0049",
-      "line_number": 3512,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0050",
-      "line_number": 3513,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0051",
-      "line_number": 3514,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0052",
-      "line_number": 3515,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0053",
-      "line_number": 3516,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0054",
-      "line_number": 3517,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    },
-    {
-      "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0055",
-      "line_number": 3518,
-      "message": "Chunk spans more than 50 pages",
-      "page_end": 76,
-      "page_start": 1,
-      "severity": "MEDIUM",
-      "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "type": "large_page_range"
-    }
-  ],
+  "page_range_issues": [],
   "per_document_quality_metrics": [
     {
       "counts_by_structure_type": {
@@ -1542,6 +1156,19 @@
     },
     {
       "counts_by_structure_type": {
+        "fallback": 1,
+        "guideline": 9
+      },
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/coaching_sector_ads_guidelines_2024_summary.pdf",
+      "structure_aware_chunks": 9,
+      "structure_aware_percentage": 90.0,
+      "total_chunks": 10
+    },
+    {
+      "counts_by_structure_type": {
         "fallback": 13,
         "regulation": 26
       },
@@ -1619,6 +1246,19 @@
       "structure_aware_chunks": 14,
       "structure_aware_percentage": 93.33,
       "total_chunks": 15
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "guideline": 8
+      },
+      "document_type": "guidelines",
+      "domain": "consumer",
+      "fallback_chunks": 1,
+      "source_file": "consumer/greenwashing_guidelines_2024_summary.pdf",
+      "structure_aware_chunks": 8,
+      "structure_aware_percentage": 88.89,
+      "total_chunks": 9
     },
     {
       "counts_by_structure_type": {
@@ -1753,16 +1393,17 @@
     },
     {
       "counts_by_structure_type": {
-        "annexure": 4,
-        "fallback": 55
+        "annexure": 11,
+        "fallback": 2,
+        "manual_section": 126
       },
       "document_type": "procedural_user_guide",
       "domain": "cyber",
-      "fallback_chunks": 55,
+      "fallback_chunks": 2,
       "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-      "structure_aware_chunks": 4,
-      "structure_aware_percentage": 6.78,
-      "total_chunks": 59
+      "structure_aware_chunks": 137,
+      "structure_aware_percentage": 98.56,
+      "total_chunks": 139
     },
     {
       "counts_by_structure_type": {
@@ -1835,6 +1476,19 @@
     {
       "counts_by_structure_type": {
         "fallback": 1,
+        "rule": 5
+      },
+      "document_type": "amendment_rules",
+      "domain": "cyber",
+      "fallback_chunks": 1,
+      "source_file": "cyber/it_intermediary_amendment_rules_2022.pdf",
+      "structure_aware_chunks": 5,
+      "structure_aware_percentage": 83.33,
+      "total_chunks": 6
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
         "rule": 16
       },
       "document_type": "amendment_rules",
@@ -1874,16 +1528,17 @@
     },
     {
       "counts_by_structure_type": {
-        "annexure": 6,
-        "fallback": 14
+        "annexure": 4,
+        "fallback": 3,
+        "manual_section": 25
       },
       "document_type": "procedural_user_guide",
       "domain": "cyber",
-      "fallback_chunks": 14,
+      "fallback_chunks": 3,
       "source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf",
-      "structure_aware_chunks": 6,
-      "structure_aware_percentage": 30.0,
-      "total_chunks": 20
+      "structure_aware_chunks": 29,
+      "structure_aware_percentage": 90.62,
+      "total_chunks": 32
     },
     {
       "counts_by_structure_type": {
@@ -1964,6 +1619,20 @@
       "structure_aware_chunks": 72,
       "structure_aware_percentage": 98.63,
       "total_chunks": 73
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 1,
+        "schedule": 2,
+        "section": 175
+      },
+      "document_type": "statute",
+      "domain": "tenancy",
+      "fallback_chunks": 1,
+      "source_file": "tenancy/indian_stamp_act_1899.pdf",
+      "structure_aware_chunks": 177,
+      "structure_aware_percentage": 99.44,
+      "total_chunks": 178
     },
     {
       "counts_by_structure_type": {
@@ -2753,6 +2422,26 @@
       "type": "sequence_reverse_jump"
     },
     {
+      "current_chunk_id": "tenancy_indian_stamp_act_1899__chunk_0111",
+      "current_number": "7",
+      "previous_chunk_id": "tenancy_indian_stamp_act_1899__chunk_0108",
+      "previous_number": "79",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/indian_stamp_act_1899.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
+      "current_chunk_id": "tenancy_indian_stamp_act_1899__chunk_0175",
+      "current_number": "17",
+      "previous_chunk_id": "tenancy_indian_stamp_act_1899__chunk_0173",
+      "previous_number": "62",
+      "severity": "MEDIUM",
+      "source_file": "tenancy/indian_stamp_act_1899.pdf",
+      "structure_type": "section",
+      "type": "sequence_reverse_jump"
+    },
+    {
       "current_chunk_id": "tenancy_registration_act_1908__chunk_0020",
       "current_number": "4",
       "previous_chunk_id": "tenancy_registration_act_1908__chunk_0019",
@@ -3008,6 +2697,13 @@
         "structure_type": "article"
       },
       {
+        "char_count": 2108,
+        "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0041",
+        "provision_number": "5.1.7.1",
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_type": "manual_section"
+      },
+      {
         "char_count": 2107,
         "chunk_id": "consumer_cdrc_general_rules_2020__chunk_0019",
         "provision_number": "14",
@@ -3041,13 +2737,6 @@
         "provision_number": "39",
         "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
         "structure_type": "section"
-      },
-      {
-        "char_count": 2106,
-        "chunk_id": "cyber_information_technology_act_2000__chunk_0084",
-        "provision_number": "70B",
-        "source_file": "cyber/information_technology_act_2000.pdf",
-        "structure_type": "section"
       }
     ]
   },
@@ -3059,14 +2748,17 @@
       "constitutional_public_authority/rti_rules_2012.pdf": 4,
       "consumer/legal_metrology_packaged_commodities_rules_2011.pdf": 24,
       "cyber/bharatiya_nyaya_sanhita_2023.pdf": 59,
+      "cyber/cybercrime_portal_citizen_manual_latest.pdf": 13,
       "cyber/digital_personal_data_protection_rules_2025.pdf": 3,
       "cyber/it_blocking_rules_2009.pdf": 1,
+      "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf": 2,
       "cyber/npci_upi_procedural_guidelines.pdf": 5,
       "tenancy/delhi_rent_control_rules_1959.pdf": 9,
+      "tenancy/indian_stamp_act_1899.pdf": 1,
       "tenancy/registration_act_1908.pdf": 2,
       "tenancy/transfer_of_property_act_1882.pdf": 4
     },
-    "review_40_to_100_count": 284,
+    "review_40_to_100_count": 298,
     "review_samples": [
       {
         "char_count": 53,
@@ -3351,6 +3043,20 @@
         "structure_type": "section"
       },
       {
+        "char_count": 19,
+        "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0015",
+        "snippet": "ANNEXURE B: HELP 57",
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_type": "annexure"
+      },
+      {
+        "char_count": 23,
+        "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0023",
+        "snippet": "Annexure C, Section 3.1",
+        "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
+        "structure_type": "annexure"
+      },
+      {
         "char_count": 35,
         "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0056",
         "snippet": "Annexure to this Form may be used).",
@@ -3358,7 +3064,7 @@
         "structure_type": "annexure"
       }
     ],
-    "very_suspicious_under_40_count": 11
+    "very_suspicious_under_40_count": 13
   },
   "validation_failures": []
 }
