@@ -8,13 +8,26 @@ from pathlib import Path
 from typing import Any
 
 from config import BASE_DIR, METADATA_PATH, TOP_K
-from rag import LegalRAG, final_rerank_score, retrieval_debug_info, select_relevant_chunks
+from rag import (
+    LegalRAG,
+    final_rerank_score,
+    production_candidate_k,
+    retrieval_debug_info,
+    select_relevant_chunks,
+)
 
 EVAL_DIR = BASE_DIR / "eval"
 DEFAULT_QUERY_PATH = EVAL_DIR / "retrieval_queries.json"
 DEFAULT_JSON_OUTPUT = EVAL_DIR / "retrieval_evaluation.json"
 DEFAULT_MD_OUTPUT = EVAL_DIR / "retrieval_evaluation.md"
-RAW_CANDIDATE_K = 10
+# Fixed 2026-09-14: this used to be a hardcoded candidate_k=10, decoupled from what
+# LegalRAG.retrieve() actually uses in production (40-100 depending on domain as of this
+# session) -- meaning this evaluator's metrics could never reflect retrieval-depth fixes made to
+# that function (see eval/retrieval_evaluation.md's history). Now calls production_candidate_k()
+# per query, same as production. RAW_CANDIDATES_DISPLAY_LIMIT is unrelated -- it only truncates
+# how many raw candidates get dumped into the per-query diagnostic JSON, independent of how many
+# are actually fetched/reranked.
+RAW_CANDIDATES_DISPLAY_LIMIT = 10
 METRIC_TOP_K = 10
 
 SUPPORTING_DOCUMENT_TYPES = {
@@ -104,19 +117,21 @@ def serialize_result(rank: int, retrieved, metadata: dict[str, Any]) -> dict[str
 
 
 def ranked_results_for_query(engine: LegalRAG, query: str, lookup: dict[tuple[str, int, str], dict[str, Any]]) -> dict[str, Any]:
-    candidates = engine.retrieve_candidates(query, candidate_k=RAW_CANDIDATE_K)
+    candidate_k = production_candidate_k(query, TOP_K)
+    candidates = engine.retrieve_candidates(query, candidate_k=candidate_k)
     for candidate in candidates:
         candidate.rerank_score = final_rerank_score(query, candidate)
     ranked = sorted(candidates, key=lambda item: (item.rerank_score, item.score), reverse=True)
     selected = select_relevant_chunks(list(candidates), question=query, top_k=TOP_K)
     return {
         "domain_signals": retrieval_debug_info(query),
+        "candidate_k": candidate_k,
         "raw_candidates_top10": [
             {
                 **serialize_result(index, candidate, metadata_for_retrieved(candidate, lookup)),
                 "domain_debug": retrieval_debug_info(query, candidate),
             }
-            for index, candidate in enumerate(candidates[:RAW_CANDIDATE_K], start=1)
+            for index, candidate in enumerate(candidates[:RAW_CANDIDATES_DISPLAY_LIMIT], start=1)
         ],
         "reranked_top10": [
             {
@@ -329,7 +344,8 @@ def run_evaluation(query_path: Path = DEFAULT_QUERY_PATH) -> dict[str, Any]:
             "embedding_model": metadata.get("embedding_model"),
             "embedding_dimension": metadata.get("embedding_dimension"),
             "faiss_index_type": metadata.get("faiss_index_type"),
-            "raw_candidate_k": RAW_CANDIDATE_K,
+            "candidate_k": "production_candidate_k() per query (matches LegalRAG.retrieve(); see per-query candidate_k field in query_results)",
+            "raw_candidates_display_limit": RAW_CANDIDATES_DISPLAY_LIMIT,
             "metric_top_k": METRIC_TOP_K,
             "uses_existing_retrieval_query_expansion": True,
             "uses_existing_reranking": True,

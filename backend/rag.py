@@ -214,14 +214,30 @@ DOMAIN_SIGNAL_CLOSE_DELTA = 0.16
 DOMAIN_PRIMARY_BOOST = 0.20
 DOMAIN_SECONDARY_BOOST = 0.10
 DOMAIN_MISMATCH_PENALTY = 0.12
-# UPDATE 2026-09-14: this was originally logged as an accepted, not-fixed limitation (see prior
-# comment text in git history / eval/retrieval_evaluation.md's older revisions). It has since been
-# addressed for the specific retrieval_priority=low + authority_level=procedural_guide case, via
-# PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY in authority_level_boost() below, rather than by changing
-# the baseline weights here (which still apply to every document regardless of query type). The
-# baseline weights below remain the general-purpose priority/authority signal; the additional,
-# query-conditional penalty is what actually pushes these specific manuals down on substantive
-# (non-procedural-intent) questions. See eval/retrieval_evaluation.md for before/after examples.
+# HISTORY (2026-09-14): the cybercrime_portal_citizen_manual_latest.pdf retrieval drift went
+# through three escalating rounds on the same day, in this order -- read as a record of what was
+# tried and why each step alone was insufficient, not a single clean design:
+#   1. ACCEPT: originally logged here as an accepted, not-fixed limitation, relying only on the
+#      baseline weights immediately below (still the general-purpose priority/authority signal,
+#      applied to every document regardless of query type). Insufficient: raw semantic similarity
+#      for plain-language citizen queries was strong enough to survive these baseline penalties.
+#   2. STRENGTHEN SCORING: added PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY (in authority_level_boost()
+#      and relevance_gate_score() below) -- a much larger, query-conditional penalty for
+#      procedural manuals on substantive (non-procedural-intent) queries specifically. Verified
+#      effective wherever the target statute was already a raw-FAISS candidate -- but insufficient
+#      on its own: several substantive cyber queries never fetched IT Act s.66C as a candidate at
+#      all (raw-FAISS rank 41-61, outside the then-current candidate_k=40), so no scoring change
+#      could surface a document that was never in the pool.
+#   3. WIDEN CANDIDATES: added the cyber-specific candidate_k=100 branch in
+#      production_candidate_k() below, specifically to close the gap step 2 exposed. This is what
+#      actually got IT Act into the top 5 for most tested substantive queries. Also extended step
+#      2's penalty to retrieval_priority=medium (not just low) after confirming
+#      npci_upi_procedural_guidelines.pdf shares the same crowding risk.
+# Net effect verified this session: cyber Document Hit@5 66.7%->88.9%, MRR 0.404->0.615 in
+# eval/retrieval_evaluation.md, with one known, reported (not fixed) side effect: a wider
+# candidate pool let one document (DPDP Act 2023) monopolize multiple slots on one query
+# ("someone shared private data online"), pushing out a second expected document (IT Act 2000)
+# that a narrower pool had included. See eval/retrieval_evaluation.md for the full before/after.
 RETRIEVAL_PRIORITY_WEIGHTS = {
     "high": 0.045,
     "medium": 0.02,
@@ -546,6 +562,48 @@ def detect_domain_signals(query: str) -> dict[str, Any]:
     }
 
 
+def production_candidate_k(question: str, top_k: int = TOP_K) -> int:
+    """The candidate_k LegalRAG.retrieve() actually uses in production. Factored out (2026-09-14)
+    so evaluate_retrieval.py can call this directly instead of keeping its own hardcoded
+    RAW_CANDIDATE_K constant that silently drifts out of sync with this logic -- which is exactly
+    what happened before this refactor: that script's own candidate window was narrower than
+    production's, so its metrics couldn't reflect fixes made to this function (see
+    eval/retrieval_evaluation.md's history for that finding)."""
+    signals = detect_domain_signals(question)
+    domain_count = len(signals["primary_domains"] + signals["secondary_domains"])
+    if domain_count > 1:
+        # Multi-domain/ambiguous: keep the window tight-ish to limit cross-domain noise reaching
+        # the reranker.
+        return max(top_k * 8, 40)
+    if domain_count == 1:
+        single_domain = (signals["primary_domains"] + signals["secondary_domains"])[0]
+        if single_domain == "cyber":
+            # Cyber-specific, added 2026-09-14 (step 3 of the cyber-manual escalation -- see
+            # PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY above for steps 1-2): the general single-domain
+            # candidate_k=40 below still wasn't enough for cyber. Its low/medium-priority
+            # procedural manuals (cybercrime_portal_citizen_manual_latest.pdf and siblings)
+            # dominate raw semantic similarity so strongly for plain-language substantive queries
+            # that IT Act s.66C's raw-FAISS candidate rank was 41, 44, and 61 (out of the full
+            # corpus) across three tested substantive phrasings -- all outside candidate_k=40,
+            # meaning the statute was never fetched as a candidate at all, so no amount of
+            # down-weighting in authority_level_boost()/relevance_gate_score() could surface it.
+            # 100 covers the worst case found (61) with ~40 of margin, not just barely. If a
+            # future query needs more, re-check raw-FAISS rank empirically rather than guessing --
+            # see eval/retrieval_evaluation.md for the methodology.
+            return max(top_k * 20, 100)
+        # Single, unambiguous domain (non-cyber): widen the window. There's less cross-domain
+        # noise risk here, so it's safe to look deeper. Found via manual_02_delhi_electricity: a
+        # correct provision (Delhi Rent Control Act, 1958 s.45, essential-supply cutoff) was
+        # ranking ~30th in raw FAISS similarity for a plainly-phrased "landlord disconnected
+        # electricity" query -- outside the old candidate_k=12 window -- so it never reached
+        # select_relevant_chunks' query_intent_boost, which does correctly boost this query's
+        # intent once a chunk is in the pool. See eval/manual_regression_evaluation.md.
+        return max(top_k * 6, 40)
+    # No clear domain signal at all: not the same as a confidently single-domain query, so don't
+    # widen -- keep the original tight default.
+    return max(top_k * 2, 12)
+
+
 def detect_public_authority_intents(query: str) -> dict[str, Any]:
     lowered = re.sub(r"\s+", " ", query.lower()).strip()
     scores = {intent: 0.0 for intent in PUBLIC_AUTHORITY_INTENT_CUES}
@@ -705,25 +763,7 @@ class LegalRAG:
         return candidates
 
     def retrieve(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
-        signals = detect_domain_signals(question)
-        domain_count = len(signals["primary_domains"] + signals["secondary_domains"])
-        if domain_count > 1:
-            # Multi-domain/ambiguous: keep the window tight-ish to limit cross-domain noise
-            # reaching the reranker.
-            candidate_k = max(top_k * 8, 40)
-        elif domain_count == 1:
-            # Single, unambiguous domain: widen the window. There's less cross-domain noise risk
-            # here, so it's safe to look deeper. Found via manual_02_delhi_electricity: a correct
-            # provision (Delhi Rent Control Act, 1958 s.45, essential-supply cutoff) was ranking
-            # ~30th in raw FAISS similarity for a plainly-phrased "landlord disconnected
-            # electricity" query -- outside the old candidate_k=12 window -- so it never reached
-            # select_relevant_chunks' query_intent_boost, which does correctly boost this query's
-            # intent once a chunk is in the pool. See eval/manual_regression_evaluation.md.
-            candidate_k = max(top_k * 6, 40)
-        else:
-            # No clear domain signal at all: not the same as a confidently single-domain query,
-            # so don't widen -- keep the original tight default.
-            candidate_k = max(top_k * 2, 12)
+        candidate_k = production_candidate_k(question, top_k)
         candidates = self.retrieve_candidates(question, candidate_k=candidate_k)
         results = select_relevant_chunks(candidates, question=question, top_k=top_k)
         logger.info(
@@ -1023,25 +1063,33 @@ def authority_level_boost(question: str, chunk: RetrievedChunk) -> float:
     is_procedural_manual = authority == "procedural_guide" and chunk.document_type == "procedural_user_guide"
     if is_procedural_manual and is_procedural_query(question):
         boost += PROCEDURAL_QUERY_MANUAL_BOOST
-    elif is_procedural_manual and (chunk.retrieval_priority or "").lower() == "low":
-        # Strengthened down-weighting, added 2026-09-14: retrieval_priority=low procedural
-        # manuals (currently cybercrime_portal_citizen_manual_latest.pdf,
-        # national_cybercrime_reporting_portal_user_manual_2019.pdf, and
-        # sanchar_saathi_ceir_user_manual.pdf -- see corpus_manifest.json for the current set;
-        # any future document tagged the same way inherits this automatically) have plain,
-        # citizen-facing language with raw semantic similarity strong enough to crowd statutory
-        # sources (e.g. IT Act, DPDP Act) out of the top 5 on substantive legal questions,
-        # despite the baseline AUTHORITY_LEVEL_WEIGHTS/RETRIEVAL_PRIORITY_WEIGHTS penalties above
-        # (see the KNOWN LIMITATION comment near those weights -- this replaces the "accept as-is"
-        # decision recorded there for the low-priority case specifically). This additional
-        # penalty applies only when is_procedural_query(question) is False, reusing that same
+    elif is_procedural_manual and (chunk.retrieval_priority or "").lower() in ("low", "medium"):
+        # Strengthened down-weighting, added 2026-09-14, extended 2026-09-14: procedural manuals
+        # (authority_level=procedural_guide + document_type=procedural_user_guide) with
+        # retrieval_priority=low OR medium (currently cybercrime_portal_citizen_manual_latest.pdf,
+        # national_cybercrime_reporting_portal_user_manual_2019.pdf,
+        # sanchar_saathi_ceir_user_manual.pdf [low], and npci_upi_procedural_guidelines.pdf
+        # [medium] -- see corpus_manifest.json for the current set; any future document tagged the
+        # same way inherits this automatically) have plain, citizen-facing language with raw
+        # semantic similarity strong enough to crowd statutory sources (e.g. IT Act, DPDP Act) out
+        # of the top 5 on substantive legal questions, despite the baseline
+        # AUTHORITY_LEVEL_WEIGHTS/RETRIEVAL_PRIORITY_WEIGHTS penalties above (see the KNOWN
+        # LIMITATION comment near those weights -- this replaces the "accept as-is" decision
+        # recorded there). Originally scoped to retrieval_priority=low only; widened to include
+        # medium the same day after confirming npci_upi_procedural_guidelines.pdf (medium
+        # priority) shares the identical procedural_guide/procedural_user_guide shape and the same
+        # crowding risk for substantive UPI/payment-fraud queries. This additional penalty applies
+        # only when is_procedural_query(question) is False, reusing that same
         # procedural-vs-substantive signal the boost above already uses, so genuinely procedural
         # queries ("how do I report this", "where do I file a complaint") are untouched and these
         # manuals still rank well for them. Magnitude (0.20) was tuned empirically against
         # eval/retrieval_evaluation.md's cyber queries: it's enough to surface statutory content
         # into the top 5 on substantive phrasings without fully suppressing the manual (it still
         # co-occurs in the top 5 for most substantive queries, per the "alongside or ahead of, not
-        # crowded out" goal) or affecting procedural-intent queries at all.
+        # crowded out" goal) or affecting procedural-intent queries at all. Note: this alone isn't
+        # sufficient for every substantive query -- see the cyber-specific candidate_k branch in
+        # LegalRAG.retrieve() below for the companion candidate-pool-depth fix this required (a
+        # down-weighted chunk still has to be fetched as a candidate before this can act on it).
         boost -= PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
     return boost
 
@@ -1135,8 +1183,8 @@ def final_rerank_score(question: str, chunk: RetrievedChunk) -> float:
 
 def relevance_gate_score(question: str, chunk: RetrievedChunk) -> float:
     """Raw-score-derived value used only for select_relevant_chunks' admission threshold, not
-    for display/eval/MRR purposes (those keep reading chunk.score directly). A retrieval_priority
-    =low procedural manual can have a raw score so far above every other candidate's that
+    for display/eval/MRR purposes (those keep reading chunk.score directly). A low/medium-
+    priority procedural manual can have a raw score so far above every other candidate's that
     max_score - RELEVANCE_WINDOW anchors the window above every statutory chunk, excluding them
     from admission entirely regardless of any rerank_score down-weighting -- rerank only reorders
     candidates that already cleared this gate. Applies the same
@@ -1146,7 +1194,11 @@ def relevance_gate_score(question: str, chunk: RetrievedChunk) -> float:
     score = chunk.score
     authority = (chunk.authority_level or "").lower()
     is_procedural_manual = authority == "procedural_guide" and chunk.document_type == "procedural_user_guide"
-    if is_procedural_manual and (chunk.retrieval_priority or "").lower() == "low" and not is_procedural_query(question):
+    if (
+        is_procedural_manual
+        and (chunk.retrieval_priority or "").lower() in ("low", "medium")
+        and not is_procedural_query(question)
+    ):
         score -= PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
     return score
 

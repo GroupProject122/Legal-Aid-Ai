@@ -2,90 +2,85 @@
 
 > **Baseline note (2026-09-14):** this file is regenerated in full by `evaluate_retrieval.py` on
 > every run, overwriting any hand-written notes (this one included) -- the durable copy of the
-> finding below lives in `rag.py` as a comment above `authority_level_boost()` /
-> `PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY`.
+> full history lives in `rag.py` as a comment above `RETRIEVAL_PRIORITY_WEIGHTS`.
 >
-> A down-weighting fix was added this session for retrieval_priority=low + authority_level=
-> procedural_guide documents (currently `cybercrime_portal_citizen_manual_latest.pdf`,
-> `national_cybercrime_reporting_portal_user_manual_2019.pdf`,
-> `sanchar_saathi_ceir_user_manual.pdf`) on substantive (non-procedural-intent) queries. **This
-> file's own Overall Metrics do not reflect it**, and that's expected, not a sign the fix didn't
-> work: `evaluate_retrieval.py` calls `retrieve_candidates()` with its own hardcoded
-> `RAW_CANDIDATE_K=10`, a narrower window than `LegalRAG.retrieve()` actually uses in production
-> (40 for single-domain queries as of this session). At candidate_k=10, statutory sources like the
-> IT Act/DPDP Act often aren't fetched as candidates at all for cyber queries where these manuals
-> dominate raw semantic similarity, so no amount of down-weighting inside this evaluator's own
-> 10-candidate window can surface them -- verified directly against the production `retrieve()`
-> path instead (candidate_k=40): e.g. for `cyber fraud online payment`, IT Act s.66C now appears
-> at rank 3 of 4 alongside the manual, correctly, where it was absent before. See the git history /
-> conversation record for full before/after numbers across both substantive and procedural test
-> queries; this evaluator is not a reliable proxy for that particular before/after because of the
-> candidate_k mismatch just described (a pre-existing property of this script, not something
-> changed this session).
+> This baseline reflects a three-step, same-day escalation on the
+> `cybercrime_portal_citizen_manual_latest.pdf` retrieval drift, not a single clean fix: (1)
+> accept as-is (an earlier baseline of this file), (2) strengthen scoring
+> (`PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY`, extended to `retrieval_priority=medium` to also cover
+> `npci_upi_procedural_guidelines.pdf`), (3) widen the cyber-domain candidate pool
+> (`candidate_k=100`, via `production_candidate_k()`) after step 2 alone proved insufficient --
+> several substantive cyber queries never fetched IT Act s.66C as a raw-FAISS candidate at all
+> (rank 41-61) under the then-current candidate_k=40, so no scoring change could have surfaced it.
+> `evaluate_retrieval.py` itself was also fixed this round: it previously hardcoded its own
+> `candidate_k=10` (now `production_candidate_k()` per query, matching production), which is why
+> this file's own Overall Metrics numbers only started reflecting the fix at step 3, not step 2 --
+> at candidate_k=10 the statute was never a candidate here either, same underlying cause.
 >
-> One side effect specific to this evaluator's narrow window: `average_off_domain_top5_count`
-> moved slightly (0.056 -> 0.083 overall; cyber 0.111 -> 0.222). Traced to one query
-> (`intermediary failed to remove unlawful content`): with the manual correctly down-weighted, this
-> evaluator's 10-candidate pool had no other strong same-domain candidate to fill the vacated
-> slot and fell back to an off-domain RTI Act chunk. Confirmed this does not happen against the
-> real `LegalRAG.retrieve()` path (candidate_k=40), which fills that slot with another cyber
-> document (an Intermediary Guidelines Rules chunk) instead -- an artifact of this evaluator's
-> RAW_CANDIDATE_K=10 being narrower than production, not a real production regression.
+> **Net result (steps 2+3 combined), single-domain queries:** Document Hit@5 88.9% -> 94.4%,
+> MRR 0.813 -> 0.857. Cyber-domain specifically: Document Hit@5 66.7% -> 88.9%, MRR 0.404 -> 0.615.
+> `cyber fraud online payment`'s Top 5 no longer contains the manual at all (RBI, CERT-In, and IT
+> Act s.66C now occupy the top 3); see the Cyber Retrieval Analysis section below for the current
+> numbers.
+>
+> **Known, reported (not fixed) side effect of the wider candidate pool:** on
+> `someone shared private data online`, `document_hit_at_5` flipped True->False (3 net
+> query-level improvements elsewhere, 1 regression here; document_mrr 0.333->0.167 for this case).
+> Cause: the wider pool let a single document (Digital Personal Data Protection Act, 2023) fill
+> all 4 selected slots with its own chunks, pushing out The Information Technology Act, 2000 --
+> one of this case's two expected primary documents -- which the narrower candidate_k=40 pool had
+> included. Not corrected in this round; flagged for a future decision (e.g. a per-document cap
+> on selected slots) rather than forced through silently.
 
 ## Overall Metrics
 - Single-domain queries: 36
 - Domain Hit@1: 97.2%
 - Domain Hit@3: 100.0%
-- Document Hit@1: 75.0%
-- Document Hit@3: 86.1%
-- Document Hit@5: 88.9%
+- Document Hit@1: 80.6%
+- Document Hit@3: 91.7%
+- Document Hit@5: 94.4%
 - Provision Hit@5: 90.9% over 11 provision-labelled queries
-- MRR: 0.813
+- MRR: 0.857
 - Average off-domain Top-5 count: 0.083
 
 ## Domain-wise Performance
 - constitutional_public_authority: Domain Hit@1 100.0%, Document Hit@5 100.0%, MRR 1.0, Avg off-domain Top-5 0.111
-- consumer: Domain Hit@1 100.0%, Document Hit@5 88.9%, MRR 0.849, Avg off-domain Top-5 0.0
-- cyber: Domain Hit@1 88.9%, Document Hit@5 66.7%, MRR 0.404, Avg off-domain Top-5 0.222
+- consumer: Domain Hit@1 100.0%, Document Hit@5 88.9%, MRR 0.815, Avg off-domain Top-5 0.0
+- cyber: Domain Hit@1 88.9%, Document Hit@5 88.9%, MRR 0.615, Avg off-domain Top-5 0.222
 - tenancy: Domain Hit@1 100.0%, Document Hit@5 100.0%, MRR 1.0, Avg off-domain Top-5 0.0
 
 ## Strong Examples
 - `online seller refusing refund` -> `consumer/consumer_protection_act_2019.pdf` (section 39)
 - `defective product and seller not replacing it` -> `consumer/consumer_protection_act_2019.pdf` (section 39)
-- `misleading advertisement caused me loss` -> `consumer/consumer_protection_act_2019.pdf` (section 89)
+- `misleading advertisement caused me loss` -> `consumer/consumer_protection_act_2019.pdf` (section 39)
 - `dark pattern forced me to subscribe` -> `consumer/dark_patterns_guidelines_2023.pdf` (guideline 5)
 - `where can I file consumer complaint` -> `consumer/consumer_protection_act_2019.pdf` (section 17)
 - `limitation period for consumer complaint` -> `consumer/consumer_protection_act_2019.pdf` (section 69)
 - `can consumer commission order repair or replacement` -> `consumer/consumer_protection_act_2019.pdf` (section 39)
-- `identity theft using my personal details` -> `cyber/information_technology_act_2000.pdf` (section 66C)
-- `unauthorized access to computer account` -> `cyber/information_technology_act_2000.pdf` (section 29)
+- `phishing link stole my money` -> `cyber/information_technology_act_2000.pdf` (section 66C)
+- `someone hacked my social media account` -> `cyber/information_technology_act_2000.pdf` (section 42)
 
 ## Failure Examples
 - `direct selling company refusing refund`: expected primary document absent from Top 5; top result `consumer/consumer_protection_act_2019.pdf`
-- `cyber fraud online payment`: broad supporting statute outranking primary source, generic/common wording, duplicate/adjacent chunks; top result `cyber/cybercrime_portal_citizen_manual_latest.pdf`
-- `phishing link stole my money`: broad supporting statute outranking primary source, expected primary document absent from Top 5, duplicate/adjacent chunks; top result `cyber/cybercrime_portal_citizen_manual_latest.pdf`
-- `someone hacked my social media account`: broad supporting statute outranking primary source, expected primary document absent from Top 5, duplicate/adjacent chunks; top result `cyber/it_blocking_rules_2009.pdf`
+- `someone shared private data online`: expected primary document absent from Top 5; top result `cyber/digital_personal_data_protection_act_2023.pdf`
 
 ## Cyber Retrieval Analysis
 - `cyber fraud online payment` Top 5:
-  - rank 1: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.6485, rerank 0.6165
-  - rank 2: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.5975, rerank 0.5655
-  - rank 3: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.6161, rerank 0.5541
-  - rank 4: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.5853, rerank 0.5533
-  - rank 5: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.585, rerank 0.553
+  - rank 1: `cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf` domain `cyber`, score 0.5204, rerank 0.7384
+  - rank 2: `cyber/cert_in_directions_2022.pdf` domain `cyber`, score 0.5074, rerank 0.6994
+  - rank 3: `cyber/information_technology_act_2000.pdf` domain `cyber`, score 0.4397, rerank 0.6927
+  - rank 4: `cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf` domain `cyber`, score 0.3898, rerank 0.6528
+  - rank 5: `cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf` domain `cyber`, score 0.4813, rerank 0.6363
 
 ## Supporting vs Primary Source Issues
-- `cyber fraud online payment`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 1 before first primary rank None
-- `phishing link stole my money`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 1 before first primary rank None
-- `someone hacked my social media account`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 2 before first primary rank 10
 - `how to report online cybercrime`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 1 before first primary rank 5
 
 ## Cross-Domain Queries
-- `Instagram seller took payment and blocked me`: expected ['consumer', 'cyber']; Top5 ['cyber']; Top10 ['cyber']
+- `Instagram seller took payment and blocked me`: expected ['consumer', 'cyber']; Top5 ['consumer', 'cyber']; Top10 ['consumer', 'cyber']
 - `online marketplace account hacked and money lost`: expected ['consumer', 'cyber']; Top5 ['cyber']; Top10 ['cyber']
-- `public authority leaked my personal information`: expected ['constitutional_public_authority', 'cyber']; Top5 ['constitutional_public_authority', 'cyber']; Top10 ['constitutional_public_authority', 'cyber']
-- `government website did not respond to my RTI and exposed my data`: expected ['constitutional_public_authority', 'cyber']; Top5 ['constitutional_public_authority']; Top10 ['constitutional_public_authority', 'cyber']
-- `landlord used online threats to force me to leave`: expected ['cyber', 'tenancy']; Top5 ['cyber', 'tenancy']; Top10 ['cyber', 'tenancy']
+- `public authority leaked my personal information`: expected ['constitutional_public_authority', 'cyber']; Top5 ['constitutional_public_authority']; Top10 ['constitutional_public_authority']
+- `government website did not respond to my RTI and exposed my data`: expected ['constitutional_public_authority', 'cyber']; Top5 ['constitutional_public_authority']; Top10 ['constitutional_public_authority']
+- `landlord used online threats to force me to leave`: expected ['cyber', 'tenancy']; Top5 ['tenancy']; Top10 ['constitutional_public_authority', 'cyber', 'tenancy']
 
 ## Non-Legal Queries
 - `weather tomorrow` -> top result `constitutional_public_authority/constitution_of_india.pdf` domain `constitutional_public_authority`
@@ -94,6 +89,6 @@
 
 ## Recommended Next Improvements
 - Best-performing domain by Document Hit@5: `constitutional_public_authority`.
-- Weakest-performing domain by Document Hit@5: `cyber`.
+- Weakest-performing domain by Document Hit@5: `consumer`.
 - Review remaining document-level misses before adding heavier retrieval methods.
 - Consider targeted query-intent handling or domain routing only after comparing this report with earlier baselines.
