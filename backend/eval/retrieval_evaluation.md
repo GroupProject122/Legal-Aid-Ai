@@ -32,6 +32,21 @@
 - `direct selling company refusing refund`: expected primary document absent from Top 5; top result `consumer/consumer_protection_act_2019.pdf`
 
 ## Cyber Retrieval Analysis
+> **Known limitation, accepted as of 2026-09-14 (not a new regression if seen again):**
+> `national_cybercrime_reporting_portal_user_manual_2019.pdf` (manifest name
+> `cybercrime_portal_citizen_manual_latest.pdf`; added in commit `0dbf9415a572d8500de0da6b7cfeb338b21bbe54`)
+> is already tagged `status: reference_only`, `authority_level: procedural_guide`,
+> `retrieval_priority: low` in `corpus_manifest.json`, and `rag.py`'s down-weighting is applied to
+> it (see the comment above `RETRIEVAL_PRIORITY_WEIGHTS` in `rag.py`) -- but its plain, citizen-facing
+> language still has strong enough raw semantic similarity to user-style cyber queries that it
+> sometimes outranks primary statutory text anyway, as seen at rank 2 and rank 5 below. This was
+> investigated and ruled out as the cause of several other eval findings (a domain_router
+> misclassification, two grounded_answer unsafe-certainty flags, a corpus_gap abstain->answer
+> flip). Accepted as-is; not considered worth further scoring changes. If this baseline is re-run
+> and shows the same document at similar ranks/scores for cyber-domain queries, that reflects this
+> accepted state, not a new regression -- compare against the actual regression bar (missing
+> primary document, wrong domain, or a real score/rank shift on statutory text), not against this
+> document's presence in the Top 5.
 - `cyber fraud online payment` Top 5:
   - rank 1: `cyber/information_technology_act_2000.pdf` domain `cyber`, score 0.4397, rerank 0.6927
   - rank 2: `cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf` domain `cyber`, score 0.4705, rerank 0.6085

@@ -133,17 +133,23 @@ def evaluate_case(engine: rag.LegalRAG, case: dict[str, Any]) -> dict[str, Any]:
 
 
 def frontend_and_verifier_language_clean() -> bool:
-    verifier_text = Path("backend/claim_verifier.py").read_text(encoding="utf-8")
+    # Was Path("backend/claim_verifier.py") -- only valid if invoked from the repo root, unlike
+    # every other path in this module (and every other evaluate_*.py script), which resolves via
+    # BASE_DIR on the assumption that CWD is backend/. Fixed to match that convention.
+    verifier_text = (BASE_DIR / "claim_verifier.py").read_text(encoding="utf-8")
     return "The retrieved sources partly support this point" not in verifier_text and "Claim verification could not be completed right now" not in verifier_text
 
 
 def frontend_empty_section_guard_present() -> bool:
-    text = Path("src/App.jsx").read_text(encoding="utf-8")
+    # Was Path("src/App.jsx") -- only valid if invoked from frontend/, which is neither this
+    # project's convention (backend/) nor the repo root. Same class of bug as above.
+    text = (BASE_DIR.parent / "frontend" / "src" / "App.jsx").read_text(encoding="utf-8")
     return "!clarificationQuestion && nextSteps.length > 0" in text and "!clarificationQuestion && sources.length > 0" in text
 
 
 def frontend_category_sync_present(_expected: str | None) -> bool:
-    text = Path("src/App.jsx").read_text(encoding="utf-8")
+    # Same class of bug as frontend_empty_section_guard_present above.
+    text = (BASE_DIR.parent / "frontend" / "src" / "App.jsx").read_text(encoding="utf-8")
     return "displayCategoryFromRouting" in text and "setCategory(routedCategory)" in text
 
 

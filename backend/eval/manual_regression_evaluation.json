@@ -3,7 +3,61 @@
     "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/manual_regression_cases.json",
     "live_gemini_calls": 0
   },
-  "failures": [],
+  "failures": [
+    {
+      "case_id": "manual_02_delhi_electricity",
+      "category_sync_present": true,
+      "correct": false,
+      "debug_language_clean": true,
+      "disfavored_provisions_absent": true,
+      "document_hit": true,
+      "empty_section_guard_present": true,
+      "preferred_before_disfavored": true,
+      "preferred_provision_hit": false,
+      "product_liability_not_dominant": true,
+      "query": "My landlord in Delhi has disconnected the electricity supply to my rented house. What can I do?",
+      "retrieved": [
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "14",
+          "rank": 1,
+          "rerank_score": 0.6152,
+          "score": 0.3752,
+          "section_title": "Protection of tenant against eviction"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "22",
+          "rank": 2,
+          "rerank_score": 0.587,
+          "score": 0.387,
+          "section_title": "Special provision for recovery of possession in certain cases"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "31",
+          "rank": 3,
+          "rerank_score": 0.5783,
+          "score": 0.3603,
+          "section_title": "Fixing of fair rate"
+        },
+        {
+          "document_title": "The Delhi Rent Control Act, 1958",
+          "domain": "tenancy",
+          "provision": "25",
+          "rank": 4,
+          "rerank_score": 0.5681,
+          "score": 0.3681,
+          "section_title": "Vacant possession to landlord"
+        }
+      ],
+      "source_family_coverage": true,
+      "verifier_fallback_useful": true
+    }
+  ],
   "metrics": {
     "case_count": 15,
     "category_sync_correctness": 1.0,
@@ -12,12 +66,13 @@
     "cyber_identity_misuse_provision_hit": 1.0,
     "debug_language_leakage_rate": 0.0,
     "empty_section_guard_rate": 1.0,
-    "failed_cases": [],
+    "failed_cases": [
+      "manual_02_delhi_electricity"
+    ],
     "multi_domain_source_coverage": 1.0,
-    "overall_expected_behavior_rate": 1.0,
+    "overall_expected_behavior_rate": 0.933,
     "passed_cases": [
       "manual_01_defective_refund",
-      "manual_02_delhi_electricity",
       "manual_03_natural_credential_misuse",
       "manual_04_explicit_identity_theft",
       "manual_05_mumbai_tenancy_gap",
@@ -92,51 +147,51 @@
     {
       "case_id": "manual_02_delhi_electricity",
       "category_sync_present": true,
-      "correct": true,
+      "correct": false,
       "debug_language_clean": true,
       "disfavored_provisions_absent": true,
       "document_hit": true,
       "empty_section_guard_present": true,
       "preferred_before_disfavored": true,
-      "preferred_provision_hit": true,
+      "preferred_provision_hit": false,
       "product_liability_not_dominant": true,
       "query": "My landlord in Delhi has disconnected the electricity supply to my rented house. What can I do?",
       "retrieved": [
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "45",
+          "provision": "14",
           "rank": 1,
-          "rerank_score": 0.7825,
-          "score": 0.3665,
-          "section_title": "Cutting off or withholding essential supply or service"
+          "rerank_score": 0.6152,
+          "score": 0.3752,
+          "section_title": "Protection of tenant against eviction"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "14C",
+          "provision": "22",
           "rank": 2,
-          "rerank_score": 0.6199,
-          "score": 0.4019,
-          "section_title": "Right to recover immediate possession of premises to accrue to Central Government and"
+          "rerank_score": 0.587,
+          "score": 0.387,
+          "section_title": "Special provision for recovery of possession in certain cases"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "2",
+          "provision": "31",
           "rank": 3,
-          "rerank_score": 0.6145,
-          "score": 0.3605,
-          "section_title": "Clause (d) has been ins"
+          "rerank_score": 0.5783,
+          "score": 0.3603,
+          "section_title": "Fixing of fair rate"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "47",
+          "provision": "25",
           "rank": 4,
-          "rerank_score": 0.5472,
-          "score": 0.3652,
-          "section_title": "Leases of vacant premises to Government"
+          "rerank_score": 0.5681,
+          "score": 0.3681,
+          "section_title": "Vacant possession to landlord"
         }
       ],
       "source_family_coverage": true,
@@ -165,31 +220,31 @@
           "section_title": "Punishment for identity theft"
         },
         {
-          "document_title": "The Information Technology Act, 2000",
-          "domain": "cyber",
-          "provision": "72",
-          "rank": 2,
-          "rerank_score": 0.692,
-          "score": 0.414,
-          "section_title": "Penalty for Breach of confidentiality and privacy"
-        },
-        {
-          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
           "domain": "cyber",
           "provision": "",
-          "rank": 3,
-          "rerank_score": 0.6546,
-          "score": 0.4286,
+          "rank": 2,
+          "rerank_score": 0.6343,
+          "score": 0.4703,
           "section_title": null
         },
         {
-          "document_title": "The Information Technology Act, 2000",
+          "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
           "domain": "cyber",
-          "provision": "66F",
+          "provision": "",
+          "rank": 3,
+          "rerank_score": 0.6272,
+          "score": 0.4812,
+          "section_title": null
+        },
+        {
+          "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+          "domain": "cyber",
+          "provision": "",
           "rank": 4,
-          "rerank_score": 0.6301,
-          "score": 0.3721,
-          "section_title": "Punishment for cyber terrorism"
+          "rerank_score": 0.5638,
+          "score": 0.4398,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
@@ -227,21 +282,21 @@
           "section_title": null
         },
         {
-          "document_title": "The Information Technology Act, 2000",
+          "document_title": "The Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011",
           "domain": "cyber",
-          "provision": "66F",
+          "provision": "2",
           "rank": 3,
-          "rerank_score": 0.6726,
-          "score": 0.4566,
-          "section_title": "Punishment for cyber terrorism"
+          "rerank_score": 0.7189,
+          "score": 0.4799,
+          "section_title": "Definitions"
         },
         {
-          "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+          "document_title": "CERT-In Directions under sub-section (6) of section 70B of the Information Technology Act, 2000, dated 28 April 2022",
           "domain": "cyber",
           "provision": "",
           "rank": 4,
-          "rerank_score": 0.583,
-          "score": 0.498,
+          "rerank_score": 0.6921,
+          "score": 0.5371,
           "section_title": null
         }
       ],
@@ -266,36 +321,36 @@
           "domain": "tenancy",
           "provision": "45",
           "rank": 1,
-          "rerank_score": 0.785,
-          "score": 0.369,
+          "rerank_score": 0.7282,
+          "score": 0.3122,
           "section_title": "Cutting off or withholding essential supply or service"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "1",
+          "provision": "22",
           "rank": 2,
-          "rerank_score": 0.5541,
-          "score": 0.3361,
-          "section_title": "Added by Act 57 of 1988, s"
+          "rerank_score": 0.5127,
+          "score": 0.3307,
+          "section_title": "Special provision for recovery of possession in certain cases"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "14C",
+          "provision": "44",
           "rank": 3,
-          "rerank_score": 0.5062,
-          "score": 0.3062,
-          "section_title": "Right to recover immediate possession of premises to accrue to Central Government and"
+          "rerank_score": 0.5058,
+          "score": 0.3058,
+          "section_title": "Landlord's duty to keep the premises in good repair"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "47",
+          "provision": "25",
           "rank": 4,
-          "rerank_score": 0.4847,
-          "score": 0.3027,
-          "section_title": "Leases of vacant premises to Government"
+          "rerank_score": 0.4959,
+          "score": 0.3139,
+          "section_title": "Vacant possession to landlord"
         }
       ],
       "source_family_coverage": true,
@@ -414,20 +469,20 @@
         {
           "document_title": "The Consumer Protection Act, 2019",
           "domain": "consumer",
-          "provision": "38",
+          "provision": "81",
           "rank": 3,
-          "rerank_score": 0.7725,
-          "score": 0.3791,
-          "section_title": "Procedure on admission of complaint"
+          "rerank_score": 0.6749,
+          "score": 0.3955,
+          "section_title": "Recording settlement and passing of order"
         },
         {
-          "document_title": "The Consumer Protection Act, 2019",
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
           "domain": "consumer",
-          "provision": "47",
+          "provision": "4",
           "rank": 4,
-          "rerank_score": 0.7207,
-          "score": 0.3757,
-          "section_title": "Jurisdiction of State Commission"
+          "rerank_score": 0.5738,
+          "score": 0.4052,
+          "section_title": "Duties of e-commerce entities"
         }
       ],
       "source_family_coverage": true,
@@ -449,17 +504,8 @@
         {
           "document_title": "The Consumer Protection Act, 2019",
           "domain": "consumer",
-          "provision": "39",
-          "rank": 1,
-          "rerank_score": 1.0821,
-          "score": 0.3283,
-          "section_title": "Findings of District Commission"
-        },
-        {
-          "document_title": "The Consumer Protection Act, 2019",
-          "domain": "consumer",
           "provision": "17",
-          "rank": 2,
+          "rank": 1,
           "rerank_score": 0.8082,
           "score": 0.403,
           "section_title": "Complaints to authorities"
@@ -468,19 +514,28 @@
           "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
           "domain": "consumer",
           "provision": "6",
-          "rank": 3,
+          "rank": 2,
           "rerank_score": 0.7869,
           "score": 0.4412,
           "section_title": "Duties of sellers on marketplace"
         },
         {
-          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
           "domain": "cyber",
           "provision": "",
-          "rank": 4,
-          "rerank_score": 0.5538,
-          "score": 0.4596,
+          "rank": 3,
+          "rerank_score": 0.6327,
+          "score": 0.515,
           "section_title": null
+        },
+        {
+          "document_title": "The Consumer Protection (Direct Selling) Rules, 2021",
+          "domain": "consumer",
+          "provision": "7",
+          "rank": 4,
+          "rerank_score": 0.6541,
+          "score": 0.3974,
+          "section_title": "Duties of direct selling entity and direct seller"
         }
       ],
       "source_family_coverage": true,
@@ -518,22 +573,22 @@
           "section_title": "State Legal Aid Fund"
         },
         {
-          "document_title": "The Legal Services Authorities Act, 1987",
+          "document_title": "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
           "domain": "constitutional_public_authority",
-          "provision": "13",
+          "provision": "147",
           "rank": 3,
-          "rerank_score": 0.7576,
-          "score": 0.4405,
-          "section_title": "Entitlement of legal services"
+          "rerank_score": 0.6951,
+          "score": 0.5031,
+          "section_title": null
         },
         {
-          "document_title": "The Legal Services Authorities Act, 1987",
+          "document_title": "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
           "domain": "constitutional_public_authority",
-          "provision": "12",
+          "provision": "13",
           "rank": 4,
-          "rerank_score": 0.7371,
-          "score": 0.4245,
-          "section_title": "Criteria for giving legal services"
+          "rerank_score": 0.6936,
+          "score": 0.5309,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
@@ -555,38 +610,38 @@
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "1",
+          "provision": "27",
           "rank": 1,
-          "rerank_score": 0.6127,
-          "score": 0.3677,
-          "section_title": "Added by Act 57 of 1988, s"
+          "rerank_score": 0.6319,
+          "score": 0.3869,
+          "section_title": "Deposit of rent by the tenant"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
           "provision": "26",
           "rank": 2,
-          "rerank_score": 0.5933,
-          "score": 0.3663,
+          "rerank_score": 0.5989,
+          "score": 0.3719,
           "section_title": "Receipt to be given for rent paid"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "43",
+          "provision": "44",
           "rank": 3,
-          "rerank_score": 0.5626,
-          "score": 0.3356,
-          "section_title": "Finality of order"
+          "rerank_score": 0.5518,
+          "score": 0.3248,
+          "section_title": "Landlord's duty to keep the premises in good repair"
         },
         {
           "document_title": "The Delhi Rent Control Act, 1958",
           "domain": "tenancy",
-          "provision": "46",
+          "provision": "14",
           "rank": 4,
-          "rerank_score": 0.5571,
-          "score": 0.3481,
-          "section_title": "Landlord's duty to give notice of new construction to Government"
+          "rerank_score": 0.5461,
+          "score": 0.3371,
+          "section_title": "Protection of tenant against eviction"
         }
       ],
       "source_family_coverage": true,
@@ -624,22 +679,22 @@
           "section_title": "Marriage an d divorce; infants and minors; adoption; wills, intestacy and succession; joint family"
         },
         {
-          "document_title": "The Bharatiya Nagarik Suraksha Sanhita, 2023",
-          "domain": "cyber",
-          "provision": "487",
-          "rank": 3,
-          "rerank_score": 0.3542,
-          "score": 0.3742,
-          "section_title": "Discharge from custody"
-        },
-        {
           "document_title": "The Bharatiya Nyaya Sanhita, 2023",
           "domain": "cyber",
           "provision": "84",
-          "rank": 4,
+          "rank": 3,
           "rerank_score": 0.3394,
           "score": 0.3144,
           "section_title": "Enticing or taking away or detaining with criminal intent a married woman"
+        },
+        {
+          "document_title": "The Consumer Protection (Consumer Disputes Redressal Commissions) Rules, 2020",
+          "domain": "consumer",
+          "provision": "11",
+          "rank": 4,
+          "rerank_score": 0.3346,
+          "score": 0.3221,
+          "section_title": "Procedure for filing and hearing of ap peal before State Commission"
         }
       ],
       "source_family_coverage": true,
@@ -686,13 +741,13 @@
           "section_title": "Procedure on admission of complaint"
         },
         {
-          "document_title": "The Consumer Protection Act, 2019",
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
           "domain": "consumer",
-          "provision": "17",
+          "provision": "7",
           "rank": 4,
-          "rerank_score": 0.8106,
-          "score": 0.4046,
-          "section_title": "Complaints to authorities"
+          "rerank_score": 0.769,
+          "score": 0.437,
+          "section_title": "Duties and liabilities of inventory e-commerce entities:"
         }
       ],
       "source_family_coverage": true,
@@ -714,17 +769,8 @@
         {
           "document_title": "The Consumer Protection Act, 2019",
           "domain": "consumer",
-          "provision": "39",
-          "rank": 1,
-          "rerank_score": 1.0821,
-          "score": 0.3283,
-          "section_title": "Findings of District Commission"
-        },
-        {
-          "document_title": "The Consumer Protection Act, 2019",
-          "domain": "consumer",
           "provision": "17",
-          "rank": 2,
+          "rank": 1,
           "rerank_score": 0.8082,
           "score": 0.403,
           "section_title": "Complaints to authorities"
@@ -733,19 +779,28 @@
           "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
           "domain": "consumer",
           "provision": "6",
-          "rank": 3,
+          "rank": 2,
           "rerank_score": 0.7869,
           "score": 0.4412,
           "section_title": "Duties of sellers on marketplace"
         },
         {
-          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+          "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
           "domain": "cyber",
           "provision": "",
-          "rank": 4,
-          "rerank_score": 0.5538,
-          "score": 0.4596,
+          "rank": 3,
+          "rerank_score": 0.6327,
+          "score": 0.515,
           "section_title": null
+        },
+        {
+          "document_title": "The Consumer Protection (Direct Selling) Rules, 2021",
+          "domain": "consumer",
+          "provision": "7",
+          "rank": 4,
+          "rerank_score": 0.6541,
+          "score": 0.3974,
+          "section_title": "Duties of direct selling entity and direct seller"
         }
       ],
       "source_family_coverage": true,

@@ -807,7 +807,12 @@ def answer_grounded_from_context(
     chunks = rag.retrieve(retrieval_text)
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
-    pre_gap = corpus_gap.pre_generation_check(retrieval_text, context.domains, chunks)
+    # user_question (falling back to original_message) is the text the user actually typed this
+    # turn, as opposed to retrieval_text (the LLM-paraphrased, retrieval-optimized version) --
+    # same "effective latest user message" expression used elsewhere in this function. Threaded
+    # through so corpus_gap's case-law safety gate checks what the user typed, not a paraphrase
+    # that may or may not have kept the trigger phrasing.
+    pre_gap = corpus_gap.pre_generation_check(retrieval_text, context.domains, chunks, raw_user_query=user_question or original_message)
     if not pre_gap.allow_grounded_answer:
         response = corpus_gap.abstention_response(pre_gap)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)

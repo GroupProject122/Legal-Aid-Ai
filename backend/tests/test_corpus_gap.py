@@ -65,6 +65,41 @@ def test_missing_case_law_is_insufficient():
     assert "case_law_not_in_corpus" in gap.reason_codes
 
 
+def test_case_law_gate_checks_raw_query_not_retrieval_paraphrase():
+    # fact_sufficiency.retrieval_query() paraphrases the user's message for retrieval, and that
+    # paraphrase is not deterministic -- it may or may not retain a trigger phrase like "what did
+    # the supreme court". issue_summary here simulates a paraphrase that dropped it entirely (no
+    # case-law trigger words at all); raw_user_query is what the user actually typed. The gate
+    # must fire off the raw text, not the paraphrase, or it becomes a coin flip in production.
+    paraphrased_issue_summary = "Inquiry regarding the constitutional holding and doctrine established in a certain matter."
+    raw_query = "What did the Supreme Court hold in Kesavananda Bharati case?"
+    assert not corpus_gap.case_law_query(corpus_gap.normalize(paraphrased_issue_summary))
+
+    gap = corpus_gap.pre_generation_check(
+        paraphrased_issue_summary,
+        ["constitutional_public_authority"],
+        [chunk(domain="constitutional_public_authority")],
+        raw_user_query=raw_query,
+    )
+
+    assert gap.status == "insufficient"
+    assert "case_law_not_in_corpus" in gap.reason_codes
+    assert gap.allow_grounded_answer is False
+
+
+def test_case_law_gate_without_raw_query_falls_back_to_issue_summary():
+    # Backward compatibility: callers that don't have a separate raw query (existing eval
+    # scripts, this test file's other cases) keep checking issue_summary, same as before this fix.
+    gap = corpus_gap.pre_generation_check(
+        "what did the Supreme Court hold in a specific case",
+        ["constitutional_public_authority"],
+        [chunk(domain="constitutional_public_authority")],
+    )
+
+    assert gap.status == "insufficient"
+    assert "case_law_not_in_corpus" in gap.reason_codes
+
+
 def test_supporting_only_sources_are_limited():
     supporting = chunk(authority_level="primary", status="supporting_only", document_type="supporting_property_law")
     gap = corpus_gap.pre_generation_check("tenant landlord dispute", ["tenancy"], [supporting])

@@ -214,6 +214,22 @@ DOMAIN_SIGNAL_CLOSE_DELTA = 0.16
 DOMAIN_PRIMARY_BOOST = 0.20
 DOMAIN_SECONDARY_BOOST = 0.10
 DOMAIN_MISMATCH_PENALTY = 0.12
+# KNOWN LIMITATION, accepted as of 2026-09-14, not considered worth further scoring changes:
+# cyber/cybercrime_portal_citizen_manual_latest.pdf (added in commit
+# 0dbf9415a572d8500de0da6b7cfeb338b21bbe54, "Expand cyber legal corpus; add root CHANGELOG")
+# is already tagged status=reference_only, authority_level=procedural_guide,
+# retrieval_priority=low in corpus_manifest.json -- the down-weighting below IS being applied to
+# it -- but it still sometimes outranks primary statutory text (e.g. the IT Act) for certain
+# cyber-domain phrasings. Cause: this is a citizen-facing "how to report X" manual, and its plain,
+# user-style language has strong raw semantic similarity against user-phrased queries, strong
+# enough to survive AUTHORITY_LEVEL_WEIGHTS' -0.012 and RETRIEVAL_PRIORITY_WEIGHTS' -0.015
+# penalties below. This was investigated (session of 2026-09-14) as a possible cause of several
+# other eval findings (a domain_router misclassification, two grounded_answer unsafe-certainty
+# flags, and a corpus_gap case flipping from abstain to answer) -- all four were confirmed
+# unrelated to this document; it was ruled out as their cause in each case. The retrieval-metric
+# drift this document alone causes (see eval/retrieval_evaluation.md) is accepted as-is; not
+# fixed here. If revisited, the lever is either the two weights below or the document's own
+# retrieval_priority/authority_level tags in corpus_manifest.json, not this file's ranking logic.
 RETRIEVAL_PRIORITY_WEIGHTS = {
     "high": 0.045,
     "medium": 0.02,
