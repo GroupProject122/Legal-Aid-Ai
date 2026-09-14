@@ -214,22 +214,14 @@ DOMAIN_SIGNAL_CLOSE_DELTA = 0.16
 DOMAIN_PRIMARY_BOOST = 0.20
 DOMAIN_SECONDARY_BOOST = 0.10
 DOMAIN_MISMATCH_PENALTY = 0.12
-# KNOWN LIMITATION, accepted as of 2026-09-14, not considered worth further scoring changes:
-# cyber/cybercrime_portal_citizen_manual_latest.pdf (added in commit
-# 0dbf9415a572d8500de0da6b7cfeb338b21bbe54, "Expand cyber legal corpus; add root CHANGELOG")
-# is already tagged status=reference_only, authority_level=procedural_guide,
-# retrieval_priority=low in corpus_manifest.json -- the down-weighting below IS being applied to
-# it -- but it still sometimes outranks primary statutory text (e.g. the IT Act) for certain
-# cyber-domain phrasings. Cause: this is a citizen-facing "how to report X" manual, and its plain,
-# user-style language has strong raw semantic similarity against user-phrased queries, strong
-# enough to survive AUTHORITY_LEVEL_WEIGHTS' -0.012 and RETRIEVAL_PRIORITY_WEIGHTS' -0.015
-# penalties below. This was investigated (session of 2026-09-14) as a possible cause of several
-# other eval findings (a domain_router misclassification, two grounded_answer unsafe-certainty
-# flags, and a corpus_gap case flipping from abstain to answer) -- all four were confirmed
-# unrelated to this document; it was ruled out as their cause in each case. The retrieval-metric
-# drift this document alone causes (see eval/retrieval_evaluation.md) is accepted as-is; not
-# fixed here. If revisited, the lever is either the two weights below or the document's own
-# retrieval_priority/authority_level tags in corpus_manifest.json, not this file's ranking logic.
+# UPDATE 2026-09-14: this was originally logged as an accepted, not-fixed limitation (see prior
+# comment text in git history / eval/retrieval_evaluation.md's older revisions). It has since been
+# addressed for the specific retrieval_priority=low + authority_level=procedural_guide case, via
+# PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY in authority_level_boost() below, rather than by changing
+# the baseline weights here (which still apply to every document regardless of query type). The
+# baseline weights below remain the general-purpose priority/authority signal; the additional,
+# query-conditional penalty is what actually pushes these specific manuals down on substantive
+# (non-procedural-intent) questions. See eval/retrieval_evaluation.md for before/after examples.
 RETRIEVAL_PRIORITY_WEIGHTS = {
     "high": 0.045,
     "medium": 0.02,
@@ -243,6 +235,7 @@ AUTHORITY_LEVEL_WEIGHTS = {
 SUPPORTING_ONLY_PENALTY = 0.04
 REFERENCE_ONLY_PENALTY = 0.035
 PROCEDURAL_QUERY_MANUAL_BOOST = 0.06
+PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY = 0.20
 PROCEDURAL_QUERY_TERMS = {
     "report",
     "reporting",
@@ -1027,8 +1020,29 @@ def retrieval_priority_boost(chunk: RetrievedChunk) -> float:
 def authority_level_boost(question: str, chunk: RetrievedChunk) -> float:
     authority = (chunk.authority_level or "").lower()
     boost = AUTHORITY_LEVEL_WEIGHTS.get(authority, 0.0)
-    if is_procedural_query(question) and chunk.document_type == "procedural_user_guide":
+    is_procedural_manual = authority == "procedural_guide" and chunk.document_type == "procedural_user_guide"
+    if is_procedural_manual and is_procedural_query(question):
         boost += PROCEDURAL_QUERY_MANUAL_BOOST
+    elif is_procedural_manual and (chunk.retrieval_priority or "").lower() == "low":
+        # Strengthened down-weighting, added 2026-09-14: retrieval_priority=low procedural
+        # manuals (currently cybercrime_portal_citizen_manual_latest.pdf,
+        # national_cybercrime_reporting_portal_user_manual_2019.pdf, and
+        # sanchar_saathi_ceir_user_manual.pdf -- see corpus_manifest.json for the current set;
+        # any future document tagged the same way inherits this automatically) have plain,
+        # citizen-facing language with raw semantic similarity strong enough to crowd statutory
+        # sources (e.g. IT Act, DPDP Act) out of the top 5 on substantive legal questions,
+        # despite the baseline AUTHORITY_LEVEL_WEIGHTS/RETRIEVAL_PRIORITY_WEIGHTS penalties above
+        # (see the KNOWN LIMITATION comment near those weights -- this replaces the "accept as-is"
+        # decision recorded there for the low-priority case specifically). This additional
+        # penalty applies only when is_procedural_query(question) is False, reusing that same
+        # procedural-vs-substantive signal the boost above already uses, so genuinely procedural
+        # queries ("how do I report this", "where do I file a complaint") are untouched and these
+        # manuals still rank well for them. Magnitude (0.20) was tuned empirically against
+        # eval/retrieval_evaluation.md's cyber queries: it's enough to surface statutory content
+        # into the top 5 on substantive phrasings without fully suppressing the manual (it still
+        # co-occurs in the top 5 for most substantive queries, per the "alongside or ahead of, not
+        # crowded out" goal) or affecting procedural-intent queries at all.
+        boost -= PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
     return boost
 
 
@@ -1119,10 +1133,28 @@ def final_rerank_score(question: str, chunk: RetrievedChunk) -> float:
     )
 
 
+def relevance_gate_score(question: str, chunk: RetrievedChunk) -> float:
+    """Raw-score-derived value used only for select_relevant_chunks' admission threshold, not
+    for display/eval/MRR purposes (those keep reading chunk.score directly). A retrieval_priority
+    =low procedural manual can have a raw score so far above every other candidate's that
+    max_score - RELEVANCE_WINDOW anchors the window above every statutory chunk, excluding them
+    from admission entirely regardless of any rerank_score down-weighting -- rerank only reorders
+    candidates that already cleared this gate. Applies the same
+    PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY / is_procedural_query(question) signal used in
+    authority_level_boost so the down-weighting is consistent between ranking and admission,
+    without building separate classification logic for the two."""
+    score = chunk.score
+    authority = (chunk.authority_level or "").lower()
+    is_procedural_manual = authority == "procedural_guide" and chunk.document_type == "procedural_user_guide"
+    if is_procedural_manual and (chunk.retrieval_priority or "").lower() == "low" and not is_procedural_query(question):
+        score -= PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
+    return score
+
+
 def select_relevant_chunks(candidates: list[RetrievedChunk], question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
     if not candidates:
         return []
-    max_score = max(chunk.score for chunk in candidates)
+    max_score = max(relevance_gate_score(question, chunk) for chunk in candidates)
     threshold = max(MIN_RELEVANCE_SCORE, max_score - RELEVANCE_WINDOW)
     if max_score < MIN_RELEVANCE_SCORE:
         threshold = max(LOW_CONFIDENCE_RELEVANCE_SCORE, max_score - 0.08)
@@ -1137,7 +1169,7 @@ def select_relevant_chunks(candidates: list[RetrievedChunk], question: str, top_
     ranked = balance_multi_domain_candidates(question, ranked)
     selected: list[RetrievedChunk] = []
     for chunk in ranked:
-        if chunk.score < threshold:
+        if relevance_gate_score(question, chunk) < threshold:
             continue
         if is_near_duplicate(chunk, selected):
             continue

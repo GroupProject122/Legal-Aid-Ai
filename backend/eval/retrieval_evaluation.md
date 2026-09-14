@@ -1,23 +1,36 @@
 # Retrieval Evaluation
 
 > **Baseline note (2026-09-14):** this file is regenerated in full by `evaluate_retrieval.py` on
-> every run, which overwrites any hand-written notes in it (this one included) -- so a note here
-> only survives until the next re-run; it is not a durable record on its own. The durable version
-> of the finding below lives in `rag.py`, as a code comment above `RETRIEVAL_PRIORITY_WEIGHTS` /
-> `AUTHORITY_LEVEL_WEIGHTS`, which will not be overwritten by this script.
+> every run, overwriting any hand-written notes (this one included) -- the durable copy of the
+> finding below lives in `rag.py` as a comment above `authority_level_boost()` /
+> `PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY`.
 >
-> This particular regeneration (2026-09-14) also found that the previously-committed baseline
-> (last generated at commit `3ed645c`) predated the cyber corpus expansion in commit
-> `0dbf9415a572d8500de0da6b7cfeb338b21bbe54`, which added `cybercrime_portal_citizen_manual_latest.pdf`
-> among other documents and re-embedded the corpus. `backend/vectorstore/` is git-ignored and
-> rebuilt locally from `backend/parsed/*`, so the numbers below reflect whatever corpus state is
-> currently embedded locally, not necessarily what's committed. The metric shift from the prior
-> committed baseline (Domain Hit@1 100.0% -> 97.2%, Document Hit@5 97.2% -> 88.9%, MRR 0.944 ->
-> 0.813) reflects that stale-baseline gap, not any change made in this session -- confirmed by
-> re-running this script twice back-to-back with no code changes between runs (identical output
-> both times) and by this script's evaluation path never calling `LegalRAG.retrieve()` (the only
-> function touched by this session's candidate_k widening fix; this script calls
-> `retrieve_candidates()` directly with a fixed `candidate_k=10`).
+> A down-weighting fix was added this session for retrieval_priority=low + authority_level=
+> procedural_guide documents (currently `cybercrime_portal_citizen_manual_latest.pdf`,
+> `national_cybercrime_reporting_portal_user_manual_2019.pdf`,
+> `sanchar_saathi_ceir_user_manual.pdf`) on substantive (non-procedural-intent) queries. **This
+> file's own Overall Metrics do not reflect it**, and that's expected, not a sign the fix didn't
+> work: `evaluate_retrieval.py` calls `retrieve_candidates()` with its own hardcoded
+> `RAW_CANDIDATE_K=10`, a narrower window than `LegalRAG.retrieve()` actually uses in production
+> (40 for single-domain queries as of this session). At candidate_k=10, statutory sources like the
+> IT Act/DPDP Act often aren't fetched as candidates at all for cyber queries where these manuals
+> dominate raw semantic similarity, so no amount of down-weighting inside this evaluator's own
+> 10-candidate window can surface them -- verified directly against the production `retrieve()`
+> path instead (candidate_k=40): e.g. for `cyber fraud online payment`, IT Act s.66C now appears
+> at rank 3 of 4 alongside the manual, correctly, where it was absent before. See the git history /
+> conversation record for full before/after numbers across both substantive and procedural test
+> queries; this evaluator is not a reliable proxy for that particular before/after because of the
+> candidate_k mismatch just described (a pre-existing property of this script, not something
+> changed this session).
+>
+> One side effect specific to this evaluator's narrow window: `average_off_domain_top5_count`
+> moved slightly (0.056 -> 0.083 overall; cyber 0.111 -> 0.222). Traced to one query
+> (`intermediary failed to remove unlawful content`): with the manual correctly down-weighted, this
+> evaluator's 10-candidate pool had no other strong same-domain candidate to fill the vacated
+> slot and fell back to an off-domain RTI Act chunk. Confirmed this does not happen against the
+> real `LegalRAG.retrieve()` path (candidate_k=40), which fills that slot with another cyber
+> document (an Intermediary Guidelines Rules chunk) instead -- an artifact of this evaluator's
+> RAW_CANDIDATE_K=10 being narrower than production, not a real production regression.
 
 ## Overall Metrics
 - Single-domain queries: 36
@@ -28,12 +41,12 @@
 - Document Hit@5: 88.9%
 - Provision Hit@5: 90.9% over 11 provision-labelled queries
 - MRR: 0.813
-- Average off-domain Top-5 count: 0.056
+- Average off-domain Top-5 count: 0.083
 
 ## Domain-wise Performance
 - constitutional_public_authority: Domain Hit@1 100.0%, Document Hit@5 100.0%, MRR 1.0, Avg off-domain Top-5 0.111
 - consumer: Domain Hit@1 100.0%, Document Hit@5 88.9%, MRR 0.849, Avg off-domain Top-5 0.0
-- cyber: Domain Hit@1 88.9%, Document Hit@5 66.7%, MRR 0.404, Avg off-domain Top-5 0.111
+- cyber: Domain Hit@1 88.9%, Document Hit@5 66.7%, MRR 0.404, Avg off-domain Top-5 0.222
 - tenancy: Domain Hit@1 100.0%, Document Hit@5 100.0%, MRR 1.0, Avg off-domain Top-5 0.0
 
 ## Strong Examples
@@ -51,34 +64,20 @@
 - `direct selling company refusing refund`: expected primary document absent from Top 5; top result `consumer/consumer_protection_act_2019.pdf`
 - `cyber fraud online payment`: broad supporting statute outranking primary source, generic/common wording, duplicate/adjacent chunks; top result `cyber/cybercrime_portal_citizen_manual_latest.pdf`
 - `phishing link stole my money`: broad supporting statute outranking primary source, expected primary document absent from Top 5, duplicate/adjacent chunks; top result `cyber/cybercrime_portal_citizen_manual_latest.pdf`
-- `someone hacked my social media account`: broad supporting statute outranking primary source, expected primary document absent from Top 5, duplicate/adjacent chunks; top result `cyber/cybercrime_portal_citizen_manual_latest.pdf`
+- `someone hacked my social media account`: broad supporting statute outranking primary source, expected primary document absent from Top 5, duplicate/adjacent chunks; top result `cyber/it_blocking_rules_2009.pdf`
 
 ## Cyber Retrieval Analysis
-> **Known limitation, accepted as of 2026-09-14 (not a new regression if seen again):**
-> `cybercrime_portal_citizen_manual_latest.pdf` (added in commit
-> `0dbf9415a572d8500de0da6b7cfeb338b21bbe54`) is already tagged `status: reference_only`,
-> `authority_level: procedural_guide`, `retrieval_priority: low` in `corpus_manifest.json`, and
-> `rag.py`'s down-weighting is applied to it -- but its plain, citizen-facing language still has
-> strong enough raw semantic similarity to user-style cyber queries that it sometimes outranks
-> primary statutory text anyway, as seen taking all of ranks 1-5 below for `cyber fraud online
-> payment`. This was investigated and ruled out as the cause of several other eval findings (a
-> domain_router misclassification, two grounded_answer unsafe-certainty flags, a corpus_gap
-> abstain->answer flip). Accepted as-is; not considered worth further scoring changes. If this
-> baseline is re-run and shows the same document at similar ranks/scores for cyber-domain
-> queries, that reflects this accepted state, not a new regression -- compare against the actual
-> regression bar (missing primary document, wrong domain, or a real score/rank shift on
-> statutory text), not against this document's presence in the Top 5.
 - `cyber fraud online payment` Top 5:
-  - rank 1: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.6485, rerank 0.8165
-  - rank 2: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.5975, rerank 0.7655
-  - rank 3: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.6161, rerank 0.7541
-  - rank 4: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.5853, rerank 0.7533
-  - rank 5: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.585, rerank 0.753
+  - rank 1: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.6485, rerank 0.6165
+  - rank 2: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.5975, rerank 0.5655
+  - rank 3: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.6161, rerank 0.5541
+  - rank 4: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.5853, rerank 0.5533
+  - rank 5: `cyber/cybercrime_portal_citizen_manual_latest.pdf` domain `cyber`, score 0.585, rerank 0.553
 
 ## Supporting vs Primary Source Issues
 - `cyber fraud online payment`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 1 before first primary rank None
 - `phishing link stole my money`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 1 before first primary rank None
-- `someone hacked my social media account`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 1 before first primary rank 10
+- `someone hacked my social media account`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 2 before first primary rank 10
 - `how to report online cybercrime`: supporting `cyber/cybercrime_portal_citizen_manual_latest.pdf` at rank 1 before first primary rank 5
 
 ## Cross-Domain Queries

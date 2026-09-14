@@ -218,19 +218,10 @@
           "section_title": "Punishment for identity theft"
         },
         {
-          "document_title": "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
-          "domain": "cyber",
-          "provision": "",
-          "rank": 2,
-          "rerank_score": 0.7451,
-          "score": 0.5511,
-          "section_title": null
-        },
-        {
           "document_title": "The Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011",
           "domain": "cyber",
           "provision": "2",
-          "rank": 3,
+          "rank": 2,
           "rerank_score": 0.7189,
           "score": 0.4799,
           "section_title": "Definitions"
@@ -239,10 +230,19 @@
           "document_title": "CERT-In Directions under sub-section (6) of section 70B of the Information Technology Act, 2000, dated 28 April 2022",
           "domain": "cyber",
           "provision": "",
-          "rank": 4,
+          "rank": 3,
           "rerank_score": 0.6921,
           "score": 0.5371,
           "section_title": null
+        },
+        {
+          "document_title": "The Information Technology Act, 2000",
+          "domain": "cyber",
+          "provision": "66F",
+          "rank": 4,
+          "rerank_score": 0.6726,
+          "score": 0.4566,
+          "section_title": "Punishment for cyber terrorism"
         }
       ],
       "source_family_coverage": true,
@@ -403,10 +403,19 @@
           "section_title": "Findings of District Commission"
         },
         {
+          "document_title": "The Consumer Protection Act, 2019",
+          "domain": "consumer",
+          "provision": "2",
+          "rank": 2,
+          "rerank_score": 0.889,
+          "score": 0.348,
+          "section_title": "Definitions"
+        },
+        {
           "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
           "domain": "consumer",
           "provision": "6",
-          "rank": 2,
+          "rank": 3,
           "rerank_score": 0.7945,
           "score": 0.4361,
           "section_title": "Duties of sellers on marketplace"
@@ -415,19 +424,10 @@
           "document_title": "The Consumer Protection Act, 2019",
           "domain": "consumer",
           "provision": "38",
-          "rank": 3,
+          "rank": 4,
           "rerank_score": 0.7725,
           "score": 0.3791,
           "section_title": "Procedure on admission of complaint"
-        },
-        {
-          "document_title": "The Consumer Protection Act, 2019",
-          "domain": "consumer",
-          "provision": "47",
-          "rank": 4,
-          "rerank_score": 0.7207,
-          "score": 0.3757,
-          "section_title": "Jurisdiction of State Commission"
         }
       ],
       "source_family_coverage": true,
@@ -465,22 +465,22 @@
           "section_title": "Duties of sellers on marketplace"
         },
         {
-          "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
-          "domain": "cyber",
-          "provision": "",
-          "rank": 3,
-          "rerank_score": 0.6327,
-          "score": 0.515,
-          "section_title": null
-        },
-        {
           "document_title": "The Consumer Protection (Direct Selling) Rules, 2021",
           "domain": "consumer",
           "provision": "7",
-          "rank": 4,
+          "rank": 3,
           "rerank_score": 0.6541,
           "score": 0.3974,
           "section_title": "Duties of direct selling entity and direct seller"
+        },
+        {
+          "document_title": "National Payments Corporation of India - Unified Payments Interface (UPI) Procedural Guidelines",
+          "domain": "cyber",
+          "provision": "",
+          "rank": 4,
+          "rerank_score": 0.5399,
+          "score": 0.3984,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
@@ -730,22 +730,22 @@
           "section_title": "Duties of sellers on marketplace"
         },
         {
-          "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
-          "domain": "cyber",
-          "provision": "",
-          "rank": 3,
-          "rerank_score": 0.6327,
-          "score": 0.515,
-          "section_title": null
-        },
-        {
           "document_title": "The Consumer Protection (Direct Selling) Rules, 2021",
           "domain": "consumer",
           "provision": "7",
-          "rank": 4,
+          "rank": 3,
           "rerank_score": 0.6541,
           "score": 0.3974,
           "section_title": "Duties of direct selling entity and direct seller"
+        },
+        {
+          "document_title": "National Payments Corporation of India - Unified Payments Interface (UPI) Procedural Guidelines",
+          "domain": "cyber",
+          "provision": "",
+          "rank": 4,
+          "rerank_score": 0.5399,
+          "score": 0.3984,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
