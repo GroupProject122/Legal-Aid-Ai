@@ -17,6 +17,7 @@ import {
   FileImage,
   FileText,
   FolderOpen,
+  Gavel,
   Gift,
   Globe2,
   HardDrive,
@@ -51,9 +52,15 @@ import { IntakeForm } from './schemes/IntakeForm.jsx';
 import { ResultsList } from './schemes/ResultsList.jsx';
 import { ApiError, postMatch } from './schemes/api.js';
 
+import { ScenarioPicker, SCENARIOS } from './complaints/ScenarioPicker.jsx';
+import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
+import { DraftPreview } from './complaints/DraftPreview.jsx';
+import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
+
 const navItems = [
   { label: 'Home', icon: Home, page: 'home', href: '#/' },
   { label: 'Ask Question', icon: MessageCircle, page: 'ask', href: '#/ask' },
+  { label: 'Draft Complaint', icon: Gavel, page: 'complaints', href: '#/complaints' },
   { label: 'My Cases', icon: BriefcaseBusiness, page: 'cases', href: '#/cases' },
   { label: 'Documents', icon: FileText, page: 'documents', href: '#/documents' },
   { label: 'Summarize Document', icon: Sparkles, page: 'summarize', href: '#/summarize-document' },
@@ -80,10 +87,10 @@ const features = [
   },
   {
     title: 'Draft Complaints',
-    description: 'Create professional complaint letters in seconds.',
+    description: 'Create a ready-to-file complaint from a fixed legal template.',
     button: 'Create Now',
-    icon: FilePenLine,
-    href: '#/ask'
+    icon: Gavel,
+    href: '#/complaints'
   },
   {
     title: 'Follow Procedure',
@@ -2646,6 +2653,93 @@ function OtherLegalAidServices() {
   );
 }
 
+function ComplaintDrafterPage() {
+  const [scenario, setScenario] = React.useState(null);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState(null);
+  // The field this error concerns, read directly off ApiError.field (the backend's own
+  // structured `field` response key -- see complaints/api.js and complaint_drafter_router.py).
+  // Not derived from the message text.
+  const [errorField, setErrorField] = React.useState(null);
+  const [draft, setDraft] = React.useState(null); // { intake, response }
+
+  async function handleSubmit(intake) {
+    setSubmitting(true);
+    setErrorMessage(null);
+    setErrorField(null);
+    try {
+      const response = await generateDraft(scenario, intake);
+      setDraft({ intake, response });
+    } catch (error) {
+      if (error instanceof ComplaintApiError) {
+        setErrorMessage(error.message);
+        setErrorField(error.field);
+      } else {
+        setErrorMessage('Something went wrong while drafting this complaint. Please try again.');
+        setErrorField(null);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function handleChangeScenario(nextScenario) {
+    setScenario(nextScenario);
+    setDraft(null);
+    setErrorMessage(null);
+    setErrorField(null);
+  }
+
+  function handleBackToForm() {
+    setDraft(null);
+    setErrorMessage(null);
+    setErrorField(null);
+  }
+
+  const activeScenario = SCENARIOS.find((item) => item.id === scenario);
+
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="rights-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>◇</i></div>
+          <h2>Draft a Complaint</h2>
+          <div className="header-ornament-line"><i>◇</i><span /></div>
+          <p>
+            Answer a few questions and get a ready-to-file complaint document. The wording comes
+            from a fixed legal template filled in with your answers — it is not written by AI.
+          </p>
+          <PageDivider />
+        </header>
+
+        {!scenario ? (
+          <ScenarioPicker onSelect={handleChangeScenario} />
+        ) : draft ? (
+          <DraftPreview scenario={scenario} intake={draft.intake} draft={draft.response} onBack={handleBackToForm} />
+        ) : (
+          <section className="rights-panel">
+            <button type="button" className="rights-back-button" onClick={() => handleChangeScenario(null)}>
+              ← Choose a different complaint type
+            </button>
+            <h3>{activeScenario?.title}</h3>
+            <ComplaintIntakeForm
+              scenario={scenario}
+              submitting={submitting}
+              errorMessage={errorMessage}
+              errorField={errorField}
+              onSubmit={handleSubmit}
+            />
+          </section>
+        )}
+
+        <RightsDisclaimerCard text="This tool fills a fixed legal template from what you enter — it does not generate or invent legal wording. Always review the finished document, and consult a lawyer before filing anything beyond routine drafting." />
+      </div>
+    </>
+  );
+}
+
 function SchemesPage() {
   const [screen, setScreen] = React.useState('form');
   const [profile, setProfile] = React.useState({});
@@ -2809,6 +2903,19 @@ const homeSections = [
       'Free Legal Aid (NALSA) if you qualify',
       'Consumer (1915) and Cyber Crime (1930) helplines',
       'Tele-Law advice and online case filing (e-Daakhil)'
+    ]
+  },
+  {
+    id: 'complaints',
+    kicker: '06',
+    label: 'Draft Complaint',
+    href: '#/complaints',
+    cta: 'Draft a complaint',
+    summary: 'Answer a few questions and get a ready-to-file complaint document, filled from a fixed legal template — not written by AI.',
+    points: [
+      'Tenancy eviction petitions, or consumer complaints for defective goods and misleading ads',
+      'Every citation is checked against the actual Act or CCPA guideline before it is used',
+      'Download the finished complaint as a DOCX or PDF'
     ]
   }
 ];
@@ -3823,19 +3930,21 @@ export default function App() {
   const initialCaseId = queryParams.get('case') || '';
   const activePage = routeSegments[0] === 'ask'
     ? 'ask'
-    : routeSegments[0] === 'documents'
-      ? 'documents'
-      : routeSegments[0] === 'summarize-document'
-        ? 'summarize'
-        : routeSegments[0] === 'cases'
-          ? 'cases'
-          : routeSegments[0] === 'rights'
-            ? 'rights'
-            : routeSegments[0] === 'about'
-              ? 'about'
-              : routeSegments[0] === 'schemes'
-                ? 'schemes'
-                : 'home';
+    : routeSegments[0] === 'complaints'
+      ? 'complaints'
+      : routeSegments[0] === 'documents'
+        ? 'documents'
+        : routeSegments[0] === 'summarize-document'
+          ? 'summarize'
+          : routeSegments[0] === 'cases'
+            ? 'cases'
+            : routeSegments[0] === 'rights'
+              ? 'rights'
+              : routeSegments[0] === 'about'
+                ? 'about'
+                : routeSegments[0] === 'schemes'
+                  ? 'schemes'
+                  : 'home';
 
   return (
     <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
@@ -3856,6 +3965,7 @@ export default function App() {
       />
       <main className={`main-panel ${activePage}-page-panel`}>
         {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} />}
+        {activePage === 'complaints' && <ComplaintDrafterPage />}
         {activePage === 'cases' && <MyCasesPage />}
         {activePage === 'documents' && <DocumentsPage />}
         {activePage === 'summarize' && <SummarizeDocumentPage />}

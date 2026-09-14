@@ -1741,6 +1741,21 @@ body.has-custom-cursor textarea {
   display: none;
 }
 
+.complaints-page-panel {
+  background-color: #f3e6cd;
+  /* TODO: placeholder asset — duplicated from document-page-bg.png. Needs a
+     real, purpose-designed background before ship (see final build notes). */
+  background-image: url('/complaints-page-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.complaints-page-panel .documents-background-art {
+  display: none;
+}
+
 .schemes-page-panel,
 .about-page-panel {
   background-color: #f3e6cd;
@@ -5116,7 +5131,12 @@ body.has-custom-cursor textarea {
   font-size: 1.02rem;
 }
 
-.scheme-field input:not([type='radio']),
+/* Pre-existing schemes/IntakeForm.jsx only ever used radio/select inputs inside a .scheme-field,
+   so excluding just [type='radio'] here was enough at the time -- it never excluded checkbox,
+   since none existed yet. The complaint-drafter's relief-sought checkboxes are the first
+   .scheme-field inputs of type checkbox in the codebase, and without this exclusion they
+   inherited width:100%/min-height:46px, stretching each checkbox into the size of a text input. */
+.scheme-field input:not([type='radio']):not([type='checkbox']),
 .scheme-field select {
   width: 100%;
   min-height: 46px;
@@ -5524,5 +5544,302 @@ body.has-custom-cursor textarea {
 
   .scheme-badge {
     align-self: flex-start;
+  }
+}
+
+/* ---- complaint drafter ---- */
+
+.complaint-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.complaint-scenario-card {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 22px 20px;
+  text-align: left;
+  color: inherit;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 247, 0.93), rgba(250, 241, 225, 0.86)),
+    radial-gradient(circle at 50% 0%, rgba(215, 177, 118, 0.08), transparent 34%);
+  border: 1px solid rgba(151, 91, 38, 0.3);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 3px rgba(255, 250, 240, 0.46), 0 12px 24px rgba(70, 42, 19, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.complaint-scenario-card:hover,
+.complaint-scenario-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 0 3px rgba(255, 250, 240, 0.5), 0 16px 30px rgba(70, 42, 19, 0.14);
+}
+
+.complaint-scenario-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--caramel);
+  background: var(--scheme-caution-tint);
+  border-radius: 10px;
+}
+
+.complaint-scenario-card h3 {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: 1.18rem;
+  color: var(--mocha);
+}
+
+.complaint-scenario-act {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--taupe);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.complaint-scenario-description {
+  margin: 2px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: rgba(63, 40, 22, 0.75);
+}
+
+.complaint-scenario-cta {
+  margin-top: 6px;
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--caramel);
+}
+
+.complaint-field-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.complaint-field-wide {
+  grid-column: 1 / -1;
+}
+
+.complaint-required {
+  color: #a3311f;
+}
+
+.complaint-field-error input:not([type='radio']):not([type='checkbox']),
+.complaint-field-error select,
+.complaint-field-error textarea {
+  border-color: #a3311f;
+  outline: 2px solid rgba(163, 49, 31, 0.25);
+}
+
+.complaint-field-message {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a3311f;
+}
+
+.complaint-checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-top: 4px;
+}
+
+.complaint-checkbox-option {
+  display: grid;
+  gap: 3px;
+  max-width: 260px;
+}
+
+.complaint-checkbox-option .scheme-radio {
+  white-space: nowrap;
+}
+
+.complaint-option-hint {
+  margin: 0 0 0 24px;
+  font-size: 0.78rem;
+  font-style: italic;
+  white-space: normal;
+}
+
+.complaint-preview-header {
+  margin-top: 10px;
+}
+
+.complaint-preview-header h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  color: var(--mocha);
+}
+
+.complaint-preview-act {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--taupe);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.complaint-review-banner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 16px 0;
+  padding: 14px 16px;
+  color: #7a3410;
+  background: rgba(230, 168, 90, 0.22);
+  border: 1px solid rgba(179, 108, 33, 0.45);
+  border-left: 4px solid #c9761f;
+  border-radius: 10px;
+}
+
+.complaint-review-banner strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+}
+
+.complaint-review-banner p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.complaint-forum-tier {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  color: var(--mocha-soft);
+}
+
+.complaint-preview-section {
+  margin-top: 22px;
+}
+
+.complaint-preview-section h4 {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--mocha);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+
+.complaint-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  margin: 0;
+}
+
+.complaint-summary-item {
+  display: grid;
+  gap: 2px;
+}
+
+.complaint-summary-item dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--taupe);
+}
+
+.complaint-summary-item dd {
+  margin: 0;
+  font-size: 0.94rem;
+  color: var(--ink);
+}
+
+.complaint-citation-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.complaint-citation-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  background: rgba(255, 252, 245, 0.7);
+  border: 1px solid rgba(179, 125, 57, 0.28);
+  border-radius: 8px;
+}
+
+.complaint-citation-cite {
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--mocha);
+}
+
+.complaint-citation-act {
+  font-size: 0.88rem;
+  color: rgba(63, 40, 22, 0.7);
+}
+
+.complaint-citation-authority {
+  margin-left: auto;
+  padding: 3px 9px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border-radius: 999px;
+}
+
+.complaint-citation-authority-primary {
+  color: var(--scheme-eligible);
+  background: var(--scheme-eligible-tint);
+}
+
+.complaint-citation-authority-official_guidance {
+  color: #8a5a1e;
+  background: var(--scheme-caution-tint);
+}
+
+.complaint-download-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.complaint-download-button {
+  display: grid;
+  gap: 6px;
+}
+
+.complaint-download-error {
+  max-width: 320px;
+}
+
+.complaint-disclaimer {
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .complaint-scenario-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .complaint-field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .complaint-summary-grid {
+    grid-template-columns: 1fr;
   }
 }
