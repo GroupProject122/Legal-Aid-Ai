@@ -14,6 +14,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 import clarification
 import case_store
 import claim_verifier
+import complaint_drafter_router
 import corpus_gap
 import conversation_state
 import document_extractor
@@ -63,9 +64,16 @@ app.add_middleware(
     allow_headers=["Content-Type"],
 )
 
+app.include_router(complaint_drafter_router.router)
+
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(_request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    # A dict detail (currently only complaint_drafter_router.py's structured field-validation
+    # errors) is forwarded as-is; every other endpoint in this codebase passes a plain string,
+    # which keeps hitting the branch below exactly as before.
+    if isinstance(exc.detail, dict):
+        return JSONResponse(status_code=exc.status_code, content=exc.detail)
     detail = exc.detail if isinstance(exc.detail, str) else "The request could not be processed."
     return JSONResponse(status_code=exc.status_code, content={"detail": detail})
 

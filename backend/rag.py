@@ -75,6 +75,8 @@ class RetrievedChunk:
     article_title: str | None = None
     regulation_number: str | None = None
     regulation_title: str | None = None
+    guideline_number: str | None = None
+    guideline_title: str | None = None
     page_start: int | None = None
     page_end: int | None = None
 
@@ -685,6 +687,8 @@ class LegalRAG:
                     article_title=item.get("article_title"),
                     regulation_number=item.get("regulation_number"),
                     regulation_title=item.get("regulation_title"),
+                    guideline_number=item.get("guideline_number"),
+                    guideline_title=item.get("guideline_title"),
                     page_start=item.get("page_start"),
                     page_end=item.get("page_end"),
                 )

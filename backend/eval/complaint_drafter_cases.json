@@ -1,0 +1,266 @@
+{
+  "notes": "Curated cases for the tenancy-eviction (Delhi Rent Control Act, 1958) complaint-drafter scenario. Each case runs the actual Pydantic validator + clause-selector + citation-resolution pipeline in complaint_drafter.py -- nothing here is mocked. Section 3 of the Act reads 'monthly rent exceeds three thousand and five hundred rupees' -- 'exceeds' is strictly-greater-than, so the cap is EXCLUSIVE: a rent of exactly Rs. 3,500 is still covered by the Act (case boundary_rent_at_cap_is_covered), and only a rent strictly above Rs. 3,500 falls outside it (case boundary_rent_just_above_cap_is_excluded).",
+  "cases": [
+    {
+      "id": "valid_arrears",
+      "group": "valid_per_ground",
+      "description": "Complete arrears-ground intake should validate and resolve to Section 14(1)(a).",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "arrears",
+        "relief_sought": ["recovery_of_possession", "arrears_payment"],
+        "arrears_amount": 45000,
+        "arrears_period_months": 6
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "tenancy_arrears_ground.txt",
+      "expected_citation": {
+        "section_cite": "Section 14(1)(a)",
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+        "section_number": "14"
+      }
+    },
+    {
+      "id": "valid_subletting",
+      "group": "valid_per_ground",
+      "description": "Complete subletting-ground intake should validate and resolve to Section 14(1)(b).",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "subletting",
+        "relief_sought": ["recovery_of_possession"],
+        "subletting_details": "Sublet the rear room to a third party without the landlord's written consent since January 2024."
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "tenancy_subletting_ground.txt",
+      "expected_citation": {
+        "section_cite": "Section 14(1)(b)",
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+        "section_number": "14"
+      }
+    },
+    {
+      "id": "valid_damage",
+      "group": "valid_per_ground",
+      "description": "Complete damage-ground intake should validate and resolve to Section 14(1)(j).",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "damage",
+        "relief_sought": ["recovery_of_possession", "damages"],
+        "damage_description": "Removed a load-bearing wall in the kitchen without the landlord's permission."
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "tenancy_damage_ground.txt",
+      "expected_citation": {
+        "section_cite": "Section 14(1)(j)",
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+        "section_number": "14"
+      }
+    },
+    {
+      "id": "valid_bona_fide_requirement",
+      "group": "valid_per_ground",
+      "description": "Complete bona-fide-requirement intake should validate and resolve to Section 14(1)(e).",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "bona_fide_requirement",
+        "relief_sought": ["recovery_of_possession"],
+        "bona_fide_reason": "Landlord's son is returning from abroad and needs the flat to live in with his family."
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "tenancy_bona_fide_ground.txt",
+      "expected_citation": {
+        "section_cite": "Section 14(1)(e)",
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+        "section_number": "14"
+      }
+    },
+    {
+      "id": "rent_cap_exclusion",
+      "group": "hard_validators",
+      "description": "Monthly rent above Rs. 3,500 (Section 3) must fail validation, not proceed silently.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 4000,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "arrears",
+        "relief_sought": ["recovery_of_possession"],
+        "arrears_amount": 8000,
+        "arrears_period_months": 2
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_rent_cap",
+      "expected_failure_message_contains": "exceeds Rs. 3,500"
+    },
+    {
+      "id": "boundary_rent_at_cap_is_covered",
+      "group": "rent_cap_boundary",
+      "description": "Section 3 excludes premises whose rent 'exceeds' Rs. 3,500 -- exceeds is strictly-greater-than, so a rent of exactly Rs. 3,500 is still covered by the Act and must PASS validation.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 3500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "arrears",
+        "relief_sought": ["recovery_of_possession"],
+        "arrears_amount": 7000,
+        "arrears_period_months": 2
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "tenancy_arrears_ground.txt",
+      "expected_citation": {
+        "section_cite": "Section 14(1)(a)",
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+        "section_number": "14"
+      }
+    },
+    {
+      "id": "boundary_rent_just_above_cap_is_excluded",
+      "group": "rent_cap_boundary",
+      "description": "A rent one paisa above Rs. 3,500 already 'exceeds' the cap and must FAIL validation.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 3500.01,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "arrears",
+        "relief_sought": ["recovery_of_possession"],
+        "arrears_amount": 7000,
+        "arrears_period_months": 2
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_rent_cap",
+      "expected_failure_message_contains": "exceeds Rs. 3,500"
+    },
+    {
+      "id": "incomplete_arrears_missing_amount",
+      "group": "hard_validators",
+      "description": "grounds_for_eviction=arrears without arrears_amount/arrears_period_months must fail as incomplete, not proceed with blank fields.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "arrears",
+        "relief_sought": ["recovery_of_possession"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_conditional_fields_for_grounds",
+      "expected_failure_message_contains": "incomplete"
+    },
+    {
+      "id": "incomplete_subletting_missing_details",
+      "group": "hard_validators",
+      "description": "grounds_for_eviction=subletting without subletting_details must fail as incomplete.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "subletting",
+        "relief_sought": ["recovery_of_possession"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_conditional_fields_for_grounds",
+      "expected_failure_message_contains": "incomplete"
+    },
+    {
+      "id": "incomplete_damage_missing_description",
+      "group": "hard_validators",
+      "description": "grounds_for_eviction=damage without damage_description must fail as incomplete.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "damage",
+        "relief_sought": ["recovery_of_possession"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_conditional_fields_for_grounds",
+      "expected_failure_message_contains": "incomplete"
+    },
+    {
+      "id": "incomplete_bona_fide_missing_reason",
+      "group": "hard_validators",
+      "description": "grounds_for_eviction=bona_fide_requirement without bona_fide_reason must fail as incomplete.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": "bona_fide_requirement",
+        "relief_sought": ["recovery_of_possession"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_conditional_fields_for_grounds",
+      "expected_failure_message_contains": "incomplete"
+    },
+    {
+      "id": "future_tenancy_start_date",
+      "group": "hard_validators",
+      "description": "A tenancy_start_date in the future must fail validation as invalid.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2099-01-01",
+        "grounds_for_eviction": "arrears",
+        "relief_sought": ["recovery_of_possession"],
+        "arrears_amount": 5000,
+        "arrears_period_months": 1
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_tenancy_start_date_not_future",
+      "expected_failure_message_contains": "cannot be in the future"
+    }
+  ]
+}

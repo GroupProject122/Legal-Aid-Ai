@@ -1,0 +1,210 @@
+{
+  "notes": "Curated cases for the misleading-advertisement / dark-pattern scenario (Consumer Protection Act, 2019, informed by the CCPA's misleading-ads and dark-patterns guidelines). Each case runs the actual Pydantic validator + clause-selector + citation-resolution pipeline in complaint_drafter.py -- nothing here is mocked. dark_pattern_deceptive_design is expected to resolve against the corpus (Guideline 4 exists) but is flagged citation_review_required=true because its statutory characterization is framed in the alternative by the guideline itself, not a single direct Act provision -- see GOODS_CLAUSE_CITATIONS/ADS_CLAUSE_CITATIONS comments in complaint_drafter.py.",
+  "cases": [
+    {
+      "id": "valid_false_claim_about_goods",
+      "group": "valid_per_ground",
+      "description": "Complete false-claim intake should validate and resolve to Section 2(28)(i).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "GlowSkin Cosmetics",
+        "opposite_party_address": "9 Ring Road, Bengaluru",
+        "advertisement_or_practice_description": "Print ad describing the cream as clinically proven to remove wrinkles in 3 days",
+        "platform_or_medium": "print",
+        "date_encountered": "2025-06-01",
+        "claim_type": "false_claim_about_goods",
+        "how_it_caused_loss": "I purchased the cream for Rs. 1200 relying on this claim; it had no effect and no clinical study exists.",
+        "relief_sought": ["discontinuation_of_practice"]
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "ads_false_claim_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(28)(i)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"},
+      "expected_citation_review_required": false
+    },
+    {
+      "id": "valid_misleading_price_representation",
+      "group": "valid_per_ground",
+      "description": "Complete misleading-price intake should validate and resolve to Section 2(47)(i)(i).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "MegaMart Online",
+        "opposite_party_address": "e-commerce, registered office Mumbai",
+        "advertisement_or_practice_description": "Website showed a struck-through 'original price' far higher than the item had ever actually sold for",
+        "platform_or_medium": "e_commerce_website",
+        "date_encountered": "2025-06-01",
+        "claim_type": "misleading_price_representation",
+        "how_it_caused_loss": "I paid Rs. 2000 believing I was getting a 60% discount that did not actually exist.",
+        "relief_sought": ["compensation"],
+        "compensation_amount": 500
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "ads_misleading_price_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(47)(i)(i)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"},
+      "expected_citation_review_required": false
+    },
+    {
+      "id": "valid_false_guarantee_or_warranty",
+      "group": "valid_per_ground",
+      "description": "Complete false-guarantee intake should validate and resolve to Section 2(28)(ii).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "HomeAppliances Direct",
+        "opposite_party_address": "17 Mall Road, Bengaluru",
+        "advertisement_or_practice_description": "TV ad promising a 5-year full replacement guarantee on the mixer",
+        "platform_or_medium": "television",
+        "date_encountered": "2025-06-01",
+        "claim_type": "false_guarantee_or_warranty",
+        "how_it_caused_loss": "The mixer failed after 6 months and the seller refused the promised replacement guarantee entirely.",
+        "relief_sought": ["discontinuation_of_practice", "compensation"],
+        "compensation_amount": 1500
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "ads_false_guarantee_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(28)(ii)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"},
+      "expected_citation_review_required": false
+    },
+    {
+      "id": "valid_surrogate_advertisement",
+      "group": "valid_per_ground",
+      "description": "Complete surrogate-advertisement intake should validate and resolve to Guideline 6 of the misleading-ads guidelines.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Premium Soda Club",
+        "opposite_party_address": "5 Industrial Area, Bengaluru",
+        "advertisement_or_practice_description": "TV ad for 'Premium Soda Club' using the exact branding of a liquor brand whose direct advertising is restricted by law",
+        "platform_or_medium": "television",
+        "date_encountered": "2025-06-01",
+        "claim_type": "surrogate_advertisement",
+        "how_it_caused_loss": "As a recovering alcoholic I was repeatedly exposed to disguised liquor-brand advertising, undermining my treatment.",
+        "relief_sought": ["discontinuation_of_practice"]
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "ads_surrogate_advertisement_ground.txt",
+      "expected_citation": {"section_cite": "Guideline 6(1), read with the definition in Guideline 2(h)", "source_file": "consumer/misleading_ads_guidelines_2022.pdf", "guideline_number": "6"},
+      "expected_citation_review_required": false
+    },
+    {
+      "id": "valid_dark_pattern_deceptive_design",
+      "group": "valid_per_ground",
+      "description": "Complete dark-pattern intake should validate, resolve against the corpus, and be flagged for manual citation review.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "BookMyTrip Travel",
+        "opposite_party_address": "e-commerce, registered office Delhi",
+        "advertisement_or_practice_description": "Checkout page auto-added travel insurance with a pre-ticked box before payment",
+        "platform_or_medium": "e_commerce_website",
+        "date_encountered": "2025-06-01",
+        "claim_type": "dark_pattern_deceptive_design",
+        "how_it_caused_loss": "I was charged Rs. 499 extra for insurance I never selected or wanted, discovered only after payment.",
+        "relief_sought": ["compensation", "discontinuation_of_practice"],
+        "compensation_amount": 499
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "ads_dark_pattern_ground.txt",
+      "expected_citation": {"section_cite": "Guideline 4, read with the definition in Guideline 2(e)", "source_file": "consumer/dark_patterns_guidelines_2023.pdf", "guideline_number": "4"},
+      "expected_citation_review_required": true
+    },
+    {
+      "id": "hard_fail_loss_description_too_short",
+      "group": "hard_validators",
+      "description": "how_it_caused_loss under the minimum length must fail as insufficiently specific.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "GlowSkin Cosmetics",
+        "opposite_party_address": "9 Ring Road, Bengaluru",
+        "advertisement_or_practice_description": "Print ad describing the cream as clinically proven to remove wrinkles in 3 days",
+        "platform_or_medium": "print",
+        "date_encountered": "2025-06-01",
+        "claim_type": "false_claim_about_goods",
+        "how_it_caused_loss": "It didn't work.",
+        "relief_sought": ["discontinuation_of_practice"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "at least 20 characters"
+    },
+    {
+      "id": "hard_fail_loss_description_empty",
+      "group": "hard_validators",
+      "description": "An empty how_it_caused_loss must fail as insufficiently specific.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "GlowSkin Cosmetics",
+        "opposite_party_address": "9 Ring Road, Bengaluru",
+        "advertisement_or_practice_description": "Print ad describing the cream as clinically proven to remove wrinkles in 3 days",
+        "platform_or_medium": "print",
+        "date_encountered": "2025-06-01",
+        "claim_type": "false_claim_about_goods",
+        "how_it_caused_loss": "",
+        "relief_sought": ["discontinuation_of_practice"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "at least 20 characters"
+    },
+    {
+      "id": "hard_fail_future_date_encountered",
+      "group": "hard_validators",
+      "description": "date_encountered in the future must fail validation.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "GlowSkin Cosmetics",
+        "opposite_party_address": "9 Ring Road, Bengaluru",
+        "advertisement_or_practice_description": "Print ad describing the cream as clinically proven to remove wrinkles in 3 days",
+        "platform_or_medium": "print",
+        "date_encountered": "2099-01-01",
+        "claim_type": "false_claim_about_goods",
+        "how_it_caused_loss": "I purchased the cream relying on this claim and it had no effect at all on my skin.",
+        "relief_sought": ["discontinuation_of_practice"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "cannot be in the future"
+    },
+    {
+      "id": "hard_fail_compensation_relief_missing_amount",
+      "group": "hard_validators",
+      "description": "'compensation' in relief_sought without compensation_amount must fail as incomplete.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "GlowSkin Cosmetics",
+        "opposite_party_address": "9 Ring Road, Bengaluru",
+        "advertisement_or_practice_description": "Print ad describing the cream as clinically proven to remove wrinkles in 3 days",
+        "platform_or_medium": "print",
+        "date_encountered": "2025-06-01",
+        "claim_type": "false_claim_about_goods",
+        "how_it_caused_loss": "I purchased the cream relying on this claim and it had no effect at all on my skin.",
+        "relief_sought": ["compensation"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "incomplete"
+    },
+    {
+      "id": "valid_dark_pattern_without_purchase",
+      "group": "no_transaction_case",
+      "description": "A dark-pattern claim with no completed purchase (amount_paid omitted) should still validate -- not every dark-pattern claim involves a transaction.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "QuickSignup App",
+        "opposite_party_address": "e-commerce, registered office Pune",
+        "advertisement_or_practice_description": "App used confirm-shaming language ('No, I don't want to save money') to discourage cancelling a free trial before it converted to a paid plan",
+        "platform_or_medium": "digital_display",
+        "date_encountered": "2025-06-01",
+        "claim_type": "dark_pattern_deceptive_design",
+        "how_it_caused_loss": "The manipulative design pressured me into continuing a trial I had already decided to cancel, though I did not complete any purchase.",
+        "relief_sought": ["discontinuation_of_practice"]
+      },
+      "expected_outcome": "pass",
+      "expected_clause_file": "ads_dark_pattern_ground.txt",
+      "expected_citation": {"section_cite": "Guideline 4, read with the definition in Guideline 2(e)", "source_file": "consumer/dark_patterns_guidelines_2023.pdf", "guideline_number": "4"},
+      "expected_citation_review_required": true
+    }
+  ]
+}

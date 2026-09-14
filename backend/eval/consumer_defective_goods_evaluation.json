@@ -1,0 +1,413 @@
+{
+  "dataset_summary": {
+    "grounds_covered": [
+      "defective_goods",
+      "deficient_service",
+      "short_delivery",
+      "spurious_goods",
+      "unfair_trade_practice_in_sale"
+    ],
+    "total_cases": 13
+  },
+  "evaluation_config": {
+    "act": "Consumer Protection Act, 2019",
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/consumer_defective_goods_cases.json",
+    "llm_calls": 0,
+    "note": "Slot-fill drafting pipeline only -- no LLM call is part of this path.",
+    "scenario": "consumer_defective_goods"
+  },
+  "failures": [],
+  "group_breakdown": {
+    "forum_tier_boundary": {
+      "case_count": 4,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "clause_selection_accuracy": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "forum_tier_accuracy": 1.0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 4
+    },
+    "hard_validators": {
+      "case_count": 4,
+      "citation_accuracy": 0.0,
+      "citation_corpus_resolution_rate": 0.0,
+      "clause_selection_accuracy": 0.0,
+      "fail_case_accuracy": 1.0,
+      "fail_case_count": 4,
+      "forum_tier_accuracy": 0.0,
+      "hard_fail_message_match_rate": 1.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 0.0,
+      "pass_case_count": 0
+    },
+    "valid_per_ground": {
+      "case_count": 5,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "clause_selection_accuracy": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "forum_tier_accuracy": 1.0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 5
+    }
+  },
+  "latency": {
+    "average_latency_ms": 24.38,
+    "cases": 13,
+    "max_latency_ms": 103
+  },
+  "overall_metrics": {
+    "case_count": 13,
+    "citation_accuracy": 1.0,
+    "citation_corpus_resolution_rate": 1.0,
+    "clause_selection_accuracy": 1.0,
+    "fail_case_accuracy": 1.0,
+    "fail_case_count": 4,
+    "forum_tier_accuracy": 1.0,
+    "hard_fail_message_match_rate": 1.0,
+    "overall_accuracy": 1.0,
+    "pass_case_accuracy": 1.0,
+    "pass_case_count": 9
+  },
+  "results": [
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(10)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_defective_goods_ground.txt",
+      "actual_forum_tier": "district",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete defective-goods intake should validate and resolve to Section 2(10).",
+      "docx_bytes_generated": 37736,
+      "expected_citation": {
+        "section_cite": "Section 2(10)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_defective_goods_ground.txt",
+      "expected_forum_tier": "district",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "valid_per_ground",
+      "id": "valid_defective_goods",
+      "latency_ms": 103
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_deficient_service_ground.txt",
+      "actual_forum_tier": "district",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete deficient-service intake should validate and resolve to Section 2(11).",
+      "docx_bytes_generated": 37835,
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_forum_tier": "district",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "valid_per_ground",
+      "id": "valid_deficient_service",
+      "latency_ms": 27
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(10) (the 'quantity' prong)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_short_delivery_ground.txt",
+      "actual_forum_tier": "district",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete short-delivery intake should validate and resolve to Section 2(10) (quantity prong).",
+      "docx_bytes_generated": 37757,
+      "expected_citation": {
+        "section_cite": "Section 2(10) (the 'quantity' prong)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_short_delivery_ground.txt",
+      "expected_forum_tier": "district",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "valid_per_ground",
+      "id": "valid_short_delivery",
+      "latency_ms": 25
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(43)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_spurious_goods_ground.txt",
+      "actual_forum_tier": "district",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete spurious-goods intake should validate and resolve to Section 2(43).",
+      "docx_bytes_generated": 37704,
+      "expected_citation": {
+        "section_cite": "Section 2(43)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_spurious_goods_ground.txt",
+      "expected_forum_tier": "district",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "valid_per_ground",
+      "id": "valid_spurious_goods",
+      "latency_ms": 24
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(47)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_unfair_trade_practice_ground.txt",
+      "actual_forum_tier": "district",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete unfair-trade-practice intake should validate and resolve to Section 2(47).",
+      "docx_bytes_generated": 37749,
+      "expected_citation": {
+        "section_cite": "Section 2(47)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_unfair_trade_practice_ground.txt",
+      "expected_forum_tier": "district",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "valid_per_ground",
+      "id": "valid_unfair_trade_practice",
+      "latency_ms": 33
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "amount_paid <= 0 must fail validation (garbage input).",
+      "expected_outcome": "fail",
+      "failure_message": "Input should be greater than 0",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_negative_amount_paid",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "transaction_date in the future must fail validation.",
+      "expected_outcome": "fail",
+      "failure_message": "Transaction date cannot be in the future.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_future_transaction_date",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "prior_complaint_made=true without prior_complaint_response must fail as incomplete.",
+      "expected_outcome": "fail",
+      "failure_message": "prior_complaint_made is true but prior_complaint_response was not supplied. This complaint is incomplete.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_prior_complaint_missing_response",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "'compensation' in relief_sought without compensation_amount must fail as incomplete.",
+      "expected_outcome": "fail",
+      "failure_message": "relief_sought includes 'compensation' but compensation_amount was not supplied (or was not a positive amount). This complaint is incomplete.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_compensation_relief_missing_amount",
+      "latency_ms": 0
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_deficient_service_ground.txt",
+      "actual_forum_tier": "district",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "amount_paid exactly Rs. 50,00,000 (does not exceed) must classify as district tier.",
+      "docx_bytes_generated": 37737,
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_forum_tier": "district",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "forum_tier_boundary",
+      "id": "forum_tier_district_boundary_at_cap",
+      "latency_ms": 25
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_deficient_service_ground.txt",
+      "actual_forum_tier": "state",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "amount_paid one rupee above Rs. 50,00,000 must classify as state tier.",
+      "docx_bytes_generated": 37743,
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_forum_tier": "state",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "forum_tier_boundary",
+      "id": "forum_tier_state_just_above_district_cap",
+      "latency_ms": 25
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_deficient_service_ground.txt",
+      "actual_forum_tier": "state",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "amount_paid exactly Rs. 2,00,00,000 (does not exceed) must classify as state tier.",
+      "docx_bytes_generated": 37739,
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_forum_tier": "state",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "forum_tier_boundary",
+      "id": "forum_tier_state_boundary_at_cap",
+      "latency_ms": 24
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_clause_file": "consumer_deficient_service_ground.txt",
+      "actual_forum_tier": "national",
+      "actual_outcome": "pass",
+      "all_citations_resolved_against_corpus": true,
+      "citation_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "amount_paid one rupee above Rs. 2,00,00,000 must classify as national tier.",
+      "docx_bytes_generated": 37738,
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_forum_tier": "national",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "forum_tier_correct": true,
+      "group": "forum_tier_boundary",
+      "id": "forum_tier_national_just_above_state_cap",
+      "latency_ms": 31
+    }
+  ]
+}

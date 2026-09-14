@@ -1,0 +1,290 @@
+{
+  "notes": "Curated cases for the consumer defective-goods/deficient-service scenario (Consumer Protection Act, 2019). Each case runs the actual Pydantic validator + clause-selector + citation-resolution + forum-tier pipeline in complaint_drafter.py -- nothing here is mocked. Forum-tier thresholds: District <= Rs. 50 lakh, State Rs. 50 lakh - Rs. 2 crore, National > Rs. 2 crore, per the Consumer Protection (Jurisdiction ...) Rules, 2021 (Rules 3-5), which are the values actually in force today under the Act's own delegated proviso power in Sections 34(1)/47(1)(a)(i)/58(1)(a)(i) -- not the Act's bare original figures of Rs. 1 crore / Rs. 10 crore.",
+  "cases": [
+    {
+      "id": "valid_defective_goods",
+      "group": "valid_per_ground",
+      "description": "Complete defective-goods intake should validate and resolve to Section 2(10).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "ABC Mobiles Pvt Ltd",
+        "opposite_party_address": "45 Commercial St, Bengaluru",
+        "goods_or_service_description": "Smartphone Model X",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 25000,
+        "defect_or_deficiency_type": "defective_goods",
+        "defect_description": "Screen cracked on first use, well beyond fair wear and tear.",
+        "prior_complaint_made": false,
+        "relief_sought": ["refund"]
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "district",
+      "expected_clause_file": "consumer_defective_goods_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(10)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "valid_deficient_service",
+      "group": "valid_per_ground",
+      "description": "Complete deficient-service intake should validate and resolve to Section 2(11).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "QuickFix Repairs",
+        "opposite_party_address": "3 Service Road, Bengaluru",
+        "goods_or_service_description": "Laptop repair service",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 4000,
+        "defect_or_deficiency_type": "deficient_service",
+        "defect_description": "Laptop still would not power on after the paid repair.",
+        "prior_complaint_made": true,
+        "prior_complaint_response": "Technician said the issue was unrelated to the repair.",
+        "relief_sought": ["refund", "compensation"],
+        "compensation_amount": 1000
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "district",
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "valid_short_delivery",
+      "group": "valid_per_ground",
+      "description": "Complete short-delivery intake should validate and resolve to Section 2(10) (quantity prong).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Bulk Grains Traders",
+        "opposite_party_address": "22 Market Yard, Bengaluru",
+        "goods_or_service_description": "25 kg bag of rice",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 1500,
+        "defect_or_deficiency_type": "short_delivery",
+        "defect_description": "Bag weighed only 21 kg when checked on a verified scale.",
+        "prior_complaint_made": false,
+        "relief_sought": ["refund"]
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "district",
+      "expected_clause_file": "consumer_short_delivery_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(10) (the 'quantity' prong)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "valid_spurious_goods",
+      "group": "valid_per_ground",
+      "description": "Complete spurious-goods intake should validate and resolve to Section 2(43).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Discount Cosmetics Store",
+        "opposite_party_address": "8 Bazaar Street, Bengaluru",
+        "goods_or_service_description": "Branded face cream, 50ml jar",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 800,
+        "defect_or_deficiency_type": "spurious_goods",
+        "defect_description": "Batch code does not match the manufacturer's genuine batch codes; manufacturer confirmed it is counterfeit.",
+        "prior_complaint_made": false,
+        "relief_sought": ["refund", "removal_of_defect"]
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "district",
+      "expected_clause_file": "consumer_spurious_goods_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(43)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "valid_unfair_trade_practice",
+      "group": "valid_per_ground",
+      "description": "Complete unfair-trade-practice intake should validate and resolve to Section 2(47).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Fast Deals Electronics",
+        "opposite_party_address": "17 Mall Road, Bengaluru",
+        "goods_or_service_description": "Refurbished television sold as brand new",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 30000,
+        "defect_or_deficiency_type": "unfair_trade_practice_in_sale",
+        "defect_description": "Seller represented a refurbished television as new; service tag confirms prior repair history.",
+        "prior_complaint_made": false,
+        "relief_sought": ["refund", "compensation"],
+        "compensation_amount": 3000
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "district",
+      "expected_clause_file": "consumer_unfair_trade_practice_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(47)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "hard_fail_negative_amount_paid",
+      "group": "hard_validators",
+      "description": "amount_paid <= 0 must fail validation (garbage input).",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "ABC Mobiles Pvt Ltd",
+        "opposite_party_address": "45 Commercial St, Bengaluru",
+        "goods_or_service_description": "Smartphone Model X",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 0,
+        "defect_or_deficiency_type": "defective_goods",
+        "defect_description": "Screen cracked on first use.",
+        "prior_complaint_made": false,
+        "relief_sought": ["refund"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "greater than 0"
+    },
+    {
+      "id": "hard_fail_future_transaction_date",
+      "group": "hard_validators",
+      "description": "transaction_date in the future must fail validation.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "ABC Mobiles Pvt Ltd",
+        "opposite_party_address": "45 Commercial St, Bengaluru",
+        "goods_or_service_description": "Smartphone Model X",
+        "transaction_date": "2099-01-01",
+        "amount_paid": 25000,
+        "defect_or_deficiency_type": "defective_goods",
+        "defect_description": "Screen cracked on first use.",
+        "prior_complaint_made": false,
+        "relief_sought": ["refund"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "cannot be in the future"
+    },
+    {
+      "id": "hard_fail_prior_complaint_missing_response",
+      "group": "hard_validators",
+      "description": "prior_complaint_made=true without prior_complaint_response must fail as incomplete.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "ABC Mobiles Pvt Ltd",
+        "opposite_party_address": "45 Commercial St, Bengaluru",
+        "goods_or_service_description": "Smartphone Model X",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 25000,
+        "defect_or_deficiency_type": "defective_goods",
+        "defect_description": "Screen cracked on first use.",
+        "prior_complaint_made": true,
+        "relief_sought": ["refund"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "incomplete"
+    },
+    {
+      "id": "hard_fail_compensation_relief_missing_amount",
+      "group": "hard_validators",
+      "description": "'compensation' in relief_sought without compensation_amount must fail as incomplete.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "ABC Mobiles Pvt Ltd",
+        "opposite_party_address": "45 Commercial St, Bengaluru",
+        "goods_or_service_description": "Smartphone Model X",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 25000,
+        "defect_or_deficiency_type": "defective_goods",
+        "defect_description": "Screen cracked on first use.",
+        "prior_complaint_made": false,
+        "relief_sought": ["compensation"]
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "incomplete"
+    },
+    {
+      "id": "forum_tier_district_boundary_at_cap",
+      "group": "forum_tier_boundary",
+      "description": "amount_paid exactly Rs. 50,00,000 (does not exceed) must classify as district tier.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Big Builders Pvt Ltd",
+        "opposite_party_address": "1 Tower Road, Bengaluru",
+        "goods_or_service_description": "Flat purchase agreement",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 5000000,
+        "defect_or_deficiency_type": "deficient_service",
+        "defect_description": "Possession delayed by two years beyond the promised date.",
+        "prior_complaint_made": false,
+        "relief_sought": ["compensation"],
+        "compensation_amount": 100000
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "district",
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "forum_tier_state_just_above_district_cap",
+      "group": "forum_tier_boundary",
+      "description": "amount_paid one rupee above Rs. 50,00,000 must classify as state tier.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Big Builders Pvt Ltd",
+        "opposite_party_address": "1 Tower Road, Bengaluru",
+        "goods_or_service_description": "Flat purchase agreement",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 5000001,
+        "defect_or_deficiency_type": "deficient_service",
+        "defect_description": "Possession delayed by two years beyond the promised date.",
+        "prior_complaint_made": false,
+        "relief_sought": ["compensation"],
+        "compensation_amount": 100000
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "state",
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "forum_tier_state_boundary_at_cap",
+      "group": "forum_tier_boundary",
+      "description": "amount_paid exactly Rs. 2,00,00,000 (does not exceed) must classify as state tier.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Big Builders Pvt Ltd",
+        "opposite_party_address": "1 Tower Road, Bengaluru",
+        "goods_or_service_description": "Flat purchase agreement",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 20000000,
+        "defect_or_deficiency_type": "deficient_service",
+        "defect_description": "Possession delayed by two years beyond the promised date.",
+        "prior_complaint_made": false,
+        "relief_sought": ["compensation"],
+        "compensation_amount": 100000
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "state",
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    },
+    {
+      "id": "forum_tier_national_just_above_state_cap",
+      "group": "forum_tier_boundary",
+      "description": "amount_paid one rupee above Rs. 2,00,00,000 must classify as national tier.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "Big Builders Pvt Ltd",
+        "opposite_party_address": "1 Tower Road, Bengaluru",
+        "goods_or_service_description": "Flat purchase agreement",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 20000001,
+        "defect_or_deficiency_type": "deficient_service",
+        "defect_description": "Possession delayed by two years beyond the promised date.",
+        "prior_complaint_made": false,
+        "relief_sought": ["compensation"],
+        "compensation_amount": 100000
+      },
+      "expected_outcome": "pass",
+      "expected_forum_tier": "national",
+      "expected_clause_file": "consumer_deficient_service_ground.txt",
+      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+    }
+  ]
+}

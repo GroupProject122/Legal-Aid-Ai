@@ -1,0 +1,320 @@
+{
+  "dataset_summary": {
+    "claim_types_covered": [
+      "dark_pattern_deceptive_design",
+      "false_claim_about_goods",
+      "false_guarantee_or_warranty",
+      "misleading_price_representation",
+      "surrogate_advertisement"
+    ],
+    "total_cases": 10
+  },
+  "evaluation_config": {
+    "act": "Consumer Protection Act, 2019 (informed by the CCPA misleading-ads and dark-patterns guidelines)",
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/consumer_misleading_ads_cases.json",
+    "llm_calls": 0,
+    "note": "Slot-fill drafting pipeline only -- no LLM call is part of this path.",
+    "scenario": "consumer_misleading_ads"
+  },
+  "failures": [],
+  "group_breakdown": {
+    "hard_validators": {
+      "case_count": 4,
+      "citation_accuracy": 0.0,
+      "citation_corpus_resolution_rate": 0.0,
+      "citation_review_flag_accuracy": 0.0,
+      "clause_selection_accuracy": 0.0,
+      "fail_case_accuracy": 1.0,
+      "fail_case_count": 4,
+      "hard_fail_message_match_rate": 1.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 0.0,
+      "pass_case_count": 0
+    },
+    "no_transaction_case": {
+      "case_count": 1,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "citation_review_flag_accuracy": 1.0,
+      "clause_selection_accuracy": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 1
+    },
+    "valid_per_ground": {
+      "case_count": 5,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "citation_review_flag_accuracy": 1.0,
+      "clause_selection_accuracy": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 5
+    }
+  },
+  "latency": {
+    "average_latency_ms": 23.3,
+    "cases": 10,
+    "max_latency_ms": 101
+  },
+  "overall_metrics": {
+    "case_count": 10,
+    "citation_accuracy": 1.0,
+    "citation_corpus_resolution_rate": 1.0,
+    "citation_review_flag_accuracy": 1.0,
+    "clause_selection_accuracy": 1.0,
+    "fail_case_accuracy": 1.0,
+    "fail_case_count": 4,
+    "hard_fail_message_match_rate": 1.0,
+    "overall_accuracy": 1.0,
+    "pass_case_accuracy": 1.0,
+    "pass_case_count": 6
+  },
+  "results": [
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(28)(i)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_citation_review_required": false,
+      "actual_clause_file": "ads_false_claim_ground.txt",
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete false-claim intake should validate and resolve to Section 2(28)(i).",
+      "docx_bytes_generated": 37642,
+      "expected_citation": {
+        "section_cite": "Section 2(28)(i)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_citation_review_required": false,
+      "expected_clause_file": "ads_false_claim_ground.txt",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_per_ground",
+      "id": "valid_false_claim_about_goods",
+      "latency_ms": 101
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(47)(i)(i)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_citation_review_required": false,
+      "actual_clause_file": "ads_misleading_price_ground.txt",
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete misleading-price intake should validate and resolve to Section 2(47)(i)(i).",
+      "docx_bytes_generated": 37706,
+      "expected_citation": {
+        "section_cite": "Section 2(47)(i)(i)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_citation_review_required": false,
+      "expected_clause_file": "ads_misleading_price_ground.txt",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_per_ground",
+      "id": "valid_misleading_price_representation",
+      "latency_ms": 27
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Consumer Protection Act, 2019",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 2(28)(ii)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "actual_citation_review_required": false,
+      "actual_clause_file": "ads_false_guarantee_ground.txt",
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete false-guarantee intake should validate and resolve to Section 2(28)(ii).",
+      "docx_bytes_generated": 37656,
+      "expected_citation": {
+        "section_cite": "Section 2(28)(ii)",
+        "section_number": "2",
+        "source_file": "consumer/consumer_protection_act_2019.pdf"
+      },
+      "expected_citation_review_required": false,
+      "expected_clause_file": "ads_false_guarantee_ground.txt",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_per_ground",
+      "id": "valid_false_guarantee_or_warranty",
+      "latency_ms": 24
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022",
+        "authority_level": "official_guidance",
+        "confidence": "high",
+        "guideline_number": "6",
+        "provision_field": "guideline_number",
+        "section_cite": "Guideline 6(1), read with the definition in Guideline 2(h)",
+        "source_file": "consumer/misleading_ads_guidelines_2022.pdf"
+      },
+      "actual_citation_review_required": false,
+      "actual_clause_file": "ads_surrogate_advertisement_ground.txt",
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete surrogate-advertisement intake should validate and resolve to Guideline 6 of the misleading-ads guidelines.",
+      "docx_bytes_generated": 37898,
+      "expected_citation": {
+        "guideline_number": "6",
+        "section_cite": "Guideline 6(1), read with the definition in Guideline 2(h)",
+        "source_file": "consumer/misleading_ads_guidelines_2022.pdf"
+      },
+      "expected_citation_review_required": false,
+      "expected_clause_file": "ads_surrogate_advertisement_ground.txt",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_per_ground",
+      "id": "valid_surrogate_advertisement",
+      "latency_ms": 25
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+        "authority_level": "official_guidance",
+        "confidence": "needs_manual_review",
+        "guideline_number": "4",
+        "provision_field": "guideline_number",
+        "section_cite": "Guideline 4, read with the definition in Guideline 2(e)",
+        "source_file": "consumer/dark_patterns_guidelines_2023.pdf"
+      },
+      "actual_citation_review_required": true,
+      "actual_clause_file": "ads_dark_pattern_ground.txt",
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Complete dark-pattern intake should validate, resolve against the corpus, and be flagged for manual citation review.",
+      "docx_bytes_generated": 38144,
+      "expected_citation": {
+        "guideline_number": "4",
+        "section_cite": "Guideline 4, read with the definition in Guideline 2(e)",
+        "source_file": "consumer/dark_patterns_guidelines_2023.pdf"
+      },
+      "expected_citation_review_required": true,
+      "expected_clause_file": "ads_dark_pattern_ground.txt",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_per_ground",
+      "id": "valid_dark_pattern_deceptive_design",
+      "latency_ms": 32
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "how_it_caused_loss under the minimum length must fail as insufficiently specific.",
+      "expected_outcome": "fail",
+      "failure_message": "how_it_caused_loss must describe the specific loss or harm caused (at least 20 characters). A vague or empty description is not enough to draft this complaint.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_loss_description_too_short",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "An empty how_it_caused_loss must fail as insufficiently specific.",
+      "expected_outcome": "fail",
+      "failure_message": "how_it_caused_loss must describe the specific loss or harm caused (at least 20 characters). A vague or empty description is not enough to draft this complaint.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_loss_description_empty",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "date_encountered in the future must fail validation.",
+      "expected_outcome": "fail",
+      "failure_message": "Date encountered cannot be in the future.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_future_date_encountered",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "'compensation' in relief_sought without compensation_amount must fail as incomplete.",
+      "expected_outcome": "fail",
+      "failure_message": "relief_sought includes 'compensation' but compensation_amount was not supplied (or was not a positive amount). This complaint is incomplete.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_compensation_relief_missing_amount",
+      "latency_ms": 0
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Guidelines for Prevention and Regulation of Dark Patterns, 2023",
+        "authority_level": "official_guidance",
+        "confidence": "needs_manual_review",
+        "guideline_number": "4",
+        "provision_field": "guideline_number",
+        "section_cite": "Guideline 4, read with the definition in Guideline 2(e)",
+        "source_file": "consumer/dark_patterns_guidelines_2023.pdf"
+      },
+      "actual_citation_review_required": true,
+      "actual_clause_file": "ads_dark_pattern_ground.txt",
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "A dark-pattern claim with no completed purchase (amount_paid omitted) should still validate -- not every dark-pattern claim involves a transaction.",
+      "docx_bytes_generated": 38167,
+      "expected_citation": {
+        "guideline_number": "4",
+        "section_cite": "Guideline 4, read with the definition in Guideline 2(e)",
+        "source_file": "consumer/dark_patterns_guidelines_2023.pdf"
+      },
+      "expected_citation_review_required": true,
+      "expected_clause_file": "ads_dark_pattern_ground.txt",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "no_transaction_case",
+      "id": "valid_dark_pattern_without_purchase",
+      "latency_ms": 24
+    }
+  ]
+}
