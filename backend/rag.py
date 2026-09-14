@@ -713,7 +713,24 @@ class LegalRAG:
 
     def retrieve(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
         signals = detect_domain_signals(question)
-        candidate_k = max(top_k * 8, 40) if len(signals["primary_domains"] + signals["secondary_domains"]) > 1 else max(top_k * 2, 12)
+        domain_count = len(signals["primary_domains"] + signals["secondary_domains"])
+        if domain_count > 1:
+            # Multi-domain/ambiguous: keep the window tight-ish to limit cross-domain noise
+            # reaching the reranker.
+            candidate_k = max(top_k * 8, 40)
+        elif domain_count == 1:
+            # Single, unambiguous domain: widen the window. There's less cross-domain noise risk
+            # here, so it's safe to look deeper. Found via manual_02_delhi_electricity: a correct
+            # provision (Delhi Rent Control Act, 1958 s.45, essential-supply cutoff) was ranking
+            # ~30th in raw FAISS similarity for a plainly-phrased "landlord disconnected
+            # electricity" query -- outside the old candidate_k=12 window -- so it never reached
+            # select_relevant_chunks' query_intent_boost, which does correctly boost this query's
+            # intent once a chunk is in the pool. See eval/manual_regression_evaluation.md.
+            candidate_k = max(top_k * 6, 40)
+        else:
+            # No clear domain signal at all: not the same as a confidently single-domain query,
+            # so don't widen -- keep the original tight default.
+            candidate_k = max(top_k * 2, 12)
         candidates = self.retrieve_candidates(question, candidate_k=candidate_k)
         results = select_relevant_chunks(candidates, question=question, top_k=top_k)
         logger.info(

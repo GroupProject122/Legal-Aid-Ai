@@ -2,7 +2,7 @@
 
 ## Overall Results
 - Cases: 15
-- Overall expected-behavior rate: 93.3%
+- Overall expected-behavior rate: 100.0%
 - Consumer primary framing correctness: 100.0%
 - Consumer no-harm product-liability suppression: 100.0%
 - Cyber identity-misuse provision hit: 100.0%
@@ -15,7 +15,7 @@
 
 ## Case Results
 - `manual_01_defective_refund`: PASS; top source=The Consumer Protection Act, 2019 39
-- `manual_02_delhi_electricity`: REVIEW; top source=The Delhi Rent Control Act, 1958 14
+- `manual_02_delhi_electricity`: PASS; top source=The Delhi Rent Control Act, 1958 45
 - `manual_03_natural_credential_misuse`: PASS; top source=The Information Technology Act, 2000 66C
 - `manual_04_explicit_identity_theft`: PASS; top source=The Information Technology Act, 2000 66C
 - `manual_05_mumbai_tenancy_gap`: PASS; top source=The Delhi Rent Control Act, 1958 45
@@ -31,7 +31,7 @@
 - `manual_15_rti_no_response_appeal_priority`: PASS; top source=The Right to Information Act, 2005 19
 
 ## Remaining Failures
-- `manual_02_delhi_electricity` needs review.
+- None under the targeted regression checks.
 
 ## Recommendation
 - Proceed to final manual retest of the 12 scenarios.
