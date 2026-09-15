@@ -6,7 +6,7 @@
       "damage",
       "subletting"
     ],
-    "total_cases": 12
+    "total_cases": 16
   },
   "evaluation_config": {
     "act": "Delhi Rent Control Act, 1958",
@@ -18,16 +18,28 @@
   "failures": [],
   "group_breakdown": {
     "hard_validators": {
-      "case_count": 6,
+      "case_count": 7,
       "citation_accuracy": 0.0,
       "citation_corpus_resolution_rate": 0.0,
       "clause_selection_accuracy": 0.0,
       "fail_case_accuracy": 1.0,
-      "fail_case_count": 6,
+      "fail_case_count": 7,
       "hard_fail_message_match_rate": 1.0,
       "overall_accuracy": 1.0,
       "pass_case_accuracy": 0.0,
       "pass_case_count": 0
+    },
+    "multi_ground": {
+      "case_count": 3,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "clause_selection_accuracy": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 3
     },
     "rent_cap_boundary": {
       "case_count": 2,
@@ -55,134 +67,355 @@
     }
   },
   "latency": {
-    "average_latency_ms": 17.33,
-    "cases": 12,
-    "max_latency_ms": 101
+    "average_latency_ms": 18.81,
+    "cases": 16,
+    "max_latency_ms": 104
   },
   "overall_metrics": {
-    "case_count": 12,
+    "case_count": 16,
     "citation_accuracy": 1.0,
     "citation_corpus_resolution_rate": 1.0,
     "clause_selection_accuracy": 1.0,
     "fail_case_accuracy": 1.0,
-    "fail_case_count": 7,
+    "fail_case_count": 8,
     "hard_fail_message_match_rate": 1.0,
     "overall_accuracy": 1.0,
     "pass_case_accuracy": 1.0,
-    "pass_case_count": 5
+    "pass_case_count": 8
   },
   "results": [
     {
-      "actual_citation": {
-        "act_short_title": "Delhi Rent Control Act, 1958",
-        "confidence": "high",
-        "section_cite": "Section 14(1)(a)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "actual_clause_file": "tenancy_arrears_ground.txt",
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_arrears_ground.txt"
+      ],
       "actual_outcome": "pass",
       "citation_correct": true,
       "citation_resolved_against_corpus": true,
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete arrears-ground intake should validate and resolve to Section 14(1)(a).",
-      "docx_bytes_generated": 37646,
-      "expected_citation": {
-        "section_cite": "Section 14(1)(a)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "expected_clause_file": "tenancy_arrears_ground.txt",
+      "docx_bytes_generated": 37648,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_arrears_ground.txt"
+      ],
       "expected_outcome": "pass",
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_arrears",
-      "latency_ms": 101
+      "latency_ms": 104
     },
     {
-      "actual_citation": {
-        "act_short_title": "Delhi Rent Control Act, 1958",
-        "confidence": "high",
-        "section_cite": "Section 14(1)(b)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "actual_clause_file": "tenancy_subletting_ground.txt",
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(b)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_subletting_ground.txt"
+      ],
       "actual_outcome": "pass",
       "citation_correct": true,
       "citation_resolved_against_corpus": true,
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete subletting-ground intake should validate and resolve to Section 14(1)(b).",
-      "docx_bytes_generated": 37640,
-      "expected_citation": {
-        "section_cite": "Section 14(1)(b)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "expected_clause_file": "tenancy_subletting_ground.txt",
+      "docx_bytes_generated": 37642,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(b)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_subletting_ground.txt"
+      ],
       "expected_outcome": "pass",
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_subletting",
-      "latency_ms": 26
+      "latency_ms": 27
     },
     {
-      "actual_citation": {
-        "act_short_title": "Delhi Rent Control Act, 1958",
-        "confidence": "high",
-        "section_cite": "Section 14(1)(j)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "actual_clause_file": "tenancy_damage_ground.txt",
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(j)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_damage_ground.txt"
+      ],
       "actual_outcome": "pass",
       "citation_correct": true,
       "citation_resolved_against_corpus": true,
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete damage-ground intake should validate and resolve to Section 14(1)(j).",
-      "docx_bytes_generated": 37600,
-      "expected_citation": {
-        "section_cite": "Section 14(1)(j)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "expected_clause_file": "tenancy_damage_ground.txt",
+      "docx_bytes_generated": 37602,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(j)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_damage_ground.txt"
+      ],
       "expected_outcome": "pass",
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_damage",
-      "latency_ms": 24
+      "latency_ms": 25
     },
     {
-      "actual_citation": {
-        "act_short_title": "Delhi Rent Control Act, 1958",
-        "confidence": "high",
-        "section_cite": "Section 14(1)(e)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "actual_clause_file": "tenancy_bona_fide_ground.txt",
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(e)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_bona_fide_ground.txt"
+      ],
       "actual_outcome": "pass",
       "citation_correct": true,
       "citation_resolved_against_corpus": true,
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete bona-fide-requirement intake should validate and resolve to Section 14(1)(e).",
-      "docx_bytes_generated": 37676,
-      "expected_citation": {
-        "section_cite": "Section 14(1)(e)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "expected_clause_file": "tenancy_bona_fide_ground.txt",
+      "docx_bytes_generated": 37679,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(e)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_bona_fide_ground.txt"
+      ],
       "expected_outcome": "pass",
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_bona_fide_requirement",
       "latency_ms": 25
+    },
+    {
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(b)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_arrears_ground.txt",
+        "tenancy_subletting_ground.txt"
+      ],
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Arrears + subletting pleaded together should validate and render both grounds in statutory order: (a) arrears, then (b) subletting.",
+      "docx_bytes_generated": 37933,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "section_cite": "Section 14(1)(b)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_arrears_ground.txt",
+        "tenancy_subletting_ground.txt"
+      ],
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "multi_ground",
+      "id": "multi_ground_arrears_subletting",
+      "latency_ms": 36
+    },
+    {
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(b)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(e)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(j)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_arrears_ground.txt",
+        "tenancy_subletting_ground.txt",
+        "tenancy_bona_fide_ground.txt",
+        "tenancy_damage_ground.txt"
+      ],
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "All four modeled grounds pleaded together (unusual but legally valid) should validate and render in statutory order: (a) arrears, (b) subletting, (e) bona fide requirement, (j) damage.",
+      "docx_bytes_generated": 38305,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "section_cite": "Section 14(1)(b)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "section_cite": "Section 14(1)(e)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "section_cite": "Section 14(1)(j)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_arrears_ground.txt",
+        "tenancy_subletting_ground.txt",
+        "tenancy_bona_fide_ground.txt",
+        "tenancy_damage_ground.txt"
+      ],
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "multi_ground",
+      "id": "multi_ground_all_four",
+      "latency_ms": 26
+    },
+    {
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(e)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_arrears_ground.txt",
+        "tenancy_bona_fide_ground.txt"
+      ],
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "clause_selection_correct": true,
+      "correct": true,
+      "description": "Grounds deliberately selected in non-statutory input order (bona_fide_requirement listed before arrears) must still render in fixed statutory order: (a) arrears before (e) bona fide requirement, regardless of selection order.",
+      "docx_bytes_generated": 37976,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        },
+        {
+          "section_cite": "Section 14(1)(e)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_arrears_ground.txt",
+        "tenancy_bona_fide_ground.txt"
+      ],
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "multi_ground",
+      "id": "multi_ground_input_order_ignored",
+      "latency_ms": 25
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "grounds_for_eviction containing the same value twice must fail validation (the new duplicate check added alongside multi-ground support).",
+      "expected_outcome": "fail",
+      "failure_message": "grounds_for_eviction contains a duplicate value. Select each ground at most once.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "duplicate_ground_rejected",
+      "latency_ms": 0
     },
     {
       "actual_outcome": "fail",
@@ -196,32 +429,40 @@
       "latency_ms": 0
     },
     {
-      "actual_citation": {
-        "act_short_title": "Delhi Rent Control Act, 1958",
-        "confidence": "high",
-        "section_cite": "Section 14(1)(a)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "actual_clause_file": "tenancy_arrears_ground.txt",
+      "actual_citations": [
+        {
+          "act_short_title": "Delhi Rent Control Act, 1958",
+          "confidence": "high",
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "actual_clause_files": [
+        "tenancy_arrears_ground.txt"
+      ],
       "actual_outcome": "pass",
       "citation_correct": true,
       "citation_resolved_against_corpus": true,
       "clause_selection_correct": true,
       "correct": true,
       "description": "Section 3 excludes premises whose rent 'exceeds' Rs. 3,500 -- exceeds is strictly-greater-than, so a rent of exactly Rs. 3,500 is still covered by the Act and must PASS validation.",
-      "docx_bytes_generated": 37625,
-      "expected_citation": {
-        "section_cite": "Section 14(1)(a)",
-        "section_number": "14",
-        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
-      },
-      "expected_clause_file": "tenancy_arrears_ground.txt",
+      "docx_bytes_generated": 37627,
+      "expected_citations": [
+        {
+          "section_cite": "Section 14(1)(a)",
+          "section_number": "14",
+          "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+        }
+      ],
+      "expected_clause_files": [
+        "tenancy_arrears_ground.txt"
+      ],
       "expected_outcome": "pass",
       "failure_message": null,
       "group": "rent_cap_boundary",
       "id": "boundary_rent_at_cap_is_covered",
-      "latency_ms": 32
+      "latency_ms": 33
     },
     {
       "actual_outcome": "fail",
@@ -239,7 +480,7 @@
       "correct": true,
       "description": "grounds_for_eviction=arrears without arrears_amount/arrears_period_months must fail as incomplete, not proceed with blank fields.",
       "expected_outcome": "fail",
-      "failure_message": "grounds_for_eviction is 'arrears' but arrears_amount and arrears_period_months were not both supplied. This complaint is incomplete.",
+      "failure_message": "grounds_for_eviction includes 'arrears' but arrears_amount and arrears_period_months were not both supplied. This complaint is incomplete.",
       "failure_message_matches_expected": true,
       "group": "hard_validators",
       "id": "incomplete_arrears_missing_amount",
@@ -250,7 +491,7 @@
       "correct": true,
       "description": "grounds_for_eviction=subletting without subletting_details must fail as incomplete.",
       "expected_outcome": "fail",
-      "failure_message": "grounds_for_eviction is 'subletting' but subletting_details was not supplied. This complaint is incomplete.",
+      "failure_message": "grounds_for_eviction includes 'subletting' but subletting_details was not supplied. This complaint is incomplete.",
       "failure_message_matches_expected": true,
       "group": "hard_validators",
       "id": "incomplete_subletting_missing_details",
@@ -261,7 +502,7 @@
       "correct": true,
       "description": "grounds_for_eviction=damage without damage_description must fail as incomplete.",
       "expected_outcome": "fail",
-      "failure_message": "grounds_for_eviction is 'damage' but damage_description was not supplied. This complaint is incomplete.",
+      "failure_message": "grounds_for_eviction includes 'damage' but damage_description was not supplied. This complaint is incomplete.",
       "failure_message_matches_expected": true,
       "group": "hard_validators",
       "id": "incomplete_damage_missing_description",
@@ -272,7 +513,7 @@
       "correct": true,
       "description": "grounds_for_eviction=bona_fide_requirement without bona_fide_reason must fail as incomplete.",
       "expected_outcome": "fail",
-      "failure_message": "grounds_for_eviction is 'bona_fide_requirement' but bona_fide_reason was not supplied. This complaint is incomplete.",
+      "failure_message": "grounds_for_eviction includes 'bona_fide_requirement' but bona_fide_reason was not supplied. This complaint is incomplete.",
       "failure_message_matches_expected": true,
       "group": "hard_validators",
       "id": "incomplete_bona_fide_missing_reason",

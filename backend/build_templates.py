@@ -63,11 +63,28 @@ def build_tenancy_eviction_base_template() -> None:
     body("3. The tenancy commenced on: {{ tenancy_start_date_display }}.")
     document.add_paragraph()
 
-    # 4. Grounds (selected clause inserted here)
+    # 4. Grounds (selected clause(s) inserted here). Single-ground path (grounds_for_eviction has
+    # exactly one entry) is byte-for-byte identical to the original single-ground-only template --
+    # same three lines, same variable names -- so a single-ground draft is unchanged by this
+    # feature. Multi-ground path (2+) adds a fixed framing line and numbers each ground
+    # "Ground N" in fixed statutory order (see complaint_drafter.GROUND_STATUTORY_ORDER /
+    # ordered_grounds()), never in the order the user selected them in. complaint_drafter.py's
+    # _build_render_context() puts EITHER grounds_label/grounds_clause/citation_line (single)
+    # OR grounds/multi_ground_framing_line (multi) in the render context, never both -- "is not
+    # defined" (a safe Jinja test even under StrictUndefined) is how this branch tells them apart.
     heading("GROUNDS FOR EVICTION", center=False)
+    body("{%p if grounds is not defined %}")
     body("Ground relied upon: {{ grounds_label }}")
     body("{{ grounds_clause }}")
     body("{{ citation_line }}")
+    body("{%p else %}")
+    body("{{ multi_ground_framing_line }}")
+    body("{%p for ground in grounds %}")
+    body("Ground {{ loop.index }}: {{ ground.label }}")
+    body("{{ ground.clause_text }}")
+    body("{{ ground.citation_line }}")
+    body("{%p endfor %}")
+    body("{%p endif %}")
     document.add_paragraph()
 
     # 5. Relief sought

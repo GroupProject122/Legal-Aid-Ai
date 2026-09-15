@@ -13,7 +13,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "arrears",
+        "grounds_for_eviction": ["arrears"],
         "relief_sought": ["recovery_of_possession", "arrears_payment"],
         "arrears_amount": 45000,
         "arrears_period_months": 6
@@ -38,7 +38,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "subletting",
+        "grounds_for_eviction": ["subletting"],
         "relief_sought": ["recovery_of_possession"],
         "subletting_details": "Sublet the rear room to a third party without the landlord's written consent since January 2024."
       },
@@ -62,7 +62,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "damage",
+        "grounds_for_eviction": ["damage"],
         "relief_sought": ["recovery_of_possession", "damages"],
         "damage_description": "Removed a load-bearing wall in the kitchen without the landlord's permission."
       },
@@ -86,7 +86,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "bona_fide_requirement",
+        "grounds_for_eviction": ["bona_fide_requirement"],
         "relief_sought": ["recovery_of_possession"],
         "bona_fide_reason": "Landlord's son is returning from abroad and needs the flat to live in with his family."
       },
@@ -97,6 +97,111 @@
         "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
         "section_number": "14"
       }
+    },
+    {
+      "id": "multi_ground_arrears_subletting",
+      "group": "multi_ground",
+      "description": "Arrears + subletting pleaded together should validate and render both grounds in statutory order: (a) arrears, then (b) subletting.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": ["arrears", "subletting"],
+        "relief_sought": ["recovery_of_possession", "arrears_payment"],
+        "arrears_amount": 45000,
+        "arrears_period_months": 6,
+        "subletting_details": "Sublet the rear room to a third party without the landlord's written consent since January 2024."
+      },
+      "expected_outcome": "pass",
+      "expected_clause_files": ["tenancy_arrears_ground.txt", "tenancy_subletting_ground.txt"],
+      "expected_citations": [
+        {"section_cite": "Section 14(1)(a)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"},
+        {"section_cite": "Section 14(1)(b)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"}
+      ]
+    },
+    {
+      "id": "multi_ground_all_four",
+      "group": "multi_ground",
+      "description": "All four modeled grounds pleaded together (unusual but legally valid) should validate and render in statutory order: (a) arrears, (b) subletting, (e) bona fide requirement, (j) damage.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": ["arrears", "subletting", "damage", "bona_fide_requirement"],
+        "relief_sought": ["recovery_of_possession", "arrears_payment", "damages"],
+        "arrears_amount": 45000,
+        "arrears_period_months": 6,
+        "subletting_details": "Sublet the rear room to a third party without the landlord's written consent since January 2024.",
+        "damage_description": "Removed a load-bearing partition wall without permission, causing structural cracks.",
+        "bona_fide_reason": "Landlord's son is returning from abroad and needs the flat to live in with his family."
+      },
+      "expected_outcome": "pass",
+      "expected_clause_files": [
+        "tenancy_arrears_ground.txt",
+        "tenancy_subletting_ground.txt",
+        "tenancy_bona_fide_ground.txt",
+        "tenancy_damage_ground.txt"
+      ],
+      "expected_citations": [
+        {"section_cite": "Section 14(1)(a)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"},
+        {"section_cite": "Section 14(1)(b)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"},
+        {"section_cite": "Section 14(1)(e)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"},
+        {"section_cite": "Section 14(1)(j)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"}
+      ]
+    },
+    {
+      "id": "multi_ground_input_order_ignored",
+      "group": "multi_ground",
+      "description": "Grounds deliberately selected in non-statutory input order (bona_fide_requirement listed before arrears) must still render in fixed statutory order: (a) arrears before (e) bona fide requirement, regardless of selection order.",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": ["bona_fide_requirement", "arrears"],
+        "relief_sought": ["recovery_of_possession", "arrears_payment"],
+        "arrears_amount": 45000,
+        "arrears_period_months": 6,
+        "bona_fide_reason": "Landlord's son is returning from abroad and needs the flat to live in with his family."
+      },
+      "expected_outcome": "pass",
+      "expected_clause_files": ["tenancy_arrears_ground.txt", "tenancy_bona_fide_ground.txt"],
+      "expected_citations": [
+        {"section_cite": "Section 14(1)(a)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"},
+        {"section_cite": "Section 14(1)(e)", "source_file": "tenancy/delhi_rent_control_act_1958.pdf", "section_number": "14"}
+      ]
+    },
+    {
+      "id": "duplicate_ground_rejected",
+      "group": "hard_validators",
+      "description": "grounds_for_eviction containing the same value twice must fail validation (the new duplicate check added alongside multi-ground support).",
+      "intake": {
+        "tenant_name": "Ramesh Kumar",
+        "tenant_address": "B-12, Lajpat Nagar, New Delhi",
+        "landlord_name": "Sunita Sharma",
+        "landlord_address": "C-45, Defence Colony, New Delhi",
+        "property_address": "B-12, Lajpat Nagar, New Delhi",
+        "monthly_rent": 2500,
+        "tenancy_start_date": "2019-04-01",
+        "grounds_for_eviction": ["arrears", "arrears"],
+        "relief_sought": ["recovery_of_possession"],
+        "arrears_amount": 45000,
+        "arrears_period_months": 6
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_grounds_for_eviction_has_no_duplicates",
+      "expected_failure_message_contains": "duplicate value"
     },
     {
       "id": "rent_cap_exclusion",
@@ -110,7 +215,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 4000,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "arrears",
+        "grounds_for_eviction": ["arrears"],
         "relief_sought": ["recovery_of_possession"],
         "arrears_amount": 8000,
         "arrears_period_months": 2
@@ -131,7 +236,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 3500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "arrears",
+        "grounds_for_eviction": ["arrears"],
         "relief_sought": ["recovery_of_possession"],
         "arrears_amount": 7000,
         "arrears_period_months": 2
@@ -156,7 +261,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 3500.01,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "arrears",
+        "grounds_for_eviction": ["arrears"],
         "relief_sought": ["recovery_of_possession"],
         "arrears_amount": 7000,
         "arrears_period_months": 2
@@ -177,7 +282,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "arrears",
+        "grounds_for_eviction": ["arrears"],
         "relief_sought": ["recovery_of_possession"]
       },
       "expected_outcome": "fail",
@@ -196,7 +301,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "subletting",
+        "grounds_for_eviction": ["subletting"],
         "relief_sought": ["recovery_of_possession"]
       },
       "expected_outcome": "fail",
@@ -215,7 +320,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "damage",
+        "grounds_for_eviction": ["damage"],
         "relief_sought": ["recovery_of_possession"]
       },
       "expected_outcome": "fail",
@@ -234,7 +339,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2019-04-01",
-        "grounds_for_eviction": "bona_fide_requirement",
+        "grounds_for_eviction": ["bona_fide_requirement"],
         "relief_sought": ["recovery_of_possession"]
       },
       "expected_outcome": "fail",
@@ -253,7 +358,7 @@
         "property_address": "B-12, Lajpat Nagar, New Delhi",
         "monthly_rent": 2500,
         "tenancy_start_date": "2099-01-01",
-        "grounds_for_eviction": "arrears",
+        "grounds_for_eviction": ["arrears"],
         "relief_sought": ["recovery_of_possession"],
         "arrears_amount": 5000,
         "arrears_period_months": 1

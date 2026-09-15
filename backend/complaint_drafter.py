@@ -77,18 +77,8 @@ def _raise_field_validation_error(instance: BaseModel, field: str, message: str)
 # government/DDA/MCD while leasing the land -- a practitioner convention for unauthorized-
 # construction petitions, not a verbatim textual match in the Act. That's too weak a citation
 # basis to ship. Reinstate it (enum value + CLAUSE_FILE_BY_GROUND + CLAUSE_CITATIONS +
-# GROUND_CLAUSE_LETTER + GROUND_LABEL entries, and a restored clause file) only after a human
-# has done a manual legal review and confirmed the correct citation.
-#
-# SCOPE LIMIT (deliberate, not an oversight): TenancyEvictionIntake.grounds_for_eviction below
-# takes a single EvictionGround value, not a list -- this schema supports one ground per
-# petition only. Multi-ground petitions (e.g. arrears + subletting pleaded together, or arrears
-# + bona fide requirement in the alternative) are legally common in practice and are not yet
-# modeled: there is no clause-composition logic, no combined citation set, and no template
-# section order for stacking more than one grounds paragraph. Documented here as a known V1
-# scope limit rather than encoded as a validator, since there is nothing to validate against --
-# the schema simply cannot express the input yet. Extending to multiple grounds is a real
-# feature (clause selector + template changes), not a bug fix.
+# GROUND_CLAUSE_LETTER + GROUND_LABEL + GROUND_STATUTORY_ORDER entries, and a restored clause
+# file) only after a human has done a manual legal review and confirmed the correct citation.
 class EvictionGround(str, Enum):
     arrears = "arrears"
     subletting = "subletting"
@@ -125,7 +115,12 @@ class TenancyEvictionIntake(BaseModel):
     # charge exists, get advice on whether it should be included before relying on this field.
     monthly_rent: float = Field(gt=0)
     tenancy_start_date: datetime.date
-    grounds_for_eviction: EvictionGround
+    # Multi-ground petitions (e.g. arrears + subletting pleaded together, or arrears + bona fide
+    # requirement in the alternative) are legally common in practice -- as of 2026-09-15 this is
+    # a list, not a single value. Breaking change to the intake shape (no external consumers
+    # existed yet, so no dual-support/versioning was needed). Rendered output always appears in
+    # fixed statutory order (see GROUND_STATUTORY_ORDER), never in the order the user picked.
+    grounds_for_eviction: list[EvictionGround] = Field(min_length=1)
     relief_sought: list[ReliefSought] = Field(min_length=1)
 
     # Conditionally required based on grounds_for_eviction.
@@ -148,39 +143,50 @@ class TenancyEvictionIntake(BaseModel):
         return self
 
     @model_validator(mode="after")
+    def check_grounds_for_eviction_has_no_duplicates(self) -> "TenancyEvictionIntake":
+        grounds = self.grounds_for_eviction
+        if len(set(grounds)) != len(grounds):
+            _raise_field_validation_error(
+                self,
+                "grounds_for_eviction",
+                "grounds_for_eviction contains a duplicate value. Select each ground at most once.",
+            )
+        return self
+
+    @model_validator(mode="after")
     def check_conditional_fields_for_grounds(self) -> "TenancyEvictionIntake":
-        ground = self.grounds_for_eviction
-        if ground == EvictionGround.arrears:
+        grounds = self.grounds_for_eviction
+        if EvictionGround.arrears in grounds:
             if self.arrears_amount is None or self.arrears_period_months is None:
                 _raise_field_validation_error(
                     self,
                     "arrears_amount",
-                    "grounds_for_eviction is 'arrears' but arrears_amount and "
+                    "grounds_for_eviction includes 'arrears' but arrears_amount and "
                     "arrears_period_months were not both supplied. This complaint is incomplete.",
                 )
-        elif ground == EvictionGround.subletting:
+        if EvictionGround.subletting in grounds:
             if not self.subletting_details or not self.subletting_details.strip():
                 _raise_field_validation_error(
                     self,
                     "subletting_details",
-                    "grounds_for_eviction is 'subletting' but subletting_details was not supplied. "
-                    "This complaint is incomplete.",
+                    "grounds_for_eviction includes 'subletting' but subletting_details was not "
+                    "supplied. This complaint is incomplete.",
                 )
-        elif ground == EvictionGround.damage:
+        if EvictionGround.damage in grounds:
             if not self.damage_description or not self.damage_description.strip():
                 _raise_field_validation_error(
                     self,
                     "damage_description",
-                    "grounds_for_eviction is 'damage' but damage_description was not supplied. "
-                    "This complaint is incomplete.",
+                    "grounds_for_eviction includes 'damage' but damage_description was not "
+                    "supplied. This complaint is incomplete.",
                 )
-        elif ground == EvictionGround.bona_fide_requirement:
+        if EvictionGround.bona_fide_requirement in grounds:
             if not self.bona_fide_reason or not self.bona_fide_reason.strip():
                 _raise_field_validation_error(
                     self,
                     "bona_fide_reason",
-                    "grounds_for_eviction is 'bona_fide_requirement' but bona_fide_reason was not "
-                    "supplied. This complaint is incomplete.",
+                    "grounds_for_eviction includes 'bona_fide_requirement' but bona_fide_reason "
+                    "was not supplied. This complaint is incomplete.",
                 )
         return self
 
@@ -241,6 +247,47 @@ GROUND_LABEL: dict[EvictionGround, str] = {
     EvictionGround.bona_fide_requirement: "Bona fide personal requirement of the landlord",
 }
 
+# Fixed rendering order for multi-ground petitions, matching Section 14(1)'s own lettering
+# ((a) arrears, (b) subletting, (e) bona fide requirement, (j) damage) -- NOT the order the user
+# selected grounds in on the form. A petition listing grounds out of the statute's own sequence
+# reads as sloppy drafting; this fixes that regardless of selection order.
+GROUND_STATUTORY_ORDER: list[EvictionGround] = [
+    EvictionGround.arrears,
+    EvictionGround.subletting,
+    EvictionGround.bona_fide_requirement,
+    EvictionGround.damage,
+]
+
+
+def ordered_grounds(grounds: list[EvictionGround]) -> list[EvictionGround]:
+    """`grounds` (in whatever order the user selected them) reordered to GROUND_STATUTORY_ORDER."""
+    return [ground for ground in GROUND_STATUTORY_ORDER if ground in grounds]
+
+
+def _join_clause_letters(letters: list[str]) -> str:
+    """"(a)" | "(a) AND (b)" | "(a), (b) AND (e)" -- for the petition title. Matches the
+    all-caps title's own style (the word "AND" is capitalized; each clause letter itself stays
+    lowercase, matching the statute's own lettering)."""
+    if len(letters) == 1:
+        return letters[0]
+    if len(letters) == 2:
+        return f"{letters[0]} AND {letters[1]}"
+    return f"{', '.join(letters[:-1])} AND {letters[-1]}"
+
+
+# Standard Indian pleading convention for multi-ground petitions: grounds are pleaded "in the
+# alternative and/or cumulatively" so a court finding against the petitioner on one ground can
+# still grant relief on another -- this is procedural boilerplate (not a legal citation), and
+# this exact "in the alternative and/or cumulatively" phrasing (or a close variant of it) is the
+# conventional way Indian pleadings (eviction petitions under rent control statutes included)
+# frame more than one ground/cause of action pleaded together. Only used when 2+ grounds are
+# selected; the single-ground path is untouched (see _build_render_context/the base template).
+MULTI_GROUND_FRAMING_LINE = (
+    "The Petitioner/Landlord relies upon the following ground(s) of eviction under Section "
+    "14(1) of the Delhi Rent Control Act, 1958, in the alternative and/or cumulatively, as may "
+    "be applicable:"
+)
+
 RELIEF_LABEL: dict[ReliefSought, str] = {
     ReliefSought.recovery_of_possession: "Recovery of vacant and peaceful possession of the tenanted premises.",
     ReliefSought.arrears_payment: "Payment of the arrears of rent due and payable by the Respondent/Tenant.",
@@ -263,9 +310,16 @@ TENANCY_FIELD_PROVENANCE: dict[str, str] = {
     "property_address": "user_supplied",
     "monthly_rent_display": "deterministic_rule:formatted from user_supplied monthly_rent",
     "tenancy_start_date_display": "deterministic_rule:formatted from user_supplied tenancy_start_date",
+    # Single-ground path only (rendered when len(grounds_for_eviction) == 1) -- kept byte-for-byte
+    # identical to the pre-multi-ground behavior; see _build_render_context.
     "grounds_label": "deterministic_rule:derived from grounds_for_eviction via GROUND_LABEL",
     "grounds_clause": "deterministic_rule:selected clause file rendered from user_supplied conditional fields",
     "citation_line": "deterministic_rule:derived from grounds_for_eviction via CLAUSE_CITATIONS",
+    # Multi-ground path only (rendered when len(grounds_for_eviction) > 1) -- each entry has its
+    # own label/clause_text/citation_line, reordered to GROUND_STATUTORY_ORDER regardless of the
+    # order the user selected them in.
+    "grounds": "deterministic_rule:derived from grounds_for_eviction, reordered via GROUND_STATUTORY_ORDER",
+    "multi_ground_framing_line": "deterministic_rule:fixed MULTI_GROUND_FRAMING_LINE boilerplate, only rendered when len(grounds) > 1",
     "relief_sought_lines": "deterministic_rule:derived from relief_sought via RELIEF_LABEL",
     "generated_date_display": "deterministic_rule:today's date, formatted",
 }
@@ -428,15 +482,26 @@ def _format_inr(amount: float) -> str:
     return f"Rs. {amount:,.2f}".rstrip("0").rstrip(".") if amount == int(amount) else f"Rs. {amount:,.2f}"
 
 
-def _build_render_context(intake: TenancyEvictionIntake) -> tuple[dict[str, Any], dict[str, Any]]:
-    ground = intake.grounds_for_eviction
-    citation = CLAUSE_CITATIONS[ground]
-    grounds_clause = _render_clause_text(ground, intake)
+def _build_render_context(
+    intake: TenancyEvictionIntake,
+) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    """Returns (context, primary_citation, additional_citations). Reordered to
+    GROUND_STATUTORY_ORDER regardless of the order the user selected grounds in. The single-
+    ground path (len(grounds) == 1) computes grounds_label/grounds_clause/citation_line exactly
+    as before this feature -- same keys, same values, same base-template branch -- so a
+    single-ground draft is byte-for-byte unchanged. The multi-ground path (2+) computes a
+    `grounds` list instead (one entry per ground, each with its own label/clause_text/
+    citation_line) plus a fixed framing line, rendered by a different base-template branch."""
+    grounds = ordered_grounds(intake.grounds_for_eviction)
+    citations = [CLAUSE_CITATIONS[ground] for ground in grounds]
+    primary_citation = citations[0]
+    additional_citations = citations[1:]
 
     context = {
         "forum_name": "IN THE COURT OF THE RENT CONTROLLER, DELHI",
         "petition_title": (
-            f"PETITION FOR EVICTION UNDER SECTION 14(1){GROUND_CLAUSE_LETTER[ground]} OF THE "
+            f"PETITION FOR EVICTION UNDER SECTION 14(1)"
+            f"{_join_clause_letters([GROUND_CLAUSE_LETTER[ground] for ground in grounds])} OF THE "
             "DELHI RENT CONTROL ACT, 1958"
         ),
         "tenant_name": intake.tenant_name,
@@ -446,13 +511,28 @@ def _build_render_context(intake: TenancyEvictionIntake) -> tuple[dict[str, Any]
         "property_address": intake.property_address,
         "monthly_rent_display": _format_inr(intake.monthly_rent),
         "tenancy_start_date_display": intake.tenancy_start_date.strftime("%d %B %Y"),
-        "grounds_label": GROUND_LABEL[ground],
-        "grounds_clause": grounds_clause,
-        "citation_line": f"(See {citation['section_cite']} of the {citation['act_short_title']}.)",
         "relief_sought_lines": [RELIEF_LABEL[item] for item in intake.relief_sought],
         "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
     }
-    return context, citation
+
+    if len(grounds) == 1:
+        ground = grounds[0]
+        citation = citations[0]
+        context["grounds_label"] = GROUND_LABEL[ground]
+        context["grounds_clause"] = _render_clause_text(ground, intake)
+        context["citation_line"] = f"(See {citation['section_cite']} of the {citation['act_short_title']}.)"
+    else:
+        context["multi_ground_framing_line"] = MULTI_GROUND_FRAMING_LINE
+        context["grounds"] = [
+            {
+                "label": GROUND_LABEL[ground],
+                "clause_text": _render_clause_text(ground, intake),
+                "citation_line": f"(See {citation['section_cite']} of the {citation['act_short_title']}.)",
+            }
+            for ground, citation in zip(grounds, citations)
+        ]
+
+    return context, primary_citation, additional_citations
 
 
 def _verify_field_provenance(context: dict[str, Any], provenance: dict[str, str]) -> None:
@@ -465,16 +545,19 @@ def _verify_field_provenance(context: dict[str, Any], provenance: dict[str, str]
 
 
 def assemble_tenancy_eviction_draft(intake: TenancyEvictionIntake) -> DraftAssemblyResult:
-    """Slot-fill the fixed base template with the intake data and the selected clause.
+    """Slot-fill the fixed base template with the intake data and the selected clause(s).
 
     No LLM call is made anywhere in this path. Hard-fails (raises) rather than emitting a
-    partial document if the citation doesn't resolve or an unregistered field would be rendered.
+    partial document if any selected ground's citation doesn't resolve, or an unregistered field
+    would be rendered.
     """
-    ground = intake.grounds_for_eviction
-    citation = CLAUSE_CITATIONS[ground]
-    _require_citation_resolved(citation, f"ground '{ground.value}'")
+    grounds = ordered_grounds(intake.grounds_for_eviction)
+    # Pre-output check: every selected ground's citation must resolve against the corpus, not
+    # just the first one -- a multi-ground draft is only as trustworthy as its weakest citation.
+    for ground in grounds:
+        _require_citation_resolved(CLAUSE_CITATIONS[ground], f"ground '{ground.value}'")
 
-    context, citation = _build_render_context(intake)
+    context, citation, additional_citations = _build_render_context(intake)
     _verify_field_provenance(context, TENANCY_FIELD_PROVENANCE)
 
     if not TENANCY_EVICTION_TEMPLATE_PATH.exists():
@@ -489,15 +572,17 @@ def assemble_tenancy_eviction_draft(intake: TenancyEvictionIntake) -> DraftAssem
     doc.save(buffer)
 
     warnings: list[str] = []
-    review_warning = _citation_review_warning(citation, f"ground '{ground.value}'")
-    citation_review_required = review_warning is not None
-    if review_warning:
-        warnings.append(review_warning)
+    citation_review_required = False
+    for ground, ground_citation in zip(grounds, [citation, *additional_citations]):
+        review_warning = _citation_review_warning(ground_citation, f"ground '{ground.value}'")
+        if review_warning:
+            warnings.append(review_warning)
+            citation_review_required = True
 
     logger.info(
-        "Tenancy eviction draft assembled ground=%s citation=%s citation_review_required=%s",
-        ground.value,
-        citation["section_cite"],
+        "Tenancy eviction draft assembled grounds=%s citations=%s citation_review_required=%s",
+        [ground.value for ground in grounds],
+        [item["section_cite"] for item in [citation, *additional_citations]],
         citation_review_required,
     )
 
@@ -506,6 +591,7 @@ def assemble_tenancy_eviction_draft(intake: TenancyEvictionIntake) -> DraftAssem
         citation_used=citation,
         citation_review_required=citation_review_required,
         warnings=warnings,
+        additional_citations=additional_citations,
     )
 
 

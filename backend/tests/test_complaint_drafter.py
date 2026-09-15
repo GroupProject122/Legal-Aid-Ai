@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import datetime
+import io
 import sys
 from pathlib import Path
 
 import pytest
+from docx import Document
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
@@ -36,7 +38,7 @@ def test_rent_above_cap_fails_validation():
     with pytest.raises(ValidationError) as exc_info:
         drafter.TenancyEvictionIntake(
             **{**base_intake_kwargs(), "monthly_rent": 3600},
-            grounds_for_eviction="arrears",
+            grounds_for_eviction=["arrears"],
             arrears_amount=1000,
             arrears_period_months=1,
         )
@@ -53,7 +55,7 @@ def test_rent_above_cap_fails_validation():
 def test_rent_at_cap_boundary_is_allowed():
     intake = drafter.TenancyEvictionIntake(
         **{**base_intake_kwargs(), "monthly_rent": 3500},
-        grounds_for_eviction="arrears",
+        grounds_for_eviction=["arrears"],
         arrears_amount=1000,
         arrears_period_months=1,
     )
@@ -65,14 +67,14 @@ def test_rent_at_cap_boundary_is_allowed():
 
 def test_arrears_ground_without_amount_fails_validation():
     with pytest.raises(ValidationError) as exc_info:
-        drafter.TenancyEvictionIntake(**base_intake_kwargs(), grounds_for_eviction="arrears")
+        drafter.TenancyEvictionIntake(**base_intake_kwargs(), grounds_for_eviction=["arrears"])
     assert "arrears_amount" in str(exc_info.value)
     assert exc_info.value.errors()[0]["loc"] == ("arrears_amount",)
 
 
 def test_subletting_ground_without_details_fails_validation():
     with pytest.raises(ValidationError) as exc_info:
-        drafter.TenancyEvictionIntake(**base_intake_kwargs(), grounds_for_eviction="subletting")
+        drafter.TenancyEvictionIntake(**base_intake_kwargs(), grounds_for_eviction=["subletting"])
     assert exc_info.value.errors()[0]["loc"] == ("subletting_details",)
 
 
@@ -83,7 +85,7 @@ def test_future_tenancy_start_date_fails_validation():
     with pytest.raises(ValidationError) as exc_info:
         drafter.TenancyEvictionIntake(
             **{**base_intake_kwargs(), "tenancy_start_date": datetime.date.today() + datetime.timedelta(days=1)},
-            grounds_for_eviction="arrears",
+            grounds_for_eviction=["arrears"],
             arrears_amount=1000,
             arrears_period_months=1,
         )
@@ -103,11 +105,105 @@ def test_future_tenancy_start_date_fails_validation():
     ],
 )
 def test_each_ground_assembles_a_draft(ground, extra):
-    intake = drafter.TenancyEvictionIntake(**base_intake_kwargs(), grounds_for_eviction=ground, **extra)
+    intake = drafter.TenancyEvictionIntake(**base_intake_kwargs(), grounds_for_eviction=[ground], **extra)
     result = drafter.assemble_tenancy_eviction_draft(intake)
     assert result.docx_bytes.startswith(b"PK")  # docx is a zip archive
     assert result.citation_used["section_number"] == "14"
     assert result.citation_review_required is False
+
+
+def _docx_paragraph_texts(docx_bytes: bytes) -> list[str]:
+    return [p.text for p in Document(io.BytesIO(docx_bytes)).paragraphs if p.text.strip()]
+
+
+# --- Multi-ground support ---
+
+
+def test_grounds_for_eviction_with_duplicate_value_fails_validation():
+    with pytest.raises(ValidationError) as exc_info:
+        drafter.TenancyEvictionIntake(
+            **base_intake_kwargs(),
+            grounds_for_eviction=["arrears", "arrears"],
+            arrears_amount=1000,
+            arrears_period_months=1,
+        )
+    error = exc_info.value.errors()[0]
+    assert error["loc"] == ("grounds_for_eviction",)
+    assert "duplicate" in error["msg"].lower()
+
+
+def test_multi_ground_conditional_fields_each_required_independently():
+    # arrears + subletting selected, but only arrears' conditional fields supplied -- must fail
+    # on subletting_details specifically (not arrears_amount, which was already satisfied).
+    with pytest.raises(ValidationError) as exc_info:
+        drafter.TenancyEvictionIntake(
+            **base_intake_kwargs(),
+            grounds_for_eviction=["arrears", "subletting"],
+            arrears_amount=1000,
+            arrears_period_months=1,
+        )
+    assert exc_info.value.errors()[0]["loc"] == ("subletting_details",)
+
+
+def test_multi_ground_renders_in_statutory_order_regardless_of_input_order():
+    # Input deliberately scrambled: bona_fide_requirement, damage, arrears, subletting.
+    # Statutory order is arrears (a), subletting (b), bona_fide_requirement (e), damage (j).
+    intake = drafter.TenancyEvictionIntake(
+        **base_intake_kwargs(),
+        grounds_for_eviction=["bona_fide_requirement", "damage", "arrears", "subletting"],
+        arrears_amount=45000,
+        arrears_period_months=6,
+        subletting_details="Sublet to a third party without consent.",
+        damage_description="Removed a load-bearing wall without permission.",
+        bona_fide_reason="Landlord's son needs the flat to live in.",
+    )
+    result = drafter.assemble_tenancy_eviction_draft(intake)
+
+    assert result.citation_used["section_cite"] == "Section 14(1)(a)"
+    assert [c["section_cite"] for c in result.additional_citations] == [
+        "Section 14(1)(b)",
+        "Section 14(1)(e)",
+        "Section 14(1)(j)",
+    ]
+
+    texts = _docx_paragraph_texts(result.docx_bytes)
+    ground_lines = [t for t in texts if t.startswith("Ground ")]
+    assert ground_lines == [
+        "Ground 1: Non-payment of arrears of rent",
+        "Ground 2: Unauthorized subletting",
+        "Ground 3: Bona fide personal requirement of the landlord",
+        "Ground 4: Substantial damage to the premises",
+    ]
+    assert any("in the alternative and/or cumulatively" in t for t in texts)
+    assert "SECTION 14(1)(a), (b), (e) AND (j)" in " ".join(texts)
+
+
+def test_single_ground_output_is_unchanged_by_multi_ground_feature():
+    intake = drafter.TenancyEvictionIntake(
+        **base_intake_kwargs(), grounds_for_eviction=["arrears"], arrears_amount=45000, arrears_period_months=6
+    )
+    result = drafter.assemble_tenancy_eviction_draft(intake)
+    texts = _docx_paragraph_texts(result.docx_bytes)
+    # None of the multi-ground-only elements should appear when only one ground is selected.
+    assert not any(t.startswith("Ground 1:") for t in texts)
+    assert not any("in the alternative and/or cumulatively" in t for t in texts)
+    assert any(t == "Ground relied upon: Non-payment of arrears of rent" for t in texts)
+
+
+def test_multi_ground_pre_output_check_covers_every_selected_ground(monkeypatch):
+    # A broken citation on the SECOND ground (subletting), not the first (arrears), must still
+    # hard-fail -- proves the pre-output check loops over every selected ground, not just one.
+    intake = drafter.TenancyEvictionIntake(
+        **base_intake_kwargs(),
+        grounds_for_eviction=["arrears", "subletting"],
+        arrears_amount=1000,
+        arrears_period_months=1,
+        subletting_details="Sublet to a third party without consent.",
+    )
+    broken_citation = {**drafter.CLAUSE_CITATIONS[drafter.EvictionGround.subletting], "section_number": "999"}
+    monkeypatch.setitem(drafter.CLAUSE_CITATIONS, drafter.EvictionGround.subletting, broken_citation)
+    with pytest.raises(drafter.CitationUnresolvedError):
+        drafter.assemble_tenancy_eviction_draft(intake)
 
 
 def test_unauthorized_construction_ground_was_deliberately_dropped():
@@ -122,7 +218,7 @@ def test_unauthorized_construction_ground_was_deliberately_dropped():
 
 def test_unresolved_citation_hard_fails(monkeypatch):
     intake = drafter.TenancyEvictionIntake(
-        **base_intake_kwargs(), grounds_for_eviction="arrears", arrears_amount=1000, arrears_period_months=1
+        **base_intake_kwargs(), grounds_for_eviction=["arrears"], arrears_amount=1000, arrears_period_months=1
     )
     broken_citation = {**drafter.CLAUSE_CITATIONS[drafter.EvictionGround.arrears], "section_number": "999"}
     monkeypatch.setitem(drafter.CLAUSE_CITATIONS, drafter.EvictionGround.arrears, broken_citation)
@@ -135,7 +231,7 @@ def test_clause_referencing_unwhitelisted_field_hard_fails(monkeypatch, tmp_path
     bad_clause.write_text("This references {{ some_field_not_on_the_whitelist }}.")
     monkeypatch.setattr(drafter, "CLAUSES_DIR", tmp_path)
     intake = drafter.TenancyEvictionIntake(
-        **base_intake_kwargs(), grounds_for_eviction="arrears", arrears_amount=1000, arrears_period_months=1
+        **base_intake_kwargs(), grounds_for_eviction=["arrears"], arrears_amount=1000, arrears_period_months=1
     )
     monkeypatch.setitem(drafter.CLAUSE_FILE_BY_GROUND, drafter.EvictionGround.arrears, "bad_clause.txt")
     with pytest.raises(drafter.FieldProvenanceError):
@@ -203,10 +299,41 @@ def test_api_draft_docx_download_returns_docx_bytes():
     assert response.content.startswith(b"PK")
 
 
+def test_api_validate_returns_grounds_as_list_in_statutory_order():
+    response = client.post(
+        "/api/complaint-drafter/tenancy-eviction/validate",
+        json={
+            "intake": {
+                **base_intake_kwargs_json(),
+                "grounds_for_eviction": ["subletting", "arrears"],
+                "subletting_details": "Sublet to a third party without consent.",
+            }
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["grounds_for_eviction"] == ["arrears", "subletting"]
+
+
+def test_api_draft_docx_filename_lists_grounds_in_statutory_order():
+    response = client.post(
+        "/api/complaint-drafter/tenancy-eviction/draft/docx",
+        json={
+            "intake": {
+                **base_intake_kwargs_json(),
+                "grounds_for_eviction": ["subletting", "arrears"],
+                "subletting_details": "Sublet to a third party without consent.",
+            }
+        },
+    )
+    assert response.status_code == 200
+    disposition = response.headers["content-disposition"]
+    assert "eviction_petition_arrears_subletting.docx" in disposition
+
+
 def base_intake_kwargs_json() -> dict:
     kwargs = base_intake_kwargs()
     kwargs["tenancy_start_date"] = kwargs["tenancy_start_date"].isoformat()
-    kwargs["grounds_for_eviction"] = "arrears"
+    kwargs["grounds_for_eviction"] = ["arrears"]
     kwargs["arrears_amount"] = 45000
     kwargs["arrears_period_months"] = 6
     return kwargs

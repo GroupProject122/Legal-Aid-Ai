@@ -75,10 +75,20 @@ def _generate_draft(payload: dict[str, Any], validate_fn, assemble_fn) -> tuple[
 # --- Scenario 1: tenancy eviction ---
 
 
+def _tenancy_grounds_filename_fragment(intake: drafter.TenancyEvictionIntake) -> str:
+    """Grounds joined in statutory order (matching the document body's own ordering), not
+    selection order -- e.g. two grounds picked as [subletting, arrears] still produce
+    "arrears_subletting" here, consistent with how they appear in the rendered document."""
+    return "_".join(ground.value for ground in drafter.ordered_grounds(intake.grounds_for_eviction))
+
+
 @router.post("/tenancy-eviction/validate")
 def validate_tenancy_eviction_intake(request: RawIntakeRequest) -> dict:
     intake = _validate_tenancy_eviction_intake(request.intake)
-    return {"status": "valid", "grounds_for_eviction": intake.grounds_for_eviction.value}
+    return {
+        "status": "valid",
+        "grounds_for_eviction": [ground.value for ground in drafter.ordered_grounds(intake.grounds_for_eviction)],
+    }
 
 
 @router.post("/tenancy-eviction/draft")
@@ -86,7 +96,7 @@ def draft_tenancy_eviction(request: RawIntakeRequest) -> dict:
     intake, result = _generate_draft(request.intake, _validate_tenancy_eviction_intake, drafter.assemble_tenancy_eviction_draft)
     logger.info(
         "Tenancy eviction draft generated grounds=%s citation_review_required=%s",
-        intake.grounds_for_eviction.value,
+        [ground.value for ground in drafter.ordered_grounds(intake.grounds_for_eviction)],
         result.citation_review_required,
     )
     return {"status": "success", "scenario": "tenancy_eviction", **result.metadata()}
@@ -95,7 +105,7 @@ def draft_tenancy_eviction(request: RawIntakeRequest) -> dict:
 @router.post("/tenancy-eviction/draft/docx")
 def download_tenancy_eviction_docx(request: RawIntakeRequest) -> Response:
     intake, result = _generate_draft(request.intake, _validate_tenancy_eviction_intake, drafter.assemble_tenancy_eviction_draft)
-    filename = f"eviction_petition_{intake.grounds_for_eviction.value}.docx"
+    filename = f"eviction_petition_{_tenancy_grounds_filename_fragment(intake)}.docx"
     return Response(
         content=result.docx_bytes,
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -110,7 +120,7 @@ def download_tenancy_eviction_pdf(request: RawIntakeRequest) -> Response:
         pdf_bytes = drafter.convert_docx_bytes_to_pdf(result.docx_bytes)
     except drafter.PdfConversionError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
-    filename = f"eviction_petition_{intake.grounds_for_eviction.value}.pdf"
+    filename = f"eviction_petition_{_tenancy_grounds_filename_fragment(intake)}.pdf"
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",

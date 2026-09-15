@@ -67,23 +67,46 @@ def evaluate_case(case: dict[str, Any]) -> dict[str, Any]:
         result["latency_ms"] = int((time.perf_counter() - started) * 1000)
         return result
 
-    expected_clause_file = case.get("expected_clause_file")
-    actual_clause_file = drafter.CLAUSE_FILE_BY_GROUND[intake.grounds_for_eviction]
-    clause_selection_correct = actual_clause_file == expected_clause_file
+    # expected_clause_file(s): supports both the old singular key (still accepted so any
+    # not-yet-migrated case file keeps working) and the new plural key. Grounds are compared in
+    # statutory order (drafter.ordered_grounds), matching the order the document itself renders
+    # them in -- not the order the case file lists them in.
+    ordered_grounds = drafter.ordered_grounds(intake.grounds_for_eviction)
+    if "expected_clause_files" in case:
+        expected_clause_files = case["expected_clause_files"]
+    elif "expected_clause_file" in case:
+        expected_clause_files = [case["expected_clause_file"]]
+    else:
+        expected_clause_files = []
+    actual_clause_files = [drafter.CLAUSE_FILE_BY_GROUND[ground] for ground in ordered_grounds]
+    clause_selection_correct = actual_clause_files == expected_clause_files
 
-    expected_citation = case.get("expected_citation") or {}
-    citation_used = draft_result.citation_used
-    citation_correct = all(citation_used.get(key) == value for key, value in expected_citation.items())
+    # expected_citations: supports both the old singular "expected_citation" key (one dict,
+    # compared against citation_used only) and the new plural "expected_citations" key (a list,
+    # one dict per ground in statutory order, compared against [citation_used, *additional_citations]).
+    all_citations = [draft_result.citation_used, *draft_result.additional_citations]
+    if "expected_citations" in case:
+        expected_citations = case["expected_citations"]
+        citation_correct = len(expected_citations) == len(all_citations) and all(
+            all(actual.get(key) == value for key, value in expected.items())
+            for expected, actual in zip(expected_citations, all_citations)
+        )
+    else:
+        expected_citations = [case.get("expected_citation") or {}]
+        citation_correct = all(
+            draft_result.citation_used.get(key) == value for key, value in expected_citations[0].items()
+        )
+    citations_resolved_against_corpus = [drafter.resolve_citation_against_corpus(item) for item in all_citations]
 
     result["actual_outcome"] = "pass"
     result["failure_message"] = None
-    result["expected_clause_file"] = expected_clause_file
-    result["actual_clause_file"] = actual_clause_file
+    result["expected_clause_files"] = expected_clause_files
+    result["actual_clause_files"] = actual_clause_files
     result["clause_selection_correct"] = clause_selection_correct
-    result["expected_citation"] = expected_citation
-    result["actual_citation"] = citation_used
+    result["expected_citations"] = expected_citations
+    result["actual_citations"] = all_citations
     result["citation_correct"] = citation_correct
-    result["citation_resolved_against_corpus"] = drafter.resolve_citation_against_corpus(citation_used)
+    result["citation_resolved_against_corpus"] = all(citations_resolved_against_corpus)
     result["docx_bytes_generated"] = len(draft_result.docx_bytes)
     result["correct"] = clause_selection_correct and citation_correct and result["citation_resolved_against_corpus"]
     result["latency_ms"] = int((time.perf_counter() - started) * 1000)
@@ -175,10 +198,11 @@ def render_markdown(report: dict[str, Any]) -> str:
         "## Valid Drafts Per Ground",
     ]
     for item in report["results"]:
-        if item["group"] == "valid_per_ground":
+        if item["group"] in ("valid_per_ground", "multi_ground"):
+            citation_cites = [c.get("section_cite") for c in item.get("actual_citations", [])]
             lines.append(
-                f"- `{item['id']}` -> clause `{item.get('actual_clause_file')}`, "
-                f"citation `{item.get('actual_citation', {}).get('section_cite')}`, "
+                f"- `{item['id']}` -> clauses `{item.get('actual_clause_files')}`, "
+                f"citations `{citation_cites}`, "
                 f"resolved_against_corpus={item.get('citation_resolved_against_corpus')}"
             )
     lines.extend(["", "## Rent-Cap Boundary (Section 3)"])

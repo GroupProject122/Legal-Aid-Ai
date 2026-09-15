@@ -36,7 +36,14 @@ export const FIELD_SCHEMAS = {
       hint: 'Must not exceed Rs. 3,500 for this Act to apply (Section 3).'
     },
     { name: 'tenancy_start_date', label: 'Tenancy start date', type: 'date', required: true },
-    { name: 'grounds_for_eviction', label: 'Grounds for eviction', type: 'select', required: true, options: EVICTION_GROUNDS },
+    {
+      name: 'grounds_for_eviction',
+      label: 'Grounds for eviction',
+      type: 'multiselect',
+      required: true,
+      options: EVICTION_GROUNDS,
+      hint: 'Select one or more. The document will list them in Section 14(1)’s own order, not the order you pick them in.'
+    },
     { name: 'relief_sought', label: 'Relief sought', type: 'multiselect', required: true, options: TENANCY_RELIEF_OPTIONS },
     {
       name: 'arrears_amount',
@@ -44,7 +51,7 @@ export const FIELD_SCHEMAS = {
       type: 'number',
       required: true,
       min: 0.01,
-      showIf: (v) => v.grounds_for_eviction === 'arrears'
+      showIf: (v) => (v.grounds_for_eviction || []).includes('arrears')
     },
     {
       name: 'arrears_period_months',
@@ -53,28 +60,28 @@ export const FIELD_SCHEMAS = {
       required: true,
       min: 1,
       step: 1,
-      showIf: (v) => v.grounds_for_eviction === 'arrears'
+      showIf: (v) => (v.grounds_for_eviction || []).includes('arrears')
     },
     {
       name: 'subletting_details',
       label: 'Subletting details',
       type: 'textarea',
       required: true,
-      showIf: (v) => v.grounds_for_eviction === 'subletting'
+      showIf: (v) => (v.grounds_for_eviction || []).includes('subletting')
     },
     {
       name: 'damage_description',
       label: 'Damage description',
       type: 'textarea',
       required: true,
-      showIf: (v) => v.grounds_for_eviction === 'damage'
+      showIf: (v) => (v.grounds_for_eviction || []).includes('damage')
     },
     {
       name: 'bona_fide_reason',
       label: 'Reason for bona fide requirement',
       type: 'textarea',
       required: true,
-      showIf: (v) => v.grounds_for_eviction === 'bona_fide_requirement'
+      showIf: (v) => (v.grounds_for_eviction || []).includes('bona_fide_requirement')
     }
   ],
   consumer_defective_goods: [
