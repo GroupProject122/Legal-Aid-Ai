@@ -77,13 +77,13 @@
           "section_title": "Duties of sellers on marketplace"
         },
         {
-          "document_title": "The Consumer Protection Act, 2019",
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
           "domain": "consumer",
-          "provision": "38",
+          "provision": "7",
           "rank": 4,
-          "rerank_score": 0.9162,
-          "score": 0.4264,
-          "section_title": "Procedure on admission of complaint"
+          "rerank_score": 0.823,
+          "score": 0.4448,
+          "section_title": "Duties and liabilities of inventory e-commerce entities:"
         }
       ],
       "source_family_coverage": true,
@@ -121,22 +121,22 @@
           "section_title": "Protection of tenant against eviction"
         },
         {
-          "document_title": "The Delhi Rent Control Act, 1958",
+          "document_title": "The Delhi Rent Control Rules, 1959",
           "domain": "tenancy",
-          "provision": "22",
+          "provision": "24",
           "rank": 3,
-          "rerank_score": 0.587,
-          "score": 0.387,
-          "section_title": "Special provision for recovery of possession in certain cases"
+          "rerank_score": 0.5117,
+          "score": 0.3907,
+          "section_title": "Registers to be maintained by the Controller and Tribunal"
         },
         {
-          "document_title": "The Delhi Rent Control Act, 1958",
+          "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
           "domain": "tenancy",
-          "provision": "31",
+          "provision": "21",
           "rank": 4,
-          "rerank_score": 0.5783,
-          "score": 0.3603,
-          "section_title": "Fixing of fair rate"
+          "rerank_score": 0.4642,
+          "score": 0.3922,
+          "section_title": "Chapter not to apply to eviction of tenants from certain buildings"
         }
       ],
       "source_family_coverage": true,
@@ -183,13 +183,13 @@
           "section_title": "Subject to the provisions of this Act, it shall"
         },
         {
-          "document_title": "The Information Technology Act, 2000",
+          "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
           "domain": "cyber",
-          "provision": "42",
+          "provision": "",
           "rank": 4,
-          "rerank_score": 0.6748,
-          "score": 0.3708,
-          "section_title": "Control of private key"
+          "rerank_score": 0.6272,
+          "score": 0.4812,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
@@ -280,22 +280,22 @@
           "section_title": "Special provision for recovery of possession in certain cases"
         },
         {
-          "document_title": "The Delhi Rent Control Act, 1958",
+          "document_title": "The Delhi Rent Control Rules, 1959",
           "domain": "tenancy",
-          "provision": "44",
+          "provision": "24",
           "rank": 3,
-          "rerank_score": 0.5058,
-          "score": 0.3058,
-          "section_title": "Landlord's duty to keep the premises in good repair"
+          "rerank_score": 0.3896,
+          "score": 0.3406,
+          "section_title": "Registers to be maintained by the Controller and Tribunal"
         },
         {
-          "document_title": "The Delhi Rent Control Act, 1958",
-          "domain": "tenancy",
-          "provision": "25",
+          "document_title": "Reserve Bank of India - Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (DBR.No.Leg.BC.78/09.07.005/2017-18, 6 July 2017)",
+          "domain": "cyber",
+          "provision": "",
           "rank": 4,
-          "rerank_score": 0.4959,
-          "score": 0.3139,
-          "section_title": "Vacant possession to landlord"
+          "rerank_score": 0.3505,
+          "score": 0.3199,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
@@ -333,22 +333,22 @@
           "section_title": "Powers and functions of Info rmation Commissions"
         },
         {
-          "document_title": "The Right to Information Act, 2005",
+          "document_title": "The Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
           "domain": "constitutional_public_authority",
-          "provision": "5",
+          "provision": "16",
           "rank": 3,
-          "rerank_score": 0.8632,
-          "score": 0.5082,
-          "section_title": "Designation of Public Information Offic ers"
+          "rerank_score": 0.7964,
+          "score": 0.4654,
+          "section_title": "Appeals"
         },
         {
-          "document_title": "The Right to Information Act, 2005",
+          "document_title": "The Right to Information Rules, 2012",
           "domain": "constitutional_public_authority",
-          "provision": "6",
+          "provision": "11",
           "rank": 4,
-          "rerank_score": 0.8442,
-          "score": 0.4982,
-          "section_title": "Request for obtaining information"
+          "rerank_score": 0.7885,
+          "score": 0.5395,
+          "section_title": "Procedure for deciding appeals"
         }
       ],
       "source_family_coverage": true,
@@ -421,13 +421,13 @@
           "section_title": "Duties of sellers on marketplace"
         },
         {
-          "document_title": "The Consumer Protection Act, 2019",
+          "document_title": "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020",
           "domain": "consumer",
-          "provision": "38",
+          "provision": "9",
           "rank": 4,
-          "rerank_score": 0.7725,
-          "score": 0.3791,
-          "section_title": "Procedure on admission of complaint"
+          "rerank_score": 0.649,
+          "score": 0.3786,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
@@ -518,22 +518,22 @@
           "section_title": "State Legal Aid Fund"
         },
         {
-          "document_title": "The Legal Services Authorities Act, 1987",
+          "document_title": "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
           "domain": "constitutional_public_authority",
-          "provision": "13",
+          "provision": "147",
           "rank": 3,
-          "rerank_score": 0.7576,
-          "score": 0.4405,
-          "section_title": "Entitlement of legal services"
+          "rerank_score": 0.6951,
+          "score": 0.5031,
+          "section_title": null
         },
         {
-          "document_title": "The Legal Services Authorities Act, 1987",
+          "document_title": "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
           "domain": "constitutional_public_authority",
-          "provision": "12",
+          "provision": "13",
           "rank": 4,
-          "rerank_score": 0.7371,
-          "score": 0.4245,
-          "section_title": "Criteria for giving legal services"
+          "rerank_score": 0.6936,
+          "score": 0.5309,
+          "section_title": null
         }
       ],
       "source_family_coverage": true,
@@ -571,22 +571,22 @@
           "section_title": "Receipt to be given for rent paid"
         },
         {
-          "document_title": "The Delhi Rent Control Act, 1958",
+          "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
           "domain": "tenancy",
-          "provision": "14",
+          "provision": "28",
           "rank": 3,
-          "rerank_score": 0.5851,
-          "score": 0.3041,
-          "section_title": "Protection of tenant against eviction"
+          "rerank_score": 0.4519,
+          "score": 0.3659,
+          "section_title": "Power of eviction to be exercised only by the competent authority"
         },
         {
-          "document_title": "The Delhi Rent Control Act, 1958",
+          "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
           "domain": "tenancy",
-          "provision": "44",
+          "provision": "20B",
           "rank": 4,
-          "rerank_score": 0.5518,
-          "score": 0.3248,
-          "section_title": "Landlord's duty to keep the premises in good repair"
+          "rerank_score": 0.4515,
+          "score": 0.3115,
+          "section_title": "Rent of buildings in slum areas"
         }
       ],
       "source_family_coverage": true,
@@ -686,13 +686,13 @@
           "section_title": "Duties of sellers on marketplace"
         },
         {
-          "document_title": "The Consumer Protection Act, 2019",
+          "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
           "domain": "consumer",
-          "provision": "38",
+          "provision": "7",
           "rank": 4,
-          "rerank_score": 0.8762,
-          "score": 0.4102,
-          "section_title": "Procedure on admission of complaint"
+          "rerank_score": 0.769,
+          "score": 0.437,
+          "section_title": "Duties and liabilities of inventory e-commerce entities:"
         }
       ],
       "source_family_coverage": true,
@@ -783,22 +783,22 @@
           "section_title": "Powers and functions of Info rmation Commissions"
         },
         {
-          "document_title": "The Right to Information Act, 2005",
+          "document_title": "The Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
           "domain": "constitutional_public_authority",
-          "provision": "5",
+          "provision": "16",
           "rank": 3,
-          "rerank_score": 0.8632,
-          "score": 0.5082,
-          "section_title": "Designation of Public Information Offic ers"
+          "rerank_score": 0.7964,
+          "score": 0.4654,
+          "section_title": "Appeals"
         },
         {
-          "document_title": "The Right to Information Act, 2005",
+          "document_title": "The Right to Information Rules, 2012",
           "domain": "constitutional_public_authority",
-          "provision": "6",
+          "provision": "11",
           "rank": 4,
-          "rerank_score": 0.8442,
-          "score": 0.4982,
-          "section_title": "Request for obtaining information"
+          "rerank_score": 0.7885,
+          "score": 0.5395,
+          "section_title": "Procedure for deciding appeals"
         }
       ],
       "source_family_coverage": true,

@@ -3,6 +3,21 @@
 Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives in
 [`frontend/CHANGELOG.md`](frontend/CHANGELOG.md).
 
+> **Known limitation (retrieval, `backend/rag.py`) — domain-signal cue gap, not fixed, found
+> 2026-09-14/15.** `detect_domain_signals()` (which drives `production_candidate_k()`'s
+> single-domain widening, including the cyber-specific candidate_k=100 branch — see the Unreleased
+> entry below) returns a **zero score for every domain** on some plainly cyber/payment-fraud
+> phrasings, e.g. `"rights after online payment fraud"`. No keyword in `DOMAIN_SIGNAL_CUES`
+> matches that exact phrasing, so the query falls through to the generic
+> `domain_count == 0` branch (`candidate_k=12`) instead of the cyber-specific one, regardless of
+> how obviously cyber-domain the query actually is. Practical effect: this class of phrasing can't
+> benefit from any domain-specific retrieval-depth widening, capping how many substantive cyber
+> queries the down-weighting/candidate_k work below can actually reach. Not fixed — would mean
+> either adding cue coverage to `DOMAIN_SIGNAL_CUES` or classifying by some other signal, both out
+> of scope for a same-day fix. Recorded here so it isn't only in a conversation transcript;
+> revisit by testing more payment-fraud/rights-framed phrasings against `detect_domain_signals()`
+> directly and expanding cue coverage as needed.
+
 > **Known corpus caveat (consumer)** — two CCPA instruments have no official machine-readable
 > source (only scanned-image PDFs exist and no OCR was run), so they are in the corpus as
 > **compiled summaries**, not verbatim law:
@@ -23,6 +38,49 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > 1 Jan 2025 and is still actively changing — a compiled secondary-source summary risks being
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
+
+## Unreleased — cyber procedural-manual crowding: down-weighting, candidate_k, diversity cap
+
+Four-round, same-day escalation in `backend/rag.py` (2026-09-14/15) fixing a retrieval-quality
+issue: `cybercrime_portal_citizen_manual_latest.pdf` and similar citizen-facing procedural manuals
+were crowding statutory sources (IT Act, DPDP Act) out of the top results on substantive
+cyber-fraud questions, despite already being tagged low-priority/reference-only in the manifest.
+Each step alone proved insufficient — kept here as the full record rather than smoothed into one
+clean-looking fix:
+
+1. **Accept as-is** — initial finding, logged as a known limitation, no code change.
+2. **Strengthen scoring** — `PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY` (-0.20) added to
+   `authority_level_boost()` and a matching `relevance_gate_score()` fix to
+   `select_relevant_chunks()`'s admission threshold (a rerank-only penalty can't override a
+   raw-score-based admission gate). Applies only on non-procedural-intent queries
+   (`is_procedural_query()`, reused, not reimplemented) — procedural queries ("how do I report
+   this") are unaffected. Insufficient alone: some substantive queries never fetched the statute
+   as a raw-FAISS candidate at all.
+3. **Widen candidates** — `production_candidate_k()` (factored out of `LegalRAG.retrieve()`) adds
+   a cyber-specific `candidate_k=100` branch (raw-FAISS rank for the missed statute was 41-61
+   across tested phrasings, all outside the prior single-domain `candidate_k=40`).
+   `evaluate_retrieval.py`'s own hardcoded `candidate_k=10` was also replaced with a call to the
+   same function — it previously measured a narrower window than production, so its metrics
+   couldn't reflect steps 2 or this step either.
+4. **Per-document diversity cap** — step 3's wider pool let one document (DPDP Act 2023) fill
+   every selected slot on one query, pushing out a second expected document (IT Act 2000).
+   `DOCUMENT_DIVERSITY_CAP = 2` in `select_relevant_chunks()` (at most 2 of the selected slots from
+   the same source document, backfilled from skipped candidates if too few distinct documents
+   clear the relevance threshold) fixed that case without regressing the three queries step 3 had
+   just improved.
+
+Extended to `npci_upi_procedural_guidelines.pdf` (`retrieval_priority=medium`, not just `low`) in
+step 3 — same `authority_level=procedural_guide`/`document_type=procedural_user_guide` shape, same
+crowding risk on substantive UPI/payment-fraud queries; its own procedural queries confirmed
+unaffected.
+
+**Net effect** (`eval/retrieval_evaluation.md`, single-domain queries, n=36): Document Hit@5
+88.9% → 94.4%, MRR 0.813 → 0.857; cyber domain Document Hit@5 66.7% → 88.9%, MRR 0.404 → 0.615.
+Manual regression suite (`eval/manual_regression_evaluation.md`) and pytest unaffected throughout
+(15/15 and 337/337 respectively, checked after every step). Full per-step before/after detail is
+in the `rag.py` comment above `RETRIEVAL_PRIORITY_WEIGHTS` and in git history for this range of
+commits. See the domain-signal cue gap caveat above for a related, separately-tracked limitation
+this work surfaced but did not fix.
 
 ## Unreleased — corpus completion round (Stamp Act, 2022 IT amendment, CCPA summaries)
 

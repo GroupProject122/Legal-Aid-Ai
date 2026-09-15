@@ -1,36 +1,24 @@
 # Retrieval Evaluation
 
-> **Baseline note (2026-09-14):** this file is regenerated in full by `evaluate_retrieval.py` on
-> every run, overwriting any hand-written notes (this one included) -- the durable copy of the
-> full history lives in `rag.py` as a comment above `RETRIEVAL_PRIORITY_WEIGHTS`.
+> **Baseline note (2026-09-15):** this file is regenerated in full by `evaluate_retrieval.py` on
+> every run, overwriting hand-written notes -- the durable copy of the full 4-step history (accept
+> -> strengthen scoring -> widen candidates -> per-document diversity cap) lives in `rag.py`'s
+> comment above `RETRIEVAL_PRIORITY_WEIGHTS`, and a summary is in the root `CHANGELOG.md`.
 >
-> This baseline reflects a three-step, same-day escalation on the
-> `cybercrime_portal_citizen_manual_latest.pdf` retrieval drift, not a single clean fix: (1)
-> accept as-is (an earlier baseline of this file), (2) strengthen scoring
-> (`PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY`, extended to `retrieval_priority=medium` to also cover
-> `npci_upi_procedural_guidelines.pdf`), (3) widen the cyber-domain candidate pool
-> (`candidate_k=100`, via `production_candidate_k()`) after step 2 alone proved insufficient --
-> several substantive cyber queries never fetched IT Act s.66C as a raw-FAISS candidate at all
-> (rank 41-61) under the then-current candidate_k=40, so no scoring change could have surfaced it.
-> `evaluate_retrieval.py` itself was also fixed this round: it previously hardcoded its own
-> `candidate_k=10` (now `production_candidate_k()` per query, matching production), which is why
-> this file's own Overall Metrics numbers only started reflecting the fix at step 3, not step 2 --
-> at candidate_k=10 the statute was never a candidate here either, same underlying cause.
->
-> **Net result (steps 2+3 combined), single-domain queries:** Document Hit@5 88.9% -> 94.4%,
-> MRR 0.813 -> 0.857. Cyber-domain specifically: Document Hit@5 66.7% -> 88.9%, MRR 0.404 -> 0.615.
-> `cyber fraud online payment`'s Top 5 no longer contains the manual at all (RBI, CERT-In, and IT
-> Act s.66C now occupy the top 3); see the Cyber Retrieval Analysis section below for the current
-> numbers.
->
-> **Known, reported (not fixed) side effect of the wider candidate pool:** on
-> `someone shared private data online`, `document_hit_at_5` flipped True->False (3 net
-> query-level improvements elsewhere, 1 regression here; document_mrr 0.333->0.167 for this case).
-> Cause: the wider pool let a single document (Digital Personal Data Protection Act, 2023) fill
-> all 4 selected slots with its own chunks, pushing out The Information Technology Act, 2000 --
-> one of this case's two expected primary documents -- which the narrower candidate_k=40 pool had
-> included. Not corrected in this round; flagged for a future decision (e.g. a per-document cap
-> on selected slots) rather than forced through silently.
+> **Step 4 (diversity cap) closes the known side effect from step 3:** `DOCUMENT_DIVERSITY_CAP=2`
+> in `select_relevant_chunks()` restores The Information Technology Act, 2000 to
+> `"someone shared private data online"`'s selected results (verified directly against
+> `LegalRAG.retrieve()`) without regressing the three queries step 3 had just fixed. **This file's
+> own Document Hit@5/MRR numbers do not show that specific improvement**, and that's a separate,
+> pre-existing property of this evaluator worth knowing about: `evaluate_single_domain()` computes
+> those metrics from `reranked_top10` (the raw top-10 by individual `final_rerank_score`, before
+> `select_relevant_chunks()` ever runs), not from `selected_by_current_retrieve` (what
+> `select_relevant_chunks()` -- and therefore production -- actually returns). A diversity cap is
+> a property of the *selected set*, not of any individual chunk's rerank score, so it structurally
+> cannot move a per-chunk-scored list like `reranked_top10` -- same category of finding as the
+> `RAW_CANDIDATE_K` mismatch fixed earlier this session, not yet applied to this second mismatch.
+> Verify diversity-cap-sensitive changes against `selected_by_current_retrieve` in the JSON output,
+> or directly against `LegalRAG.retrieve()`, not against this file's aggregate metrics.
 
 ## Overall Metrics
 - Single-domain queries: 36

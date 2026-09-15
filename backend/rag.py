@@ -214,8 +214,8 @@ DOMAIN_SIGNAL_CLOSE_DELTA = 0.16
 DOMAIN_PRIMARY_BOOST = 0.20
 DOMAIN_SECONDARY_BOOST = 0.10
 DOMAIN_MISMATCH_PENALTY = 0.12
-# HISTORY (2026-09-14): the cybercrime_portal_citizen_manual_latest.pdf retrieval drift went
-# through three escalating rounds on the same day, in this order -- read as a record of what was
+# HISTORY (2026-09-14/15): the cybercrime_portal_citizen_manual_latest.pdf retrieval drift went
+# through four escalating rounds across two days, in this order -- read as a record of what was
 # tried and why each step alone was insufficient, not a single clean design:
 #   1. ACCEPT: originally logged here as an accepted, not-fixed limitation, relying only on the
 #      baseline weights immediately below (still the general-purpose priority/authority signal,
@@ -232,12 +232,21 @@ DOMAIN_MISMATCH_PENALTY = 0.12
 #      production_candidate_k() below, specifically to close the gap step 2 exposed. This is what
 #      actually got IT Act into the top 5 for most tested substantive queries. Also extended step
 #      2's penalty to retrieval_priority=medium (not just low) after confirming
-#      npci_upi_procedural_guidelines.pdf shares the same crowding risk.
-# Net effect verified this session: cyber Document Hit@5 66.7%->88.9%, MRR 0.404->0.615 in
-# eval/retrieval_evaluation.md, with one known, reported (not fixed) side effect: a wider
-# candidate pool let one document (DPDP Act 2023) monopolize multiple slots on one query
-# ("someone shared private data online"), pushing out a second expected document (IT Act 2000)
-# that a narrower pool had included. See eval/retrieval_evaluation.md for the full before/after.
+#      npci_upi_procedural_guidelines.pdf shares the same crowding risk. Side effect found: the
+#      wider pool let one document (DPDP Act 2023) monopolize every selected slot on one query
+#      ("someone shared private data online"), pushing out a second expected document (IT Act
+#      2000) that the narrower pool had included.
+#   4. DIVERSITY CAP: added DOCUMENT_DIVERSITY_CAP=2 to select_relevant_chunks() (below), fixing
+#      step 3's side effect directly -- confirmed it restores IT Act 2000 for that query without
+#      regressing the three queries step 3 had just fixed ("cyber fraud online payment", "phishing
+#      link stole my money", "someone hacked my social media account").
+# Also found, NOT fixed (recorded in CHANGELOG.md's known-limitations callout instead): some
+# plainly cyber/payment-fraud phrasings (e.g. "rights after online payment fraud") get a zero
+# score from detect_domain_signals() for every domain, so they never reach the cyber-specific
+# candidate_k branch above at all -- a separate, upstream cue-coverage gap, not something steps
+# 1-4 could address.
+# Net effect verified this session: single-domain Document Hit@5 88.9%->94.4%, MRR 0.813->0.857;
+# cyber domain Document Hit@5 66.7%->88.9%, MRR 0.404->0.615 (all in eval/retrieval_evaluation.md).
 RETRIEVAL_PRIORITY_WEIGHTS = {
     "high": 0.045,
     "medium": 0.02,
@@ -421,6 +430,9 @@ MIN_RELEVANCE_SCORE = 0.30
 LOW_CONFIDENCE_RELEVANCE_SCORE = 0.22
 RELEVANCE_WINDOW = 0.14
 MAX_CONTEXT_CHUNKS = 4
+# See the per-document diversity cap comment in select_relevant_chunks() for why this exists and
+# how 2 was chosen.
+DOCUMENT_DIVERSITY_CAP = 2
 MAX_SOURCE_CARDS = 4
 
 
@@ -1219,15 +1231,44 @@ def select_relevant_chunks(candidates: list[RetrievedChunk], question: str, top_
     )
     ranked = demote_context_suppressed_product_liability(question, ranked, top_k)
     ranked = balance_multi_domain_candidates(question, ranked)
+    target = min(top_k, MAX_CONTEXT_CHUNKS)
     selected: list[RetrievedChunk] = []
+    doc_counts: dict[str, int] = {}
+    capped_out: list[RetrievedChunk] = []
     for chunk in ranked:
         if relevance_gate_score(question, chunk) < threshold:
             continue
         if is_near_duplicate(chunk, selected):
             continue
+        # Per-document diversity cap, added 2026-09-15: a wide candidate pool (see
+        # production_candidate_k()'s cyber-specific widening) can let one document with many
+        # similar chunks fill every selected slot, pushing out a second, equally relevant
+        # document entirely. Found via "someone shared private data online": Digital Personal
+        # Data Protection Act, 2023 chunks filled all 4 slots, losing The Information Technology
+        # Act, 2000 coverage that a narrower pool had included. DOCUMENT_DIVERSITY_CAP=2 (tuned
+        # against that case plus the three queries the wider candidate pool had just fixed --
+        # "cyber fraud online payment", "phishing link stole my money", "someone hacked my social
+        # media account" -- confirmed it restores the lost document without regressing any of
+        # the three) means at most 2 of the selected slots can come from the same source
+        # document; the rest of this loop still ranks by rerank_score as before. If the capped
+        # pool doesn't fill every slot (too few distinct relevant documents survived the
+        # threshold), the fallback below backfills from what the cap skipped, so this never
+        # returns fewer chunks than an uncapped selection would have.
+        source_key = chunk.source or chunk.document_title
+        if doc_counts.get(source_key, 0) >= DOCUMENT_DIVERSITY_CAP:
+            capped_out.append(chunk)
+            continue
         selected.append(chunk)
-        if len(selected) >= min(top_k, MAX_CONTEXT_CHUNKS):
+        doc_counts[source_key] = doc_counts.get(source_key, 0) + 1
+        if len(selected) >= target:
             break
+    if len(selected) < target:
+        for chunk in capped_out:
+            if is_near_duplicate(chunk, selected):
+                continue
+            selected.append(chunk)
+            if len(selected) >= target:
+                break
     selected = ensure_multi_domain_selection(question, selected, ranked, threshold, top_k)
     return selected
 

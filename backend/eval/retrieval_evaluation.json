@@ -2508,21 +2508,21 @@
             "structure_type": "schedule"
           },
           {
-            "authority_level": "official_guidance",
-            "chunk_id": "cyber_rbi_limiting_liability_unauthorised_transactions_2017__chunk_0010",
-            "document_title": "Reserve Bank of India - Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (DBR.No.Leg.BC.78/09.07.005/2017-18, 6 July 2017)",
-            "document_type": "guidelines",
+            "authority_level": "primary",
+            "chunk_id": "cyber_cert_in_directions_2022__chunk_0008",
+            "document_title": "CERT-In Directions under sub-section (6) of section 70B of the Information Technology Act, 2000, dated 28 April 2022",
+            "document_type": "rules",
             "domain": "cyber",
             "domain_debug": {
-              "authority_boost": 0.018,
+              "authority_boost": 0.035,
               "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.194,
-              "final_rerank_score": 0.5801,
+              "final_rerank_score": 0.5766,
               "primary_domains": [
                 "cyber"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -2543,19 +2543,19 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.063,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
             "page": 5,
-            "provision_number": "9",
-            "provision_title": "On being notified by the customer, the bank shall credit (shadow reversal) the",
+            "provision_number": null,
+            "provision_title": "Annexure I",
             "rank": 4,
-            "rerank_score": 0.5801,
-            "retrieval_priority": "high",
-            "similarity_score": 0.3111,
-            "snippet": "Guideline 9 — On being notified by the customer, the bank shall credit (shadow reversal) the 9. On being notified by the customer, the bank shall credit (shadow reversal) the amount involved in the unauthorised electroni",
-            "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
-            "structure_type": "guideline"
+            "rerank_score": 0.5766,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.3456,
+            "snippet": "virtual asset exchanges, custodian wallets, Robotics, 3D and 4D Printing, additive manufacturing, Drones Page 6 of 8 xx. Attacks or malicious/ suspicious activities affecting systems/ servers/software/ applications relat",
+            "source_file": "cyber/cert_in_directions_2022.pdf",
+            "structure_type": "annexure"
           }
         ]
       }
@@ -3713,21 +3713,21 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0043",
-            "document_title": "The Right to Information Act, 2005",
+            "chunk_id": "cyber_digital_personal_data_protection_act_2023__chunk_0021",
+            "document_title": "The Digital Personal Data Protection Act, 2023",
             "document_type": "statute",
-            "domain": "constitutional_public_authority",
+            "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
-              "chunk_domain": "constitutional_public_authority",
+              "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
-              "domain_boost": 0.09,
-              "final_rerank_score": 0.7162,
+              "domain_boost": -0.054,
+              "final_rerank_score": 0.6444,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
+              "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [],
@@ -3750,34 +3750,34 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 18,
-            "provision_number": "20",
-            "provision_title": "Penalties",
+            "page": 10,
+            "provision_number": "15",
+            "provision_title": "A Data Principal shall perform the following duties, namely:",
             "rank": 3,
-            "rerank_score": 0.7162,
+            "rerank_score": 0.6444,
             "retrieval_priority": "high",
-            "similarity_score": 0.4922,
-            "snippet": "CHAPTER V Section 20 — Penalties plete or misleading information or destroyed information which was the subject of the request or obstructed in any manner in furnishing the information, it shall recommend for disciplinar",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+            "similarity_score": 0.5104,
+            "snippet": "CHAPTER III Section 15 — A Data Principal shall perform the following duties, namely: 15. A Data Principal shall perform the following duties, namely:— (a) comply with the provisions of all applicable laws for the time b",
+            "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
             "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0023",
-            "document_title": "The Right to Information Act, 2005",
+            "chunk_id": "cyber_information_technology_act_2000__chunk_0087",
+            "document_title": "The Information Technology Act, 2000",
             "document_type": "statute",
-            "domain": "constitutional_public_authority",
+            "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
-              "chunk_domain": "constitutional_public_authority",
+              "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
-              "domain_boost": 0.09,
-              "final_rerank_score": 0.7111,
+              "domain_boost": -0.054,
+              "final_rerank_score": 0.5897,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
+              "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [],
@@ -3800,15 +3800,15 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 11,
-            "provision_number": "11",
-            "provision_title": "Third party infor mation",
+            "page": 28,
+            "provision_number": "72",
+            "provision_title": "Penalty for Breach of confidentiality and privacy",
             "rank": 4,
-            "rerank_score": 0.7111,
+            "rerank_score": 0.5897,
             "retrieval_priority": "high",
-            "similarity_score": 0.4871,
-            "snippet": "CHAPTER II Section 11 — Third party infor mation 11. Third party infor mation.—(1) Where a Central Public Information Officer or a State Public Information Officer, as the case may be, intends to disclose any information",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+            "similarity_score": 0.4737,
+            "snippet": "CHAPTER XI Section 72 — Penalty for Breach of confidentiality and privacy 72. Penalty for Breach of confidentiality and privacy .–Save as otherwise provided in this Act or any other law for the time being in force, if an",
+            "source_file": "cyber/information_technology_act_2000.pdf",
             "structure_type": "section"
           }
         ]
@@ -5012,23 +5012,23 @@
             "structure_type": "section"
           },
           {
-            "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0052",
-            "document_title": "The Right to Information Act, 2005",
-            "document_type": "statute",
+            "authority_level": "official_guidance",
+            "chunk_id": "constitutional_public_authority_rti_rules_2012__chunk_0011",
+            "document_title": "The Right to Information Rules, 2012",
+            "document_type": "rules",
             "domain": "constitutional_public_authority",
             "domain_debug": {
-              "authority_boost": 0.035,
+              "authority_boost": 0.018,
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.1,
-              "final_rerank_score": 0.8276,
+              "final_rerank_score": 0.5611,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
-              "public_authority_intent_boost": 0.0715,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "rti"
@@ -5049,38 +5049,38 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.063,
               "supporting_status_boost": 0.0
             },
-            "page": 20,
-            "provision_number": "26",
-            "provision_title": "Appropriate Government to prepare programmes",
+            "page": 3,
+            "provision_number": "11",
+            "provision_title": "Procedure for deciding appeals",
             "rank": 3,
-            "rerank_score": 0.8276,
+            "rerank_score": 0.5611,
             "retrieval_priority": "high",
-            "similarity_score": 0.5041,
-            "snippet": "CHAPTER VI Section 26 — Appropriate Government to prepare programmes be; (d) the assistance available from and the duties of the Central Public Information Officer or State Public Information Officer, as the case may be,",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.4498,
+            "snippet": "Rule 11 — Procedure for deciding appeals 11. Procedure for deciding appeals. — The Commission, while deciding an appeal may.— receive oral or written evidence on oath or on affidavit from concerned or interested person; ",
+            "source_file": "constitutional_public_authority/rti_rules_2012.pdf",
+            "structure_type": "rule"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0042",
-            "document_title": "The Right to Information Act, 2005",
+            "chunk_id": "cyber_digital_personal_data_protection_act_2023__chunk_0021",
+            "document_title": "The Digital Personal Data Protection Act, 2023",
             "document_type": "statute",
-            "domain": "constitutional_public_authority",
+            "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
-              "chunk_domain": "constitutional_public_authority",
+              "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
-              "domain_boost": 0.1,
-              "final_rerank_score": 0.8117,
+              "domain_boost": -0.06,
+              "final_rerank_score": 0.5568,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
-              "public_authority_intent_boost": 0.0715,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "rti"
@@ -5104,15 +5104,15 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 18,
-            "provision_number": "20",
-            "provision_title": "Penalties",
+            "page": 10,
+            "provision_number": "15",
+            "provision_title": "A Data Principal shall perform the following duties, namely:",
             "rank": 4,
-            "rerank_score": 0.8117,
+            "rerank_score": 0.5568,
             "retrieval_priority": "high",
-            "similarity_score": 0.4927,
-            "snippet": "CHAPTER V Section 20 — Penalties 20. Penalties.—(1)Where the Central Information Commission or the State Information Commission, as the case may be, at the time of deciding any complaint or appeal is of the opinion that ",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+            "similarity_score": 0.4446,
+            "snippet": "CHAPTER III Section 15 — A Data Principal shall perform the following duties, namely: 15. A Data Principal shall perform the following duties, namely:— (a) comply with the provisions of all applicable laws for the time b",
+            "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
             "structure_type": "section"
           }
         ]
@@ -6273,56 +6273,6 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0046",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
-            "domain": "tenancy",
-            "domain_debug": {
-              "authority_boost": 0.035,
-              "chunk_domain": "tenancy",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.084,
-              "final_rerank_score": 0.5482,
-              "primary_domains": [
-                "tenancy"
-              ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.0,
-                "cyber": 0.0,
-                "tenancy": 0.42
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
-            },
-            "page": 17,
-            "provision_number": "25B",
-            "provision_title": "Special procedure for the disposal of applications for eviction on the",
-            "rank": 3,
-            "rerank_score": 0.5482,
-            "retrieval_priority": "high",
-            "similarity_score": 0.3242,
-            "snippet": "Section 25B — Special procedure for the disposal of applications for eviction on the or eviction from the premises unless he files an affidavit stating the grounds on which he seeks to contest the application for evictio",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
-            "structure_type": "section"
-          },
-          {
-            "authority_level": "primary",
             "chunk_id": "tenancy_slum_areas_improvement_and_clearance_act_1956__chunk_0037",
             "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
             "document_type": "statute",
@@ -6363,11 +6313,61 @@
             "page": 12,
             "provision_number": "28",
             "provision_title": "Power of eviction to be exercised only by the competent authority",
-            "rank": 4,
+            "rank": 3,
             "rerank_score": 0.4964,
             "retrieval_priority": "low",
             "similarity_score": 0.3504,
             "snippet": "Section 28 — Power of eviction to be exercised only by the competent authority 28. Power of eviction to be exercised only by the competent authority.— Where the competent authority is satisfied either upon a representati",
+            "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
+            "structure_type": "section"
+          },
+          {
+            "authority_level": "primary",
+            "chunk_id": "tenancy_slum_areas_improvement_and_clearance_act_1956__chunk_0024",
+            "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
+            "document_type": "statute",
+            "domain": "tenancy",
+            "domain_debug": {
+              "authority_boost": 0.035,
+              "chunk_domain": "tenancy",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.4182,
+              "primary_domains": [
+                "tenancy"
+              ],
+              "priority_boost": -0.015,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.0,
+                "cyber": 0.0,
+                "tenancy": 0.42
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.02,
+              "supporting_status_boost": 0.0
+            },
+            "page": 8,
+            "provision_number": "19",
+            "provision_title": "Proceedings for eviction of tenants not to be taken without permission of",
+            "rank": 4,
+            "rerank_score": 0.4182,
+            "retrieval_priority": "low",
+            "similarity_score": 0.3022,
+            "snippet": "Section 19 — Proceedings for eviction of tenants not to be taken without permission of 19. Proceedings for eviction of tenants not to be taken without permission of the competent authority.— (1)Notwithstanding anything c",
             "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
             "structure_type": "section"
           }
@@ -12052,16 +12052,16 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0032",
-            "document_title": "The Consumer Protection Act, 2019",
-            "document_type": "statute",
+            "chunk_id": "consumer_ecommerce_rules_2020__chunk_0013",
+            "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+            "document_type": "rules",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.12,
-              "final_rerank_score": 0.8415,
+              "final_rerank_score": 0.7261,
               "primary_domains": [
                 "consumer"
               ],
@@ -12089,16 +12089,16 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 14,
-            "provision_number": "17",
-            "provision_title": "Complaints to authorities",
+            "page": 11,
+            "provision_number": "7",
+            "provision_title": "Duties and liabilities of inventory e-commerce entities:",
             "rank": 4,
-            "rerank_score": 0.8415,
+            "rerank_score": 0.7261,
             "retrieval_priority": "high",
-            "similarity_score": 0.4863,
-            "snippet": "CHAPTER III Section 17 — Complaints to authorities 17. Complaints to authorities.—A complaint relating to violation of consumer rights or unfair trade practices or false or misleading advertisements which are prejudicial",
-            "source_file": "consumer/consumer_protection_act_2019.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.4911,
+            "snippet": "Rule 7 — Duties and liabilities of inventory e-commerce entities: nd voluntary charges, such as delivery charges, postage and handling charges, conveyance charges and the applicable tax; and (f) a ticket number for each ",
+            "source_file": "consumer/ecommerce_rules_2020.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -18151,56 +18151,6 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0032",
-            "document_title": "The Consumer Protection Act, 2019",
-            "document_type": "statute",
-            "domain": "consumer",
-            "domain_debug": {
-              "authority_boost": 0.035,
-              "chunk_domain": "consumer",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.148,
-              "final_rerank_score": 0.9066,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.74,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
-            },
-            "page": 14,
-            "provision_number": "17",
-            "provision_title": "Complaints to authorities",
-            "rank": 3,
-            "rerank_score": 0.9066,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5257,
-            "snippet": "CHAPTER III Section 17 — Complaints to authorities 17. Complaints to authorities.—A complaint relating to violation of consumer rights or unfair trade practices or false or misleading advertisements which are prejudicial",
-            "source_file": "consumer/consumer_protection_act_2019.pdf",
-            "structure_type": "section"
-          },
-          {
-            "authority_level": "primary",
             "chunk_id": "consumer_ecommerce_rules_2020__chunk_0010",
             "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
             "document_type": "rules",
@@ -18241,11 +18191,61 @@
             "page": 10,
             "provision_number": "6",
             "provision_title": "Duties of sellers on marketplace",
-            "rank": 4,
+            "rank": 3,
             "rerank_score": 0.8746,
             "retrieval_priority": "high",
             "similarity_score": 0.5283,
             "snippet": "Rule 6 — Duties of sellers on marketplace 6. Duties of sellers on marketplace. – (1) No seller offering goods or service s through a marketplace e -commerce entity shall adopt any unfair trade practice whether in the cou",
+            "source_file": "consumer/ecommerce_rules_2020.pdf",
+            "structure_type": "rule"
+          },
+          {
+            "authority_level": "primary",
+            "chunk_id": "consumer_ecommerce_rules_2020__chunk_0013",
+            "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+            "document_type": "rules",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.035,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.148,
+              "final_rerank_score": 0.7422,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.045,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.74,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.08,
+              "supporting_status_boost": 0.0
+            },
+            "page": 11,
+            "provision_number": "7",
+            "provision_title": "Duties and liabilities of inventory e-commerce entities:",
+            "rank": 4,
+            "rerank_score": 0.7422,
+            "retrieval_priority": "high",
+            "similarity_score": 0.4849,
+            "snippet": "Rule 7 — Duties and liabilities of inventory e-commerce entities: nd voluntary charges, such as delivery charges, postage and handling charges, conveyance charges and the applicable tax; and (f) a ticket number for each ",
             "source_file": "consumer/ecommerce_rules_2020.pdf",
             "structure_type": "rule"
           }
@@ -19461,20 +19461,20 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0107",
-            "document_title": "The Consumer Protection Act, 2019",
-            "document_type": "statute",
+            "chunk_id": "consumer_consumer_commission_procedure_regulations_2020__chunk_0029",
+            "document_title": "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020",
+            "document_type": "regulations",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.87,
+              "final_rerank_score": 0.8197,
               "primary_domains": [
                 "consumer"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -19495,19 +19495,19 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
-            "page": 31,
-            "provision_number": "81",
-            "provision_title": "Recording settlement and passing of order",
+            "page": 12,
+            "provision_number": "16",
+            "provision_title": "Appearance of Voluntary Consumer Organisations",
             "rank": 4,
-            "rerank_score": 0.87,
-            "retrieval_priority": "high",
-            "similarity_score": 0.572,
-            "snippet": "CHAPTER V Section 81 — Recording settlement and passing of order 81. Recording settlement and passing of order .—(1) The District Commission or the State Commission or the National Commission, as the case may be, shall, ",
-            "source_file": "consumer/consumer_protection_act_2019.pdf",
-            "structure_type": "section"
+            "rerank_score": 0.8197,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5367,
+            "snippet": "Regulation 16 — Appearance of Voluntary Consumer Organisations 16. Appearance of Voluntary Consumer Organisations.- (1) Recognised Consumer Organisations have a right of audience before the Consumer Commission. (2) An au",
+            "source_file": "consumer/consumer_commission_procedure_regulations_2020.pdf",
+            "structure_type": "regulation"
           }
         ]
       }
@@ -20672,56 +20672,6 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "consumer_consumer_protection_act_2019__chunk_0032",
-            "document_title": "The Consumer Protection Act, 2019",
-            "document_type": "statute",
-            "domain": "consumer",
-            "domain_debug": {
-              "authority_boost": 0.035,
-              "chunk_domain": "consumer",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.084,
-              "final_rerank_score": 0.9762,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.42,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
-            },
-            "page": 14,
-            "provision_number": "17",
-            "provision_title": "Complaints to authorities",
-            "rank": 3,
-            "rerank_score": 0.9762,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5882,
-            "snippet": "CHAPTER III Section 17 — Complaints to authorities 17. Complaints to authorities.—A complaint relating to violation of consumer rights or unfair trade practices or false or misleading advertisements which are prejudicial",
-            "source_file": "consumer/consumer_protection_act_2019.pdf",
-            "structure_type": "section"
-          },
-          {
-            "authority_level": "primary",
             "chunk_id": "consumer_consumer_commission_procedure_regulations_2020__chunk_0027",
             "document_title": "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020",
             "document_type": "regulations",
@@ -20762,11 +20712,61 @@
             "page": 11,
             "provision_number": "14",
             "provision_title": "Limitation-(1) Subject to the provisions of sections 40, 41, 50, 51, 60, 67 and 69, the period of limitation in",
-            "rank": 4,
+            "rank": 3,
             "rerank_score": 0.9302,
             "retrieval_priority": "medium",
             "similarity_score": 0.6532,
             "snippet": "Regulation 14 — Limitation-(1) Subject to the provisions of sections 40, 41, 50, 51, 60, 67 and 69, the period of limitation in 14. Limitation-(1) Subject to the provisions of sections 40, 41, 50, 51, 60, 67 and 69, the ",
+            "source_file": "consumer/consumer_commission_procedure_regulations_2020.pdf",
+            "structure_type": "regulation"
+          },
+          {
+            "authority_level": "primary",
+            "chunk_id": "consumer_consumer_commission_procedure_regulations_2020__chunk_0022",
+            "document_title": "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020",
+            "document_type": "regulations",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.035,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.8908,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.42,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.055,
+              "supporting_status_boost": 0.0
+            },
+            "page": 10,
+            "provision_number": "9",
+            "provision_title": "Scrutiny of complaint, appeal, petition and revision petition",
+            "rank": 4,
+            "rerank_score": 0.8908,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.6138,
+            "snippet": "Regulation 9 — Scrutiny of complaint, appeal, petition and revision petition 9. Scrutiny of complaint, appeal, petition and revision petition .-(1) Every complaint, appeal, or revision petition shall after it is filed be",
             "source_file": "consumer/consumer_commission_procedure_regulations_2020.pdf",
             "structure_type": "regulation"
           }
@@ -25713,56 +25713,6 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "cyber_information_technology_act_2000__chunk_0069",
-            "document_title": "The Information Technology Act, 2000",
-            "document_type": "statute",
-            "domain": "cyber",
-            "domain_debug": {
-              "authority_boost": 0.035,
-              "chunk_domain": "cyber",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.14,
-              "final_rerank_score": 0.5164,
-              "primary_domains": [
-                "cyber"
-              ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.0,
-                "cyber": 0.7,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
-            },
-            "page": 23,
-            "provision_number": "65",
-            "provision_title": "Tampering with computer source documents",
-            "rank": 3,
-            "rerank_score": 0.5164,
-            "retrieval_priority": "high",
-            "similarity_score": 0.3144,
-            "snippet": "CHAPTER XI Section 65 — Tampering with computer source documents a computer resource or a communication device,– (a) any information that is grossly offensive or has menacing character; or (b) any information which he kn",
-            "source_file": "cyber/information_technology_act_2000.pdf",
-            "structure_type": "section"
-          },
-          {
-            "authority_level": "primary",
             "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0010",
             "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
             "document_type": "rules",
@@ -25803,13 +25753,63 @@
             "page": 1,
             "provision_number": "2",
             "provision_title": "Definitions",
-            "rank": 4,
+            "rank": 3,
             "rerank_score": 0.5071,
             "retrieval_priority": "high",
             "similarity_score": 0.3231,
             "snippet": "PART I Rule 2 — Definitions ant social media intermediary”. 2 Subs. by G.S.R. 794(E), dated 28.10.2022, for clauses (a) and (b) (w.e.f. 28.10.2022). Clauses (a) and (b), before substitution, stood as under: “(a) the inte",
             "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
             "structure_type": "rule"
+          },
+          {
+            "authority_level": "primary",
+            "chunk_id": "cyber_cert_in_directions_2022__chunk_0008",
+            "document_title": "CERT-In Directions under sub-section (6) of section 70B of the Information Technology Act, 2000, dated 28 April 2022",
+            "document_type": "rules",
+            "domain": "cyber",
+            "domain_debug": {
+              "authority_boost": 0.035,
+              "chunk_domain": "cyber",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.14,
+              "final_rerank_score": 0.5027,
+              "primary_domains": [
+                "cyber"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.0,
+                "cyber": 0.7,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.055,
+              "supporting_status_boost": 0.0
+            },
+            "page": 5,
+            "provision_number": null,
+            "provision_title": "Annexure I",
+            "rank": 4,
+            "rerank_score": 0.5027,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.3257,
+            "snippet": "virtual asset exchanges, custodian wallets, Robotics, 3D and 4D Printing, additive manufacturing, Drones Page 6 of 8 xx. Attacks or malicious/ suspicious activities affecting systems/ servers/software/ applications relat",
+            "source_file": "cyber/cert_in_directions_2022.pdf",
+            "structure_type": "annexure"
           }
         ]
       }
@@ -30501,8 +30501,8 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "cyber_digital_personal_data_protection_act_2023__chunk_0021",
-            "document_title": "The Digital Personal Data Protection Act, 2023",
+            "chunk_id": "cyber_information_technology_act_2000__chunk_0095",
+            "document_title": "The Information Technology Act, 2000",
             "document_type": "statute",
             "domain": "cyber",
             "domain_debug": {
@@ -30510,7 +30510,7 @@
               "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.07,
-              "final_rerank_score": 0.6478,
+              "final_rerank_score": 0.6186,
               "primary_domains": [
                 "cyber"
               ],
@@ -30538,21 +30538,21 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 10,
-            "provision_number": "15",
-            "provision_title": "A Data Principal shall perform the following duties, namely:",
+            "page": 30,
+            "provision_number": "79",
+            "provision_title": "Exemption from liability of intermediary in certain cases",
             "rank": 3,
-            "rerank_score": 0.6478,
+            "rerank_score": 0.6186,
             "retrieval_priority": "high",
-            "similarity_score": 0.4258,
-            "snippet": "CHAPTER III Section 15 — A Data Principal shall perform the following duties, namely: 15. A Data Principal shall perform the following duties, namely:— (a) comply with the provisions of all applicable laws for the time b",
-            "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
+            "similarity_score": 0.3726,
+            "snippet": "CHAPTER XI Section 79 — Exemption from liability of intermediary in certain cases 79. Exemption from liability of intermediary in certain cases .–(1) Notwithstanding anything contained in any law for the time being in fo",
+            "source_file": "cyber/information_technology_act_2000.pdf",
             "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "cyber_digital_personal_data_protection_act_2023__chunk_0011",
-            "document_title": "The Digital Personal Data Protection Act, 2023",
+            "chunk_id": "cyber_information_technology_act_2000__chunk_0082",
+            "document_title": "The Information Technology Act, 2000",
             "document_type": "statute",
             "domain": "cyber",
             "domain_debug": {
@@ -30560,7 +30560,7 @@
               "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.07,
-              "final_rerank_score": 0.6318,
+              "final_rerank_score": 0.6092,
               "primary_domains": [
                 "cyber"
               ],
@@ -30588,15 +30588,15 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "7",
-            "provision_title": "A Data Fiduciary may process personal data of a Data Principal for any of following",
+            "page": 27,
+            "provision_number": "69B",
+            "provision_title": "Power to authorise to monitor and collect traffic data or information through any",
             "rank": 4,
-            "rerank_score": 0.6318,
+            "rerank_score": 0.6092,
             "retrieval_priority": "high",
-            "similarity_score": 0.4638,
-            "snippet": "CHAPTER II Section 7 — A Data Fiduciary may process personal data of a Data Principal for any of following 7. A Data Fiduciary may process personal data of a Data Principal for any of following uses, namely:— (a) for the",
-            "source_file": "cyber/digital_personal_data_protection_act_2023.pdf",
+            "similarity_score": 0.3872,
+            "snippet": "CHAPTER XI Section 69B — Power to authorise to monitor and collect traffic data or information through any 69B. Power to authorise to monitor and collect traffic data or information through any computer resource for cybe",
+            "source_file": "cyber/information_technology_act_2000.pdf",
             "structure_type": "section"
           }
         ]
@@ -31763,16 +31763,16 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "cyber_information_technology_act_2000__chunk_0080",
-            "document_title": "The Information Technology Act, 2000",
-            "document_type": "statute",
+            "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0019",
+            "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+            "document_type": "rules",
             "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.1,
-              "final_rerank_score": 0.6391,
+              "final_rerank_score": 0.5489,
               "primary_domains": [
                 "cyber"
               ],
@@ -31800,29 +31800,29 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 26,
-            "provision_number": "68",
-            "provision_title": "Power of Controller to give directions",
+            "page": 7,
+            "provision_number": null,
+            "provision_title": "Eighth Schedule",
             "rank": 3,
-            "rerank_score": 0.6391,
+            "rerank_score": 0.5489,
             "retrieval_priority": "high",
-            "similarity_score": 0.3691,
-            "snippet": "CHAPTER XI Section 68 — Power of Controller to give directions rred to in sub-section (1), extend all facilities and technical assistance to– (a) provide access to or secure access to the computer resource generating , t",
-            "source_file": "cyber/information_technology_act_2000.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.4189,
+            "snippet": "PART II such information and associated records for one hundred and eighty days for investigation purposes, or for such longer period as may be required by the court or by Government agencies who are lawfully authorised;",
+            "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+            "structure_type": "schedule"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "cyber_information_technology_act_2000__chunk_0074",
-            "document_title": "The Information Technology Act, 2000",
-            "document_type": "statute",
+            "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0008",
+            "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+            "document_type": "rules",
             "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.1,
-              "final_rerank_score": 0.6374,
+              "final_rerank_score": 0.5247,
               "primary_domains": [
                 "cyber"
               ],
@@ -31850,16 +31850,16 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 25,
-            "provision_number": "66F",
-            "provision_title": "Punishment for cyber terrorism",
+            "page": 1,
+            "provision_number": "2",
+            "provision_title": "Definitions",
             "rank": 4,
-            "rerank_score": 0.6374,
+            "rerank_score": 0.5247,
             "retrieval_priority": "high",
-            "similarity_score": 0.3854,
-            "snippet": "CHAPTER XI Section 66F — Punishment for cyber terrorism 66F. Punishment for cyber terrorism.–(1) Whoever,– (A) with intent to threaten the unity, integrity, security or sovereignty of India or to strike terror in the peo",
-            "source_file": "cyber/information_technology_act_2000.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.3507,
+            "snippet": "PART I Rule 2 — Definitions creation or presentation does not result in the creation or generation of any false document or false electronic record; or (c) the use of computer resources solely for improving accessibility",
+            "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -33071,20 +33071,20 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0004",
-            "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
-            "document_type": "rules",
+            "chunk_id": "cyber_it_intermediary_amendment_rules_2023__chunk_0006",
+            "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2023",
+            "document_type": "amendment_rules",
             "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.07,
-              "final_rerank_score": 0.547,
+              "final_rerank_score": 0.4907,
               "primary_domains": [
                 "cyber"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -33105,18 +33105,18 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
-            "page": 1,
-            "provision_number": "2",
-            "provision_title": "Definitions",
+            "page": 2,
+            "provision_number": "4",
+            "provision_title": "In rule 3A of the said rules,",
             "rank": 4,
-            "rerank_score": 0.547,
-            "retrieval_priority": "high",
-            "similarity_score": 0.415,
-            "snippet": "PART I Rule 2 — Definitions 139(E), dated 25.2.2021, published in the Gazette of India, Extra., Pt. II, Sec. 3(i), dated 25.2.2021. 2 Ins. by G.S.R. 120(E), dated 10.02.2026. (i) ‘digital media’ means digitized content t",
-            "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+            "rerank_score": 0.4907,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4017,
+            "snippet": "Rule 4 — In rule 3A of the said rules, 4. In rule 3A of the said rules,— (i)in sub-rule (3), for the words □Any person aggrieved by a decision of the Grievance Officer‚, the words, brackets, letters and numbers □Any pers",
+            "source_file": "cyber/it_intermediary_amendment_rules_2023.pdf",
             "structure_type": "rule"
           }
         ]
@@ -34282,8 +34282,8 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0051",
-            "document_title": "The Delhi Rent Control Act, 1958",
+            "chunk_id": "tenancy_slum_areas_improvement_and_clearance_act_1956__chunk_0007",
+            "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
             "document_type": "statute",
             "domain": "tenancy",
             "domain_debug": {
@@ -34291,11 +34291,11 @@
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.174,
-              "final_rerank_score": 0.6721,
+              "final_rerank_score": 0.5067,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": -0.015,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -34316,36 +34316,36 @@
                 "tenancy": 0.87
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.02,
               "supporting_status_boost": 0.0
             },
-            "page": 19,
-            "provision_number": "27",
-            "provision_title": "Deposit of rent by the tenant",
+            "page": 3,
+            "provision_number": "5",
+            "provision_title": "Enforcement of notice requiring execution of works of improvement",
             "rank": 3,
-            "rerank_score": 0.6721,
-            "retrieval_priority": "high",
-            "similarity_score": 0.3221,
-            "snippet": "Section 27 — Deposit of rent by the tenant opportunity of being heard and such order shall be without prejudice to the rights of such persons to receive such rent being decided by a court of competent jurisdiction.(5)If ",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.5067,
+            "retrieval_priority": "low",
+            "similarity_score": 0.3127,
+            "snippet": "Section 5 — Enforcement of notice requiring execution of works of improvement 5. Enforcement of notice requiring execution of works of improvement.— (1)If a notice under section 4 requiring the owner of the building or o",
+            "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
             "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0023",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
+            "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0034",
+            "document_title": "The Delhi Rent Control Rules, 1959",
+            "document_type": "rules",
             "domain": "tenancy",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "tenancy",
-              "credential_misuse_boost": -0.05,
+              "credential_misuse_boost": 0.0,
               "domain_boost": 0.174,
-              "final_rerank_score": 0.5754,
+              "final_rerank_score": 0.4516,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -34366,19 +34366,19 @@
                 "tenancy": 0.87
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
             "page": 8,
-            "provision_number": "14",
-            "provision_title": "Protection of tenant against eviction",
+            "provision_number": "3",
+            "provision_title": "Name of the tenant",
             "rank": 4,
-            "rerank_score": 0.5754,
-            "retrieval_priority": "high",
-            "similarity_score": 0.3114,
-            "snippet": "Section 14 — Protection of tenant against eviction 14. Protection of tenant against eviction. (1)Notwithstanding anything to the contrary contained in any other law or contract, no order or decree for the recovery of pos",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
-            "structure_type": "section"
+            "rerank_score": 0.4516,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.3126,
+            "snippet": "Rule 3 — Name of the tenant 3. Name of the tenant.",
+            "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -35543,8 +35543,8 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0046",
-            "document_title": "The Delhi Rent Control Act, 1958",
+            "chunk_id": "tenancy_slum_areas_improvement_and_clearance_act_1956__chunk_0024",
+            "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
             "document_type": "statute",
             "domain": "tenancy",
             "domain_debug": {
@@ -35552,11 +35552,11 @@
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.7139,
+              "final_rerank_score": 0.6293,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": -0.015,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -35577,24 +35577,24 @@
                 "tenancy": 0.42
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.02,
               "supporting_status_boost": 0.0
             },
-            "page": 17,
-            "provision_number": "25B",
-            "provision_title": "Special procedure for the disposal of applications for eviction on the",
+            "page": 8,
+            "provision_number": "19",
+            "provision_title": "Proceedings for eviction of tenants not to be taken without permission of",
             "rank": 3,
-            "rerank_score": 0.7139,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5199,
-            "snippet": "Section 25B — Special procedure for the disposal of applications for eviction on the or eviction from the premises unless he files an affidavit stating the grounds on which he seeks to contest the application for evictio",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.6293,
+            "retrieval_priority": "low",
+            "similarity_score": 0.5133,
+            "snippet": "Section 19 — Proceedings for eviction of tenants not to be taken without permission of 19. Proceedings for eviction of tenants not to be taken without permission of the competent authority.— (1)Notwithstanding anything c",
+            "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
             "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0037",
-            "document_title": "The Delhi Rent Control Act, 1958",
+            "chunk_id": "tenancy_slum_areas_improvement_and_clearance_act_1956__chunk_0037",
+            "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
             "document_type": "statute",
             "domain": "tenancy",
             "domain_debug": {
@@ -35602,11 +35602,11 @@
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.6857,
+              "final_rerank_score": 0.6029,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": -0.015,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -35627,18 +35627,18 @@
                 "tenancy": 0.42
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.02,
               "supporting_status_boost": 0.0
             },
-            "page": 14,
-            "provision_number": "19",
-            "provision_title": "Recovery of possession for occupation and re-entry",
+            "page": 12,
+            "provision_number": "28",
+            "provision_title": "Power of eviction to be exercised only by the competent authority",
             "rank": 4,
-            "rerank_score": 0.6857,
-            "retrieval_priority": "high",
-            "similarity_score": 0.4437,
-            "snippet": "Section 19 — Recovery of possession for occupation and re-entry 19. Recovery of possession for occupation and re-entry. (1)Where a landlord recovers possession of any premises from the tenant in pursuance of an order mad",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.6029,
+            "retrieval_priority": "low",
+            "similarity_score": 0.5169,
+            "snippet": "Section 28 — Power of eviction to be exercised only by the competent authority 28. Power of eviction to be exercised only by the competent authority.— Where the competent authority is satisfied either upon a representati",
+            "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
             "structure_type": "section"
           }
         ]
@@ -36801,8 +36801,8 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0011",
-            "document_title": "The Delhi Rent Control Act, 1958",
+            "chunk_id": "tenancy_slum_areas_improvement_and_clearance_act_1956__chunk_0030",
+            "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
             "document_type": "statute",
             "domain": "tenancy",
             "domain_debug": {
@@ -36810,11 +36810,11 @@
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.144,
-              "final_rerank_score": 0.8024,
+              "final_rerank_score": 0.7483,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": -0.015,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -36835,36 +36835,36 @@
                 "tenancy": 0.72
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.02,
               "supporting_status_boost": 0.0
             },
-            "page": 4,
-            "provision_number": "5",
-            "provision_title": "Unlawful changes not to be claimed or received",
+            "page": 9,
+            "provision_number": "20B",
+            "provision_title": "Rent of buildings in slum areas",
             "rank": 3,
-            "rerank_score": 0.8024,
-            "retrieval_priority": "high",
-            "similarity_score": 0.4884,
-            "snippet": "Section 5 — Unlawful changes not to be claimed or received 5. Unlawful changes not to be claimed or received. (1)Subject to the provisions of this Act, no person shall claim or receive any rent in excess of the standard ",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.7483,
+            "retrieval_priority": "low",
+            "similarity_score": 0.4583,
+            "snippet": "Section 20B — Rent of buildings in slum areas t is finally determined under this section, then the amount of rent paid by the tenant shall be adjusted against the rent so finally determined and if the amount so paid fall",
+            "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
             "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0080",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
+            "chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0064",
+            "document_title": "The Transfer of Property Act, 1882",
+            "document_type": "supporting_property_law",
             "domain": "tenancy",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.144,
-              "final_rerank_score": 0.7757,
+              "final_rerank_score": 0.7462,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -36885,18 +36885,18 @@
                 "tenancy": 0.72
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
+              "source_role_boost": 0.015,
+              "supporting_status_boost": -0.04
             },
-            "page": 28,
+            "page": 18,
             "provision_number": "50",
-            "provision_title": "Jurisdiction of civil courts barred in respect of certain matters",
+            "provision_title": "Rent bona fide paid to holder under defective title",
             "rank": 4,
-            "rerank_score": 0.7757,
-            "retrieval_priority": "high",
-            "similarity_score": 0.4437,
-            "snippet": "Section 50 — Jurisdiction of civil courts barred in respect of certain matters 50. Jurisdiction of civil courts barred in respect of certain matters. (1)Save as otherwise expressly provided in this Act, no civil court sh",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.7462,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4282,
+            "snippet": "CHAPTER I Section 50 — Rent bona fide paid to holder under defective title 50. Rent bona fide paid to holder under defective title. —No person shall be chargeable with any rents or profits of any immoveable property, whi",
+            "source_file": "tenancy/transfer_of_property_act_1882.pdf",
             "structure_type": "section"
           }
         ]
@@ -38061,20 +38061,20 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0053",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
+            "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0012",
+            "document_title": "The Delhi Rent Control Rules, 1959",
+            "document_type": "rules",
             "domain": "tenancy",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.174,
-              "final_rerank_score": 0.7968,
+              "final_rerank_score": 0.6447,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -38095,36 +38095,36 @@
                 "tenancy": 0.87
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
-            "page": 20,
-            "provision_number": "29",
-            "provision_title": "Saving as to acceptance of rent and forfeiture of rent in deposit",
+            "page": 3,
+            "provision_number": "10",
+            "provision_title": "Deposit of rent",
             "rank": 3,
-            "rerank_score": 0.7968,
-            "retrieval_priority": "high",
-            "similarity_score": 0.4708,
-            "snippet": "Section 29 — Saving as to acceptance of rent and forfeiture of rent in deposit 29. Saving as to acceptance of rent and forfeiture of rent in deposit. (1)The withdrawal of rent deposited under section 27 in the manner pro",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
-            "structure_type": "section"
+            "rerank_score": 0.6447,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4877,
+            "snippet": "Rule 10 — Deposit of rent 10. Deposit of rent. (1)A deposit of rent under section 27 shall be made in cash and shall be accompanied by an application by the tenant in Form C.(2)On such deposit being made, the Controller ",
+            "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+            "structure_type": "rule"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0049",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
+            "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0031",
+            "document_title": "The Delhi Rent Control Rules, 1959",
+            "document_type": "rules",
             "domain": "tenancy",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.174,
-              "final_rerank_score": 0.7574,
+              "final_rerank_score": 0.6215,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -38145,19 +38145,19 @@
                 "tenancy": 0.87
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
-            "page": 18,
-            "provision_number": "26",
-            "provision_title": "Receipt to be given for rent paid",
+            "page": 6,
+            "provision_number": "24",
+            "provision_title": "Registers to be maintained by the Controller and Tribunal",
             "rank": 4,
-            "rerank_score": 0.7574,
-            "retrieval_priority": "high",
-            "similarity_score": 0.4494,
-            "snippet": "Section 26 — Receipt to be given for rent paid 26. Receipt to be given for rent paid. (1)Every tenant shall pay rent within the time fixed by contract or in the absence of such contract, by the fifteenth day of the month",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
-            "structure_type": "section"
+            "rerank_score": 0.6215,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4645,
+            "snippet": "Rule 24 — Registers to be maintained by the Controller and Tribunal (2)The period for which the rent is deposited and the rate per month.(3)The name and address of the landlord or the person or persons claiming to be ent",
+            "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -40482,20 +40482,20 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0029",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
+            "chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0153",
+            "document_title": "The Transfer of Property Act, 1882",
+            "document_type": "supporting_property_law",
             "domain": "tenancy",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.154,
-              "final_rerank_score": 0.8639,
+              "final_rerank_score": 0.8038,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -40516,36 +40516,36 @@
                 "tenancy": 0.77
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
+              "source_role_boost": 0.015,
+              "supporting_status_boost": -0.04
             },
-            "page": 8,
-            "provision_number": "14",
-            "provision_title": "Protection of tenant against eviction",
+            "page": 42,
+            "provision_number": "116",
+            "provision_title": "Effect of holding over",
             "rank": 3,
-            "rerank_score": 0.8639,
-            "retrieval_priority": "high",
-            "similarity_score": 0.4679,
-            "snippet": "Section 14 — Protection of tenant against eviction ring a right on a landlord owning, in the Union territory of Delhi, two or more dwelling houses whether in his own name or in the name of his wife or dependent child to ",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.8038,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5148,
+            "snippet": "CHAPTER V Section 116 — Effect of holding over 116. Effect of holding over. —If a lessee or under -lessee of property remains in possession thereof after the determination of the lease granted to the lessee, and the less",
+            "source_file": "tenancy/transfer_of_property_act_1882.pdf",
             "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0010",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
+            "chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0146",
+            "document_title": "The Transfer of Property Act, 1882",
+            "document_type": "supporting_property_law",
             "domain": "tenancy",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.154,
-              "final_rerank_score": 0.821,
+              "final_rerank_score": 0.7994,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -40566,18 +40566,18 @@
                 "tenancy": 0.77
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
+              "source_role_boost": 0.015,
+              "supporting_status_boost": -0.04
             },
-            "page": 4,
-            "provision_number": "4",
-            "provision_title": "Rent in excess of standard rent not recoverable",
+            "page": 38,
+            "provision_number": "108",
+            "provision_title": "Rights and liabilities of lessor and lessee",
             "rank": 4,
-            "rerank_score": 0.821,
-            "retrieval_priority": "high",
-            "similarity_score": 0.479,
-            "snippet": "Section 4 — Rent in excess of standard rent not recoverable 4. Rent in excess of standard rent not recoverable. (1)Except where rent is liable to periodical increase by virtue of an agreement entered into before the 1st ",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.7994,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5224,
+            "snippet": "CHAPTER V Section 108 — Rights and liabilities of lessor and lessee be subject to all the liabilities of the lessor as to the property or part transferred so long as he is the owner of it; but the lessor shall not, by re",
+            "source_file": "tenancy/transfer_of_property_act_1882.pdf",
             "structure_type": "section"
           }
         ]
@@ -42998,8 +42998,8 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0043",
-            "document_title": "The Delhi Rent Control Act, 1958",
+            "chunk_id": "tenancy_slum_areas_improvement_and_clearance_act_1956__chunk_0031",
+            "document_title": "The Slum Areas (Improvement and Clearance) Act, 1956",
             "document_type": "statute",
             "domain": "tenancy",
             "domain_debug": {
@@ -43007,11 +43007,11 @@
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.164,
-              "final_rerank_score": 0.9295,
+              "final_rerank_score": 0.9246,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": -0.015,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -43032,36 +43032,36 @@
                 "tenancy": 0.8200000000000001
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.02,
               "supporting_status_boost": 0.0
             },
-            "page": 16,
-            "provision_number": "25",
-            "provision_title": "Vacant possession to landlord",
+            "page": 10,
+            "provision_number": "21",
+            "provision_title": "Chapter not to apply to eviction of tenants from certain buildings",
             "rank": 3,
-            "rerank_score": 0.9295,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5655,
-            "snippet": "Section 25 — Vacant possession to landlord 25. Vacant possession to landlord. - Notwithstanding anything contained in any other law, where the interest of a tenant in any premises is determined for any reason whatsoever ",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+            "rerank_score": 0.9246,
+            "retrieval_priority": "low",
+            "similarity_score": 0.6506,
+            "snippet": "Section 21 — Chapter not to apply to eviction of tenants from certain buildings 21. Chapter not to apply to eviction of tenants from certain buildings.— Nothing in this Chapter shall apply to or in relation to the evicti",
+            "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
             "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "tenancy_delhi_rent_control_act_1958__chunk_0022",
-            "document_title": "The Delhi Rent Control Act, 1958",
-            "document_type": "statute",
+            "chunk_id": "tenancy_delhi_rent_control_rules_1959__chunk_0028",
+            "document_title": "The Delhi Rent Control Rules, 1959",
+            "document_type": "rules",
             "domain": "tenancy",
             "domain_debug": {
               "authority_boost": 0.035,
               "chunk_domain": "tenancy",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.164,
-              "final_rerank_score": 0.9277,
+              "final_rerank_score": 0.8751,
               "primary_domains": [
                 "tenancy"
               ],
-              "priority_boost": 0.045,
+              "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -43082,19 +43082,19 @@
                 "tenancy": 0.8200000000000001
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
-            "page": 8,
-            "provision_number": "13",
-            "provision_title": "Refund of rent, premium, etc, not recoverable under the Act",
+            "page": 6,
+            "provision_number": "24",
+            "provision_title": "Registers to be maintained by the Controller and Tribunal",
             "rank": 4,
-            "rerank_score": 0.9277,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5457,
-            "snippet": "Section 13 — Refund of rent, premium, etc, not recoverable under the Act 13. Refund of rent, premium, etc, not recoverable under the Act. - Where any sum or other consideration has been paid, whether before or after the ",
-            "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
-            "structure_type": "section"
+            "rerank_score": 0.8751,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.6441,
+            "snippet": "Rule 24 — Registers to be maintained by the Controller and Tribunal ossible.] (17) Whether any additions or alterations have been made since the rent was fixed as stated under item No. 15; and if so, the date on which su",
+            "source_file": "tenancy/delhi_rent_control_rules_1959.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -46665,60 +46665,6 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0515",
-            "document_title": "The Constitution of India",
-            "document_type": "constitution",
-            "domain": "constitutional_public_authority",
-            "domain_debug": {
-              "authority_boost": 0.035,
-              "chunk_domain": "constitutional_public_authority",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.076,
-              "final_rerank_score": 0.7298,
-              "primary_domains": [
-                "constitutional_public_authority"
-              ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": "fundamental_rights",
-              "public_authority_intent_boost": 0.0832,
-              "public_authority_intents": {
-                "primary_intents": [
-                  "fundamental_rights"
-                ],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.64,
-                  "human_rights": 0.3,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": [
-                  "human_rights"
-                ]
-              },
-              "scores": {
-                "constitutional_public_authority": 0.38,
-                "consumer": 0.0,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
-            },
-            "page": 164,
-            "provision_number": "1",
-            "provision_title": "Paragraph 2 of the Constitution (Removal of Difficulties) Order No",
-            "rank": 3,
-            "rerank_score": 0.7298,
-            "retrieval_priority": "high",
-            "similarity_score": 0.4593,
-            "snippet": "PART XXI Article 1 — Paragraph 2 of the Constitution (Removal of Difficulties) Order No in any civil service of the State, or to such class or classes of civil posts under the State, or to such class or classes of posts ",
-            "source_file": "constitutional_public_authority/constitution_of_india.pdf",
-            "structure_type": "article"
-          },
-          {
-            "authority_level": "primary",
             "chunk_id": "consumer_consumer_protection_act_2019__chunk_0033",
             "document_title": "The Consumer Protection Act, 2019",
             "document_type": "statute",
@@ -46763,12 +46709,66 @@
             "page": 14,
             "provision_number": "18",
             "provision_title": "Powers and functions of Central Authority",
-            "rank": 4,
+            "rank": 3,
             "rerank_score": 0.7262,
             "retrieval_priority": "high",
             "similarity_score": 0.485,
             "snippet": "CHAPTER III Section 18 — Powers and functions of Central Authority 18. Powers and functions of Central Authority.—(1) The Central Authority shall— (a) protect, promote and enforce the rights of consumers as a class, and ",
             "source_file": "consumer/consumer_protection_act_2019.pdf",
+            "structure_type": "section"
+          },
+          {
+            "authority_level": "primary",
+            "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0018",
+            "document_title": "The Protection of Human Rights Act, 1993",
+            "document_type": "statute",
+            "domain": "constitutional_public_authority",
+            "domain_debug": {
+              "authority_boost": 0.035,
+              "chunk_domain": "constitutional_public_authority",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.076,
+              "final_rerank_score": 0.7182,
+              "primary_domains": [
+                "constitutional_public_authority"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": "human_rights",
+              "public_authority_intent_boost": 0.018,
+              "public_authority_intents": {
+                "primary_intents": [
+                  "fundamental_rights"
+                ],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.64,
+                  "human_rights": 0.3,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": [
+                  "human_rights"
+                ]
+              },
+              "scores": {
+                "constitutional_public_authority": 0.38,
+                "consumer": 0.0,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.055,
+              "supporting_status_boost": 0.0
+            },
+            "page": 7,
+            "provision_number": "12",
+            "provision_title": "Functions of the Commission",
+            "rank": 4,
+            "rerank_score": 0.7182,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4988,
+            "snippet": "Section 12 — Functions of the Commission 12. Functions of the Commission. - The Commission shall perform all or any of the following functions, namely:(a)inquire, suo motu or on a petition presented to it by a victim or ",
+            "source_file": "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
             "structure_type": "section"
           }
         ]
@@ -47980,22 +47980,22 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0244",
-            "document_title": "The Constitution of India",
-            "document_type": "constitution",
-            "domain": "constitutional_public_authority",
+            "chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0579",
+            "document_title": "The Bharatiya Nyaya Sanhita, 2023",
+            "document_type": "supporting_criminal_law",
+            "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
-              "chunk_domain": "constitutional_public_authority",
+              "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
-              "domain_boost": 0.1,
-              "final_rerank_score": 0.8771,
+              "domain_boost": -0.06,
+              "final_rerank_score": 0.4061,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": "fundamental_rights",
-              "public_authority_intent_boost": 0.0715,
+              "priority_boost": -0.015,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "fundamental_rights"
@@ -48016,38 +48016,38 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
+              "source_role_boost": -0.02,
+              "supporting_status_boost": -0.04
             },
-            "page": 83,
-            "provision_number": "211",
-            "provision_title": "Restriction on discussion in the Legislature",
+            "page": 87,
+            "provision_number": "302",
+            "provision_title": "Uttering words, etc",
             "rank": 3,
-            "rerank_score": 0.8771,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5536,
-            "snippet": "PART VI Article 211 — Restriction on discussion in the Legislature 211. Restriction on discussion in the Legislature. —No discussion shall take place in the Legislature of a State with respect to the conduct of any Judge",
-            "source_file": "constitutional_public_authority/constitution_of_india.pdf",
-            "structure_type": "article"
+            "rerank_score": 0.4061,
+            "retrieval_priority": "low",
+            "similarity_score": 0.4861,
+            "snippet": "CHAPTER XVI Section 302 — Uttering words, etc 302. Uttering words, etc., with deliberate intent to wound religious feelings of any person .— Whoever, with the deliberate intention of wounding the religious feelings of an",
+            "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
+            "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_constitution_of_india__chunk_0031",
-            "document_title": "The Constitution of India",
-            "document_type": "constitution",
-            "domain": "constitutional_public_authority",
+            "chunk_id": "cyber_it_intermediary_guidelines_digital_media_ethics_code_rules_2021__chunk_0011",
+            "document_title": "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+            "document_type": "rules",
+            "domain": "cyber",
             "domain_debug": {
               "authority_boost": 0.035,
-              "chunk_domain": "constitutional_public_authority",
+              "chunk_domain": "cyber",
               "credential_misuse_boost": 0.0,
-              "domain_boost": 0.1,
-              "final_rerank_score": 0.8522,
+              "domain_boost": -0.06,
+              "final_rerank_score": 0.403,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "fundamental_rights",
-              "public_authority_intent_boost": 0.0715,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "fundamental_rights"
@@ -48071,16 +48071,16 @@
               "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 29,
-            "provision_number": "25",
-            "provision_title": "Freedom of conscience and free profession, practice and propagation of religion",
+            "page": 1,
+            "provision_number": "2",
+            "provision_title": "Definitions",
             "rank": 4,
-            "rerank_score": 0.8522,
+            "rerank_score": 0.403,
             "retrieval_priority": "high",
-            "similarity_score": 0.5467,
-            "snippet": "PART III Article 25 — Freedom of conscience and free profession, practice and propagation of religion 25. Freedom of conscience and free profession, practice and propagation of religion.—(1) Subject to public order, mora",
-            "source_file": "constitutional_public_authority/constitution_of_india.pdf",
-            "structure_type": "article"
+            "similarity_score": 0.491,
+            "snippet": "PART I Rule 2 — Definitions ny computer resource; (x) is patently false and untrue, and is written or published in any form, with the intent to mislead or harass a person, entity or agency for financial gain or to cause ",
+            "source_file": "cyber/it_intermediary_guidelines_digital_media_ethics_code_rules_2021.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -50442,6 +50442,58 @@
             "structure_type": "section"
           },
           {
+            "authority_level": "official_guidance",
+            "chunk_id": "constitutional_public_authority_rti_rules_2012__chunk_0011",
+            "document_title": "The Right to Information Rules, 2012",
+            "document_type": "rules",
+            "domain": "constitutional_public_authority",
+            "domain_debug": {
+              "authority_boost": 0.018,
+              "chunk_domain": "constitutional_public_authority",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.09,
+              "final_rerank_score": 0.6944,
+              "primary_domains": [
+                "constitutional_public_authority"
+              ],
+              "priority_boost": 0.045,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [
+                  "rti"
+                ],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.42
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.45,
+                "consumer": 0.0,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.063,
+              "supporting_status_boost": 0.0
+            },
+            "page": 3,
+            "provision_number": "11",
+            "provision_title": "Procedure for deciding appeals",
+            "rank": 3,
+            "rerank_score": 0.6944,
+            "retrieval_priority": "high",
+            "similarity_score": 0.5513,
+            "snippet": "Rule 11 — Procedure for deciding appeals 11. Procedure for deciding appeals. — The Commission, while deciding an appeal may.— receive oral or written evidence on oath or on affidavit from concerned or interested person; ",
+            "source_file": "constitutional_public_authority/rti_rules_2012.pdf",
+            "structure_type": "rule"
+          },
+          {
             "authority_level": "primary",
             "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0052",
             "document_title": "The Right to Information Act, 2005",
@@ -50485,63 +50537,11 @@
             "page": 20,
             "provision_number": "26",
             "provision_title": "Appropriate Government to prepare programmes",
-            "rank": 3,
+            "rank": 4,
             "rerank_score": 0.8923,
             "retrieval_priority": "high",
             "similarity_score": 0.5657,
             "snippet": "CHAPTER VI Section 26 — Appropriate Government to prepare programmes be; (d) the assistance available from and the duties of the Central Public Information Officer or State Public Information Officer, as the case may be,",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
-            "structure_type": "section"
-          },
-          {
-            "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0015",
-            "document_title": "The Right to Information Act, 2005",
-            "document_type": "statute",
-            "domain": "constitutional_public_authority",
-            "domain_debug": {
-              "authority_boost": 0.035,
-              "chunk_domain": "constitutional_public_authority",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.09,
-              "final_rerank_score": 0.8765,
-              "primary_domains": [
-                "constitutional_public_authority"
-              ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
-              "public_authority_intent_boost": 0.0546,
-              "public_authority_intents": {
-                "primary_intents": [
-                  "rti"
-                ],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.42
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.45,
-                "consumer": 0.0,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.08,
-              "supporting_status_boost": 0.0
-            },
-            "page": 9,
-            "provision_number": "6",
-            "provision_title": "Request for obtaining information",
-            "rank": 4,
-            "rerank_score": 0.8765,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5717,
-            "snippet": "CHAPTER II Section 6 — Request for obtaining information 6. Request for obtaining information .—(1) A person, who desires to obtain any information under this Act, shall make a request in writing or through electronic me",
             "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
             "structure_type": "section"
           }
@@ -51750,23 +51750,23 @@
             "structure_type": "section"
           },
           {
-            "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0015",
-            "document_title": "The Right to Information Act, 2005",
-            "document_type": "statute",
+            "authority_level": "official_guidance",
+            "chunk_id": "constitutional_public_authority_rti_rules_2012__chunk_0011",
+            "document_title": "The Right to Information Rules, 2012",
+            "document_type": "rules",
             "domain": "constitutional_public_authority",
             "domain_debug": {
-              "authority_boost": 0.035,
+              "authority_boost": 0.018,
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.1,
-              "final_rerank_score": 0.9654,
+              "final_rerank_score": 0.6917,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
-              "public_authority_intent_boost": 0.13,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "rti"
@@ -51787,38 +51787,38 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.063,
               "supporting_status_boost": 0.0
             },
-            "page": 9,
-            "provision_number": "6",
-            "provision_title": "Request for obtaining information",
+            "page": 3,
+            "provision_number": "11",
+            "provision_title": "Procedure for deciding appeals",
             "rank": 3,
-            "rerank_score": 0.9654,
+            "rerank_score": 0.6917,
             "retrieval_priority": "high",
-            "similarity_score": 0.5752,
-            "snippet": "CHAPTER II Section 6 — Request for obtaining information 6. Request for obtaining information .—(1) A person, who desires to obtain any information under this Act, shall make a request in writing or through electronic me",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.5549,
+            "snippet": "Rule 11 — Procedure for deciding appeals 11. Procedure for deciding appeals. — The Commission, while deciding an appeal may.— receive oral or written evidence on oath or on affidavit from concerned or interested person; ",
+            "source_file": "constitutional_public_authority/rti_rules_2012.pdf",
+            "structure_type": "rule"
           },
           {
-            "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0013",
-            "document_title": "The Right to Information Act, 2005",
-            "document_type": "statute",
+            "authority_level": "official_guidance",
+            "chunk_id": "constitutional_public_authority_rti_rules_2012__chunk_0008",
+            "document_title": "The Right to Information Rules, 2012",
+            "document_type": "rules",
             "domain": "constitutional_public_authority",
             "domain_debug": {
-              "authority_boost": 0.035,
+              "authority_boost": 0.018,
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.1,
-              "final_rerank_score": 0.9546,
+              "final_rerank_score": 0.6857,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
-              "public_authority_intent_boost": 0.13,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "rti"
@@ -51839,19 +51839,19 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.063,
               "supporting_status_boost": 0.0
             },
-            "page": 8,
-            "provision_number": "5",
-            "provision_title": "Designation of Public Information Offic ers",
+            "page": 2,
+            "provision_number": "8",
+            "provision_title": "Appeal to the Commission",
             "rank": 4,
-            "rerank_score": 0.9546,
+            "rerank_score": 0.6857,
             "retrieval_priority": "high",
-            "similarity_score": 0.5645,
-            "snippet": "CHAPTER II Section 5 — Designation of Public Information Offic ers 5. Designation of Public Information Offic ers.—(1) Every public authority shall, within one hundred days of the enactment of this Act, designate as many",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.5488,
+            "snippet": "Rule 8 — Appeal to the Commission 8. Appeal to the Commission. — Any person aggrieved by an order passed by the First Appellate Authority or by non-disposal of his appeal by the First Appellate Authority, may file an app",
+            "source_file": "constitutional_public_authority/rti_rules_2012.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -53058,23 +53058,23 @@
             "structure_type": "section"
           },
           {
-            "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0023",
-            "document_title": "The Legal Services Authorities Act, 1987",
-            "document_type": "statute",
+            "authority_level": "official_guidance",
+            "chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0001",
+            "document_title": "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
+            "document_type": "regulations",
             "domain": "constitutional_public_authority",
             "domain_debug": {
-              "authority_boost": 0.035,
+              "authority_boost": 0.018,
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.809,
+              "final_rerank_score": 0.7576,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "legal_aid",
-              "public_authority_intent_boost": 0.13,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "legal_aid"
@@ -53095,38 +53095,38 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.063,
               "supporting_status_boost": 0.0
             },
-            "page": 10,
-            "provision_number": "16",
-            "provision_title": "State Legal Aid Fund",
+            "page": 1,
+            "provision_number": null,
+            "provision_title": null,
             "rank": 3,
-            "rerank_score": 0.809,
+            "rerank_score": 0.7576,
             "retrieval_priority": "high",
-            "similarity_score": 0.479,
-            "snippet": "CHAPTER V Section 16 — State Legal Aid Fund 16. State Legal Aid Fund. — (1) A State Authority shall establish a fund to be ca lled the State Legal Aid Fund and there shall be credited thereto — (a) all sums of money paid",
-            "source_file": "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.5206,
+            "snippet": "(P/1) THE NATIONAL LEGAL SERVICES AUTHORITY (FREE AND COMPETENT LEGAL SERVICES) REGULATIONS, 2010 (As amended vide notification F.No. L/61/10/NALSA dated 28.08.2019 and Addendum dated 18.9.2019 published in the Gazette o",
+            "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
+            "structure_type": "fallback"
           },
           {
-            "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_legal_services_authorities_act_1987__chunk_0019",
-            "document_title": "The Legal Services Authorities Act, 1987",
-            "document_type": "statute",
+            "authority_level": "official_guidance",
+            "chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0010",
+            "document_title": "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
+            "document_type": "regulations",
             "domain": "constitutional_public_authority",
             "domain_debug": {
-              "authority_boost": 0.035,
+              "authority_boost": 0.018,
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.7829,
+              "final_rerank_score": 0.728,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.045,
-              "public_authority_chunk_intent": "legal_aid",
-              "public_authority_intent_boost": 0.13,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "legal_aid"
@@ -53147,19 +53147,19 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.063,
               "supporting_status_boost": 0.0
             },
-            "page": 9,
-            "provision_number": "12",
-            "provision_title": "Criteria for giving legal services",
+            "page": 3,
+            "provision_number": "147",
+            "provision_title": "Scrutiny and evaluation of the application for free legal services",
             "rank": 4,
-            "rerank_score": 0.7829,
+            "rerank_score": 0.728,
             "retrieval_priority": "high",
-            "similarity_score": 0.4529,
-            "snippet": "CHAPTER IV Section 12 — Criteria for giving legal services 12. Criteria for giving legal services. — Every person who has to file or defend a case shall be entitled to legal services under this Act if that person is — (a",
-            "source_file": "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
-            "structure_type": "section"
+            "similarity_score": 0.509,
+            "snippet": "Regulation 147 — Scrutiny and evaluation of the application for free legal services pplicant is not covered under the categories mentioned in section 12, he or she shall be advised to seek assistance from any other body ",
+            "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
+            "structure_type": "regulation"
           }
         ]
       }
@@ -54367,8 +54367,8 @@
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0004",
-            "document_title": "The Protection of Human Rights Act, 1993",
+            "chunk_id": "constitutional_public_authority_right_to_education_act_2009__chunk_0039",
+            "document_title": "The Right of Children to Free and Compulsory Education Act, 2009",
             "document_type": "statute",
             "domain": "constitutional_public_authority",
             "domain_debug": {
@@ -54376,13 +54376,13 @@
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.18,
-              "final_rerank_score": 0.9229,
+              "final_rerank_score": 0.8179,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
               "priority_boost": 0.02,
-              "public_authority_chunk_intent": "human_rights",
-              "public_authority_intent_boost": 0.13,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "human_rights"
@@ -54406,21 +54406,21 @@
               "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
-            "page": 1,
-            "provision_number": null,
-            "provision_title": null,
+            "page": 12,
+            "provision_number": "32",
+            "provision_title": "Redressal of grievances",
             "rank": 3,
-            "rerank_score": 0.9229,
+            "rerank_score": 0.8179,
             "retrieval_priority": "medium",
-            "similarity_score": 0.4925,
-            "snippet": "n other issues relating to the scope and ambit of the Act have been examined and it has been decided to amend the Act.2. The Bill, inter alia, seeks to-(a) clarify that the Chairpersons of NHRC and State Human Rights Com",
-            "source_file": "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
-            "structure_type": "fallback"
+            "similarity_score": 0.4214,
+            "snippet": "Section 32 — Redressal of grievances 32. Redressal of grievances. - (1)Notwithstanding anything contained in section 31, any person having any grievance relating to the right of a child under this Act may make a written ",
+            "source_file": "constitutional_public_authority/right_to_education_act_2009.pdf",
+            "structure_type": "section"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_protection_of_human_rights_act_1993__chunk_0026",
-            "document_title": "The Protection of Human Rights Act, 1993",
+            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0041",
+            "document_title": "The Right to Information Act, 2005",
             "document_type": "statute",
             "domain": "constitutional_public_authority",
             "domain_debug": {
@@ -54428,13 +54428,13 @@
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.18,
-              "final_rerank_score": 0.9014,
+              "final_rerank_score": 0.7928,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
-              "priority_boost": 0.02,
-              "public_authority_chunk_intent": "human_rights",
-              "public_authority_intent_boost": 0.13,
+              "priority_boost": 0.045,
+              "public_authority_chunk_intent": "rti",
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "human_rights"
@@ -54455,18 +54455,18 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.055,
+              "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 10,
+            "page": 17,
             "provision_number": "19",
-            "provision_title": "Procedure with respect to armed forces",
+            "provision_title": "Appeal",
             "rank": 4,
-            "rerank_score": 0.9014,
-            "retrieval_priority": "medium",
-            "similarity_score": 0.4546,
-            "snippet": "Section 19 — Procedure with respect to armed forces 19. Procedure with respect to armed forces. (1)Notwithstanding anything contained in this Act, while dealing with complaints of violation of human rights by members of ",
-            "source_file": "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
+            "rerank_score": 0.7928,
+            "retrieval_priority": "high",
+            "similarity_score": 0.5017,
+            "snippet": "CHAPTER V Section 19 — Appeal ion, including any right of appeal, to the complainant and the public authority. (10) The Central Information Commission or State Information Commission, as the case may be, shall decide the",
+            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
             "structure_type": "section"
           }
         ]
@@ -55674,23 +55674,23 @@
             "structure_type": "section"
           },
           {
-            "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0052",
-            "document_title": "The Right to Information Act, 2005",
-            "document_type": "statute",
+            "authority_level": "official_guidance",
+            "chunk_id": "constitutional_public_authority_nalsa_lok_adalats_regulations_2009__chunk_0014",
+            "document_title": "The National Legal Services Authority (Lok Adalats) Regulations, 2009",
+            "document_type": "regulations",
             "domain": "constitutional_public_authority",
             "domain_debug": {
-              "authority_boost": 0.035,
+              "authority_boost": 0.018,
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.164,
-              "final_rerank_score": 0.9857,
+              "final_rerank_score": 0.6996,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
-              "public_authority_intent_boost": 0.1131,
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "rti"
@@ -55711,24 +55711,24 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 20,
-            "provision_number": "26",
-            "provision_title": "Appropriate Government to prepare programmes",
+            "page": 4,
+            "provision_number": "11",
+            "provision_title": "Summoning of records and the responsibility for its safe custody",
             "rank": 3,
-            "rerank_score": 0.9857,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5359,
-            "snippet": "CHAPTER VI Section 26 — Appropriate Government to prepare programmes be; (d) the assistance available from and the duties of the Central Public Information Officer or State Public Information Officer, as the case may be,",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
-            "structure_type": "section"
+            "rerank_score": 0.6996,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.456,
+            "snippet": "Regulation 11 — Summoning of records and the responsibility for its safe custody 11. Summoning of records and the responsibility for its safe custody. - (1) The Member Secretary, the Secretary of the High Court Legal Ser",
+            "source_file": "constitutional_public_authority/nalsa_lok_adalats_regulations_2009.pdf",
+            "structure_type": "regulation"
           },
           {
             "authority_level": "primary",
-            "chunk_id": "constitutional_public_authority_right_to_information_act_2005__chunk_0015",
-            "document_title": "The Right to Information Act, 2005",
+            "chunk_id": "constitutional_public_authority_rights_of_persons_with_disabilities_act_2016__chunk_0064",
+            "document_title": "The Rights of Persons with Disabilities Act, 2016",
             "document_type": "statute",
             "domain": "constitutional_public_authority",
             "domain_debug": {
@@ -55736,13 +55736,13 @@
               "chunk_domain": "constitutional_public_authority",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.164,
-              "final_rerank_score": 0.9577,
+              "final_rerank_score": 0.698,
               "primary_domains": [
                 "constitutional_public_authority"
               ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": "rti",
-              "public_authority_intent_boost": 0.1131,
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
                 "primary_intents": [
                   "rti"
@@ -55763,18 +55763,18 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.08,
+              "source_role_boost": 0.055,
               "supporting_status_boost": 0.0
             },
-            "page": 9,
-            "provision_number": "6",
-            "provision_title": "Request for obtaining information",
+            "page": 20,
+            "provision_number": "53",
+            "provision_title": "Appeal",
             "rank": 4,
-            "rerank_score": 0.9577,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5494,
-            "snippet": "CHAPTER II Section 6 — Request for obtaining information 6. Request for obtaining information .—(1) A person, who desires to obtain any information under this Act, shall make a request in writing or through electronic me",
-            "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+            "rerank_score": 0.698,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4513,
+            "snippet": "Section 53 — Appeal 53. Appeal. (1)Any person aggrieved by the order of the competent authority refusing to grant a certificate of registration or revoking a certificate of registration may, within such period as may be ",
+            "source_file": "constitutional_public_authority/rights_of_persons_with_disabilities_act_2016.pdf",
             "structure_type": "section"
           }
         ]
