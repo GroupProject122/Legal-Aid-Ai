@@ -183,6 +183,37 @@ def test_sensitive_values_are_redacted_before_storage(tmp_path):
     assert "123456" not in stored
 
 
+def test_non_card_digit_run_is_not_redacted(tmp_path):
+    # Regression test for the exact Phase 3 UI finding: a 13-digit epoch timestamp typed into a
+    # question was being permanently replaced with "[sensitive card number omitted]" at
+    # message-save time, even though it's not Luhn-valid and so isn't a plausible card number.
+    db = tmp_path / "legal_aid.db"
+    case_id = case_store.create_case("tenancy issue", "tenancy", db_path=db)
+    message = "My landlord in Delhi cut off my electricity. Reference: Phase3 debug 1789469159760"
+    assert not case_store.luhn_valid("1789469159760")
+
+    case_store.save_message(case_id, "user", case_store.user_content_for_storage(message), db)
+
+    stored = case_store.get_messages(case_id, db)[0]["content"]
+    assert "1789469159760" in stored
+    assert "[sensitive card number omitted]" not in stored
+
+
+def test_luhn_valid_card_number_is_still_redacted(tmp_path):
+    # Confirms the Luhn fix narrows false positives without disabling the actual protection --
+    # a real (test) card number, which IS Luhn-valid, must still be redacted.
+    db = tmp_path / "legal_aid.db"
+    case_id = case_store.create_case("cyber issue", "cyber", db_path=db)
+    card_number = "4111111111111111"  # standard Visa test card number
+    assert case_store.luhn_valid(card_number)
+
+    case_store.save_message(case_id, "user", case_store.user_content_for_storage(f"My card number is {card_number}"), db)
+
+    stored = case_store.get_messages(case_id, db)[0]["content"]
+    assert card_number not in stored
+    assert "[sensitive card number omitted]" in stored
+
+
 def test_api_open_case_round_trip_with_temp_db(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
