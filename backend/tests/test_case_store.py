@@ -75,7 +75,7 @@ def test_updated_at_changes_and_cases_list_newest_first(tmp_path):
     time.sleep(1.05)
 
     case_store.save_message(old_case, "user", {"text": "follow up"}, db)
-    cases = case_store.list_cases(db)
+    cases = case_store.list_cases(db)["items"]
 
     assert cases[0]["id"] == old_case
     assert {case["id"] for case in cases} == {old_case, new_case}
@@ -119,7 +119,8 @@ def test_delete_all_cases_removes_all_cases_and_messages(tmp_path):
     deleted_count = case_store.delete_all_cases(db)
 
     assert deleted_count == 2
-    assert case_store.list_cases(db) == []
+    assert case_store.list_cases(db)["items"] == []
+    assert case_store.list_cases(db)["total"] == 0
     assert case_store.get_messages(first, db) == []
     assert case_store.get_messages(second, db) == []
 
@@ -135,7 +136,171 @@ def test_rename_case_updates_title_and_timestamp(tmp_path):
     assert renamed is not None
     assert renamed["title"] == "Phone Refund Dispute"
     assert renamed["updated_at"] > original["updated_at"]
-    assert case_store.list_cases(db)[0]["title"] == "Phone Refund Dispute"
+    assert case_store.list_cases(db)["items"][0]["title"] == "Phone Refund Dispute"
+
+
+# --- Pagination, search, domain filter (added 2026-09-16) ---
+
+
+def test_list_cases_paginates_with_limit_and_offset(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    ids = []
+    for i in range(5):
+        ids.append(case_store.create_case(f"issue number {i}", "consumer", db_path=db))
+        time.sleep(0.01)
+    # Newest first (matches the existing ORDER BY), so reverse to get expected page order.
+    expected_order = list(reversed(ids))
+
+    page1 = case_store.list_cases(db, limit=2, offset=0)
+    page2 = case_store.list_cases(db, limit=2, offset=2)
+    page3 = case_store.list_cases(db, limit=2, offset=4)
+
+    assert [c["id"] for c in page1["items"]] == expected_order[0:2]
+    assert [c["id"] for c in page2["items"]] == expected_order[2:4]
+    assert [c["id"] for c in page3["items"]] == expected_order[4:5]
+    assert page1["total"] == page2["total"] == page3["total"] == 5
+    assert page1["has_more"] is True
+    assert page2["has_more"] is True
+    assert page3["has_more"] is False
+
+
+def test_list_cases_without_limit_returns_everything_unpaginated(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    for i in range(3):
+        case_store.create_case(f"issue {i}", "consumer", db_path=db)
+    result = case_store.list_cases(db)
+    assert len(result["items"]) == 3
+    assert result["total"] == 3
+    assert result["has_more"] is False
+
+
+def test_list_cases_search_matches_title(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    case_store.create_case("landlord cut off my electricity in Delhi", "tenancy", db_path=db)
+    case_store.create_case("seller refused a refund for defective goods", "consumer", db_path=db)
+
+    result = case_store.list_cases(db, search="electricity")
+
+    assert result["total"] == 1
+    assert "Electricity" in result["items"][0]["title"]
+
+
+def test_list_cases_search_matches_first_user_message_not_just_title(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    case_id = case_store.create_case("my Instagram account seller blocked me after payment", "cyber", db_path=db)
+    case_store.save_message(case_id, "user", {"text": "my Instagram account seller blocked me after payment"}, db)
+
+    # "blocked" appears in the first message but not in the curated title ("Instagram Seller
+    # Non-Delivery") -- proves search checks message content, not just the stored title.
+    result = case_store.list_cases(db, search="blocked")
+
+    assert result["total"] == 1
+    assert result["items"][0]["id"] == case_id
+
+
+def test_list_cases_search_ignores_later_messages(tmp_path):
+    # Deliberate scope boundary: search checks the title and the FIRST user message only (cheap,
+    # indexed lookup), not the full conversation history -- a term that only appears in a later
+    # message must not match.
+    db = tmp_path / "legal_aid.db"
+    case_id = case_store.create_case("landlord dispute", "tenancy", db_path=db)
+    case_store.save_message(case_id, "user", {"text": "landlord dispute"}, db)
+    case_store.save_message(case_id, "assistant", assistant_response("tenancy"), db)
+    case_store.save_message(case_id, "user", {"text": "the specific word xyzzy123 appears only here"}, db)
+
+    result = case_store.list_cases(db, search="xyzzy123")
+
+    assert result["total"] == 0
+
+
+def test_list_cases_search_is_case_insensitive(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    case_store.create_case("landlord cut off my electricity in Delhi", "tenancy", db_path=db)
+    result = case_store.list_cases(db, search="ELECTRICITY")
+    assert result["total"] == 1
+
+
+def test_list_cases_domain_filter(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    case_store.create_case("consumer issue", "consumer", db_path=db)
+    case_store.create_case("tenancy issue", "tenancy", db_path=db)
+    case_store.create_case("another consumer issue", "consumer", db_path=db)
+
+    result = case_store.list_cases(db, domain="consumer")
+
+    assert result["total"] == 2
+    assert all(c["primary_domain"] == "consumer" for c in result["items"])
+
+
+def test_api_list_cases_paginates(monkeypatch, tmp_path):
+    db = tmp_path / "legal_aid.db"
+    monkeypatch.setattr(main.case_store, "DB_PATH", db)
+    main.case_store.init_db()
+    client = TestClient(main.app)
+    for i in range(3):
+        main.case_store.create_case(f"issue {i}", "consumer")
+
+    response = client.get("/api/cases", params={"limit": 2, "offset": 0})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body["items"]) == 2
+    assert body["total"] == 3
+    assert body["has_more"] is True
+
+
+def test_api_list_cases_rejects_unknown_domain(monkeypatch, tmp_path):
+    db = tmp_path / "legal_aid.db"
+    monkeypatch.setattr(main.case_store, "DB_PATH", db)
+    main.case_store.init_db()
+    client = TestClient(main.app)
+
+    response = client.get("/api/cases", params={"domain": "not_a_real_domain"})
+
+    assert response.status_code == 400
+
+
+def test_api_list_cases_search_param(monkeypatch, tmp_path):
+    db = tmp_path / "legal_aid.db"
+    monkeypatch.setattr(main.case_store, "DB_PATH", db)
+    main.case_store.init_db()
+    client = TestClient(main.app)
+    main.case_store.create_case("landlord cut off my electricity in Delhi", "tenancy")
+    main.case_store.create_case("seller refused a refund", "consumer")
+
+    response = client.get("/api/cases", params={"search": "electricity"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total"] == 1
+
+
+# --- Case title generation (fixed 2026-09-16: word-extraction fallback now runs before the
+# generic domain-name fallback, not after) ---
+
+
+def test_generate_case_title_uses_curated_pattern_when_it_matches():
+    title = case_store.generate_case_title("my landlord cut off the electricity supply", "tenancy")
+    assert title in ("Delhi Electricity Disconnection", "Tenancy Electricity Dispute")
+
+
+def test_generate_case_title_falls_back_to_message_words_not_generic_domain():
+    # No curated keyword pattern matches this message -- the old behavior fell straight through
+    # to the generic "Tenancy Legal Question"; it should now use the message's own words instead.
+    message = "the building society is refusing to let me renovate my balcony"
+    title = case_store.generate_case_title(message, "tenancy")
+    assert title != "Tenancy Legal Question"
+    assert title == "The Building Society Refusing Let Renovate"
+
+
+def test_generate_case_title_falls_back_to_domain_name_only_when_message_has_nothing_usable():
+    title = case_store.generate_case_title("", "tenancy")
+    assert title == "Tenancy Legal Question"
+
+
+def test_generate_case_title_unknown_domain_and_empty_message_uses_generic_fallback():
+    title = case_store.generate_case_title("", None)
+    assert title == "Legal Question"
 
 
 def test_rename_case_rejects_blank_title(tmp_path):
@@ -265,7 +430,7 @@ def test_api_delete_all_cases_removes_every_saved_case(monkeypatch, tmp_path):
 
     assert response.status_code == 200
     assert response.json()["deleted_count"] == 2
-    assert client.get("/api/cases").json() == []
+    assert client.get("/api/cases").json()["items"] == []
     assert client.get(f"/api/cases/{first}").status_code == 404
     assert client.get(f"/api/cases/{second}").status_code == 404
 
@@ -339,7 +504,7 @@ def test_api_small_talk_alone_does_not_create_case(monkeypatch, tmp_path):
 
     assert response.status_code == 200
     assert "case_id" not in response.json()
-    assert client.get("/api/cases").json() == []
+    assert client.get("/api/cases").json()["items"] == []
 
 
 def test_new_question_does_not_delete_old_case(tmp_path):

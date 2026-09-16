@@ -91,17 +91,69 @@ def get_case(case_id: int, db_path: Path | None = None) -> dict[str, Any] | None
     return case_row_to_dict(row) if row else None
 
 
-def list_cases(db_path: Path | None = None) -> list[dict[str, Any]]:
+VALID_CASE_DOMAINS = frozenset({"consumer", "cyber", "tenancy", "constitutional_public_authority"})
+
+
+def list_cases(
+    db_path: Path | None = None,
+    limit: int | None = None,
+    offset: int = 0,
+    search: str | None = None,
+    domain: str | None = None,
+) -> dict[str, Any]:
+    """Offset-based pagination, added 2026-09-16: at 957 cases (this dev DB's current volume),
+    the old unpaginated version fetched and rendered all of them on every My Cases page load --
+    measured at ~1s to fully render and ~550ms click-to-response latency on a mid-list card in a
+    live browser test, both clearly felt as UI lag. The backend query/payload itself was never
+    the bottleneck (136KB, single-digit-ms SQL) -- rendering ~957 DOM cards was. `limit=None`
+    keeps the old fetch-everything behavior for callers that want it (e.g. tests); the
+    `/api/cases` endpoint in main.py always passes an explicit limit.
+
+    `search` matches (case-insensitively) against the case title OR the case's first user
+    message content -- cheap to include: one indexed-by-case_id EXISTS subquery against the
+    messages table, well within SQLite's comfort zone at this row count. `domain` filters on
+    primary_domain exactly (see VALID_CASE_DOMAINS for the values actually in use).
+    """
     init_db(db_path)
+    where_clauses: list[str] = []
+    params: dict[str, Any] = {}
+    if search and search.strip():
+        where_clauses.append(
+            "(cases.title LIKE :search_pattern ESCAPE '\\' OR EXISTS ("
+            "SELECT 1 FROM messages WHERE messages.case_id = cases.id AND messages.role = 'user' "
+            "AND messages.sequence_number = 1 AND messages.content_json LIKE :search_pattern ESCAPE '\\'"
+            "))"
+        )
+        escaped = search.strip().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        params["search_pattern"] = f"%{escaped}%"
+    if domain:
+        where_clauses.append("cases.primary_domain = :domain")
+        params["domain"] = domain
+    where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
+
     with connect(db_path) as conn:
-        rows = conn.execute(
-            """
-            SELECT id, title, created_at, updated_at, primary_domain
+        total = int(
+            conn.execute(f"SELECT COUNT(*) FROM cases {where_sql}", params).fetchone()[0]  # noqa: S608
+        )
+        query = f"""
+            SELECT cases.id, cases.title, cases.created_at, cases.updated_at, cases.primary_domain
             FROM cases
-            ORDER BY updated_at DESC, id DESC
-            """
-        ).fetchall()
-    return [case_row_to_dict(row, include_json=False) for row in rows]
+            {where_sql}
+            ORDER BY cases.updated_at DESC, cases.id DESC
+        """  # noqa: S608
+        if limit is not None:
+            query += " LIMIT :limit OFFSET :offset"
+            params = {**params, "limit": limit, "offset": offset}
+        rows = conn.execute(query, params).fetchall()
+
+    items = [case_row_to_dict(row, include_json=False) for row in rows]
+    return {
+        "items": items,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "has_more": limit is not None and offset + len(items) < total,
+    }
 
 
 def rename_case(case_id: int, title: str, db_path: Path | None = None) -> dict[str, Any] | None:
@@ -117,6 +169,21 @@ def rename_case(case_id: int, title: str, db_path: Path | None = None) -> dict[s
             (cleaned_title, now, case_id),
         )
     return get_case(case_id, db_path)
+
+
+def set_case_title_only(case_id: int, title: str, db_path: Path | None = None) -> bool:
+    """Update ONLY the title column -- unlike rename_case(), does not touch updated_at (so the
+    case does not jump to the top of the newest-first list) or anything else. For programmatic
+    backfills (e.g. regenerating titles after a title-generation fix), not the user-facing
+    rename action, which is expected to bump updated_at like any other edit."""
+    init_db(db_path)
+    cleaned_title = normalize_case_title(title)
+    with connect(db_path) as conn:
+        existing = conn.execute("SELECT id FROM cases WHERE id = ?", (case_id,)).fetchone()
+        if existing is None:
+            return False
+        conn.execute("UPDATE cases SET title = ? WHERE id = ?", (cleaned_title, case_id))
+    return True
 
 
 def get_messages(case_id: int, db_path: Path | None = None) -> list[dict[str, Any]]:
@@ -270,7 +337,35 @@ def message_row_to_dict(row: sqlite3.Row) -> dict[str, Any]:
     }
 
 
+DOMAIN_FALLBACK_TITLE: dict[str, str] = {
+    "consumer": "Consumer Legal Question",
+    "cyber": "Cyber Legal Question",
+    "tenancy": "Tenancy Legal Question",
+    "constitutional_public_authority": "Public Authority Question",
+}
+
+
+def _title_from_message_words(message: str) -> str | None:
+    """First several meaningful words of the (sanitized) message, title-cased -- e.g. "My
+    landlord in Delhi cut off my electricity" -> "Landlord Delhi Cut Off Electricity". Returns
+    None if the message has nothing usable (empty, or only short/stopword-length tokens)."""
+    words = [word.title() for word in re.findall(r"[A-Za-z0-9]+", sanitize_text(message)) if len(word) > 2][:6]
+    return " ".join(words) or None
+
+
 def generate_case_title(message: str, primary_domain: str | None = None) -> str:
+    """No LLM call is involved here -- title quality depends entirely on this deterministic
+    logic, not on any live service being up. Fixed 2026-09-16: this used to fall back straight
+    to a generic domain-name title (e.g. "Consumer Legal Question") whenever a message didn't
+    match one of the ~7 hand-curated keyword patterns below, even though the word-extraction
+    fallback (_title_from_message_words) almost always produces something more specific using
+    the user's own words -- it was just never reached, because the domain-name checks ran first
+    and returned before it got a chance. That's why some cases got a real, specific title and
+    others didn't: it tracked which of a handful of keyword patterns happened to match, not
+    message quality or a failing service. Priority now: curated keyword patterns (best quality,
+    when they apply) -> word-extraction from the actual message (usually good, always available)
+    -> generic domain-name (true last resort, only when the message has nothing usable at all,
+    e.g. it's empty)."""
     text = sanitize_text(message).lower()
     if contains_any(text, ("instagram", "blocked", "never delivered", "not delivered")):
         return "Instagram Seller Non-Delivery" if "instagram" in text else "Seller Non-Delivery"
@@ -284,16 +379,12 @@ def generate_case_title(message: str, primary_domain: str | None = None) -> str:
         return "RTI No Response"
     if contains_any(text, ("identity", "password", "credentials", "account")):
         return "Cyber Identity Misuse"
-    if primary_domain == "consumer":
-        return "Consumer Legal Question"
-    if primary_domain == "cyber":
-        return "Cyber Legal Question"
-    if primary_domain == "tenancy":
-        return "Tenancy Legal Question"
-    if primary_domain == "constitutional_public_authority":
-        return "Public Authority Question"
-    words = [word.title() for word in re.findall(r"[A-Za-z0-9]+", sanitize_text(message)) if len(word) > 2][:6]
-    return " ".join(words) or "Legal Question"
+    word_title = _title_from_message_words(message)
+    if word_title:
+        return word_title
+    if primary_domain and primary_domain in DOMAIN_FALLBACK_TITLE:
+        return DOMAIN_FALLBACK_TITLE[primary_domain]
+    return "Legal Question"
 
 
 def normalize_case_title(title: str) -> str:

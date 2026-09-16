@@ -4,7 +4,7 @@ import logging
 import re
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -127,9 +127,20 @@ def health() -> dict:
     }
 
 
+DEFAULT_CASES_PAGE_SIZE = 20
+MAX_CASES_PAGE_SIZE = 100
+
+
 @app.get("/api/cases")
-def list_saved_cases() -> list[dict]:
-    return case_store.list_cases()
+def list_saved_cases(
+    limit: int = Query(default=DEFAULT_CASES_PAGE_SIZE, ge=1, le=MAX_CASES_PAGE_SIZE),
+    offset: int = Query(default=0, ge=0),
+    search: str | None = Query(default=None, max_length=200),
+    domain: str | None = Query(default=None),
+) -> dict:
+    if domain is not None and domain not in case_store.VALID_CASE_DOMAINS:
+        raise HTTPException(status_code=400, detail=f"Unknown domain filter: {domain!r}.")
+    return case_store.list_cases(limit=limit, offset=offset, search=search, domain=domain)
 
 
 @app.delete("/api/cases")

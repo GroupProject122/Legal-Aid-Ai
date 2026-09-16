@@ -3184,8 +3184,28 @@ function HomePage() {
   );
 }
 
+const CASES_PAGE_SIZE = 20;
+const CASE_DOMAIN_OPTIONS = [
+  { value: 'consumer', label: 'Consumer' },
+  { value: 'cyber', label: 'Cyber' },
+  { value: 'tenancy', label: 'Tenancy' },
+  { value: 'constitutional_public_authority', label: 'Public Authority' }
+];
+
 function MyCasesPage() {
   const [cases, setCases] = React.useState([]);
+  const [total, setTotal] = React.useState(0);
+  const [hasMore, setHasMore] = React.useState(false);
+  // grandTotal is the TRUE, unfiltered case count -- kept separate from `total` (which reflects
+  // the current search/domain filter) specifically for "Delete All Cases": that action always
+  // deletes every case regardless of any active filter, so its button/confirmation must never
+  // be driven by a filtered count (a search matching 3 of 957 cases must not make the button
+  // look like -- or claim to -- delete only 3).
+  const [grandTotal, setGrandTotal] = React.useState(null);
+  const [page, setPage] = React.useState(0);
+  const [searchInput, setSearchInput] = React.useState('');
+  const [search, setSearch] = React.useState('');
+  const [domain, setDomain] = React.useState('');
   const [status, setStatus] = React.useState('loading');
   const [caseToDelete, setCaseToDelete] = React.useState(null);
   const [caseToRename, setCaseToRename] = React.useState(null);
@@ -3193,23 +3213,49 @@ function MyCasesPage() {
   const [deleteStatus, setDeleteStatus] = React.useState('idle');
   const [notice, setNotice] = React.useState('');
 
+  const isFiltered = Boolean(search || domain);
+
+  // Debounce the search box so it doesn't fire a request on every keystroke.
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setSearch(searchInput.trim());
+      setPage(0);
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
+
   const loadCases = React.useCallback(async () => {
+    setStatus('loading');
     try {
-      const response = await fetch('/api/cases');
+      const params = new URLSearchParams({ limit: String(CASES_PAGE_SIZE), offset: String(page * CASES_PAGE_SIZE) });
+      if (search) params.set('search', search);
+      if (domain) params.set('domain', domain);
+      const requests = [fetch(`/api/cases?${params.toString()}`)];
+      // Only fetch the true unfiltered total when actually filtered -- when not filtered,
+      // `total` from the main request already IS the grand total, no second request needed.
+      if (isFiltered) requests.push(fetch('/api/cases?limit=1'));
+      const [response, grandTotalResponse] = await Promise.all(requests);
       const payload = await safeJsonResponse(response);
-      if (!response.ok || !Array.isArray(payload)) {
+      if (!response.ok || !payload || !Array.isArray(payload.items)) {
         throw new Error('Could not load saved cases.');
       }
-      setCases(payload);
+      setCases(payload.items);
+      setTotal(payload.total);
+      setHasMore(Boolean(payload.has_more));
+      if (grandTotalResponse) {
+        const grandPayload = await safeJsonResponse(grandTotalResponse);
+        setGrandTotal(grandTotalResponse.ok && grandPayload ? grandPayload.total : null);
+      } else {
+        setGrandTotal(payload.total);
+      }
       setStatus('ready');
     } catch (error) {
       console.error('Could not load cases', error);
       setStatus('error');
     }
-  }, []);
+  }, [page, search, domain, isFiltered]);
 
   React.useEffect(() => {
-    setStatus('loading');
     loadCases();
   }, [loadCases]);
 
@@ -3226,11 +3272,16 @@ function MyCasesPage() {
       if (!response.ok) {
         throw new Error(payload?.detail || 'Could not delete this case.');
       }
-      setCases((current) => current.filter((savedCase) => savedCase.id !== caseToDelete.id));
       setCaseToDelete(null);
       setNotice('Case deleted.');
       window.setTimeout(() => setNotice(''), 2200);
-      await loadCases();
+      // If that was the only case left on this page (and it's not the first page), step back a
+      // page rather than land on a now-empty one.
+      if (cases.length === 1 && page > 0) {
+        setPage((current) => current - 1);
+      } else {
+        await loadCases();
+      }
     } catch (error) {
       console.error('Could not delete case', error);
       setNotice(error.message || 'Could not delete this case.');
@@ -3249,7 +3300,6 @@ function MyCasesPage() {
     if (!response.ok) {
       throw new Error(payload?.detail || 'Could not rename this case.');
     }
-    setCases((current) => current.map((item) => (item.id === savedCase.id ? { ...item, ...payload } : item)));
     setCaseToRename(null);
     setNotice('Case renamed.');
     window.setTimeout(() => setNotice(''), 2200);
@@ -3264,10 +3314,13 @@ function MyCasesPage() {
       if (!response.ok) {
         throw new Error(payload?.detail || 'Could not delete saved cases.');
       }
-      setCases([]);
       setDeleteAllRequested(false);
       setNotice(`${payload?.deleted_count || 0} case${payload?.deleted_count === 1 ? '' : 's'} deleted.`);
       window.setTimeout(() => setNotice(''), 2200);
+      setPage(0);
+      setSearchInput('');
+      setSearch('');
+      setDomain('');
       await loadCases();
     } catch (error) {
       console.error('Could not delete all cases', error);
@@ -3276,6 +3329,8 @@ function MyCasesPage() {
       setDeleteStatus('idle');
     }
   };
+
+  const totalPages = Math.max(1, Math.ceil(total / CASES_PAGE_SIZE));
 
   return (
     <>
@@ -3296,17 +3351,45 @@ function MyCasesPage() {
             <BriefcaseBusiness size={30} strokeWidth={1.45} />
           </div>
           <div>
-            <p>Total Cases</p>
-            <strong>{cases.length}</strong>
-            <span>All your legal conversations in one place</span>
+            <p>{isFiltered ? 'Matching Cases' : 'Total Cases'}</p>
+            <strong>{total}</strong>
+            <span>
+              {isFiltered
+                ? `of ${grandTotal ?? '…'} total`
+                : 'All your legal conversations in one place'}
+            </span>
           </div>
         </section>
+
+        <div className="cases-toolbar">
+          <label className="cases-search-field">
+            <Search size={17} strokeWidth={1.8} aria-hidden="true" />
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              placeholder="Search case titles and first messages..."
+              aria-label="Search saved cases"
+            />
+          </label>
+          <select
+            className="cases-domain-select"
+            value={domain}
+            onChange={(event) => { setDomain(event.target.value); setPage(0); }}
+            aria-label="Filter by category"
+          >
+            <option value="">All categories</option>
+            {CASE_DOMAIN_OPTIONS.map((option) => (
+              <option value={option.value} key={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="cases-bulk-actions">
           <button
             type="button"
             className="case-delete-all-button"
-            disabled={status !== 'ready' || cases.length === 0}
+            disabled={!grandTotal}
             onClick={() => setDeleteAllRequested(true)}
           >
             <Trash2 size={16} strokeWidth={1.8} />
@@ -3318,7 +3401,21 @@ function MyCasesPage() {
           {notice && <p className="case-toast" role="status">{notice}</p>}
           {status === 'loading' && <p className="cases-empty">Loading saved cases...</p>}
           {status === 'error' && <p className="cases-empty">Saved cases could not be loaded right now.</p>}
-          {status === 'ready' && cases.length === 0 && (
+          {status === 'ready' && cases.length === 0 && isFiltered && (
+            <div className="cases-empty-state">
+              <Search size={34} strokeWidth={1.45} />
+              <h3>No cases match this search.</h3>
+              <p>Try a different term, or clear the search/category filter.</p>
+              <button
+                type="button"
+                className="ask-button"
+                onClick={() => { setSearchInput(''); setSearch(''); setDomain(''); setPage(0); }}
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
+          {status === 'ready' && cases.length === 0 && !isFiltered && (
             <div className="cases-empty-state">
               <BriefcaseBusiness size={34} strokeWidth={1.45} />
               <h3>No saved cases yet.</h3>
@@ -3362,6 +3459,28 @@ function MyCasesPage() {
             </article>
           ))}
         </section>
+
+        {status === 'ready' && total > CASES_PAGE_SIZE && (
+          <nav className="cases-pagination" aria-label="Saved cases pages">
+            <button
+              type="button"
+              className="document-outline-button"
+              onClick={() => setPage((current) => Math.max(0, current - 1))}
+              disabled={page === 0}
+            >
+              Previous
+            </button>
+            <span>Page {page + 1} of {totalPages}</span>
+            <button
+              type="button"
+              className="document-outline-button"
+              onClick={() => setPage((current) => current + 1)}
+              disabled={!hasMore}
+            >
+              Next
+            </button>
+          </nav>
+        )}
       </div>
       {caseToDelete && (
         <CaseDeleteModal
@@ -3380,7 +3499,8 @@ function MyCasesPage() {
       )}
       {deleteAllRequested && (
         <DeleteAllCasesModal
-          count={cases.length}
+          count={grandTotal ?? total}
+          filtered={isFiltered}
           status={deleteStatus}
           onCancel={() => setDeleteAllRequested(false)}
           onDelete={confirmDeleteAllCases}
@@ -3474,7 +3594,7 @@ function CaseDeleteModal({ savedCase, status, onCancel, onDelete }) {
   );
 }
 
-function DeleteAllCasesModal({ count, status, onCancel, onDelete }) {
+function DeleteAllCasesModal({ count, filtered, status, onCancel, onDelete }) {
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onCancel}>
       <section
@@ -3492,6 +3612,11 @@ function DeleteAllCasesModal({ count, status, onCancel, onDelete }) {
         </div>
         <h3 id="delete-all-cases-title">Delete all cases?</h3>
         <p>This will permanently delete {count} saved case{count === 1 ? '' : 's'} and their conversation history.</p>
+        {filtered && (
+          <p className="document-error">
+            This deletes every saved case, not just the ones matching your current search/filter.
+          </p>
+        )}
         <div className="document-dialog-actions">
           <button type="button" className="document-outline-button" onClick={onCancel} disabled={status === 'deleting_all'}>Cancel</button>
           <button type="button" className="document-delete-button" onClick={onDelete} disabled={status === 'deleting_all'}>
