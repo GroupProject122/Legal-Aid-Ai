@@ -10,14 +10,38 @@ from typing import Any
 from google import genai
 from google.genai import types
 
+import redaction
 from config import GEMINI_API_KEY, GEMINI_MODEL
 
 logger = logging.getLogger("legal_aid_ai.document_summarizer")
 
 MAX_SINGLE_CALL_CHARS = 30000
-MAX_TOTAL_CHARS = 90000
 CHUNK_CHARS = 22000
 MAX_CHUNKS = 4
+# MAX_TOTAL_CHARS -- the hard cutoff for "document_too_long_for_summary" -- MUST equal what
+# chunking actually covers. Investigated 2026-09-16 (asked to consider raising the limit or
+# summarizing a truncated partial document instead of refusing): found this used to be a
+# separate magic number (90000), slightly ABOVE MAX_CHUNKS * CHUNK_CHARS (88000) -- so a document
+# between 88,001-90,000 chars passed this check but then had its last ~2,000 chars silently
+# dropped by `split_text(text, CHUNK_CHARS)[:MAX_CHUNKS]` (a 5th chunk was produced and silently
+# discarded). Deriving this constant closes that gap; it can't drift out of sync with chunking
+# capacity again.
+#
+# Decided AGAINST raising capacity (more chunks) or summarizing a truncated partial document with
+# a disclaimer for documents genuinely over this limit -- refusal stays the behavior there.
+# Reasoning: a partial summary of a legal document risks *reading as complete* while silently
+# omitting whatever fell in the un-summarized remainder -- a termination clause, an indemnity
+# clause, a liability cap near the end of a long contract. That's a materially worse failure mode
+# than an honest refusal, and it's the same "don't present something that looks complete when it
+# isn't" principle this codebase already applies elsewhere (grounded_answer's insufficient-context
+# abstention, corpus_gap's abstain-over-guess design) -- a disclaimer line doesn't reliably
+# prevent a skimmed partial summary from being treated as the whole document's gist. Checked
+# actual usage in this dev environment before deciding: of 75 uploaded documents, only 1 exceeds
+# 80,000 chars, and that one is a deliberately-oversized test fixture, not a realistic notice,
+# receipt, or contract (this app's stated scope for Documents/Summarize) -- so the documents this
+# limit actually turns away are already a rare edge case, not a real gap worth taking on the
+# misleading-completeness risk for.
+MAX_TOTAL_CHARS = MAX_CHUNKS * CHUNK_CHARS
 
 SUMMARY_SCHEMA = {
     "type": "object",
@@ -53,9 +77,17 @@ LEGAL_CONCLUSION_PATTERNS = [
     r"\byou are entitled\b",
 ]
 
+# Card-number redaction (the Luhn-gated 13-19 digit run check) moved to redaction.py, 2026-09-16.
+# This file used to have its own copy of that pattern here with no Luhn check -- any 13-19 digit
+# run got redacted unconditionally, including ordinary invoice/policy/order/case numbers (common
+# in legal documents), not just real card numbers. It was a separate implementation from
+# case_store.py's version, so a prior fix to case_store.py's copy didn't touch this one at all.
+# See redact_sensitive() below for where the shared check is applied. The other patterns here
+# (12-digit spaced groups, OTP/PIN/CVV/password lines) are specific to this file and are not
+# shared -- case_store.py's own OTP/PIN/password wording and its separate 12-digit (unspaced,
+# Aadhaar-shaped) pattern are deliberately different and independently maintained.
 SENSITIVE_PATTERNS = [
     r"\b\d{4}\s?\d{4}\s?\d{4}\b",
-    r"\b(?:\d[ -]?){13,19}\b",
     r"(?i)\b(?:otp|pin|cvv|password|passcode)\s*[:=-]?\s*\S+",
     r"(?i)\b(?:bank\s+password|netbanking\s+password|login\s+password)\s*[:=-]?\s*\S+",
 ]
@@ -188,6 +220,11 @@ def redact_sensitive(text: str) -> str:
     redacted = text
     for pattern in SENSITIVE_PATTERNS:
         redacted = re.sub(pattern, "[sensitive information omitted]", redacted)
+    # Luhn-gated: only a plausible real card number gets redacted, not an ordinary long digit
+    # run (invoice/policy/order/case numbers, etc.). Placeholder text kept as
+    # "[sensitive information omitted]" to match this file's existing wording for every other
+    # pattern above -- unlike case_store.py, this file never used a card-specific placeholder.
+    redacted = redaction.redact_card_number(redacted, placeholder="[sensitive information omitted]")
     return redacted
 
 

@@ -1164,6 +1164,19 @@ def ingest(parse_only: bool = False) -> dict:
     if parse_only:
         parsed_metadata = parse_documents()
         parsed_metadata["parse_outputs"] = write_parse_outputs(parsed_metadata)
+        # Limited scope, documented rather than overstated: this only clears the cache in
+        # *this* process's memory. ingest.py always runs as a separate OS process from the live
+        # `uvicorn main:app` server, so this call has no effect on that server's own
+        # legal_education._INDEX -- there is no shared memory between the two processes. The
+        # actual fix for the live server picking up a corpus change without a restart is
+        # legal_education.get_index()'s own mtime check against legal_chunks.jsonl/
+        # corpus_manifest.json, which runs on every call in the server's own process. This call
+        # is still worth having for same-process cases (e.g. a test or script that imports and
+        # runs ingest() and legal_education together) and to avoid this process's own stale copy
+        # of the index if anything here reads it afterward.
+        import legal_education
+
+        legal_education.reset_index_cache()
         logger.info("Parse-only mode complete. Embeddings and FAISS vector store were not generated.")
         return parsed_metadata
     logger.info("Building vector store from frozen parsed chunks: %s", LEGAL_CHUNKS_PATH)

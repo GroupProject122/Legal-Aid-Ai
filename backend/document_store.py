@@ -101,18 +101,47 @@ def create_uploaded_document(
     return require_document(document_id, db_path)
 
 
-def list_documents(db_path: Path | None = None) -> list[dict[str, Any]]:
+def list_documents(
+    db_path: Path | None = None,
+    limit: int | None = None,
+    offset: int = 0,
+    search: str | None = None,
+) -> dict[str, Any]:
+    """Same limit/offset/{items, total, limit, offset, has_more} pagination convention as
+    case_store.list_cases() -- reused deliberately rather than inventing a second pattern.
+    `search` matches display_filename, case-insensitively. `limit=None` keeps the old
+    fetch-everything behavior for callers that want it (e.g. tests)."""
     init_db(db_path)
+    where_clauses: list[str] = []
+    params: dict[str, Any] = {}
+    if search and search.strip():
+        where_clauses.append("display_filename LIKE :search_pattern ESCAPE '\\'")
+        escaped = search.strip().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        params["search_pattern"] = f"%{escaped}%"
+    where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
+
     with case_store.connect(db_path) as conn:
-        rows = conn.execute(
-            """
+        total = int(conn.execute(f"SELECT COUNT(*) FROM documents {where_sql}", params).fetchone()[0])  # noqa: S608
+        query = f"""
             SELECT id, display_filename, file_type, mime_type, size_bytes, created_at, updated_at,
                    extraction_status, summary_status, summary_generated_at
             FROM documents
+            {where_sql}
             ORDER BY updated_at DESC, id DESC
-            """
-        ).fetchall()
-    return [metadata_from_row(row) for row in rows]
+        """  # noqa: S608
+        if limit is not None:
+            query += " LIMIT :limit OFFSET :offset"
+            params = {**params, "limit": limit, "offset": offset}
+        rows = conn.execute(query, params).fetchall()
+
+    items = [metadata_from_row(row) for row in rows]
+    return {
+        "items": items,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "has_more": limit is not None and offset + len(items) < total,
+    }
 
 
 def get_document(document_id: int, db_path: Path | None = None) -> dict[str, Any] | None:
@@ -155,6 +184,19 @@ def delete_document(document_id: int, db_path: Path | None = None) -> None:
         document_facts.detach_confirmed_context(context_id)
     if storage_path.exists():
         storage_path.unlink()
+
+
+def delete_all_documents(db_path: Path | None = None) -> int:
+    """Mirrors case_store.delete_all_cases()'s bulk-delete pattern. Deliberately reuses
+    delete_document() per row (rather than a single blind DELETE FROM documents) so every row's
+    side effects -- detaching its confirmed_fact_context, unlinking its stored file from disk --
+    still happen; a bare bulk DELETE would silently orphan every uploaded file on disk."""
+    init_db(db_path)
+    with case_store.connect(db_path) as conn:
+        ids = [row["id"] for row in conn.execute("SELECT id FROM documents").fetchall()]
+    for document_id in ids:
+        delete_document(document_id, db_path)
+    return len(ids)
 
 
 def update_confirmed_fact_context(

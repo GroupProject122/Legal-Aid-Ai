@@ -100,6 +100,64 @@ def test_case_law_gate_without_raw_query_falls_back_to_issue_summary():
     assert "case_law_not_in_corpus" in gap.reason_codes
 
 
+def test_non_delhi_tenancy_gate_checks_raw_query_not_retrieval_paraphrase():
+    # Same structural issue as the case-law gate: a paraphrase that drops the explicit place
+    # name (e.g. normalizes "my landlord in Mumbai" into a generic tenancy issue) must not
+    # silently defeat this jurisdiction check. It has to fire off what the user actually typed.
+    paraphrased_issue_summary = "A tenant's landlord has cut off an essential utility supply."
+    raw_query = "My landlord in Mumbai cut off my electricity without notice."
+    assert not corpus_gap.explicit_non_delhi_tenancy(corpus_gap.normalize(paraphrased_issue_summary), ["tenancy"])
+
+    gap = corpus_gap.pre_generation_check(
+        paraphrased_issue_summary,
+        ["tenancy"],
+        [chunk()],
+        raw_user_query=raw_query,
+    )
+
+    assert gap.status == "insufficient"
+    assert "jurisdiction_not_covered" in gap.reason_codes
+    assert gap.allow_grounded_answer is False
+
+
+def test_unsupported_legal_gap_gate_checks_raw_query_not_retrieval_paraphrase():
+    # Same class of bug: "income tax" is the deterministic trigger, but a retrieval paraphrase
+    # might rephrase it away (e.g. into "a financial dispute with a government authority").
+    paraphrased_issue_summary = "A dispute with a government authority over money owed."
+    raw_query = "I got a notice about my income tax that I don't understand."
+    assert not corpus_gap.unsupported_legal_gap_query(corpus_gap.normalize(paraphrased_issue_summary), [chunk()])
+
+    gap = corpus_gap.pre_generation_check(
+        paraphrased_issue_summary,
+        ["consumer"],
+        [chunk(domain="consumer", title="The Consumer Protection Act, 2019")],
+        raw_user_query=raw_query,
+    )
+
+    assert gap.status == "insufficient"
+    assert "domain_not_fully_covered" in gap.reason_codes
+    assert gap.allow_grounded_answer is False
+
+
+def test_missing_current_law_gate_checks_raw_query_not_retrieval_paraphrase():
+    # Same class of bug again: "CERT-In" is the deterministic trigger, but a paraphrase might
+    # generalize it away (e.g. into "a cyber incident reporting requirement").
+    paraphrased_issue_summary = "A question about a cyber incident reporting requirement."
+    raw_query = "Does CERT-In direction require incident reporting for this?"
+    cyber_chunk = chunk(domain="cyber", title="The Information Technology Act, 2000")
+    assert not corpus_gap.missing_current_law_query(corpus_gap.normalize(paraphrased_issue_summary), [cyber_chunk])
+
+    gap = corpus_gap.pre_generation_check(
+        paraphrased_issue_summary,
+        ["cyber"],
+        [cyber_chunk],
+        raw_user_query=raw_query,
+    )
+
+    assert gap.status == "limited"
+    assert "missing_current_law" in gap.reason_codes
+
+
 def test_supporting_only_sources_are_limited():
     supporting = chunk(authority_level="primary", status="supporting_only", document_type="supporting_property_law")
     gap = corpus_gap.pre_generation_check("tenant landlord dispute", ["tenancy"], [supporting])

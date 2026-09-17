@@ -127,6 +127,28 @@ def test_sensitive_credentials_are_never_requested():
             )
 
 
+def test_sanitize_user_fact_fully_redacts_spaced_otp_and_multiword_password():
+    # Real users often dictate an otp with spaces between digits ("1 2 3 4 5 6") or in groups
+    # ("456 789"), and describe a password across a few words rather than as one token. The old
+    # patterns (a plain \S+ after the keyword) only redacted the first chunk, leaving the rest
+    # of the secret in plain text right next to the "[redacted]" marker -- and that text then
+    # flows into build_case_summary()/retrieval_query(), reaching the LLM and getting logged.
+    redacted = fact_sufficiency.sanitize_user_fact("the otp is 123 456 and my password is hunter 2 dragon")
+
+    assert "123" not in redacted
+    assert "456" not in redacted
+    assert "hunter" not in redacted
+    assert "dragon" not in redacted
+
+
+def test_sanitize_user_fact_leaves_ordinary_numbers_alone():
+    # The fix must not turn into an over-broad filter that eats ordinary facts -- a deposit
+    # amount or a date has nothing to do with an otp/pin/password and must survive untouched.
+    redacted = fact_sufficiency.sanitize_user_fact("the deposit was 12000 rupees paid on 5 January")
+
+    assert redacted == "the deposit was 12000 rupees paid on 5 January"
+
+
 def test_classified_api_runs_fact_sufficiency_before_retrieval(monkeypatch):
     called = {}
 

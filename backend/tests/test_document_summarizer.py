@@ -11,6 +11,7 @@ import case_store
 import document_store
 import document_summarizer
 import main
+import redaction
 from config import DOCUMENTS_DIR, INDEX_PATH, METADATA_PATH
 
 
@@ -159,6 +160,78 @@ def test_sensitive_credentials_are_not_leaked(monkeypatch):
 
     assert "hunter2" not in result["summary"]
     assert "[sensitive information omitted]" in result["summary"]
+
+
+# --- Card-number redaction (shared with case_store.py via redaction.py, fixed 2026-09-16) ---
+# This file had its own separate copy of the false-positive bug fixed in case_store.py: any
+# 13-19 digit run was redacted unconditionally, no Luhn check, so an ordinary long number
+# (invoice, policy, order, case number -- all common in legal documents) would be permanently
+# altered. Reproduces that failure mode specifically for this file's own pipeline (input text
+# sent to Gemini, and the final rendered summary), not just at the shared-module level.
+
+
+def test_non_card_long_number_survives_redaction_in_prompt_sent_to_gemini(monkeypatch):
+    monkeypatch.setattr(document_summarizer, "GEMINI_API_KEY", "test-key")
+    reference_number = "1234567890123"  # 13 digits, not Luhn-valid -- a plausible reference number
+    assert not redaction.luhn_valid(reference_number)
+    captured_prompts = []
+
+    def capture(prompt):
+        captured_prompts.append(prompt)
+        return {"summary": "This notice concerns a tenancy dispute."}
+
+    monkeypatch.setattr(document_summarizer, "call_gemini_summary", capture)
+
+    document_summarizer.summarize_document(
+        {"status": "success", "text": f"Reference number: {reference_number}. This notice concerns a tenancy dispute."}
+    )
+
+    assert any(reference_number in prompt for prompt in captured_prompts)
+
+
+def test_non_card_long_number_survives_in_final_summary(monkeypatch):
+    monkeypatch.setattr(document_summarizer, "GEMINI_API_KEY", "test-key")
+    invoice_number = "1234567890123456"  # 16 digits, not Luhn-valid -- a plausible invoice number
+    assert not redaction.luhn_valid(invoice_number)
+    monkeypatch.setattr(
+        document_summarizer,
+        "call_gemini_summary",
+        lambda _prompt: {"summary": f"This invoice, number {invoice_number}, is for Rs. 5,000."},
+    )
+
+    result = document_summarizer.summarize_document(
+        {"status": "success", "text": f"Invoice number: {invoice_number}. Amount: Rs. 5,000."}
+    )
+
+    assert result["status"] == "success"
+    assert invoice_number in result["summary"]
+
+
+def test_luhn_valid_card_number_in_document_is_still_redacted(monkeypatch):
+    monkeypatch.setattr(document_summarizer, "GEMINI_API_KEY", "test-key")
+    card_number = "4111111111111111"  # standard Visa test card number
+    assert redaction.luhn_valid(card_number)
+    monkeypatch.setattr(
+        document_summarizer,
+        "call_gemini_summary",
+        lambda _prompt: {"summary": f"The document lists card number {card_number} for payment."},
+    )
+
+    result = document_summarizer.summarize_document({"status": "success", "text": f"Card number: {card_number}."})
+
+    assert result["status"] == "success"
+    assert card_number not in result["summary"]
+    assert "[sensitive information omitted]" in result["summary"]
+
+
+# --- MAX_TOTAL_CHARS / chunking capacity (fixed 2026-09-16) ---
+
+
+def test_max_total_chars_matches_chunking_capacity():
+    # Regression guard: this constant used to be a separate magic number slightly ABOVE what
+    # chunking actually covers, so documents just under the old limit had their tail silently
+    # dropped. It must always equal what chunking guarantees, not just be close to it.
+    assert document_summarizer.MAX_TOTAL_CHARS == document_summarizer.MAX_CHUNKS * document_summarizer.CHUNK_CHARS
 
 
 def test_summary_never_enters_legal_corpus_or_faiss(monkeypatch, tmp_path):

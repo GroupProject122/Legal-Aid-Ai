@@ -58,9 +58,11 @@ def test_get_documents_lists_newest_first(monkeypatch, tmp_path):
     response = client.get("/api/documents")
 
     assert response.status_code == 200
-    ids = [item["id"] for item in response.json()]
+    body = response.json()
+    ids = [item["id"] for item in body["items"]]
     assert ids == [second["document_id"], first["document_id"]]
-    assert "extraction" not in response.json()[0]
+    assert "extraction" not in body["items"][0]
+    assert body["total"] == 2
 
 
 def test_get_single_document_and_file_serving(monkeypatch, tmp_path):
@@ -227,3 +229,154 @@ def test_document_never_enters_legal_corpus_or_faiss(monkeypatch, tmp_path):
 
     after = {path: path.stat().st_mtime_ns for path in tracked_paths if path.exists()}
     assert after == before
+
+
+# --- Pagination, search, bulk delete (added 2026-09-16, same convention as My Cases) ---
+
+
+def test_list_documents_paginates_with_limit_and_offset(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    ids = []
+    for i in range(5):
+        document = document_store.create_uploaded_document(
+            original_filename=f"doc{i}.txt",
+            content=f"text {i}".encode("utf-8"),
+            mime_type="text/plain",
+            extraction={"status": "success", "file_type": "txt", "text": f"text {i}"},
+            db_path=db,
+        )
+        ids.append(document["id"])
+    expected_order = list(reversed(ids))
+
+    page1 = document_store.list_documents(db, limit=2, offset=0)
+    page2 = document_store.list_documents(db, limit=2, offset=2)
+    page3 = document_store.list_documents(db, limit=2, offset=4)
+
+    assert [d["id"] for d in page1["items"]] == expected_order[0:2]
+    assert [d["id"] for d in page2["items"]] == expected_order[2:4]
+    assert [d["id"] for d in page3["items"]] == expected_order[4:5]
+    assert page1["total"] == page2["total"] == page3["total"] == 5
+    assert page1["has_more"] is True
+    assert page3["has_more"] is False
+
+
+def test_list_documents_search_matches_filename_case_insensitively(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    document_store.create_uploaded_document(
+        original_filename="Rental Agreement.txt",
+        content=b"rental text",
+        mime_type="text/plain",
+        extraction={"status": "success", "file_type": "txt", "text": "rental text"},
+        db_path=db,
+    )
+    document_store.create_uploaded_document(
+        original_filename="Invoice.txt",
+        content=b"invoice text",
+        mime_type="text/plain",
+        extraction={"status": "success", "file_type": "txt", "text": "invoice text"},
+        db_path=db,
+    )
+
+    result = document_store.list_documents(db, search="RENTAL")
+
+    assert result["total"] == 1
+    assert "Rental" in result["items"][0]["filename"]
+
+
+def test_list_documents_without_limit_returns_everything(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    for i in range(3):
+        document_store.create_uploaded_document(
+            original_filename=f"doc{i}.txt",
+            content=f"text {i}".encode("utf-8"),
+            mime_type="text/plain",
+            extraction={"status": "success", "file_type": "txt", "text": f"text {i}"},
+            db_path=db,
+        )
+    result = document_store.list_documents(db)
+    assert len(result["items"]) == 3
+    assert result["total"] == 3
+
+
+def test_size_bytes_is_present_in_listed_documents(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    content = b"twenty two byte text!"
+    document_store.create_uploaded_document(
+        original_filename="Sized.txt",
+        content=content,
+        mime_type="text/plain",
+        extraction={"status": "success", "file_type": "txt", "text": "twenty two byte text!"},
+        db_path=db,
+    )
+    result = document_store.list_documents(db)
+    assert result["items"][0]["size_bytes"] == len(content)
+
+
+def test_delete_all_documents_removes_rows_and_physical_files(tmp_path):
+    db = tmp_path / "legal_aid.db"
+    monkeypatch_upload_dir = tmp_path / "user_uploads"
+    import document_store as ds
+
+    original_upload_dir = ds.UPLOAD_DIR
+    ds.UPLOAD_DIR = monkeypatch_upload_dir
+    try:
+        documents = [
+            ds.create_uploaded_document(
+                original_filename=f"doc{i}.txt",
+                content=f"text {i}".encode("utf-8"),
+                mime_type="text/plain",
+                extraction={"status": "success", "file_type": "txt", "text": f"text {i}"},
+                db_path=db,
+            )
+            for i in range(3)
+        ]
+        storage_paths = [Path(d["storage_path"]) for d in documents]
+        assert all(path.exists() for path in storage_paths)
+
+        deleted_count = ds.delete_all_documents(db)
+
+        assert deleted_count == 3
+        assert ds.list_documents(db)["items"] == []
+        assert all(not path.exists() for path in storage_paths)
+    finally:
+        ds.UPLOAD_DIR = original_upload_dir
+
+
+def test_api_list_documents_paginates(monkeypatch, tmp_path):
+    configure_temp_store(monkeypatch, tmp_path)
+    client = TestClient(main.app)
+    for i in range(3):
+        upload_txt(client, f"doc{i}.txt", f"text {i}")
+
+    response = client.get("/api/documents", params={"limit": 2, "offset": 0})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body["items"]) == 2
+    assert body["total"] == 3
+    assert body["has_more"] is True
+
+
+def test_api_list_documents_search_param(monkeypatch, tmp_path):
+    configure_temp_store(monkeypatch, tmp_path)
+    client = TestClient(main.app)
+    upload_txt(client, "Rental Agreement.txt", "rental text")
+    upload_txt(client, "Invoice.txt", "invoice text")
+
+    response = client.get("/api/documents", params={"search": "rental"})
+
+    assert response.status_code == 200
+    assert response.json()["total"] == 1
+
+
+def test_api_delete_all_documents(monkeypatch, tmp_path):
+    configure_temp_store(monkeypatch, tmp_path)
+    client = TestClient(main.app)
+    upload_txt(client, "doc1.txt", "text 1")
+    upload_txt(client, "doc2.txt", "text 2")
+
+    response = client.delete("/api/documents")
+
+    assert response.status_code == 200
+    assert response.json()["deleted_count"] == 2
+    assert client.get("/api/documents").json()["items"] == []

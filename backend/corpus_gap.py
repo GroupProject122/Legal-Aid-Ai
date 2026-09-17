@@ -93,15 +93,20 @@ def pre_generation_check(
     raw_user_query: str | None = None,
 ) -> CorpusGapResult:
     """`issue_summary` is the retrieval-optimized text (e.g. fact_sufficiency.retrieval_query()'s
-    LLM paraphrase of the user's message) -- it's what actually got embedded and searched, so
-    it's still the right text for the domain-match/score/primary-source checks below. But
-    `case_law_query()` is a deterministic *safety* gate meant to force an abstain regardless of
-    what got retrieved, and a paraphrase is not deterministic call to call: whether it happens to
-    retain a trigger phrase like "what did the supreme court" is up to chance, which means the
-    gate's reliability would be too. `raw_user_query` -- the text the user actually typed this
-    turn, before any rewrite -- is threaded through to deterministic_pre_check specifically for
-    that check. Optional and defaults to None (falls back to checking `issue_summary`, the prior
-    behavior) so callers that don't have a separate raw query available keep working unchanged."""
+    LLM-normalized case summary) -- it's what actually got embedded and searched, so it's still
+    the right text for the domain-match/score/primary-source checks below. But every deterministic
+    keyword-trigger gate in deterministic_pre_check (case_law_query, explicit_non_delhi_tenancy,
+    unsupported_legal_gap_query, missing_current_law_query) is a *safety* gate meant to force an
+    abstain regardless of what got retrieved, and a paraphrase/normalization is not deterministic
+    call to call: whether it happens to retain a trigger phrase like "what did the supreme court"
+    is up to chance, which means the gates' reliability would be too. `raw_user_query` -- the text
+    the user actually typed this turn, before any LLM rewrite, ideally already combined with any
+    confirmed document facts the same deterministic way domain_router's routing_text is (see
+    document_facts.combined_question_with_confirmed_facts -- that combination is a plain string
+    join, not an LLM call, so it doesn't reintroduce the non-determinism this parameter exists to
+    avoid) -- is threaded through to deterministic_pre_check for exactly those checks. Optional
+    and defaults to None (falls back to checking `issue_summary`, the prior behavior) so callers
+    that don't have a separate raw query available keep working unchanged."""
     deterministic = deterministic_pre_check(issue_summary, domains, chunks, raw_user_query=raw_user_query)
     if deterministic.status != "limited" or deterministic.reason_codes:
         return deterministic
@@ -158,12 +163,15 @@ def deterministic_pre_check(
     raw_user_query: str | None = None,
 ) -> CorpusGapResult:
     text = normalize(issue_summary)
-    # See pre_generation_check's docstring: the case-law gate checks what the user actually
-    # typed, not the retrieval paraphrase, when that raw text is available.
-    case_law_check_text = normalize(raw_user_query) if raw_user_query is not None else text
+    # See pre_generation_check's docstring: every deterministic keyword-trigger gate below --
+    # not just case_law_query -- is a safety check meant to fire off what the user actually
+    # typed, regardless of what the (non-deterministic) retrieval paraphrase happened to retain
+    # or drop. Only the domain-match/score/primary-source logic further down is legitimately
+    # about issue_summary, since that's the text that was actually embedded and searched.
+    raw_check_text = normalize(raw_user_query) if raw_user_query is not None else text
     if not chunks:
         return result("insufficient", ["no_relevant_source"], "No relevant legal source was retrieved.", False, True, True)
-    if explicit_non_delhi_tenancy(text, domains):
+    if explicit_non_delhi_tenancy(raw_check_text, domains):
         return result(
             "insufficient",
             ["jurisdiction_not_covered"],
@@ -172,7 +180,7 @@ def deterministic_pre_check(
             True,
             True,
         )
-    if case_law_query(case_law_check_text):
+    if case_law_query(raw_check_text):
         return result(
             "insufficient",
             ["case_law_not_in_corpus"],
@@ -181,7 +189,7 @@ def deterministic_pre_check(
             True,
             True,
         )
-    if unsupported_legal_gap_query(text, chunks):
+    if unsupported_legal_gap_query(raw_check_text, chunks):
         return result(
             "insufficient",
             ["domain_not_fully_covered", "missing_primary_authority"],
@@ -190,7 +198,7 @@ def deterministic_pre_check(
             True,
             True,
         )
-    if missing_current_law_query(text, chunks):
+    if missing_current_law_query(raw_check_text, chunks):
         return result(
             "limited",
             ["missing_current_law", "domain_not_fully_covered"],
@@ -424,12 +432,13 @@ def should_use_gemini_for_ambiguity(
     raw_user_query: str | None = None,
 ) -> bool:
     text = normalize(issue_summary)
-    case_law_check_text = normalize(raw_user_query) if raw_user_query is not None else text
-    # In the current call order this branch is unreachable when case_law_query already fired
-    # inside deterministic_pre_check (pre_generation_check returns before reaching here) -- kept
-    # consistent with the same raw-query text anyway, so it stays correct if that ordering ever
-    # changes rather than silently reverting to the paraphrase-only check.
-    if not chunks or explicit_non_delhi_tenancy(text, domains) or case_law_query(case_law_check_text):
+    raw_check_text = normalize(raw_user_query) if raw_user_query is not None else text
+    # In the current call order this branch is unreachable when explicit_non_delhi_tenancy or
+    # case_law_query already fired inside deterministic_pre_check (pre_generation_check returns
+    # before reaching here) -- kept consistent with the same raw-query text anyway, so it stays
+    # correct if that ordering ever changes rather than silently reverting to the
+    # paraphrase-only check.
+    if not chunks or explicit_non_delhi_tenancy(raw_check_text, domains) or case_law_query(raw_check_text):
         return False
     top_score = max(float(getattr(chunk, "rerank_score", None) or getattr(chunk, "score", 0.0) or 0.0) for chunk in chunks)
     return 0.34 <= top_score <= 0.48

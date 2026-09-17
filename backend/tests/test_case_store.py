@@ -348,6 +348,25 @@ def test_sensitive_values_are_redacted_before_storage(tmp_path):
     assert "123456" not in stored
 
 
+def test_spaced_otp_and_multiword_password_are_fully_redacted(tmp_path):
+    # Regression test: real users often dictate an OTP with spaces between digits ("1 2 3 4 5 6")
+    # or in groups ("456 789"), and a password described across a few words rather than as one
+    # token. The old patterns (\d{4,8} for otp, a single \S+ for pin/password/cvv) either missed
+    # a spaced otp entirely or redacted only the first chunk, leaving the rest of the secret in
+    # plain text right next to the "[sensitive information omitted]" marker.
+    db = tmp_path / "legal_aid.db"
+    case_id = case_store.create_case("cyber issue", "cyber", db_path=db)
+    message = "the otp is 123 456 and my password is hunter 2 dragon"
+
+    case_store.save_message(case_id, "user", case_store.user_content_for_storage(message), db)
+
+    stored = case_store.get_messages(case_id, db)[0]["content"]
+    assert "123" not in stored
+    assert "456" not in stored
+    assert "hunter" not in stored
+    assert "dragon" not in stored
+
+
 def test_non_card_digit_run_is_not_redacted(tmp_path):
     # Regression test for the exact Phase 3 UI finding: a 13-digit epoch timestamp typed into a
     # question was being permanently replaced with "[sensitive card number omitted]" at

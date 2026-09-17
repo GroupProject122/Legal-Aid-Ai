@@ -454,7 +454,16 @@ PUBLIC_FACT_CUES = (
 def sanitize_user_fact(value: Any) -> str:
     text = normalize_text(value)
     text = re.sub(r"\b\d{4}\s?\d{4}\s?\d{4}\b", "[redacted Aadhaar-like number]", text)
-    text = re.sub(r"\b(otp|pin|password)\s*(?:is|hai|:)?\s*\S+", r"\1 [redacted]", text, flags=re.I)
+    # otp/pin values are numeric and real users often dictate them with spaces or in groups
+    # ("1 2 3 4 5 6", "456 789") rather than as one contiguous token -- a plain \S+ only redacts
+    # the first chunk and leaves the rest of the secret sitting in plain text right after the
+    # "[redacted]" marker. Capture the whole run of digit-groups instead of just one token.
+    text = re.sub(r"\b(otp|pin)\b\s*(?:is|hai|:)?\s*((?:\d[\s-]*){3,}\d)", r"\1 [redacted]", text, flags=re.I)
+    # Passwords aren't numeric, so the same digit-run approach doesn't apply -- but a value
+    # dictated across a few words has the identical leak risk. Redact up to the next few tokens
+    # rather than just one; over-redacting a little trailing context is the safer failure mode
+    # than leaving part of a real secret in text that reaches the LLM and gets logged.
+    text = re.sub(r"\b(password)\b\s*(?:is|hai|:)?\s*(\S+(?:\s+\S+){0,3})", r"\1 [redacted]", text, flags=re.I)
     return text
 
 

@@ -51,6 +51,15 @@ async def lifespan(_app: FastAPI):
         logger.warning("Vector store is incompatible with the configured embedding provider/model. Run `python ingest.py` to rebuild it.")
     except Exception:
         logger.exception("Vector store failed to load during startup")
+    try:
+        # Eager build at startup, same reasoning as rag.load() above: consistent with that
+        # existing pattern, and means the first real Know Your Rights request doesn't pay the
+        # index-build cost. Does NOT by itself fix corpus staleness after startup -- that's
+        # legal_education.get_index()'s own mtime check, which runs on every call regardless of
+        # whether this eager build happens here.
+        legal_education.get_index()
+    except Exception:
+        logger.exception("Legal education index failed to build during startup")
     yield
 
 
@@ -196,9 +205,24 @@ def delete_saved_case(case_id: int) -> dict:
     return {"status": "deleted", "case_id": case_id}
 
 
+DEFAULT_DOCUMENTS_PAGE_SIZE = 20
+MAX_DOCUMENTS_PAGE_SIZE = 100
+
+
 @app.get("/api/documents")
-def list_uploaded_documents() -> list[dict]:
-    return document_store.list_documents()
+def list_uploaded_documents(
+    limit: int = Query(default=DEFAULT_DOCUMENTS_PAGE_SIZE, ge=1, le=MAX_DOCUMENTS_PAGE_SIZE),
+    offset: int = Query(default=0, ge=0),
+    search: str | None = Query(default=None, max_length=200),
+) -> dict:
+    return document_store.list_documents(limit=limit, offset=offset, search=search)
+
+
+@app.delete("/api/documents")
+def delete_all_uploaded_documents() -> dict:
+    deleted_count = document_store.delete_all_documents()
+    logger.info("All uploaded documents deleted count=%s", deleted_count)
+    return {"status": "deleted", "deleted_count": deleted_count}
 
 
 @app.get("/api/documents/{document_id}")
@@ -325,6 +349,11 @@ def delete_uploaded_document(document_id: int) -> dict:
 @app.get("/api/legal-awareness/categories")
 def legal_awareness_categories() -> list[dict]:
     return legal_education.list_categories()
+
+
+@app.get("/api/legal-awareness/search")
+def legal_awareness_search(q: str = Query(default="", max_length=200), limit: int = Query(default=20, ge=1, le=100)) -> dict:
+    return {"query": q, "results": legal_education.search_provisions(q, limit=limit)}
 
 
 @app.get("/api/legal-awareness/categories/{category_id}")
@@ -819,11 +848,14 @@ def answer_grounded_from_context(
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
     # user_question (falling back to original_message) is the text the user actually typed this
-    # turn, as opposed to retrieval_text (the LLM-paraphrased, retrieval-optimized version) --
-    # same "effective latest user message" expression used elsewhere in this function. Threaded
-    # through so corpus_gap's case-law safety gate checks what the user typed, not a paraphrase
-    # that may or may not have kept the trigger phrasing.
-    pre_gap = corpus_gap.pre_generation_check(retrieval_text, context.domains, chunks, raw_user_query=user_question or original_message)
+    # turn, as opposed to retrieval_text (fact_sufficiency's LLM-normalized case summary) -- same
+    # "effective latest user message" expression used elsewhere in this function. Combined with
+    # confirmed_context the same deterministic way domain_router's routing_text is (see
+    # document_facts.combined_question_with_confirmed_facts), so a fact only established via an
+    # attached/confirmed document (e.g. a location) still reaches corpus_gap's deterministic
+    # gates -- they just skip the LLM paraphrase step in between, not the document facts.
+    raw_check_query = document_facts.combined_question_with_confirmed_facts(user_question or original_message, confirmed_context)
+    pre_gap = corpus_gap.pre_generation_check(retrieval_text, context.domains, chunks, raw_user_query=raw_check_query)
     if not pre_gap.allow_grounded_answer:
         response = corpus_gap.abstention_response(pre_gap)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)

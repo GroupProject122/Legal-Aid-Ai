@@ -60,7 +60,7 @@ CATEGORIES = {
     },
     "tenancy": {
         "title": "Tenant Rights",
-        "description": "Understand common tenancy issues under the current Delhi-focused corpus.",
+        "description": "Understand your rights and protections as a tenant in Delhi.",
         "icon": "home",
         "limitation": "The current tenancy legal corpus is primarily focused on Delhi.",
         "overview": [

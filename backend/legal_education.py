@@ -26,18 +26,44 @@ class EducationIndex:
 
 
 _INDEX: EducationIndex | None = None
+_INDEX_SOURCE_MTIMES: tuple[float, float] | None = None
+
+
+def _current_source_mtimes() -> tuple[float, float]:
+    """mtimes of the two files the index is built from. 0.0 for a file that doesn't exist yet
+    (e.g. before the first `python ingest.py` run) rather than raising."""
+    manifest_mtime = MANIFEST_PATH.stat().st_mtime if MANIFEST_PATH.exists() else 0.0
+    chunks_mtime = CHUNKS_PATH.stat().st_mtime if CHUNKS_PATH.exists() else 0.0
+    return (manifest_mtime, chunks_mtime)
 
 
 def get_index() -> EducationIndex:
-    global _INDEX
-    if _INDEX is None:
+    """Lazily builds (or rebuilds) the in-memory index, and -- this is the actual fix for the
+    corpus-staleness bug (2026-09-16) -- self-invalidates by comparing MANIFEST_PATH/CHUNKS_PATH's
+    current mtimes against what was recorded at the last build, on every call (two cheap stat()
+    syscalls). reset_index_cache() forces a rebuild explicitly and still exists for that (tests,
+    or any future caller that wants an immediate rebuild without waiting on mtimes), but mtime
+    comparison is what actually solves the original bug: `ingest.py` -- which is how the corpus
+    changes reset_index_cache() was meant to react to -- runs as a separate OS process from the
+    live `uvicorn main:app` server. A call to reset_index_cache() from inside ingest.py's process
+    cannot reach this module's `_INDEX` global in the server's process; there is no shared memory
+    between them. Comparing file mtimes works across that process boundary because it reads the
+    filesystem, not another process's memory -- so it's the only mechanism here that actually
+    achieves "reflected without requiring a manual backend restart", which is why it's the
+    primary fix and not just a belt-and-suspenders addition alongside calling
+    reset_index_cache() from ingest.py."""
+    global _INDEX, _INDEX_SOURCE_MTIMES
+    current_mtimes = _current_source_mtimes()
+    if _INDEX is None or current_mtimes != _INDEX_SOURCE_MTIMES:
         _INDEX = build_index()
+        _INDEX_SOURCE_MTIMES = current_mtimes
     return _INDEX
 
 
 def reset_index_cache() -> None:
-    global _INDEX
+    global _INDEX, _INDEX_SOURCE_MTIMES
     _INDEX = None
+    _INDEX_SOURCE_MTIMES = None
 
 
 def build_index() -> EducationIndex:
@@ -105,6 +131,63 @@ def get_provision(source_id_value: str, provision_id: str) -> dict[str, Any]:
         "page_end": provision.get("page_end"),
         "chunk_id": provision.get("chunk_id"),
     }
+
+
+def search_provisions(query: str, limit: int = 20) -> list[dict[str, Any]]:
+    """Case-insensitive search across every provision's title and text, for every source that
+    belongs to a displayed category -- lets the frontend deep-link straight to a matched
+    provision, skipping the category -> source -> provision browse. Deliberately scoped to
+    provisions reachable through that same browse hierarchy (a source not in any displayed
+    category is skipped), not every provision in provisions_by_source -- search is a shortcut
+    into the existing hierarchy, not a door to content that isn't otherwise browsable."""
+    index = get_index()
+    needle = query.strip().lower()
+    if not needle:
+        return []
+
+    source_file_to_category_id = {
+        source["source_file"]: category_id
+        for category_id, category in index.categories.items()
+        for source in category["sources"]
+    }
+
+    matches: list[dict[str, Any]] = []
+    for source_file, provisions in index.provisions_by_source.items():
+        category_id = source_file_to_category_id.get(source_file)
+        document = index.manifest_documents.get(source_file)
+        if category_id is None or document is None:
+            continue
+        for provision in provisions.values():
+            title = provision.get("title") or ""
+            text = provision.get("text") or ""
+            title_hit = needle in title.lower()
+            if not title_hit and needle not in text.lower():
+                continue
+            matches.append(
+                {
+                    "category_id": category_id,
+                    "category_title": index.categories[category_id]["title"],
+                    "source_id": source_id(source_file),
+                    "source_short_title": document.get("short_title") or document.get("document_title"),
+                    "provision_id": provision["id"],
+                    "provision_label": provision["label"],
+                    "provision_title": provision.get("title"),
+                    "excerpt": excerpt(text, limit=220),
+                    "_title_hit": title_hit,
+                }
+            )
+
+    matches.sort(
+        key=lambda item: (
+            0 if item["_title_hit"] else 1,  # a title match is more relevant than a text-only match
+            item["category_title"],
+            item["source_short_title"] or "",
+            item["provision_label"],
+        )
+    )
+    for item in matches:
+        del item["_title_hit"]
+    return matches[:limit]
 
 
 def source_pdf_path(source_id_value: str) -> Path:

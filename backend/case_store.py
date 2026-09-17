@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+import redaction
 from config import BASE_DIR
 
 DB_PATH = BASE_DIR / "legal_aid.db"
@@ -408,54 +409,35 @@ def sanitize_value(value: Any) -> Any:
     return value
 
 
-def luhn_valid(digits: str) -> bool:
-    """Standard Luhn (mod 10) checksum. `digits` must be a string of only 0-9 characters."""
-    total = 0
-    for index, char in enumerate(reversed(digits)):
-        digit = int(char)
-        if index % 2 == 1:
-            digit *= 2
-            if digit > 9:
-                digit -= 9
-        total += digit
-    return total % 10 == 0
-
-
-_CARD_NUMBER_PATTERN = re.compile(r"\b(?:\d[ -]?){13,19}\b")
-
-
-def _redact_card_number(match: re.Match) -> str:
-    """Only redact a 13-19 digit run if it's also Luhn-valid.
-
-    Fixed 2026-09-15: this previously redacted ANY 13-19 digit run unconditionally, with no
-    check that it was even plausibly a card number -- an ordinary 13-digit epoch timestamp, a
-    long order/reference number, or a phone number all matched and got permanently replaced with
-    "[sensitive card number omitted]" at message-save time, with the original text unrecoverable
-    (found in Phase 3 UI testing: "Reference: Phase3 debug 1789469159760" -> "Reference: Phase3
-    debug [sensitive card number omitted]"). Luhn is the standard, well-understood way real card
-    numbers are distinguished from arbitrary digit strings -- it's not a perfect filter (a
-    Luhn-valid non-card 16-digit number could still false-positive; see
-    tests/test_case_store.py's adversarial cases for what this does and doesn't catch), but it
-    narrows the false-positive rate substantially without disabling the actual protection: known
-    test card numbers (e.g. 4111111111111111) are still redacted.
-    """
-    digits_only = re.sub(r"[ -]", "", match.group(0))
-    if not (13 <= len(digits_only) <= 19) or not luhn_valid(digits_only):
-        return match.group(0)
-    return "[sensitive card number omitted]"
+# Card-number redaction (the Luhn-gated 13-19 digit run check) moved to redaction.py, 2026-09-16
+# -- it used to be a separate copy from document_summarizer.py's own version, and when the
+# false-positive bug in it was fixed here, that other copy was missed entirely (nothing tied the
+# two together). `luhn_valid` is re-exported here (rather than only living in redaction.py) so
+# existing call sites and tests that reference `case_store.luhn_valid` keep working unchanged.
+luhn_valid = redaction.luhn_valid
 
 
 def sanitize_text(text: str) -> str:
     cleaned = str(text or "")
     patterns = [
-        (r"\b(?:otp|one time password)\s*(?:is|:)?\s*\d{4,8}\b", "OTP [sensitive information omitted]"),
-        (r"\b(?:pin|password|cvv)\s*(?:is|:)?\s*\S+\b", "[sensitive information omitted]"),
+        # otp/pin/cvv values are numeric and real users often dictate them with spaces or in
+        # groups ("1 2 3 4 5 6", "456 789") rather than as one contiguous run -- the previous
+        # \d{4,8}/\S+ patterns either missed a spaced value entirely (otp) or redacted only the
+        # first chunk and left the rest sitting in plain text (pin/cvv). Capture the whole run
+        # of digit-groups instead.
+        (r"\b(?:otp|one time password)\s*(?:is|:)?\s*(?:\d[\s-]*){3,}\d\b", "OTP [sensitive information omitted]"),
+        (r"\b(?:pin|cvv)\s*(?:is|:)?\s*(?:\d[\s-]*){2,}\d\b", "[sensitive information omitted]"),
+        # Passwords aren't numeric, so the same digit-run approach doesn't apply -- but a value
+        # dictated across a few words has the identical leak risk. Redact up to the next few
+        # tokens rather than just one; over-redacting a little trailing context is the safer
+        # failure mode than leaving part of a real secret in a persisted, logged message.
+        (r"\b(?:password)\s*(?:is|:)?\s*\S+(?:\s+\S+){0,3}", "[sensitive information omitted]"),
         (r"\b\d{12}\b", "[sensitive identifier omitted]"),
         (r"(api[_ -]?key\s*(?:is|:)?\s*)\S+", r"\1[sensitive information omitted]"),
     ]
     for pattern, replacement in patterns:
         cleaned = re.sub(pattern, replacement, cleaned, flags=re.I)
-    cleaned = _CARD_NUMBER_PATTERN.sub(_redact_card_number, cleaned)
+    cleaned = redaction.redact_card_number(cleaned)
     return cleaned
 
 
