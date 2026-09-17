@@ -887,7 +887,7 @@
       "notes": "Not present in the current corpus."
     }
   ],
-  "pending_case_law_note": "Case-law PDFs are staged under backend/documents/cyber/case_law/ and are NOT part of the active retrieval index. They are excluded from ingest.py because judgments need a dedicated judgment parser (headnote / holding / ratio) and good-law metadata. Move them into 'documents' only after that parser exists.",
+  "pending_case_law_note": "Case-law PDFs are staged under backend/documents/<domain>/case_law/ (cyber, consumer, tenancy, and constitutional_public_authority all have one) and are NOT part of the active retrieval index. They are excluded from ingest.py because judgments need a dedicated judgment parser (headnote / holding / ratio) and good-law metadata. Move them into 'documents' only after that parser exists.",
   "pending_case_law": [
     {
       "source_file": "cyber/case_law/case1_shreya_singhal_v_union_of_india_2015.pdf",
@@ -1008,6 +1008,150 @@
       "good_law": true,
       "retrieval_priority": "medium",
       "notes": "Clarifies the 'commercial purpose' exclusion under s.2(7) of the Consumer Protection Act, 2019 (s.2(1)(d) of the 1986 Act): a purchase made for self-employment/livelihood is not automatically excluded as 'commercial purpose'. Fact-specific test, not a rigid formula — relevant whenever a complainant's consumer status is disputed because the goods/services were bought for business use."
+    },
+    {
+      "source_file": "tenancy/case_law/case1_satyawati_sharma_v_union_of_india_2008.pdf",
+      "case_name": "Satyawati Sharma (Dead) by LRs v. Union of India",
+      "citation": "(2008) 5 SCC 287",
+      "court": "Supreme Court of India",
+      "date": "2008-04-16",
+      "domain": "tenancy",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Struck down the distinction in the proviso to s.14(1)(e) of the Delhi Rent Control Act, 1958 that limited the bona fide personal-requirement eviction ground to residential premises as violative of Article 14. The ground now applies regardless of whether the tenancy is residential or commercial. Relevant to any bona-fide-requirement eviction question involving non-residential premises."
+    },
+    {
+      "source_file": "tenancy/case_law/case2_precision_steel_engineering_works_v_prem_deva_niranjan_deva_tayal_1982.pdf",
+      "case_name": "Precision Steel & Engineering Works v. Prem Deva Niranjan Deva Tayal",
+      "citation": "(1982) 3 SCC 270",
+      "court": "Supreme Court of India",
+      "date": "1982-10-07",
+      "domain": "tenancy",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "medium",
+      "notes": "Sets the standard for a tenant's leave to defend an eviction petition brought under s.14(1)(e): leave should be granted liberally wherever the tenant's affidavit discloses facts that would disentitle the landlord from an eviction order — the tenant only needs to raise a triable issue, not prove the defence outright at that stage."
+    },
+    {
+      "source_file": "tenancy/case_law/case3_sarla_ahuja_v_united_india_insurance_co_ltd_1998.pdf",
+      "case_name": "Sarla Ahuja v. United India Insurance Co. Ltd.",
+      "citation": "(1998) 8 SCC 119",
+      "court": "Supreme Court of India",
+      "date": "1998-10-27",
+      "domain": "tenancy",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "On bona fide requirement under s.14(1)(e): the landlord is the best judge of their own residential need and convenience, and a court's role is to test the genuineness (bona fides) of that need, not to second-guess its reasonableness or whether the landlord could make do with alternative accommodation instead."
+    },
+    {
+      "source_file": "tenancy/case_law/case4_gian_devi_anand_v_jeevan_kumar_1985.pdf",
+      "case_name": "Gian Devi Anand v. Jeevan Kumar",
+      "citation": "(1985) 2 SCC 683",
+      "court": "Supreme Court of India (Constitution Bench)",
+      "date": "1985-05-01",
+      "domain": "tenancy",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Constitution Bench held that statutory tenancy rights in commercial/business premises under the Delhi Rent Control Act, 1958 are heritable — on a statutory tenant's death, the tenancy passes to their heirs, not just for residential tenancies. Relevant whenever an heir's right to continue a deceased relative's business tenancy is in question."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case1_kesavananda_bharati_v_state_of_kerala_1973.pdf",
+      "case_name": "Kesavananda Bharati Sripadagalvaru v. State of Kerala",
+      "citation": "(1973) 4 SCC 225",
+      "court": "Supreme Court of India (13-judge bench)",
+      "date": "1973-04-24",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Propounded the Basic Structure doctrine: Parliament's power to amend the Constitution under Article 368 does not extend to altering the Constitution's basic structure. The foundational limit on the constitutional amendment power — relevant to any question about whether a law or amendment can validly override fundamental rights."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case2_maneka_gandhi_v_union_of_india_1978.pdf",
+      "case_name": "Maneka Gandhi v. Union of India",
+      "citation": "(1978) 1 SCC 248",
+      "court": "Supreme Court of India",
+      "date": "1978-01-25",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Expanded Article 21: the 'procedure established by law' that deprives a person of personal liberty must itself be fair, just and reasonable, and Articles 14, 19 and 21 must be read together rather than as isolated silos (the 'golden triangle'). Foundational for arguments that a state action or law is arbitrary or procedurally unfair."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case3_hussainara_khatoon_v_state_of_bihar_1979.pdf",
+      "case_name": "Hussainara Khatoon v. Home Secretary, State of Bihar",
+      "citation": "AIR 1979 SC 1369",
+      "court": "Supreme Court of India",
+      "date": "1979-03-09",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Part of a 1979 series of orders on undertrial prisoners held for years without trial. Held that speedy trial is implicit in the right to life and personal liberty under Article 21, and that free legal aid/legal services for an accused who cannot afford a lawyer is essential to a fair procedure under Article 21. Directly relevant to free-legal-aid and speedy-trial questions."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case4_olga_tellis_v_bombay_municipal_corporation_1985.pdf",
+      "case_name": "Olga Tellis v. Bombay Municipal Corporation",
+      "citation": "(1985) 3 SCC 545",
+      "court": "Supreme Court of India",
+      "date": "1985-07-10",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "medium",
+      "notes": "Held that the right to livelihood is part of the right to life under Article 21, so evicting pavement and slum dwellers without following a fair, reasonable procedure violates Article 21. Relevant to eviction/displacement questions involving a public authority rather than a private landlord."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case5_vishaka_v_state_of_rajasthan_1997.pdf",
+      "case_name": "Vishaka v. State of Rajasthan",
+      "citation": "(1997) 6 SCC 241",
+      "court": "Supreme Court of India",
+      "date": "1997-08-13",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "medium",
+      "notes": "Laid down guidelines against workplace sexual harassment under Articles 14, 19 and 21, to hold the field until Parliament legislated. Largely superseded in operative effect by the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013, which is not currently in this corpus — treat Vishaka as the historical/constitutional basis, not as the current operative statutory framework, and do not present its guidelines as still being the primary source of law on this subject without that caveat."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case6_sp_gupta_v_union_of_india_1981.pdf",
+      "case_name": "S.P. Gupta v. Union of India (First Judges' Case)",
+      "citation": "1982 AIR 149",
+      "court": "Supreme Court of India (7-judge bench)",
+      "date": "1981-12-30",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "low",
+      "notes": "Addressed consultation/primacy in High Court judge appointments and transfers, and significantly broadened locus standi for public-interest litigation. Its specific holding giving the executive primacy over the Chief Justice of India in judicial appointments was later overturned by the Second Judges Case (1993), which established the collegium system — cite this case for its PIL/locus-standi reasoning, not as current law on how judges are appointed."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case7_cbse_v_aditya_bandopadhyay_2011.pdf",
+      "case_name": "Central Board of Secondary Education v. Aditya Bandopadhyay",
+      "citation": "(2011) 8 SCC 497",
+      "court": "Supreme Court of India",
+      "date": "2011-08-09",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Held that evaluated examination answer-books are 'information' under s.2(f) of the RTI Act, 2005, so an examinee is entitled to inspect or obtain certified copies of their own answer sheets. Re-evaluation itself is a separate question, not compellable under the RTI Act unless the examining body's own rules separately allow it. Directly relevant to RTI requests about exam answer sheets."
+    },
+    {
+      "source_file": "constitutional_public_authority/case_law/case8_girish_ramchandra_deshpande_v_central_information_commissioner_2012.pdf",
+      "case_name": "Girish Ramchandra Deshpande v. Central Information Commissioner",
+      "citation": "(2013) 1 SCC 212",
+      "court": "Supreme Court of India",
+      "date": "2012-10-03",
+      "domain": "constitutional_public_authority",
+      "document_type": "case_law",
+      "good_law": true,
+      "retrieval_priority": "high",
+      "notes": "Held that an employee's personal service information — memos, show-cause notices, censure/punishment orders, assets and liabilities — is exempt from RTI disclosure under s.8(1)(j) as an unwarranted invasion of privacy, unless the requester shows a larger public interest justifying disclosure. Key limiting precedent whenever an RTI request seeks another person's personal/service records."
     }
   ]
 }
