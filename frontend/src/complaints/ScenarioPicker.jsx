@@ -8,7 +8,7 @@ export const SCENARIOS = [
     title: 'Tenancy eviction petition',
     act: 'Delhi Rent Control Act, 1958',
     description:
-      'Draft an eviction petition against a tenant — non-payment of rent, unauthorized subletting, damage to the premises, or bona fide personal requirement.'
+      'Draft an eviction petition against a tenant on one or more grounds: non-payment of rent, unauthorized subletting, damage to the premises, and/or bona fide personal requirement.'
   },
   {
     id: 'consumer_defective_goods',
@@ -16,7 +16,7 @@ export const SCENARIOS = [
     title: 'Defective goods or deficient service',
     act: 'Consumer Protection Act, 2019',
     description:
-      'Draft a complaint for a refund, replacement, or compensation over defective goods, a deficient service, short delivery, spurious goods, or an unfair trade practice.'
+      'Draft a complaint for a refund, replacement, and/or compensation over defective goods, a deficient service, short delivery, spurious goods, or an unfair trade practice.'
   },
   {
     id: 'consumer_misleading_ads',

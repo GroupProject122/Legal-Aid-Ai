@@ -1910,9 +1910,7 @@ body.has-custom-cursor textarea {
 .source-card:hover,
 .source-card:focus-visible,
 .summary-button:hover,
-.summary-button:focus-visible,
-.mini-chip:hover,
-.mini-chip:focus-visible {
+.summary-button:focus-visible {
   outline: 0;
   border-color: rgba(139, 82, 31, 0.68);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.62), 0 8px 16px rgba(73, 45, 20, 0.09);
@@ -1931,7 +1929,11 @@ body.has-custom-cursor textarea {
 
 .chat-welcome {
   max-width: 690px;
-  margin: 24px auto 0;
+  /* .chat-welcome only ever renders as the sole child of .chat-scroll (a flex column) --
+     auto top/bottom margins center it in that column's available height instead of it
+     sitting pinned to the top with a large empty gap below. Left/right auto still centers
+     it horizontally, as before. */
+  margin: auto auto;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 14px 18px;
@@ -2437,7 +2439,10 @@ body.has-custom-cursor textarea {
   border: 1px solid rgba(151, 91, 38, 0.3);
   border-radius: 999px;
   font-size: 0.78rem;
-  transition: background 170ms ease, border-color 170ms ease, box-shadow 170ms ease, transform 170ms ease;
+  /* background/border-color/box-shadow still transition smoothly when a chip's `selected`
+     class toggles (e.g. a new classification comes back) -- transform was only ever for the
+     now-removed hover lift and is dropped along with it. */
+  transition: background 170ms ease, border-color 170ms ease, box-shadow 170ms ease;
 }
 
 .mini-chip.selected {
@@ -2758,6 +2763,27 @@ body.has-custom-cursor textarea {
   border: 1px solid rgba(179, 125, 57, 0.22);
   border-radius: 10px;
   background: rgba(255, 252, 245, 0.58);
+}
+
+/* Card-list layout (2026-09-16 redesign) deliberately has no wrapping border/background -- each
+   card already carries its own border/shadow (see .document-list-card), and adding a second box
+   around the whole list double-frames it, unlike My Cases' unwrapped .cases-list. */
+.persisted-documents-list-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* The shared rules above (.cases-total-card etc.) use `margin: 0 auto ...` to center themselves
+   in My Cases' plain block-flow parent (.cases-content-frame). .documents-panel/
+   .persisted-documents-panel is `display: grid`, though -- and a grid item with auto
+   left/right margins shrinks to fit its own content instead of stretching to the grid column's
+   full width (found while screenshotting this redesign: the search box rendered ~220px wide
+   instead of spanning the panel). `width: 100%` restores the intended full-width layout without
+   touching the shared cases- rules those other elements still rely on. */
+.persisted-documents-total-card,
+.persisted-documents-search-toolbar,
+.persisted-documents-bulk-actions {
+  width: 100%;
 }
 
 .persisted-document-table {
@@ -3437,7 +3463,10 @@ body.has-custom-cursor textarea {
 
 .cases-total-card,
 .case-list-card,
-.cases-empty-state {
+.cases-empty-state,
+.persisted-documents-total-card,
+.document-list-card,
+.persisted-documents-empty-state {
   position: relative;
   background: linear-gradient(180deg, #fffdf9 0%, #fdf6ec 100%);
   border: 1px solid rgba(150, 101, 56, 0.16);
@@ -3445,7 +3474,8 @@ body.has-custom-cursor textarea {
   box-shadow: 0 10px 30px rgba(92, 56, 26, 0.07);
 }
 
-.cases-total-card {
+.cases-total-card,
+.persisted-documents-total-card {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -3457,7 +3487,8 @@ body.has-custom-cursor textarea {
 }
 
 .cases-total-icon,
-.case-list-icon {
+.case-list-icon,
+.persisted-documents-total-icon {
   display: grid;
   place-items: center;
   flex: 0 0 auto;
@@ -3466,7 +3497,8 @@ body.has-custom-cursor textarea {
   border: 1px solid rgba(192, 120, 80, 0.26);
 }
 
-.cases-total-icon {
+.cases-total-icon,
+.persisted-documents-total-icon {
   width: 62px;
   height: 62px;
   border-radius: 16px;
@@ -3474,13 +3506,17 @@ body.has-custom-cursor textarea {
 
 .cases-total-card p,
 .cases-total-card span,
-.case-list-card p {
+.case-list-card p,
+.persisted-documents-total-card p,
+.persisted-documents-total-card span,
+.document-list-card p {
   margin: 0;
   color: rgba(74, 50, 32, 0.66);
   font-size: 0.9rem;
 }
 
-.cases-total-card p:first-of-type {
+.cases-total-card p:first-of-type,
+.persisted-documents-total-card p:first-of-type {
   font-family: var(--sans);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -3489,7 +3525,8 @@ body.has-custom-cursor textarea {
   color: rgba(74, 50, 32, 0.58);
 }
 
-.cases-total-card strong {
+.cases-total-card strong,
+.persisted-documents-total-card strong {
   display: block;
   margin: 2px 0 4px;
   color: var(--mocha);
@@ -3498,13 +3535,15 @@ body.has-custom-cursor textarea {
   line-height: 1;
 }
 
-.cases-list {
+.cases-list,
+.persisted-documents-list {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.cases-toolbar {
+.cases-toolbar,
+.persisted-documents-search-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3512,7 +3551,8 @@ body.has-custom-cursor textarea {
   margin: 0 auto 16px;
 }
 
-.cases-search-field {
+.cases-search-field,
+.persisted-documents-search-field {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -3526,12 +3566,14 @@ body.has-custom-cursor textarea {
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.cases-search-field:focus-within {
+.cases-search-field:focus-within,
+.persisted-documents-search-field:focus-within {
   border-color: rgba(168, 104, 43, 0.55);
   box-shadow: 0 0 0 3px rgba(168, 104, 43, 0.12);
 }
 
-.cases-search-field input {
+.cases-search-field input,
+.persisted-documents-search-field input {
   flex: 1;
   min-height: 40px;
   padding: 0;
@@ -3542,11 +3584,13 @@ body.has-custom-cursor textarea {
   font-size: 0.92rem;
 }
 
-.cases-search-field input:focus {
+.cases-search-field input:focus,
+.persisted-documents-search-field input:focus {
   outline: none;
 }
 
-.cases-search-field input::-webkit-search-cancel-button {
+.cases-search-field input::-webkit-search-cancel-button,
+.persisted-documents-search-field input::-webkit-search-cancel-button {
   cursor: pointer;
 }
 
@@ -3568,7 +3612,8 @@ body.has-custom-cursor textarea {
   box-shadow: 0 0 0 3px rgba(168, 104, 43, 0.12);
 }
 
-.cases-pagination {
+.cases-pagination,
+.persisted-documents-pagination {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3579,13 +3624,15 @@ body.has-custom-cursor textarea {
   color: rgba(74, 50, 32, 0.66);
 }
 
-.cases-bulk-actions {
+.cases-bulk-actions,
+.persisted-documents-bulk-actions {
   display: flex;
   justify-content: flex-end;
   margin: 0 auto 16px;
 }
 
-.case-delete-all-button {
+.case-delete-all-button,
+.document-delete-all-button {
   position: relative;
   z-index: 1;
   display: inline-flex;
@@ -3606,20 +3653,24 @@ body.has-custom-cursor textarea {
   transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.case-delete-all-button:disabled {
+.case-delete-all-button:disabled,
+.document-delete-all-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
 .case-delete-all-button:not(:disabled):hover,
-.case-delete-all-button:not(:disabled):focus-visible {
+.case-delete-all-button:not(:disabled):focus-visible,
+.document-delete-all-button:not(:disabled):hover,
+.document-delete-all-button:not(:disabled):focus-visible {
   outline: 0;
   background: #fbeae2;
   border-color: rgba(178, 90, 68, 0.5);
   box-shadow: 0 8px 16px rgba(120, 60, 40, 0.12);
 }
 
-.case-list-card {
+.case-list-card,
+.document-list-card {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -3628,13 +3679,15 @@ body.has-custom-cursor textarea {
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
-.case-list-card:hover {
+.case-list-card:hover,
+.document-list-card:hover {
   transform: translateY(-2px);
   border-color: rgba(192, 120, 80, 0.4);
   box-shadow: 0 16px 34px rgba(92, 56, 26, 0.12);
 }
 
-.case-card-actions {
+.case-card-actions,
+.document-list-actions {
   position: relative;
   z-index: 1;
   display: inline-flex;
@@ -3701,7 +3754,8 @@ body.has-custom-cursor textarea {
   border-radius: 14px;
 }
 
-.case-list-main h3 {
+.case-list-main h3,
+.document-list-main h3 {
   margin: 0 0 6px;
   color: var(--mocha);
   font-family: var(--serif);
@@ -3711,11 +3765,24 @@ body.has-custom-cursor textarea {
   letter-spacing: 0.005em;
 }
 
-.case-list-main p {
+.case-list-main p,
+.document-list-main p {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
   font-variant-numeric: tabular-nums;
+}
+
+.document-list-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(74, 50, 32, 0.5);
+}
+
+.document-list-size::before {
+  content: '\00B7';
 }
 
 .case-open-button {
@@ -3746,7 +3813,8 @@ body.has-custom-cursor textarea {
 }
 
 .cases-empty,
-.cases-empty-state {
+.cases-empty-state,
+.persisted-documents-empty-state {
   text-align: center;
 }
 
@@ -3755,7 +3823,8 @@ body.has-custom-cursor textarea {
   color: rgba(74, 50, 32, 0.7);
 }
 
-.cases-empty-state {
+.cases-empty-state,
+.persisted-documents-empty-state {
   display: grid;
   justify-items: center;
   gap: 12px;
@@ -3763,7 +3832,8 @@ body.has-custom-cursor textarea {
   color: #9a5a38;
 }
 
-.cases-empty-state h3 {
+.cases-empty-state h3,
+.persisted-documents-empty-state h3 {
   margin: 0;
   color: var(--mocha);
   font-family: var(--serif);
@@ -3771,7 +3841,8 @@ body.has-custom-cursor textarea {
   font-weight: 600;
 }
 
-.cases-empty-state p {
+.cases-empty-state p,
+.persisted-documents-empty-state p {
   margin: 0 0 10px;
   color: rgba(74, 50, 32, 0.7);
 }
@@ -3968,6 +4039,15 @@ body.has-custom-cursor textarea {
 
 .file-type-icon.jpg {
   background: linear-gradient(180deg, #6095bf, #3f6f9c);
+}
+
+.file-type-icon.txt,
+.file-type-icon.file {
+  /* Pre-existing gap, found while redesigning the document list (2026-09-16): only pdf/jpg/docx
+     had a background color here, so a .txt (or any other unrecognized type) icon rendered as a
+     near-invisible pale-on-pale box -- barely noticeable in the old dense table, much more
+     visible now that this icon is a focal element of each card. */
+  background: linear-gradient(180deg, #8d8578, #675f52);
 }
 
 .file-type-icon.docx {
@@ -4217,6 +4297,53 @@ body.has-custom-cursor textarea {
   color: rgba(63, 40, 22, 0.7);
   font-size: 0.82rem;
   line-height: 1.42;
+}
+
+.selected-file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 248, 236, 0.62);
+  border: 1px solid rgba(179, 125, 57, 0.28);
+  border-radius: 10px;
+}
+
+.selected-file-row > svg {
+  flex: 0 0 auto;
+  color: var(--walnut);
+}
+
+.selected-file-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.selected-file-meta strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  color: var(--mocha);
+}
+
+.selected-file-meta small {
+  color: rgba(63, 40, 22, 0.62);
+  font-size: 0.76rem;
+}
+
+.selected-file-row .extract-button {
+  width: auto;
+  flex: 0 0 auto;
+  min-height: 38px;
+  margin-top: 0;
+  padding: 0 16px;
+  font-size: 0.88rem;
 }
 
 .extract-button {
@@ -5309,6 +5436,10 @@ body.has-custom-cursor textarea {
 .scheme-clear:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.scheme-clear-confirming {
+  color: #a24a3a;
 }
 
 .scheme-count {

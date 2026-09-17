@@ -103,8 +103,14 @@ function SelectField({ id, label, value, hint, options, onChange }) {
   );
 }
 
+const CLEAR_CONFIRM_WINDOW_MS = 3000;
+
 export function IntakeForm({ initialProfile, submitting, errorMessage, onSubmit }) {
   const [values, setValues] = React.useState(() => toValues(initialProfile));
+  const [confirmingClear, setConfirmingClear] = React.useState(false);
+  const clearConfirmTimerRef = React.useRef(null);
+
+  React.useEffect(() => () => window.clearTimeout(clearConfirmTimerRef.current), []);
 
   const set = (key) => (value) =>
     setValues((current) => ({ ...current, [key]: value }));
@@ -115,6 +121,27 @@ export function IntakeForm({ initialProfile, submitting, errorMessage, onSubmit 
     event.preventDefault();
     if (submitting) return;
     onSubmit(toProfile(values));
+  };
+
+  /** Nothing to lose if the form is already empty -- clear immediately, no confirm step.
+   * Otherwise the button becomes a "click again to confirm" arm-state for a few seconds
+   * (lighter than the modal-based delete confirmations elsewhere in this app, since this is a
+   * purely local, non-destructive-to-backend action) rather than clearing on the first click. */
+  const handleClearClick = () => {
+    if (filledCount === 0) {
+      setValues(EMPTY);
+      return;
+    }
+    if (confirmingClear) {
+      window.clearTimeout(clearConfirmTimerRef.current);
+      setConfirmingClear(false);
+      setValues(EMPTY);
+      return;
+    }
+    setConfirmingClear(true);
+    clearConfirmTimerRef.current = window.setTimeout(() => {
+      setConfirmingClear(false);
+    }, CLEAR_CONFIRM_WINDOW_MS);
   };
 
   return (
@@ -140,7 +167,12 @@ export function IntakeForm({ initialProfile, submitting, errorMessage, onSubmit 
             type="number"
             inputMode="numeric"
             min={0}
-            max={120}
+            // Matches the backend's actual validated ceiling (schemes-legal-support/backend/
+            // src/routes/match.ts: age z.coerce.number().finite().int().min(0).max(150)) -- 150
+            // is a deliberately generous data-entry safety bound (reject "9999", not police
+            // realistic ages), not a value meant to be realistic on its own; the frontend
+            // shouldn't silently reject input the backend already accepts.
+            max={150}
             placeholder="e.g. 34"
             value={values.age}
             onChange={(event) => set('age')(event.target.value)}
@@ -271,11 +303,11 @@ export function IntakeForm({ initialProfile, submitting, errorMessage, onSubmit 
         </button>
         <button
           type="button"
-          className="scheme-clear"
-          onClick={() => setValues(EMPTY)}
+          className={`scheme-clear ${confirmingClear ? 'scheme-clear-confirming' : ''}`}
+          onClick={handleClearClick}
           disabled={submitting}
         >
-          Clear all
+          {confirmingClear ? 'Click to confirm' : 'Clear all'}
         </button>
         <span className="scheme-count">
           {filledCount === 0

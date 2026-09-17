@@ -69,12 +69,17 @@ const navItems = [
   { label: 'About Us', icon: CircleHelp, page: 'about', href: '#/about' }
 ];
 
+// `rightsCategory` is a real Know Your Rights category id (backend/legal_education_config.py's
+// CATEGORIES) -- these pills deep-link straight into that category rather than just labeling a
+// topic. "Other Legal Help" maps to "public_services" ("Public Services & Remedies": RTI, free
+// legal aid, human rights/public-authority concerns) -- the one real KYR category that isn't
+// consumer/tenancy/cyber/fundamental rights, and the closest fit for a catch-all "other" pill.
 const categories = [
-  { label: 'Consumer Issues', icon: ShoppingCart },
-  { label: 'Tenant Disputes', icon: Home },
-  { label: 'Cyber Issues', icon: LockKeyhole },
-  { label: 'Fundamental Rights', icon: ShieldCheck },
-  { label: 'Other Legal Help', icon: MoreHorizontal }
+  { label: 'Consumer Issues', icon: ShoppingCart, rightsCategory: 'consumer' },
+  { label: 'Tenant Disputes', icon: Home, rightsCategory: 'tenancy' },
+  { label: 'Cyber Issues', icon: LockKeyhole, rightsCategory: 'cyber' },
+  { label: 'Fundamental Rights', icon: ShieldCheck, rightsCategory: 'fundamental_rights' },
+  { label: 'Other Legal Help', icon: MoreHorizontal, rightsCategory: 'public_services' }
 ];
 
 const features = [
@@ -104,7 +109,7 @@ const features = [
     description: 'Find schemes and benefits you may be eligible for.',
     button: 'View Schemes',
     icon: Gift,
-    href: '#/'
+    href: '#/schemes'
   }
 ];
 
@@ -480,6 +485,18 @@ function QueryBox() {
     window.location.hash = query ? `#/ask?q=${encodeURIComponent(query)}` : '#/ask';
   };
 
+  // There's no conversation yet to attach a document to on the homepage -- the only real
+  // target for "attach a document" is Ask Question's existing AttachmentModal. Send the user
+  // there and open it immediately (`attach=1`, read by AskQuestionPage on mount), carrying over
+  // anything they'd already typed the same way the submit button does.
+  const handleAttachClick = (event) => {
+    const value = new FormData(event.currentTarget.form).get('legal-query');
+    const query = value.trim();
+    const params = new URLSearchParams({ attach: '1' });
+    if (query) params.set('q', query);
+    window.location.hash = `#/ask?${params.toString()}`;
+  };
+
   return (
     <form className="query-box" onSubmit={handleSubmit}>
       <div className="query-icon">
@@ -491,7 +508,7 @@ function QueryBox() {
         placeholder="Describe your legal issue in simple words..."
         aria-label="Describe your legal issue"
       />
-      <button className="attach-button" type="button" aria-label="Attach document">
+      <button className="attach-button" type="button" aria-label="Attach document" onClick={handleAttachClick}>
         <Paperclip size={20} />
       </button>
       <button className="ask-button query-submit" type="submit">
@@ -507,8 +524,13 @@ function CategoryPills() {
     <section className="home-section" aria-label="Legal categories">
       <h3 className="home-section-title">Browse by topic</h3>
       <div className="category-pills">
-        {categories.map(({ label, icon: Icon }) => (
-          <button type="button" className="category-pill" key={label}>
+        {categories.map(({ label, icon: Icon, rightsCategory }) => (
+          <button
+            type="button"
+            className="category-pill"
+            key={label}
+            onClick={() => { window.location.hash = `#/rights/${rightsCategory}`; }}
+          >
             <Icon size={17} strokeWidth={1.65} />
             <span>{label}</span>
           </button>
@@ -1031,7 +1053,7 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
   );
 }
 
-function QuerySummaryPanel({ category, setCategory, onAttach, attachedFactContext, onDetachFactContext }) {
+function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFactContext }) {
   const selectedCategories = category.split(',').map((item) => item.trim()).filter(Boolean);
   return (
     <aside className="query-summary-panel" aria-label="Your query summary">
@@ -1053,16 +1075,17 @@ function QuerySummaryPanel({ category, setCategory, onAttach, attachedFactContex
           </div>
         </div>
 
-        <div className="category-chip-list" aria-label="Select legal category">
+        {/* Read-only: reflects Legal Aid AI's own classification of the question (possibly
+            more than one domain at once), it is not a filter the user sets -- there is
+            nothing here for a click to send to the backend. */}
+        <div className="category-chip-list" aria-label="Legal category, as classified by Legal Aid AI">
           {askCategories.map((item) => (
-            <button
-              type="button"
+            <span
               className={`mini-chip ${selectedCategories.includes(item) ? 'selected' : ''}`}
-              onClick={() => setCategory(item)}
               key={item}
             >
               {item}
-            </button>
+            </span>
           ))}
         </div>
 
@@ -1077,7 +1100,7 @@ function QuerySummaryPanel({ category, setCategory, onAttach, attachedFactContex
         <button type="button" className="summary-item summary-button" onClick={onAttach}>
           <Paperclip size={22} strokeWidth={1.6} />
           <div>
-            <h4>Documents attached</h4>
+            <h4>Document facts</h4>
             <p>{attachedFactContext ? 'Confirmed facts attached' : '0'}</p>
           </div>
         </button>
@@ -1161,12 +1184,12 @@ function SourceExcerptModal({ source, onClose }) {
   );
 }
 
-function AskQuestionPage({ initialQuery = '', initialCaseId = '' }) {
+function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach = false }) {
   const [input, setInput] = React.useState(initialQuery);
   const [messages, setMessages] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [category, setCategory] = React.useState('');
-  const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(false);
+  const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(initialAttach);
   const [selectedSource, setSelectedSource] = React.useState(null);
   const [clarificationStateId, setClarificationStateId] = React.useState(null);
   const [conversationStateId, setConversationStateId] = React.useState(null);
@@ -1357,7 +1380,6 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '' }) {
           />
           <QuerySummaryPanel
             category={category}
-            setCategory={setCategory}
             onAttach={() => setIsAttachmentOpen(true)}
             attachedFactContext={attachedFactContext}
             onDetachFactContext={handleDetachFactContext}
@@ -1779,11 +1801,18 @@ function UploadDocumentCard({ onUploaded, externalInputRef }) {
         onChange={handleFileChange}
         aria-label="Browse files"
       />
-      <button type="button" className="browse-button" onClick={() => fileInputRef.current?.click()}>Browse Files</button>
-      {selectedFile && <p className="selected-file">Selected: {selectedFile.name}</p>}
-      <button type="button" className="browse-button extract-button" disabled={!selectedFile || status === 'uploading'} onClick={handleUpload}>
-        {status === 'uploading' ? 'Extracting...' : 'Extract Text'}
-      </button>
+      {selectedFile && (
+        <div className="selected-file-row">
+          <FileText size={18} strokeWidth={1.6} aria-hidden="true" />
+          <span className="selected-file-meta">
+            <strong>{selectedFile.name}</strong>
+            <small>{formatBytes(selectedFile.size)}</small>
+          </span>
+          <button type="button" className="browse-button extract-button" disabled={status === 'uploading'} onClick={handleUpload}>
+            {status === 'uploading' ? 'Extracting...' : 'Extract Text'}
+          </button>
+        </div>
+      )}
       {message && <p className={`upload-note extraction-status ${status}`}>{message}</p>}
       {extraction && (
         <div className="extraction-preview">
@@ -2091,61 +2120,103 @@ function DocumentDeleteModal({ document, onClose, onDelete }) {
   );
 }
 
-function PersistedDocumentRow({ document, onView, onRename, onDelete }) {
+function DocumentListCard({ document, onView, onRename, onDelete }) {
   return (
-    <tr>
-      <td>
-        <div className="document-name-cell">
-          <FileTypeIcon type={document.file_type} />
-          <div>
-            <strong>{document.filename}</strong>
-          </div>
-        </div>
-      </td>
-      <td>{formatCaseDate(document.updated_at || document.created_at)}</td>
-      <td>
-        <div className="persisted-document-actions">
-          <button type="button" className="document-outline-button" onClick={() => onView(document.id)}>
-            <Eye size={16} strokeWidth={1.7} />
-            View
-          </button>
-          <button type="button" className="document-outline-button" onClick={() => onRename(document)}>
-            <Pencil size={16} strokeWidth={1.7} />
-            Rename
-          </button>
-          <button type="button" className="document-delete-button" onClick={() => onDelete(document)}>
-            <Trash2 size={16} strokeWidth={1.7} />
-            Delete
-          </button>
-        </div>
-      </td>
-    </tr>
+    <article className="document-list-card">
+      <FileTypeIcon type={document.file_type} />
+      <div className="document-list-main">
+        <h3>{document.filename}</h3>
+        <p>
+          <Clock size={14} strokeWidth={1.7} />
+          {formatCaseDate(document.updated_at || document.created_at)}
+          <span className="document-list-size">{formatBytes(document.size_bytes)}</span>
+        </p>
+      </div>
+      <div className="document-list-actions">
+        <button
+          type="button"
+          className="case-rename-icon-button"
+          aria-label={`Rename ${document.filename}`}
+          onClick={() => onRename(document)}
+        >
+          <Pencil size={17} strokeWidth={1.8} />
+        </button>
+        <button
+          type="button"
+          className="case-delete-icon-button"
+          aria-label={`Delete ${document.filename}`}
+          onClick={() => onDelete(document)}
+        >
+          <Trash2 size={17} strokeWidth={1.8} />
+        </button>
+        <button type="button" className="case-open-button" onClick={() => onView(document.id)}>
+          <Eye size={16} strokeWidth={1.8} />
+          View
+        </button>
+      </div>
+    </article>
   );
 }
 
+const DOCUMENTS_PAGE_SIZE = 20;
+
 function DocumentsPage() {
   const [storedDocuments, setStoredDocuments] = React.useState([]);
+  const [total, setTotal] = React.useState(0);
+  const [hasMore, setHasMore] = React.useState(false);
+  // Same reasoning as My Cases' grandTotal: "Delete All Documents" always deletes everything
+  // regardless of the current search, so its button/confirmation must be driven by the true
+  // unfiltered count, not a search-narrowed one.
+  const [grandTotal, setGrandTotal] = React.useState(null);
+  const [page, setPage] = React.useState(0);
+  const [searchInput, setSearchInput] = React.useState('');
+  const [search, setSearch] = React.useState('');
   const [status, setStatus] = React.useState('loading');
   const [previewDocument, setPreviewDocument] = React.useState(null);
   const [renameDocument, setRenameDocument] = React.useState(null);
   const [deleteDocument, setDeleteDocument] = React.useState(null);
+  const [deleteAllRequested, setDeleteAllRequested] = React.useState(false);
+  const [deleteStatus, setDeleteStatus] = React.useState('idle');
+  const [notice, setNotice] = React.useState('');
   const uploadInputRef = React.useRef(null);
+
+  const isFiltered = Boolean(search);
+
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setSearch(searchInput.trim());
+      setPage(0);
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
 
   const loadDocuments = React.useCallback(async () => {
     setStatus('loading');
     try {
-      const response = await fetch('/api/documents');
+      const params = new URLSearchParams({ limit: String(DOCUMENTS_PAGE_SIZE), offset: String(page * DOCUMENTS_PAGE_SIZE) });
+      if (search) params.set('search', search);
+      const requests = [fetch(`/api/documents?${params.toString()}`)];
+      if (isFiltered) requests.push(fetch('/api/documents?limit=1'));
+      const [response, grandTotalResponse] = await Promise.all(requests);
       const payload = await safeJsonResponse(response);
-      if (!response.ok || !Array.isArray(payload)) {
+      if (!response.ok || !payload || !Array.isArray(payload.items)) {
         throw new Error('Documents could not be loaded.');
       }
-      setStoredDocuments(payload);
+      setStoredDocuments(payload.items);
+      setTotal(payload.total);
+      setHasMore(Boolean(payload.has_more));
+      if (grandTotalResponse) {
+        const grandPayload = await safeJsonResponse(grandTotalResponse);
+        setGrandTotal(grandTotalResponse.ok && grandPayload ? grandPayload.total : null);
+      } else {
+        setGrandTotal(payload.total);
+      }
       setStatus('ready');
     } catch (error) {
       console.error('Could not load documents', error);
       setStatus('error');
     }
-  }, []);
+  }, [page, search, isFiltered]);
 
   React.useEffect(() => {
     loadDocuments();
@@ -2185,8 +2256,37 @@ function DocumentsPage() {
       return;
     }
     setDeleteDocument(null);
-    await loadDocuments();
+    if (storedDocuments.length === 1 && page > 0) {
+      setPage((current) => current - 1);
+    } else {
+      await loadDocuments();
+    }
   };
+
+  const confirmDeleteAllDocuments = async () => {
+    setDeleteStatus('deleting_all');
+    try {
+      const response = await fetch('/api/documents', { method: 'DELETE' });
+      const payload = await safeJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(payload?.detail || 'Could not delete saved documents.');
+      }
+      setDeleteAllRequested(false);
+      setNotice(`${payload?.deleted_count || 0} document${payload?.deleted_count === 1 ? '' : 's'} deleted.`);
+      window.setTimeout(() => setNotice(''), 2200);
+      setPage(0);
+      setSearchInput('');
+      setSearch('');
+      await loadDocuments();
+    } catch (error) {
+      console.error('Could not delete all documents', error);
+      setNotice(error.message || 'Could not delete saved documents.');
+    } finally {
+      setDeleteStatus('idle');
+    }
+  };
+
+  const totalPages = Math.max(1, Math.ceil(total / DOCUMENTS_PAGE_SIZE));
 
   return (
     <>
@@ -2197,47 +2297,123 @@ function DocumentsPage() {
         <section className="documents-panel persisted-documents-panel" aria-label="Uploaded documents">
           <PanelCorners />
           <UploadDocumentCard onUploaded={loadDocuments} externalInputRef={uploadInputRef} />
-          <div className="persisted-document-table-wrap">
+
+          <section className="persisted-documents-total-card" aria-label="Total uploaded documents">
+            <div className="persisted-documents-total-icon">
+              <FileText size={30} strokeWidth={1.45} />
+            </div>
+            <div>
+              <p>{isFiltered ? 'Matching Documents' : 'Total Documents'}</p>
+              <strong>{total}</strong>
+              <span>{isFiltered ? `of ${grandTotal ?? '…'} total` : 'Everything you have uploaded, in one place'}</span>
+            </div>
+          </section>
+
+          <div className="persisted-documents-search-toolbar">
+            <label className="persisted-documents-search-field">
+              <Search size={17} strokeWidth={1.8} aria-hidden="true" />
+              <input
+                type="search"
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                placeholder="Search document filenames..."
+                aria-label="Search uploaded documents"
+              />
+            </label>
+          </div>
+
+          <div className="persisted-documents-bulk-actions">
+            <button
+              type="button"
+              className="document-delete-all-button"
+              disabled={!grandTotal}
+              onClick={() => setDeleteAllRequested(true)}
+            >
+              <Trash2 size={16} strokeWidth={1.8} />
+              Delete All Documents
+            </button>
+          </div>
+
+          <div className="persisted-documents-list-wrap">
+            {notice && <p className="case-toast" role="status">{notice}</p>}
             {status === 'loading' && <p className="empty-documents">Loading documents...</p>}
             {status === 'error' && <p className="empty-documents">Documents could not be loaded right now.</p>}
-            {status === 'ready' && storedDocuments.length === 0 && (
-              <div className="empty-documents persisted-empty-documents">
+            {status === 'ready' && storedDocuments.length === 0 && isFiltered && (
+              <div className="persisted-documents-empty-state">
+                <Search size={34} strokeWidth={1.45} />
+                <h3>No documents match this search.</h3>
+                <p>Try a different term, or clear the search.</p>
+                <button
+                  type="button"
+                  className="ask-button"
+                  onClick={() => { setSearchInput(''); setSearch(''); setPage(0); }}
+                >
+                  Clear search
+                </button>
+              </div>
+            )}
+            {status === 'ready' && storedDocuments.length === 0 && !isFiltered && (
+              <div className="persisted-documents-empty-state">
                 <FileText size={34} strokeWidth={1.45} />
-                <p>No documents uploaded yet.</p>
-                <span>Upload a PDF, DOCX, or TXT file to get started.</span>
+                <h3>No documents uploaded yet.</h3>
+                <p>Upload a PDF, DOCX, or TXT file to get started.</p>
                 <button type="button" className="browse-button" onClick={() => uploadInputRef.current?.click()}>
                   Upload Document
                 </button>
               </div>
             )}
             {status === 'ready' && storedDocuments.length > 0 && (
-              <table className="document-table persisted-document-table">
-                <thead>
-                  <tr>
-                    <th>Document Name</th>
-                    <th>Time</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {storedDocuments.map((document) => (
-                    <PersistedDocumentRow
-                      document={document}
-                      key={document.id}
-                      onView={handleView}
-                      onRename={setRenameDocument}
-                      onDelete={setDeleteDocument}
-                    />
-                  ))}
-                </tbody>
-              </table>
+              <div className="persisted-documents-list">
+                {storedDocuments.map((document) => (
+                  <DocumentListCard
+                    document={document}
+                    key={document.id}
+                    onView={handleView}
+                    onRename={setRenameDocument}
+                    onDelete={setDeleteDocument}
+                  />
+                ))}
+              </div>
             )}
           </div>
+
+          {status === 'ready' && total > DOCUMENTS_PAGE_SIZE && (
+            <nav className="persisted-documents-pagination" aria-label="Uploaded documents pages">
+              <button
+                type="button"
+                className="document-outline-button"
+                onClick={() => setPage((current) => Math.max(0, current - 1))}
+                disabled={page === 0}
+              >
+                Previous
+              </button>
+              <span>Page {page + 1} of {totalPages}</span>
+              <button
+                type="button"
+                className="document-outline-button"
+                onClick={() => setPage((current) => current + 1)}
+                disabled={!hasMore}
+              >
+                Next
+              </button>
+            </nav>
+          )}
         </section>
       </div>
       {previewDocument && <DocumentPreviewModal document={previewDocument} onClose={() => setPreviewDocument(null)} />}
       {renameDocument && <DocumentRenameModal document={renameDocument} onClose={() => setRenameDocument(null)} onSave={handleRename} />}
       {deleteDocument && <DocumentDeleteModal document={deleteDocument} onClose={() => setDeleteDocument(null)} onDelete={handleDelete} />}
+      {deleteAllRequested && (
+        <DeleteAllConfirmModal
+          noun="document"
+          description="including any extracted text and confirmed facts"
+          count={grandTotal ?? total}
+          filtered={isFiltered}
+          status={deleteStatus}
+          onCancel={() => setDeleteAllRequested(false)}
+          onDelete={confirmDeleteAllDocuments}
+        />
+      )}
     </>
   );
 }
@@ -2256,12 +2432,17 @@ function SummarizeDocumentPage() {
   const loadDocuments = React.useCallback(async () => {
     setDocumentStatus('loading');
     try {
-      const response = await fetch('/api/documents');
+      // /api/documents is now paginated (same convention as /api/cases) -- this dropdown wants
+      // to offer every document, so it asks for the largest page the API allows. Known
+      // limitation, not addressed here: past DOCUMENTS_MAX_PAGE_SIZE documents this dropdown
+      // would stop showing everything; a searchable/paginated picker would be a real feature,
+      // out of scope for this pass.
+      const response = await fetch('/api/documents?limit=100');
       const payload = await safeJsonResponse(response);
-      if (!response.ok || !Array.isArray(payload)) {
+      if (!response.ok || !payload || !Array.isArray(payload.items)) {
         throw new Error('Documents could not be loaded.');
       }
-      setDocuments(payload.filter((document) => ['pdf', 'docx', 'txt'].includes(document.file_type)));
+      setDocuments(payload.items.filter((document) => ['pdf', 'docx', 'txt'].includes(document.file_type)));
       setDocumentStatus('ready');
     } catch (error) {
       console.error('Could not load documents for summary', error);
@@ -3498,7 +3679,9 @@ function MyCasesPage() {
         />
       )}
       {deleteAllRequested && (
-        <DeleteAllCasesModal
+        <DeleteAllConfirmModal
+          noun="case"
+          description="and their conversation history"
           count={grandTotal ?? total}
           filtered={isFiltered}
           status={deleteStatus}
@@ -3594,33 +3777,43 @@ function CaseDeleteModal({ savedCase, status, onCancel, onDelete }) {
   );
 }
 
-function DeleteAllCasesModal({ count, filtered, status, onCancel, onDelete }) {
+/** Generic "delete everything" confirmation, shared by My Cases and Documents rather than
+ * duplicating the same modal per page. `noun` is singular ("case" / "document"); plural is
+ * formed by appending "s" -- true for both current callers. If a future caller needs irregular
+ * pluralization, add an explicit `plural` prop rather than generalizing further speculatively.
+ * `description` is the trailing clause explaining what else gets removed (e.g. "and their
+ * conversation history" / "including any extracted text and confirmed facts"). */
+function DeleteAllConfirmModal({ noun, description, count, filtered, status, onCancel, onDelete }) {
+  const plural = `${noun}s`;
+  const label = count === 1 ? noun : plural;
+  const busy = status === 'deleting_all';
+  const titleId = `delete-all-${plural}-title`;
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onCancel}>
       <section
         className="attachment-modal document-action-modal"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="delete-all-cases-title"
+        aria-labelledby={titleId}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <button type="button" className="modal-close" aria-label="Close delete all cases dialog" onClick={onCancel}>
+        <button type="button" className="modal-close" aria-label={`Close delete all ${plural} dialog`} onClick={onCancel}>
           <X size={20} />
         </button>
         <div className="modal-emblem delete-emblem">
           <Trash2 size={30} strokeWidth={1.55} />
         </div>
-        <h3 id="delete-all-cases-title">Delete all cases?</h3>
-        <p>This will permanently delete {count} saved case{count === 1 ? '' : 's'} and their conversation history.</p>
+        <h3 id={titleId}>Delete all {plural}?</h3>
+        <p>This will permanently delete {count} {label}{description ? ` ${description}` : ''}.</p>
         {filtered && (
           <p className="document-error">
-            This deletes every saved case, not just the ones matching your current search/filter.
+            This deletes every saved {noun}, not just the ones matching your current search/filter.
           </p>
         )}
         <div className="document-dialog-actions">
-          <button type="button" className="document-outline-button" onClick={onCancel} disabled={status === 'deleting_all'}>Cancel</button>
-          <button type="button" className="document-delete-button" onClick={onDelete} disabled={status === 'deleting_all'}>
-            {status === 'deleting_all' ? 'Deleting...' : 'Delete All Cases'}
+          <button type="button" className="document-outline-button" onClick={onCancel} disabled={busy}>Cancel</button>
+          <button type="button" className="document-delete-button" onClick={onDelete} disabled={busy}>
+            {busy ? 'Deleting...' : `Delete All ${plural.charAt(0).toUpperCase()}${plural.slice(1)}`}
           </button>
         </div>
       </section>
@@ -3655,6 +3848,9 @@ function LegalAwarenessPage({ segments }) {
 function RightsHomePage() {
   const [categories, setCategories] = React.useState([]);
   const [status, setStatus] = React.useState('loading');
+  const [searchInput, setSearchInput] = React.useState('');
+  const [searchResults, setSearchResults] = React.useState(null); // null = no search run yet
+  const [searchStatus, setSearchStatus] = React.useState('idle');
 
   React.useEffect(() => {
     let ignore = false;
@@ -3678,6 +3874,43 @@ function RightsHomePage() {
     };
   }, []);
 
+  // Debounced search across every provision -- lets a result link straight to the matched
+  // provision, skipping the category -> source -> provision browse.
+  React.useEffect(() => {
+    const query = searchInput.trim();
+    if (!query) {
+      setSearchResults(null);
+      setSearchStatus('idle');
+      return undefined;
+    }
+    setSearchStatus('loading');
+    let ignore = false;
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/legal-awareness/search?q=${encodeURIComponent(query)}`);
+        const payload = await safeJsonResponse(response);
+        if (!response.ok || !payload || !Array.isArray(payload.results)) {
+          throw new Error('Search failed.');
+        }
+        if (!ignore) {
+          setSearchResults(payload.results);
+          setSearchStatus('ready');
+        }
+      } catch (error) {
+        console.error('Legal-awareness search failed', error);
+        if (!ignore) setSearchStatus('error');
+      }
+    }, 350);
+    return () => {
+      ignore = true;
+      window.clearTimeout(timer);
+    };
+  }, [searchInput]);
+
+  const goToSearchResult = (result) => {
+    window.location.hash = `#/rights/source/${result.source_id}/provision/${result.provision_id}`;
+  };
+
   const popularTopics = [
     { label: 'Defective Product', category: 'consumer' },
     { label: 'Refund & Replacement', category: 'consumer' },
@@ -3700,6 +3933,44 @@ function RightsHomePage() {
           <p>Understand important legal rights in simple words.</p>
           <PageDivider />
         </header>
+
+        <section className="rights-section rights-search-section" aria-label="Search legal provisions">
+          <h3>Search Provisions</h3>
+          <label className="cases-search-field rights-search-field">
+            <Search size={17} strokeWidth={1.8} aria-hidden="true" />
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              placeholder="Search legal provisions -- e.g. refund, eviction, RTI..."
+              aria-label="Search legal provisions"
+            />
+          </label>
+          {searchStatus === 'loading' && <p className="rights-muted">Searching...</p>}
+          {searchStatus === 'error' && <p className="rights-muted">Search could not be completed right now.</p>}
+          {searchStatus === 'ready' && searchResults.length === 0 && (
+            <p className="rights-muted">No provisions match &ldquo;{searchInput.trim()}&rdquo;.</p>
+          )}
+          {searchStatus === 'ready' && searchResults.length > 0 && (
+            <div className="rights-source-list">
+              {searchResults.map((result) => (
+                <button
+                  type="button"
+                  className="rights-source-card"
+                  key={`${result.source_id}-${result.provision_id}`}
+                  onClick={() => goToSearchResult(result)}
+                >
+                  <FileText size={23} strokeWidth={1.45} />
+                  <span>
+                    <strong>{result.provision_label} — {result.provision_title}</strong>
+                    <small>{result.category_title} · {result.source_short_title}</small>
+                  </span>
+                  <ChevronRight size={18} strokeWidth={1.8} />
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
 
         <section className="rights-section" aria-label="Explore legal rights by category">
           <h3>Explore by Category</h3>
@@ -4053,6 +4324,7 @@ export default function App() {
   const queryParams = new URLSearchParams(queryString);
   const initialQuery = queryParams.get('q') || '';
   const initialCaseId = queryParams.get('case') || '';
+  const initialAttach = queryParams.get('attach') === '1';
   const activePage = routeSegments[0] === 'ask'
     ? 'ask'
     : routeSegments[0] === 'complaints'
@@ -4089,7 +4361,7 @@ export default function App() {
         }}
       />
       <main className={`main-panel ${activePage}-page-panel`}>
-        {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} />}
+        {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} initialAttach={initialAttach} />}
         {activePage === 'complaints' && <ComplaintDrafterPage />}
         {activePage === 'cases' && <MyCasesPage />}
         {activePage === 'documents' && <DocumentsPage />}
