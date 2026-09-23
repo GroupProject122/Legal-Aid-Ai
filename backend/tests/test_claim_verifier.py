@@ -72,7 +72,12 @@ def test_valid_source_supported_claim_retained(monkeypatch):
     assert output["verification"]["verified_claim_count"] == 1
 
 
-def test_unknown_source_id_rejected():
+def test_unknown_source_id_rejected(monkeypatch):
+    # Needs a key present the way its sibling tests do: verify_and_sanitize_response returns
+    # early with status "unavailable" when GEMINI_API_KEY is unset, so without this the test
+    # asserts against that early return instead of the deterministic-rejection path it is
+    # actually about, and fails on any machine with no .env.
+    monkeypatch.setattr(claim_verifier, "GEMINI_API_KEY", "test")
     output = claim_verifier.verify_and_sanitize_response(
         {**response_with_claims("Section 45 may apply."), "source_chunk_ids": ["missing"]},
         [chunk()],

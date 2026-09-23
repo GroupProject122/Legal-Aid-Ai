@@ -180,11 +180,16 @@ def deterministic_pre_check(
             True,
             True,
         )
-    if case_law_query(raw_check_text):
+    if case_law_query(raw_check_text) and not retrieved_case_law(chunks):
+        # Narrowed from a blanket abstain once judgments were actually ingested. The corpus now
+        # carries 23 of them, so refusing every case-law-shaped question regardless of what was
+        # retrieved would suppress material that is right there. The safety intent is unchanged:
+        # a case-law question still abstains whenever retrieval surfaced no case-law source --
+        # which is what happens when the case asked about is one the corpus does not hold.
         return result(
             "insufficient",
             ["case_law_not_in_corpus"],
-            "The current corpus does not include comprehensive case-law material for this specific case-law question.",
+            "The current corpus does not include case-law material for this specific case-law question.",
             False,
             True,
             True,
@@ -389,6 +394,10 @@ def case_law_query(text: str) -> bool:
     return any(term in text for term in case_terms)
 
 
+def retrieved_case_law(chunks: list[Any]) -> bool:
+    return any(getattr(chunk, "document_type", "") == "case_law" for chunk in chunks)
+
+
 def missing_current_law_query(text: str, chunks: list[Any]) -> bool:
     asks_cert = "cert-in" in text or "cert in" in text or "incident reporting direction" in text
     asks_dpdp_act = "dpdp act" in text or "digital personal data protection act" in text
@@ -433,11 +442,11 @@ def should_use_gemini_for_ambiguity(
 ) -> bool:
     text = normalize(issue_summary)
     raw_check_text = normalize(raw_user_query) if raw_user_query is not None else text
-    # In the current call order this branch is unreachable when explicit_non_delhi_tenancy or
-    # case_law_query already fired inside deterministic_pre_check (pre_generation_check returns
-    # before reaching here) -- kept consistent with the same raw-query text anyway, so it stays
-    # correct if that ordering ever changes rather than silently reverting to the
-    # paraphrase-only check.
+    # explicit_non_delhi_tenancy still short-circuits in deterministic_pre_check before reaching
+    # here. case_law_query no longer does: since judgments were ingested, that gate only fires
+    # when retrieval surfaced no case-law source, so a groundable case-law question now reaches
+    # this branch and skips ambiguity resolution. That is deliberately left as-is -- the
+    # conservative path -- rather than widened as a side effect of the corpus change.
     if not chunks or explicit_non_delhi_tenancy(raw_check_text, domains) or case_law_query(raw_check_text):
         return False
     top_score = max(float(getattr(chunk, "rerank_score", None) or getattr(chunk, "score", 0.0) or 0.0) for chunk in chunks)

@@ -76,6 +76,7 @@ If the retrieved legal material is insufficient, set insufficient_context to tru
 For ordinary defective-goods, refund, replacement, or non-delivery facts with no injury, physical harm, property damage, or consequential harm, do not discuss product liability merely because a product-liability chunk is present.
 For multi-domain issues, use the retrieved material to preserve each supported aspect that is actually relevant, such as consumer remedy and cyber reporting, without inventing offences.
 For RTI non-response issues, if retrieved Section 19 appeal material is available, present that appeal route distinctly from any Section 18 complaint material. Do not invent exact deadlines unless the supplied text states them.
+A chunk marked CURRENCY_WARNING is not current law. Never state or imply that such material creates a present-day offence, liability, right, or obligation. If it is relevant, say explicitly that it was struck down, overruled or superseded, and answer from the material that replaced it. Never cite a struck-down provision as a basis on which the user could be charged or held liable.
 Return only the required structured JSON.
 Only include source_chunk_ids from the retrieved chunk IDs listed below.
 Do not include markdown, bullets, numbering prefixes, or raw SVG/icon text inside strings.
@@ -127,6 +128,31 @@ def generate_grounded_answer(
         raise GroundedAnswerError("Gemini could not generate a grounded answer right now.") from exc
 
 
+def currency_warning(chunk: Any) -> str | None:
+    """A structured 'this is not current law' signal for the prompt.
+
+    The ingest pipeline already writes a warning line into the text of struck-down provisions and
+    non-good-law judgments, but that relies on the model noticing prose buried in a chunk body.
+    This surfaces the same fact as its own labelled field, which the system prompt has an explicit
+    rule about. good_law is carried on RetrievedChunk for this purpose."""
+    good_law = getattr(chunk, "good_law", None)
+    if good_law is False:
+        return "This decision is NO LONGER GOOD LAW. Do not present it as current."
+    if good_law is not None and good_law is not True:
+        return (
+            f"This decision is {good_law} good law -- at least one of its holdings has been "
+            "overruled or superseded. Do not rely on it without saying which part still stands."
+        )
+    text = getattr(chunk, "text", "") or ""
+    for marker in ("VOID PROVISION", "PARTIALLY STRUCK DOWN", "STRUCK DOWN AMENDMENT"):
+        if marker in text:
+            return (
+                f"This chunk reproduces a provision flagged '{marker}' -- it is not enforceable "
+                "law. See the warning at the start of the chunk text."
+            )
+    return None
+
+
 def build_grounded_prompt(
     original_message: str,
     normalized_case_summary: str,
@@ -136,13 +162,16 @@ def build_grounded_prompt(
 ) -> str:
     legal_blocks = []
     for index, chunk in enumerate(chunks, start=1):
-        legal_blocks.append(
+        block = (
             f"CHUNK_ID: {chunk_id(chunk)}\n"
             f"DOCUMENT: {getattr(chunk, 'document_title', '')}\n"
             f"PROVISION: {provision_label(chunk) or 'Not identified'}\n"
             f"PAGE_RANGE: {page_range_label(chunk)}\n"
-            f"TEXT:\n{compact_text(getattr(chunk, 'text', ''), 1800)}"
         )
+        currency = currency_warning(chunk)
+        if currency:
+            block += f"CURRENCY_WARNING: {currency}\n"
+        legal_blocks.append(block + f"TEXT:\n{compact_text(getattr(chunk, 'text', ''), 1800)}")
     document_fact_block = "\n".join(f"- {clean_text(item)}" for item in confirmed_case_facts or [] if clean_text(item)) or "None"
     return (
         f"{GROUNDED_SYSTEM_PROMPT}\n\n"

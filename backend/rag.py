@@ -79,6 +79,14 @@ class RetrievedChunk:
     guideline_title: str | None = None
     page_start: int | None = None
     page_end: int | None = None
+    # Case-law fields. Carried through so downstream code can act on them rather than relying on
+    # the warning text embedded in the chunk body: good_law in particular is a safety signal
+    # (see enforce_good_law_warning), and it was being dropped here at retrieval time.
+    paragraph_number: str | None = None
+    case_name: str | None = None
+    citation: str | None = None
+    court: str | None = None
+    good_law: Any | None = None
 
 
 CONSUMER_KEYWORDS = {
@@ -261,6 +269,32 @@ SUPPORTING_ONLY_PENALTY = 0.04
 REFERENCE_ONLY_PENALTY = 0.035
 PROCEDURAL_QUERY_MANUAL_BOOST = 0.06
 PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY = 0.20
+# Same shape of problem as the procedural-manual penalty above, found when judgments were first
+# ingested (2026-09-24). Case law carries authority_level=primary -- correct, a Supreme Court
+# judgment is primary authority -- so it competes directly with statutes, and a judgment
+# discussing a topic at length can outrank the provision that actually states the obligation.
+# The concrete regression: eval query cyber_05 "intermediary failed to remove unlawful content"
+# returned Mrs X v. Union of India at rerank 0.9263, displacing the IT Intermediary Guidelines
+# Rules that carry the takedown duty. Smaller than the procedural penalty (0.20) because case law
+# is genuinely more authoritative than a citizen manual: the aim is to seat judgments alongside
+# the governing provision rather than ahead of it, not to suppress them.
+CASE_LAW_SUBSTANTIVE_PENALTY = 0.18
+# Mirrors corpus_gap.case_law_query. Duplicated rather than imported because corpus_gap imports
+# rag (it builds RetrievedChunk), so importing back would be circular.
+CASE_LAW_QUERY_TERMS = (
+    "supreme court held",
+    "high court held",
+    "what did the supreme court",
+    "what did the high court",
+    "held in",
+    "judgment in",
+    "judgement in",
+    "case law",
+    "precedent",
+    "ratio",
+    " vs ",
+    " v. ",
+)
 PROCEDURAL_QUERY_TERMS = {
     "report",
     "reporting",
@@ -770,6 +804,11 @@ class LegalRAG:
                     guideline_title=item.get("guideline_title"),
                     page_start=item.get("page_start"),
                     page_end=item.get("page_end"),
+                    paragraph_number=item.get("paragraph_number"),
+                    case_name=item.get("case_name"),
+                    citation=item.get("citation"),
+                    court=item.get("court"),
+                    good_law=item.get("good_law"),
                 )
             )
         return candidates
@@ -1103,12 +1142,32 @@ def authority_level_boost(question: str, chunk: RetrievedChunk) -> float:
         # LegalRAG.retrieve() below for the companion candidate-pool-depth fix this required (a
         # down-weighted chunk still has to be fetched as a candidate before this can act on it).
         boost -= PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
+    boost -= case_law_substantive_penalty(question, chunk)
     return boost
 
 
 def is_procedural_query(question: str) -> bool:
     lowered = question.lower()
     return any(term in lowered for term in PROCEDURAL_QUERY_TERMS)
+
+
+def is_case_law_query(question: str) -> bool:
+    lowered = question.lower()
+    return any(term in lowered for term in CASE_LAW_QUERY_TERMS)
+
+
+def case_law_substantive_penalty(question: str, chunk: RetrievedChunk) -> float:
+    """Down-weight a judgment on a question that is not asking about case law.
+
+    Someone asking what an intermediary must do needs the rule that imposes the duty; a judgment
+    applying that rule is useful context but should not displace it. When the question is itself
+    about case law ("what did the Supreme Court hold in..."), no penalty applies and judgments
+    rank on their merits."""
+    if (chunk.document_type or "").lower() != "case_law":
+        return 0.0
+    if is_case_law_query(question):
+        return 0.0
+    return CASE_LAW_SUBSTANTIVE_PENALTY
 
 
 def supporting_status_boost(question: str, chunk: RetrievedChunk) -> float:
@@ -1181,6 +1240,35 @@ def retrieval_debug_info(question: str, chunk: RetrievedChunk | None = None) -> 
     return debug
 
 
+TITLE_SUBJECT_MATCH_BOOST = 0.25
+TITLE_SUBJECT_RE = re.compile(r"\(([^)]{3,60})\)")
+
+
+def title_subject_match_boost(question: str, chunk: RetrievedChunk) -> float:
+    """Boost the instrument whose title names the specific subject the question is about.
+
+    Indian subordinate legislation distinguishes itself in parentheses -- Consumer Protection
+    (Direct Selling) Rules, 2021 against Consumer Protection (E-Commerce) Rules, 2020 -- and
+    everything outside the parentheses is shared with the parent Act. Semantic similarity alone
+    therefore favours the parent Act, which repeats general language the query also uses, over
+    the specific Rules that actually govern. Eval query consumer_06 ("direct selling company
+    refusing refund") returned the Consumer Protection Act and E-Commerce Rules while the Direct
+    Selling Rules did not make the candidate pool at all, despite the query naming its subject
+    outright. Matching on the parenthetical is narrow on purpose: it only fires when the question
+    contains the phrase that distinguishes this instrument from its siblings."""
+    title = chunk.document_title or ""
+    lowered_question = question.lower()
+    for subject in TITLE_SUBJECT_RE.findall(title):
+        subject = subject.strip().lower()
+        # Hyphens and spacing vary between the title and how a person types it
+        # ("E-Commerce" vs "e commerce"), so compare on a normalised form.
+        normalised_subject = re.sub(r"[^a-z0-9]+", " ", subject).strip()
+        normalised_question = re.sub(r"[^a-z0-9]+", " ", lowered_question)
+        if len(normalised_subject) >= 4 and normalised_subject in normalised_question:
+            return TITLE_SUBJECT_MATCH_BOOST
+    return 0.0
+
+
 def final_rerank_score(question: str, chunk: RetrievedChunk) -> float:
     return (
         chunk.score
@@ -1190,6 +1278,7 @@ def final_rerank_score(question: str, chunk: RetrievedChunk) -> float:
         + domain_signal_boost(question, chunk)
         + source_role_boost(question, chunk)
         + public_authority_intent_boost(question, chunk)
+        + title_subject_match_boost(question, chunk)
     )
 
 
@@ -1212,6 +1301,13 @@ def relevance_gate_score(question: str, chunk: RetrievedChunk) -> float:
         and not is_procedural_query(question)
     ):
         score -= PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
+    # Applied at the admission gate as well as in ranking, for the reason in this docstring: a
+    # rerank-only penalty cannot rescue a statutory chunk that the raw-score window already
+    # excluded from admission.
+    score -= case_law_substantive_penalty(question, chunk)
+    # Same reasoning in the other direction: the instrument the question actually names has to
+    # clear admission before any rerank boost can order it.
+    score += title_subject_match_boost(question, chunk)
     return score
 
 

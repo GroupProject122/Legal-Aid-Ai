@@ -1,33 +1,36 @@
 {
   "chunks_by_document_type": {
     "amendment_rules": 25,
-    "constitution": 1371,
+    "case_law": 2186,
+    "constitution": 1442,
     "guidelines": 105,
     "procedural_user_guide": 279,
-    "regulations": 113,
-    "rules": 572,
-    "statute": 1460,
-    "supporting_criminal_law": 665,
-    "supporting_document_registration_law": 103,
-    "supporting_property_law": 296
+    "regulations": 114,
+    "rules": 574,
+    "statute": 1487,
+    "supporting_criminal_law": 72,
+    "supporting_document_registration_law": 106,
+    "supporting_property_law": 307
   },
   "chunks_by_domain": {
-    "constitutional_public_authority": 2112,
-    "consumer": 695,
-    "cyber": 1402,
-    "tenancy": 780
+    "constitutional_public_authority": 3195,
+    "consumer": 857,
+    "cyber": 1613,
+    "tenancy": 1032
   },
   "chunks_by_structure_type": {
     "annexure": 49,
-    "article": 1321,
-    "fallback": 96,
+    "article": 1395,
+    "fallback": 95,
     "guideline": 92,
+    "judgment_paragraph": 618,
+    "judgment_segment": 1568,
     "manual_section": 229,
     "preamble": 1,
-    "regulation": 97,
-    "rule": 517,
-    "schedule": 129,
-    "section": 2458
+    "regulation": 98,
+    "rule": 535,
+    "schedule": 110,
+    "section": 1907
   },
   "documents": [
     {
@@ -37,6 +40,70 @@
       "source_file": "constitutional_public_authority/administrative_tribunals_act_1985.pdf",
       "structure_aware_chunks": 55,
       "total_chunks": 59
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case1_kesavananda_bharati_v_state_of_kerala_1973.pdf",
+      "structure_aware_chunks": 291,
+      "total_chunks": 291
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case2_maneka_gandhi_v_union_of_india_1978.pdf",
+      "structure_aware_chunks": 239,
+      "total_chunks": 239
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case3_hussainara_khatoon_v_state_of_bihar_1979.pdf",
+      "structure_aware_chunks": 25,
+      "total_chunks": 25
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case4_olga_tellis_v_bombay_municipal_corporation_1985.pdf",
+      "structure_aware_chunks": 86,
+      "total_chunks": 86
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case5_vishaka_v_state_of_rajasthan_1997.pdf",
+      "structure_aware_chunks": 22,
+      "total_chunks": 22
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case6_sp_gupta_v_union_of_india_1981.pdf",
+      "structure_aware_chunks": 249,
+      "total_chunks": 249
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case7_cbse_v_aditya_bandopadhyay_2011.pdf",
+      "structure_aware_chunks": 65,
+      "total_chunks": 65
+    },
+    {
+      "document_type": "case_law",
+      "domain": "constitutional_public_authority",
+      "fallback_chunks": 0,
+      "source_file": "constitutional_public_authority/case_law/case8_girish_ramchandra_deshpande_v_central_information_commissioner_2012.pdf",
+      "structure_aware_chunks": 18,
+      "total_chunks": 18
     },
     {
       "document_type": "statute",
@@ -51,24 +118,24 @@
       "domain": "constitutional_public_authority",
       "fallback_chunks": 1,
       "source_file": "constitutional_public_authority/constitution_of_india.pdf",
-      "structure_aware_chunks": 1370,
-      "total_chunks": 1371
+      "structure_aware_chunks": 1441,
+      "total_chunks": 1442
     },
     {
       "document_type": "statute",
       "domain": "constitutional_public_authority",
       "fallback_chunks": 1,
       "source_file": "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
-      "structure_aware_chunks": 31,
-      "total_chunks": 32
+      "structure_aware_chunks": 32,
+      "total_chunks": 33
     },
     {
       "document_type": "statute",
       "domain": "constitutional_public_authority",
       "fallback_chunks": 1,
       "source_file": "constitutional_public_authority/legal_services_authorities_act_1987.pdf",
-      "structure_aware_chunks": 44,
-      "total_chunks": 45
+      "structure_aware_chunks": 50,
+      "total_chunks": 51
     },
     {
       "document_type": "statute",
@@ -99,8 +166,8 @@
       "domain": "constitutional_public_authority",
       "fallback_chunks": 1,
       "source_file": "constitutional_public_authority/nalsa_legal_services_clinics_regulations_2011.pdf",
-      "structure_aware_chunks": 15,
-      "total_chunks": 16
+      "structure_aware_chunks": 16,
+      "total_chunks": 17
     },
     {
       "document_type": "regulations",
@@ -139,8 +206,8 @@
       "domain": "constitutional_public_authority",
       "fallback_chunks": 1,
       "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
-      "structure_aware_chunks": 77,
-      "total_chunks": 78
+      "structure_aware_chunks": 86,
+      "total_chunks": 87
     },
     {
       "document_type": "statute",
@@ -165,6 +232,38 @@
       "source_file": "consumer/bureau_of_indian_standards_act_2016.pdf",
       "structure_aware_chunks": 52,
       "total_chunks": 53
+    },
+    {
+      "document_type": "case_law",
+      "domain": "consumer",
+      "fallback_chunks": 0,
+      "source_file": "consumer/case_law/case1_indian_medical_association_v_vp_shantha_1995.pdf",
+      "structure_aware_chunks": 56,
+      "total_chunks": 56
+    },
+    {
+      "document_type": "case_law",
+      "domain": "consumer",
+      "fallback_chunks": 0,
+      "source_file": "consumer/case_law/case2_lucknow_development_authority_v_mk_gupta_1994.pdf",
+      "structure_aware_chunks": 43,
+      "total_chunks": 43
+    },
+    {
+      "document_type": "case_law",
+      "domain": "consumer",
+      "fallback_chunks": 0,
+      "source_file": "consumer/case_law/case3_experion_developers_v_sushma_ashok_shiroor_2022.pdf",
+      "structure_aware_chunks": 34,
+      "total_chunks": 34
+    },
+    {
+      "document_type": "case_law",
+      "domain": "consumer",
+      "fallback_chunks": 0,
+      "source_file": "consumer/case_law/case4_rohit_chaudhary_v_vipul_ltd_2023.pdf",
+      "structure_aware_chunks": 27,
+      "total_chunks": 27
     },
     {
       "document_type": "rules",
@@ -243,8 +342,8 @@
       "domain": "consumer",
       "fallback_chunks": 1,
       "source_file": "consumer/insurance_ombudsman_rules_2017.pdf",
-      "structure_aware_chunks": 28,
-      "total_chunks": 29
+      "structure_aware_chunks": 30,
+      "total_chunks": 31
     },
     {
       "document_type": "rules",
@@ -305,10 +404,58 @@
     {
       "document_type": "supporting_criminal_law",
       "domain": "cyber",
-      "fallback_chunks": 1,
+      "fallback_chunks": 0,
       "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
-      "structure_aware_chunks": 664,
-      "total_chunks": 665
+      "structure_aware_chunks": 72,
+      "total_chunks": 72
+    },
+    {
+      "document_type": "case_law",
+      "domain": "cyber",
+      "fallback_chunks": 0,
+      "source_file": "cyber/case_law/case1_shreya_singhal_v_union_of_india_2015.pdf",
+      "structure_aware_chunks": 126,
+      "total_chunks": 126
+    },
+    {
+      "document_type": "case_law",
+      "domain": "cyber",
+      "fallback_chunks": 0,
+      "source_file": "cyber/case_law/case2_ks_puttaswamy_v_union_of_india_2017.pdf",
+      "structure_aware_chunks": 325,
+      "total_chunks": 325
+    },
+    {
+      "document_type": "case_law",
+      "domain": "cyber",
+      "fallback_chunks": 0,
+      "source_file": "cyber/case_law/case3_anuradha_bhasin_v_union_of_india_2020.pdf",
+      "structure_aware_chunks": 180,
+      "total_chunks": 180
+    },
+    {
+      "document_type": "case_law",
+      "domain": "cyber",
+      "fallback_chunks": 0,
+      "source_file": "cyber/case_law/case4_mrs_x_v_union_of_india_2023_ncii.pdf",
+      "structure_aware_chunks": 103,
+      "total_chunks": 103
+    },
+    {
+      "document_type": "case_law",
+      "domain": "cyber",
+      "fallback_chunks": 0,
+      "source_file": "cyber/case_law/case5_subhranshu_rout_v_state_of_odisha_2020_rtbf.pdf",
+      "structure_aware_chunks": 19,
+      "total_chunks": 19
+    },
+    {
+      "document_type": "case_law",
+      "domain": "cyber",
+      "fallback_chunks": 0,
+      "source_file": "cyber/case_law/case6_sharat_babu_digumarti_v_nct_delhi_2016.pdf",
+      "structure_aware_chunks": 42,
+      "total_chunks": 42
     },
     {
       "document_type": "rules",
@@ -347,8 +494,8 @@
       "domain": "cyber",
       "fallback_chunks": 1,
       "source_file": "cyber/information_technology_act_2000.pdf",
-      "structure_aware_chunks": 120,
-      "total_chunks": 121
+      "structure_aware_chunks": 129,
+      "total_chunks": 130
     },
     {
       "document_type": "rules",
@@ -431,6 +578,46 @@
       "total_chunks": 6
     },
     {
+      "document_type": "case_law",
+      "domain": "tenancy",
+      "fallback_chunks": 0,
+      "source_file": "tenancy/case_law/case1_satyawati_sharma_v_union_of_india_2008.pdf",
+      "structure_aware_chunks": 69,
+      "total_chunks": 69
+    },
+    {
+      "document_type": "case_law",
+      "domain": "tenancy",
+      "fallback_chunks": 0,
+      "source_file": "tenancy/case_law/case2_precision_steel_engineering_works_v_prem_deva_niranjan_deva_tayal_1982.pdf",
+      "structure_aware_chunks": 76,
+      "total_chunks": 76
+    },
+    {
+      "document_type": "case_law",
+      "domain": "tenancy",
+      "fallback_chunks": 0,
+      "source_file": "tenancy/case_law/case3_sarla_ahuja_v_united_india_insurance_co_ltd_1998.pdf",
+      "structure_aware_chunks": 10,
+      "total_chunks": 10
+    },
+    {
+      "document_type": "case_law",
+      "domain": "tenancy",
+      "fallback_chunks": 0,
+      "source_file": "tenancy/case_law/case4_gian_devi_anand_v_jeevan_kumar_1985.pdf",
+      "structure_aware_chunks": 69,
+      "total_chunks": 69
+    },
+    {
+      "document_type": "case_law",
+      "domain": "tenancy",
+      "fallback_chunks": 0,
+      "source_file": "tenancy/case_law/case5_bharat_sales_v_lic_1998.pdf",
+      "structure_aware_chunks": 12,
+      "total_chunks": 12
+    },
+    {
       "document_type": "statute",
       "domain": "tenancy",
       "fallback_chunks": 1,
@@ -459,16 +646,16 @@
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/indian_stamp_act_1899.pdf",
-      "structure_aware_chunks": 177,
-      "total_chunks": 178
+      "structure_aware_chunks": 179,
+      "total_chunks": 180
     },
     {
       "document_type": "supporting_document_registration_law",
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/registration_act_1908.pdf",
-      "structure_aware_chunks": 102,
-      "total_chunks": 103
+      "structure_aware_chunks": 105,
+      "total_chunks": 106
     },
     {
       "document_type": "statute",
@@ -491,19 +678,19 @@
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
-      "structure_aware_chunks": 173,
-      "total_chunks": 174
+      "structure_aware_chunks": 184,
+      "total_chunks": 185
     }
   ],
-  "documents_parsed": 58,
+  "documents_parsed": 81,
   "documents_skipped": [
     {
       "reason": "manual_verification_required",
       "source_file": "tenancy/delhi_rent_act_1995.pdf"
     }
   ],
-  "fallback_chunks": 96,
-  "structure_aware_chunks": 4893,
-  "structure_aware_percentage": 98.08,
-  "total_chunks": 4989
+  "fallback_chunks": 95,
+  "structure_aware_chunks": 6602,
+  "structure_aware_percentage": 98.58,
+  "total_chunks": 6697
 }

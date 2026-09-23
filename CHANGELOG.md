@@ -39,6 +39,59 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — case law ingestion, judgment parser, corpus currency (2026-09-24)
+
+**Full write-up: [`backend/docs/CASE_LAW_AND_CORPUS_CURRENCY.md`](backend/docs/CASE_LAW_AND_CORPUS_CURRENCY.md)**
+— accuracy figures, every parameter and model, limitations, and a prioritised list of where to
+pick this up next. Summary:
+
+- **Court judgments are searchable for the first time.** 23 judgments (cyber 6, consumer 4,
+  tenancy 5, constitutional 8) parsed, embedded and retrievable — 2,186 chunks. They had been
+  collected but sat inert in `pending_case_law` because no parser understood a judgment.
+- **New judgment parser** (`parse_case_law_document`, `document_type: "case_law"`). Two modes
+  chosen per document by numbering density: paragraph mode where numbering is trustworthy, page
+  level prose mode where it is not (Kesavananda yields ~170 line-start boundaries across 721
+  pages, so segmenting on those produced 15,000-character "paragraphs"). Paragraph detection is
+  sequence-validated, since a bare `^\d+\.` matched numbers as high as 999 in judgments with far
+  fewer real paragraphs.
+- **Struck-down law is now flagged.** New `void_provisions` manifest field binds a warning to the
+  provision's own chunk so chunking cannot separate them. IT Act s.66A had its offence text and
+  the note recording that the Supreme Court voided it in 2015 in *different chunks* — retrieving
+  the offence alone presented a dead provision as live law. Also covers Delhi Rent Control Act
+  s.14(1)(e) proviso and the Constitution's 99th Amendment (NJAC).
+- **S.P. Gupta corrected to `good_law: "partial"`** — its PIL/locus standi holding survives, its
+  judicial-appointments holding was overruled by the Second Judges Case (1993). All 249 of its
+  chunks carry a warning, and its curated extract steers toward the surviving holding.
+- **`good_law` is now readable by code.** It was being dropped at retrieval — `RetrievedChunk` had
+  no such field. Now carried through and surfaced as a labelled `CURRENCY_WARNING` in the grounded
+  prompt, with a system-prompt rule against presenting such material as current law.
+- **Root-caused a documented limitation.** India Code wraps amendment-inserted provisions in
+  footnote markers (`1[66A. Punishment for…`), so `^`-anchored boundary patterns never saw them.
+  This hid **17 IT Act sections** including s.43A, s.66, s.66A, s.69 and s.72A — their text was
+  indexed but merged into the wrong section, so provision metadata pointed at the wrong place.
+  This is the "ss. 43–47 and 65–66A merge into adjacent chunks" issue recorded below. Fixed for
+  section/article/rule/regulation patterns; affects **every statute in the corpus**.
+- **Two retrieval regressions found by the eval and fixed.** Case law carries
+  `authority_level: primary`, so judgments competed head-on with statutes and displaced them
+  (`CASE_LAW_SUBSTANTIVE_PENALTY = 0.18`, skipped when the question is itself about case law).
+  Separately, specific rules lost to their parent Act because everything outside the bracketed
+  subject is shared text (`TITLE_SUBJECT_MATCH_BOOST = 0.25`). Both values tuned against
+  `evaluate_retrieval.py`, not chosen by intuition.
+- **Bharatiya Nyaya Sanhita trimmed 665 → 72 chunks** via a new `keep_provisions` extract naming
+  30 cyber-adjacent sections. Delivers the `bns_2023_cyber_extract.pdf` listed as pending below,
+  without a separately maintained PDF.
+- **Fixed a pre-existing broken test** (`test_unknown_source_id_rejected`) that omitted the
+  `GEMINI_API_KEY` monkeypatch its five sibling tests use, so it asserted against an early return.
+
+**Result — better than before the work, not merely equal:** Document Hit@5 94.4% → **97.2%**,
+MRR 0.857 → **0.881**, failing eval queries 2 → **1**, failing tests 1 → **0**. Ingestion audit
+PASS with **HIGH=0** over 6,697 chunks. The corpus is *smaller* than its 7,175 peak while gaining
+all 23 judgments — the BNS trim paid for most of the case law.
+
+The one remaining eval failure (`cyber_07`) is a stale expectation, not a retrieval defect: it was
+written before the DPDP Act was added to the corpus, and retrieval now returns the parent Act
+rather than the Rules. Retrieval was deliberately not tuned to satisfy it. See §2 of the doc.
+
 ## Unreleased — cyber procedural-manual crowding: down-weighting, candidate_k, diversity cap
 
 Four-round, same-day escalation in `backend/rag.py` (2026-09-14/15) fixing a retrieval-quality

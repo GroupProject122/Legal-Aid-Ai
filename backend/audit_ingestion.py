@@ -30,12 +30,17 @@ NUMBER_FIELD_BY_STRUCTURE = {
     "article": "article_number",
     "rule": "rule_number",
     "regulation": "regulation_number",
+    "judgment_paragraph": "paragraph_number",
 }
 TITLE_OR_NUMBER_STRUCTURES = {
     "guideline": ("guideline_number", "guideline_title", "provision_number", "provision_title"),
     "manual_section": ("heading_number", "heading_title", "provision_number", "provision_title"),
 }
-NEUTRAL_STRUCTURES = {"preamble", "schedule", "annexure", "heading", "fallback"}
+# judgment_segment is unnumbered judgment prose -- a legitimate outcome for the judgments that
+# carry no paragraph numbering at all, so it is neutral rather than an error. It is deliberately
+# absent from STRUCTURE_AWARE_TYPES below: it is page-level prose chunking, and counting it as
+# structure-aware would inflate that metric.
+NEUTRAL_STRUCTURES = {"preamble", "schedule", "annexure", "heading", "fallback", "judgment_segment"}
 STRUCTURE_AWARE_TYPES = {
     "section",
     "article",
@@ -47,6 +52,7 @@ STRUCTURE_AWARE_TYPES = {
     "schedule",
     "annexure",
     "heading",
+    "judgment_paragraph",
 }
 
 

@@ -60,6 +60,14 @@ MANIFEST_METADATA_FIELDS = (
     "source_file",
     "retrieval_priority",
     "cross_domain_relevance",
+    # Case-law only. Taken from the manifest rather than parsed out of the judgment text,
+    # because a citation or bench line scraped from a PDF is far less reliable than the
+    # curated manifest entry -- and good_law in particular must never be guessed.
+    "case_name",
+    "citation",
+    "court",
+    "date",
+    "good_law",
 )
 JSONL_RECORD_FIELDS = (
     "chunk_id",
@@ -90,6 +98,12 @@ JSONL_RECORD_FIELDS = (
     "heading_title",
     "provision_number",
     "provision_title",
+    "paragraph_number",
+    "case_name",
+    "citation",
+    "court",
+    "date",
+    "good_law",
     "chapter",
     "part",
     "page",
@@ -120,20 +134,29 @@ CHAPTER_LINE_RE = re.compile(r"^(CHAPTER\s+[IVXLCDM]+(?:\s+[A-Z][A-Z\s-]{2,80})?
 SCHEDULE_RE = re.compile(r"^(?P<title>(?:THE\s+)?(?:FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)?\s*SCHEDULE)\b", re.I)
 ANNEXURE_RE = re.compile(r"^(?P<title>ANNEXURE\s+[A-Z0-9]+)\b", re.I)
 PREAMBLE_RE = re.compile(r"^PREAMBLE$", re.I)
+# India Code prints a provision inserted or substituted by a later amendment wrapped in a
+# footnote marker -- "1[66A. Punishment for sending offensive messages..." -- so the line does not
+# begin with the section number and a "^" anchored pattern never sees it. In the IT Act alone that
+# hid 17 sections from the parser, including s.43A (compensation for failure to protect data),
+# s.66 (computer related offences), s.66A, s.69 (interception) and s.72A. Their text was still
+# indexed, but merged into whichever preceding section did match, so provision-level metadata
+# pointed at the wrong section. This is the cause of the "ss. 43-47 and 65-66A merge into adjacent
+# chunks" limitation recorded in the changelog.
+AMENDMENT_FOOTNOTE_PREFIX = r"(?:\d{1,2}\[\s*)?"
 SECTION_BOUNDARY_RE = re.compile(
-    r"^(?:SECTION\s+)?(?P<number>\d{1,3}[A-Z]?(?:-[A-Z])?)\.\s+"
+    r"^" + AMENDMENT_FOOTNOTE_PREFIX + r"(?:SECTION\s+)?(?P<number>\d{1,3}[A-Z]?(?:-[A-Z])?)\.\s+"
     r"(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{2,180})(?:[.—-]|$)"
 )
 ARTICLE_BOUNDARY_RE = re.compile(
-    r"^(?:ARTICLE\s+)?(?P<number>\d{1,3}[A-Z]?)\.\s+"
+    r"^" + AMENDMENT_FOOTNOTE_PREFIX + r"(?:ARTICLE\s+)?(?P<number>\d{1,3}[A-Z]?)\.\s+"
     r"(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{2,180})(?:[.—-]|$)"
 )
 RULE_BOUNDARY_RE = re.compile(
-    r"^(?:RULE\s+)?(?P<number>\d{1,3}[A-Z]?)\.\s+"
+    r"^" + AMENDMENT_FOOTNOTE_PREFIX + r"(?:RULE\s+)?(?P<number>\d{1,3}[A-Z]?)\.\s+"
     r"(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{2,180})(?:[.—-]|$)"
 )
 REGULATION_BOUNDARY_RE = re.compile(
-    r"^(?:REGULATION\s+)?(?P<number>\d{1,3}[A-Z]?)\.\s+"
+    r"^" + AMENDMENT_FOOTNOTE_PREFIX + r"(?:REGULATION\s+)?(?P<number>\d{1,3}[A-Z]?)\.\s+"
     r"(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{2,180})(?:[.—-]|$)"
 )
 GUIDELINE_BOUNDARY_RE = re.compile(
@@ -141,9 +164,24 @@ GUIDELINE_BOUNDARY_RE = re.compile(
     r"(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{2,180})(?:[.—-]|$)"
 )
 MANUAL_HEADING_RE = re.compile(r"^(?P<number>\d+(?:\.\d+)*)\s+(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{3,140})$")
+# A judgment paragraph is just "12. " followed by prose -- unlike a statute section there is no
+# title to anchor on, so this pattern is deliberately loose and the sequence check in
+# judgment_units_from_pages() does the real work of rejecting false positives.
+# Four digits, not three: the longest judgments here number well past 1000 (Kesavananda runs
+# beyond 1500, S.P. Gupta past 1250). A three-digit cap silently merged every later paragraph
+# into the preceding one. The looseness is safe because accept_judgment_paragraph() validates
+# against the running sequence -- a stray "1973." is rejected on the number, not the shape.
+JUDGMENT_PARAGRAPH_RE = re.compile(r"^(?P<number>\d{1,4})\.\s+(?=\S)")
+INDIANKANOON_FOOTER_RE = re.compile(r"Indian Kanoon\s*-\s*http\S*", re.I)
+EQUIVALENT_CITATIONS_RE = re.compile(r"^Equivalent citations\s*:", re.I)
+# Continuation lines of the "Equivalent citations:" block: parallel-citation soup such as
+# "(2015) 3 MAD LJ 162, (2015) 1 UC 594, ...". Year plus reporter punctuation, no prose verbs.
+CITATION_SOUP_RE = re.compile(r"^[^a-z]*\(?\d{4}\)?[^a-z]*$")
 STRUCTURED_CHILD_CHUNK_SIZE = CHUNK_SIZE * 2
 STRUCTURED_CHILD_CHUNK_OVERLAP = min(120, CHUNK_OVERLAP)
 GAZETTE_STRUCTURE_PARSERS = {"rules", "regulations", "guidelines", "amendment_rules"}
+# Below this many sequence-validated paragraphs, a judgment is treated as unnumbered prose.
+MIN_JUDGMENT_PARAGRAPHS = 5
 GAZETTE_PAGE_HEADER_RE = re.compile(
     r"\b\d+\s+THE GAZETTE OF INDIA\s*:\s*EXTRAORDINARY\s*\[[^\]]+\]",
     re.I,
@@ -384,6 +422,29 @@ def heading_label(document: str) -> str:
 
 def enrich_chunk_text(text: str, metadata: dict) -> str:
     lines: list[str] = []
+    if metadata.get("case_name"):
+        # Case identity goes into the embedded text, not just the metadata, so a chunk retrieved
+        # from the middle of a judgment still carries what case it is and whether it is good law.
+        heading = str(metadata["case_name"])
+        if metadata.get("citation"):
+            heading += f", {metadata['citation']}"
+        if metadata.get("court"):
+            heading += f" ({metadata['court']})"
+        lines.append(heading)
+        good_law = metadata.get("good_law")
+        # Anything other than an unqualified True is a warning the reader must see. "partial"
+        # covers a case like S.P. Gupta, where one holding survives and another was overruled --
+        # silently treating that as good law is exactly how a tool ends up citing dead law.
+        if good_law is False:
+            lines.append("NOTE: This decision is no longer good law and must not be cited as valid.")
+        elif good_law is not True and good_law is not None:
+            lines.append(
+                f"NOTE: This decision is {good_law} good law -- some of its holdings have been "
+                "overruled or superseded. Check the corpus manifest entry before relying on it."
+            )
+        if metadata.get("paragraph_number"):
+            lines.append(f"Paragraph {metadata['paragraph_number']}")
+        return f"{chr(10).join(lines)}\n{text}"
     if metadata.get("part"):
         lines.append(metadata["part"])
     if metadata.get("chapter"):
@@ -533,6 +594,7 @@ def fresh_structure_metadata(structure_type: str = "fallback") -> dict:
         "heading_title": None,
         "provision_number": None,
         "provision_title": None,
+        "paragraph_number": None,
     }
 
 
@@ -589,6 +651,226 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
     if current and current["lines"]:
         units.append(current)
     return units
+
+
+def remove_indiankanoon_furniture(lines: list[str]) -> list[str]:
+    """Strip Indian Kanoon export furniture: the per-page source footer, and the
+    'Equivalent citations:' block (10+ lines of parallel-citation soup in some judgments).
+    The authoritative citation comes from the manifest, so that block is pure retrieval noise."""
+    kept: list[str] = []
+    dropping_citations = False
+    dropped_citation_lines = 0
+    for line in lines:
+        line = INDIANKANOON_FOOTER_RE.sub("", line).strip()
+        if not line:
+            continue
+        if EQUIVALENT_CITATIONS_RE.match(line):
+            dropping_citations = True
+            dropped_citation_lines = 0
+            continue
+        if dropping_citations:
+            # The block ends at the next real field (Author:/Bench:) or any line that reads as
+            # prose rather than citation soup. The cap is a guard against a malformed export
+            # swallowing the judgment.
+            if re.match(r"^(Author|Bench)\s*:", line, re.I) or not CITATION_SOUP_RE.match(line):
+                dropping_citations = False
+            else:
+                dropped_citation_lines += 1
+                if dropped_citation_lines <= 25:
+                    continue
+                dropping_citations = False
+        kept.append(line)
+    return kept
+
+
+def accept_judgment_paragraph(number: int, expected: int, seen_any: bool) -> bool:
+    """Whether a "N. " line is a real paragraph boundary rather than a stray numeric line.
+
+    Judgments are full of lines that look like paragraph starts but are not -- footnote markers,
+    fragments of quoted statutes, citation remnants. The survey of the staged judgments showed
+    naive matching picking up numbers as high as 999 in documents whose real paragraph count is
+    far lower, so acceptance is tied to the running sequence instead of the pattern alone."""
+    if number == expected:
+        return True
+    if expected < number <= expected + 3:
+        # Small forward gap: a paragraph split across a page break, or a number the text layer
+        # mangled. Still clearly part of the same run.
+        return True
+    if number == 1 and seen_any:
+        # A restart. Multi-opinion judgments (Kesavananda, S.P. Gupta) renumber from 1 for each
+        # judge's opinion, so a return to 1 is expected rather than anomalous.
+        return True
+    return False
+
+
+def judgment_units_from_pages(pages: list[tuple[int, str]]) -> list[dict]:
+    """Segment a judgment into units.
+
+    Two modes, chosen per document rather than configured, because the staged judgments split
+    almost evenly: roughly half carry usable sequential paragraph numbering and the rest
+    (Sarla Ahuja, Gian Devi Anand, Olga Tellis) carry none at all.
+
+    - paragraph mode: one unit per numbered paragraph; page span is the paragraph's own.
+    - prose mode: one unit per page. Page-level units keep page_start/page_end meaningful for
+      citation, which a single whole-document unit would not -- every chunk of a 37-page
+      judgment would otherwise claim to span all 37 pages."""
+    page_lines: list[tuple[int, list[str]]] = []
+    for page_number, text in pages:
+        lines = remove_indiankanoon_furniture([l.strip() for l in text.splitlines() if l.strip()])
+        if lines:
+            page_lines.append((page_number, lines))
+
+    flat: list[tuple[int, str]] = [
+        (page_number, line) for page_number, lines in page_lines for line in lines
+    ]
+
+    boundaries: list[int] = []
+    expected = 1
+    for index, (_page_number, line) in enumerate(flat):
+        match = JUDGMENT_PARAGRAPH_RE.match(line)
+        if not match:
+            continue
+        number = int(match.group("number"))
+        if accept_judgment_paragraph(number, expected, bool(boundaries)):
+            boundaries.append(index)
+            expected = number + 1
+
+    # Paragraph mode needs numbering dense enough to actually be paragraph-level. In the older
+    # long judgments the text layer leaves many paragraph numbers mid-line rather than at the
+    # start of one, so only a sparse subset is detectable -- Kesavananda yields ~170 boundaries
+    # across 721 pages. Segmenting on those would produce 15k-character "paragraphs". Below one
+    # detected paragraph per page the numbering is not trustworthy, and page-level prose units
+    # are both more honest and better sized.
+    dense_enough = page_lines and len(boundaries) >= len(page_lines)
+    if len(boundaries) < MIN_JUDGMENT_PARAGRAPHS or not dense_enough:
+        units: list[dict] = []
+        for page_number, lines in page_lines:
+            metadata = fresh_structure_metadata("judgment_segment")
+            units.append(
+                {
+                    "page_start": page_number,
+                    "page_end": page_number,
+                    "lines": lines,
+                    "metadata": metadata,
+                }
+            )
+        return units
+
+    units = []
+    if boundaries[0] > 0:
+        # Everything before the first paragraph: cause title, bench, counsel appearances.
+        head = flat[: boundaries[0]]
+        units.append(
+            {
+                "page_start": head[0][0],
+                "page_end": head[-1][0],
+                "lines": [line for _page, line in head],
+                "metadata": fresh_structure_metadata("judgment_segment"),
+            }
+        )
+
+    for position, start in enumerate(boundaries):
+        end = boundaries[position + 1] if position + 1 < len(boundaries) else len(flat)
+        span = flat[start:end]
+        number = JUDGMENT_PARAGRAPH_RE.match(span[0][1]).group("number")
+        metadata = fresh_structure_metadata("judgment_paragraph")
+        metadata["paragraph_number"] = number
+        metadata["provision_number"] = number
+        units.append(
+            {
+                "page_start": span[0][0],
+                "page_end": span[-1][0],
+                "lines": [line for _page, line in span],
+                "metadata": metadata,
+            }
+        )
+    return units
+
+
+JUDGMENT_HOLDING_MARKERS = (
+    "we hold",
+    "it is held",
+    "we are of the view",
+    "we are of the opinion",
+    "in our opinion",
+    "in the result",
+    "for the foregoing reasons",
+    "for the above reasons",
+    "we declare",
+    "conclusion",
+)
+
+
+def select_extract_units(units: list[dict], extract: dict, source_file: str) -> list[dict]:
+    """Keep only the doctrinally relevant part of a very long judgment.
+
+    Four of the staged judgments are enormous -- Kesavananda is 721 pages, S.P. Gupta 641 --
+    and ingesting them whole would make two documents roughly 30% of the entire corpus while
+    burying the holding that actually matters under hundreds of pages of surrounding argument.
+    That is the same failure the BNSS full text was archived for.
+
+    Selection is by the doctrinal terms named in the manifest entry rather than by position,
+    because these exports carry no headnote or signposted 'held' section to anchor on. For
+    S.P. Gupta the term list is also how the corpus steers toward the locus standi / PIL holding
+    that survives and away from the judicial-appointments holding the Second Judges Case (1993)
+    overruled."""
+    keep_terms = [t.lower() for t in extract.get("keep_terms") or []]
+    # For a numbered statute the sections worth keeping are known exactly, so they are named
+    # rather than guessed at by keyword density. Density alone picked the BNS definitions clause
+    # -- long and full of words like "dishonestly" and "electronic" -- while dropping the actual
+    # offences (voyeurism, stalking, forgery) the extract exists to keep.
+    keep_provisions = {str(p) for p in extract.get("keep_provisions") or []}
+    max_units = extract.get("max_units")
+    if not keep_terms and not keep_provisions:
+        return units
+
+    if keep_provisions:
+        selected = [
+            unit
+            for unit in units
+            if str(unit["metadata"].get("provision_number") or "") in keep_provisions
+        ]
+        logger.info(
+            "Curated extract for %s: kept %s of %s units by named provision",
+            source_file,
+            len(selected),
+            len(units),
+        )
+        return selected
+
+    scored: list[tuple[int, int, dict]] = []
+    for position, unit in enumerate(units):
+        text = "\n".join(unit["lines"]).lower()
+        # Each term's contribution is capped. Uncapped counting let a mangled table extraction
+        # in Puttaswamy -- a diagram that came out as repeated bare words -- outscore real
+        # doctrinal prose purely by repeating "privacy". Capping rewards a unit that touches
+        # several parts of the doctrine over one that repeats a single word.
+        score = sum(min(text.count(term), 3) for term in keep_terms)
+        if score and text.count(". ") < 3:
+            # Almost no sentence endings: a table, a diagram or an index fragment rather than
+            # reasoning. Keep it out of the extract.
+            score = 0
+        if score and any(marker in text for marker in JUDGMENT_HOLDING_MARKERS):
+            # A paragraph that both discusses the doctrine and reads like a holding is the most
+            # valuable kind of chunk in a judgment, so it outranks a passing mention.
+            score += 3
+        scored.append((score, position, unit))
+
+    kept_positions = {position for score, position, _unit in scored if score > 0}
+    if max_units and len(kept_positions) > max_units:
+        ranked = sorted(
+            (item for item in scored if item[0] > 0),
+            key=lambda item: (-item[0], item[1]),
+        )
+        kept_positions = {position for _score, position, _unit in ranked[:max_units]}
+    # The opening unit carries the cause title, bench and the framing of the issue.
+    kept_positions.add(0)
+
+    selected = [unit for position, unit in enumerate(units) if position in kept_positions]
+    logger.info(
+        "Curated extract for %s: kept %s of %s judgment units", source_file, len(selected), len(units)
+    )
+    return selected
 
 
 def chunk_legal_unit(unit: dict) -> list[dict]:
@@ -692,7 +974,16 @@ def extract_pdf_chunks(pdf_path: Path, manifest_entry: dict | None = None, parse
         if page_text:
             pages.append((page_index, page_text))
     pages = trim_bilingual_gazette_front_matter(pages, effective_parser_family)
-    units = legal_units_from_pages(pdf_path, pages, effective_parser_family)
+    if effective_parser_family == "case_law":
+        units = judgment_units_from_pages(pages)
+    else:
+        units = legal_units_from_pages(pdf_path, pages, effective_parser_family)
+    # Not case-law-only: the same problem arises for a supporting statute carried in a domain it
+    # only partly belongs to. The full Bharatiya Nyaya Sanhita sits in the cyber corpus for a
+    # handful of offences, and the rest of the general criminal code is retrieval noise there.
+    extract = manifest_entry.get("extract")
+    if extract:
+        units = select_extract_units(units, extract, source_file)
     chunk_sequence = 1
     for unit in units:
         for child_chunk in chunk_legal_unit(unit):
@@ -701,7 +992,13 @@ def extract_pdf_chunks(pdf_path: Path, manifest_entry: dict | None = None, parse
                 **chunk_base_metadata,
                 **structure_metadata,
                 "chunk_id": f"{document_slug}__chunk_{chunk_sequence:04d}",
-                "text": enrich_chunk_text(child_chunk["text"], structure_metadata),
+                # Merged rather than structure-only so case-law chunks can carry the case name and
+                # citation into their own text. Manifest fields do not collide with the structure
+                # fields enrich_chunk_text reads, so this is a no-op for every other parser.
+                "text": apply_void_provision_warnings(
+                    enrich_chunk_text(child_chunk["text"], {**chunk_base_metadata, **structure_metadata}),
+                    manifest_entry.get("void_provisions") or [],
+                ),
                 "source": source_file,
                 "page": child_chunk["page_start"],
                 "page_start": child_chunk["page_start"],
@@ -714,6 +1011,30 @@ def extract_pdf_chunks(pdf_path: Path, manifest_entry: dict | None = None, parse
             chunks.append(chunk_metadata)
             chunk_sequence += 1
     return chunks
+
+
+def apply_void_provision_warnings(text: str, void_provisions: list[dict]) -> str:
+    """Prepend a warning to any chunk reproducing a provision that is no longer in force.
+
+    A statute PDF reproduces struck-down text as ordinary body text, and the footnote recording
+    that it is void is a separate line that chunking can separate from it. That happened to IT
+    Act s.66A: the offence text and the note saying the Supreme Court voided it in 2015 landed in
+    different chunks, so retrieving the offence alone would present a dead provision as live law.
+    Rather than delete the text -- people do still ask about 66A, and police have continued to
+    invoke it -- the provision is kept and the warning is bound to it so the two cannot separate."""
+    if not void_provisions:
+        return text
+    # Whitespace-normalised comparison: PDF text wraps mid-phrase, so a match string written as
+    # a natural sentence would otherwise miss the very provision it was written to catch.
+    haystack = re.sub(r"\s+", " ", text).lower()
+    warnings = [
+        entry["warning"]
+        for entry in void_provisions
+        if entry.get("match") and re.sub(r"\s+", " ", entry["match"]).lower() in haystack
+    ]
+    if not warnings:
+        return text
+    return "\n".join(warnings) + "\n" + text
 
 
 def parse_existing_chunking(pdf_path: Path, manifest_entry: dict, parser_family: str) -> list[dict]:
@@ -748,6 +1069,10 @@ def parse_manual_document(pdf_path: Path, manifest_entry: dict) -> list[dict]:
     return parse_existing_chunking(pdf_path, manifest_entry, "manual")
 
 
+def parse_case_law_document(pdf_path: Path, manifest_entry: dict) -> list[dict]:
+    return parse_existing_chunking(pdf_path, manifest_entry, "case_law")
+
+
 def parser_for_document_type(document_type: str) -> Callable[[Path, dict], list[dict]]:
     if document_type in STATUTE_PARSER_TYPES:
         return parse_statute_document
@@ -758,6 +1083,7 @@ def parser_for_document_type(document_type: str) -> Callable[[Path, dict], list[
         "guidelines": parse_guidelines_document,
         "amendment_rules": parse_amendment_rules_document,
         "procedural_user_guide": parse_manual_document,
+        "case_law": parse_case_law_document,
     }
     try:
         return parser_map[document_type]

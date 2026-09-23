@@ -87,6 +87,38 @@ def test_case_law_gate_checks_raw_query_not_retrieval_paraphrase():
     assert gap.allow_grounded_answer is False
 
 
+def test_case_law_gate_allows_answer_when_case_law_was_retrieved():
+    # The corpus now holds 23 judgments. A case-law question that actually retrieved one must not
+    # be refused -- the pre-ingestion behaviour of abstaining on every case-law-shaped query would
+    # now suppress material that is in the index.
+    gap = corpus_gap.pre_generation_check(
+        "what did the Supreme Court hold in Shreya Singhal",
+        ["cyber"],
+        [
+            chunk(
+                domain="cyber",
+                document_type="case_law",
+                title="Shreya Singhal v. Union of India, (2015) 5 SCC 1",
+            )
+        ],
+    )
+
+    assert "case_law_not_in_corpus" not in gap.reason_codes
+
+
+def test_case_law_gate_still_abstains_when_no_case_law_retrieved():
+    # The safety property is unchanged for a case the corpus does not hold: the question looks
+    # like case law, retrieval surfaced only statute, so it still abstains.
+    gap = corpus_gap.pre_generation_check(
+        "what did the Supreme Court hold in some case we do not have",
+        ["tenancy"],
+        [chunk(domain="tenancy", document_type="statute")],
+    )
+
+    assert gap.status == "insufficient"
+    assert "case_law_not_in_corpus" in gap.reason_codes
+
+
 def test_case_law_gate_without_raw_query_falls_back_to_issue_summary():
     # Backward compatibility: callers that don't have a separate raw query (existing eval
     # scripts, this test file's other cases) keep checking issue_summary, same as before this fix.

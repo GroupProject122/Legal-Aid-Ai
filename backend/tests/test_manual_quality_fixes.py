@@ -109,3 +109,47 @@ def test_rti_no_response_prioritizes_section_19_over_complaint_and_penalty():
 
     assert rag.final_rerank_score(query, section_19) > rag.final_rerank_score(query, section_18)
     assert rag.final_rerank_score(query, section_19) > rag.final_rerank_score(query, section_20)
+
+
+def case_law_chunk(score: float = 0.8) -> rag.RetrievedChunk:
+    return rag.RetrievedChunk(
+        chunk_id="cl1",
+        text="The intermediary was directed to remove the content.",
+        source="cyber/case_law/case4_mrs_x_v_union_of_india_2023_ncii.pdf",
+        document_title="Mrs X v. Union of India, 2023:DHC:2806",
+        page=1,
+        score=score,
+        rerank_score=0.0,
+        domain="cyber",
+        retrieval_priority="high",
+        authority_level="primary",
+        status="active",
+        document_type="case_law",
+    )
+
+
+def test_case_law_down_weighted_on_substantive_query():
+    # Regression: ingesting judgments let Mrs X v. Union of India displace the IT Intermediary
+    # Guidelines Rules on eval query cyber_05 ("intermediary failed to remove unlawful content"),
+    # because case law carries authority_level=primary and so competes directly with statute.
+    penalty = rag.case_law_substantive_penalty(
+        "intermediary failed to remove unlawful content", case_law_chunk()
+    )
+
+    assert penalty == rag.CASE_LAW_SUBSTANTIVE_PENALTY
+
+
+def test_case_law_not_down_weighted_when_question_asks_about_case_law():
+    # The point is to seat judgments alongside the governing provision on substantive questions,
+    # not to suppress them -- a question actually about case law must rank them on their merits.
+    penalty = rag.case_law_substantive_penalty(
+        "what did the Supreme Court hold about intermediary liability", case_law_chunk()
+    )
+
+    assert penalty == 0.0
+
+
+def test_statute_never_takes_the_case_law_penalty():
+    statute = chunk("s1", "cyber", "Information Technology Act 2000", "79", "Safe harbour", 0.8)
+
+    assert rag.case_law_substantive_penalty("intermediary failed to remove content", statute) == 0.0
