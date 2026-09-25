@@ -2746,6 +2746,78 @@ function AboutUsPage() {
         </section>
 
         <section className="rights-panel">
+  <h3>Why Trust This?</h3>
+
+  <p>
+    Legal Aid AI is designed to ground its answers in a curated legal
+    corpus rather than relying only on general AI knowledge.
+  </p>
+
+  <ul>
+    <li>
+      <strong>Acts and legislation</strong> — We use applicable Indian
+      legislation and legal documents included in our verified corpus.
+    </li>
+
+    <li>
+      <strong>Government sources</strong> — Where available, we rely on
+      official government portals and public legal resources.
+    </li>
+
+    <li>
+      <strong>Source-backed answers</strong> — Answers can include the
+      legal documents and excerpts used by the system.
+    </li>
+  </ul>
+
+  <p>
+    Examples of sources used in the current project include the
+    Consumer Protection Act, 2019, Constitution of India,
+    Right to Information Act, 2005, and Legal Services Authorities
+    Act, 1987.
+  </p>
+</section>
+
+<section className="rights-panel">
+  <h3>Who This Helps</h3>
+
+  <p>
+    Legal Aid AI is designed for people who need to understand a
+    legal issue before deciding what to do next.
+  </p>
+
+  <ul>
+    <li>Consumers dealing with defective goods or poor services</li>
+    <li>Tenants facing common tenancy-related disputes</li>
+    <li>People trying to understand a legal notice</li>
+    <li>People looking for information about their legal rights</li>
+    <li>People looking for information about legal aid and public services</li>
+  </ul>
+</section>
+
+<section className="rights-panel">
+  <h3>Current Coverage</h3>
+
+  <p>
+    Legal Aid AI currently focuses on selected areas of legal
+    information rather than attempting to cover every area of Indian law.
+  </p>
+
+  <ul>
+    <li>Consumer rights and common consumer issues</li>
+    <li>Tenancy-related issues</li>
+    <li>Cyber-related issues</li>
+    <li>Constitutional and public-authority matters</li>
+    <li>Legal aid and access-to-justice resources</li>
+  </ul>
+
+  <p>
+    Coverage may vary by topic and jurisdiction. Additional legal areas
+    and sources may be added as the project develops.
+  </p>
+</section>
+
+        <section className="rights-panel">
           <h3>What you can do here</h3>
           <ul>
             {aboutFeatures.map(([name, detail]) => (
@@ -2763,13 +2835,53 @@ function AboutUsPage() {
           </ol>
         </section>
 
-        <section className="rights-panel">
-          <h3>Privacy</h3>
-          <p>Your questions and documents are used only to answer you. They are not shared or sold.</p>
-        </section>
+       <section className="rights-panel">
+  <h3>Privacy & Data</h3>
 
-        <RightsAskCta label="Ready to start?" />
-        <RightsDisclaimerCard />
+  <p>
+    We take privacy seriously, especially because legal questions and
+    uploaded documents may contain sensitive information.
+  </p>
+
+  <ul>
+    <li>Only provide information that is necessary for your question.</li>
+    <li>Avoid sharing passwords, financial credentials, or unnecessary personal information.</li>
+    <li>Uploaded documents should be reviewed before submission to remove information you do not want processed.</li>
+  </ul>
+
+  <p>
+    See the project's privacy policy and technical documentation for
+    details about how data is handled.
+  </p>
+</section>
+
+        <section className="rights-panel">
+  <h3>Frequently Asked Questions</h3>
+
+  <h4>Is Legal Aid AI free?</h4>
+  <p>
+    Yes. Legal Aid AI is designed to provide accessible legal information
+    without requiring you to consult a lawyer for every basic question.
+  </p>
+
+  <h4>Does Legal Aid AI replace a lawyer?</h4>
+  <p>
+    No. It provides general legal information and guidance. It does not
+    replace a qualified lawyer or represent you in court.
+  </p>
+
+  <h4>Can I use it for every legal problem?</h4>
+  <p>
+    No. The system covers selected legal areas and sources. It may not
+    contain every law, case, or recent amendment.
+  </p>
+
+  <h4>Should I rely on its answer for an important legal matter?</h4>
+  <p>
+    For serious or time-sensitive matters, verify the information with
+    an official source or qualified legal professional.
+  </p>
+</section>
       </div>
     </>
   );

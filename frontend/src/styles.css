@@ -6049,3 +6049,93 @@ body.has-custom-cursor textarea {
     grid-template-columns: 1fr;
   }
 }
+/* =========================
+   KNOW YOUR RIGHTS
+   ========================= */
+
+.rights-page {
+  min-height: 100vh;
+  padding: 60px 8%;
+  background-image: url("/rights-page-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.rights-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.rights-header h1 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+.rights-header p {
+  font-size: 18px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.rights-categories h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 30px;
+}
+
+.rights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.rights-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s ease;
+}
+
+.rights-card:hover {
+  transform: translateY(-7px);
+}
+
+.rights-icon {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.rights-card h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.rights-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 70px;
+}
+
+.rights-card button {
+  margin-top: 15px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+@media (max-width: 900px) {
+  .rights-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .rights-grid {
+    grid-template-columns: 1fr;
+  }
+}
