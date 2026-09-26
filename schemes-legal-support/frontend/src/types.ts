@@ -49,7 +49,7 @@ export type GovernmentEmployeeGrade =
   | "group_d_mts";
 
 /**
- * The first 8 fields are required in storage; the last 4 are optional/nullable
+ * The first 8 fields are required in storage; the last 5 are optional/nullable
  * (null = unknown / not provided). The intake form submits any subset.
  */
 export interface UserProfile {
@@ -65,6 +65,7 @@ export interface UserProfile {
   paid_income_tax_last_year: boolean | null;
   monthly_pension: number | null; // INR, whole rupees; 0 is a real value
   government_employee_grade: GovernmentEmployeeGrade | null;
+  is_pregnant_or_new_mother: boolean | null;
 }
 
 export type UserProfileField = keyof UserProfile;

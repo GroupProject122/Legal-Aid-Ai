@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import {
   CATEGORIES,
@@ -17,7 +17,7 @@ import type { UserProfile } from "../types";
 type FieldKey = keyof UserProfile;
 type FormValues = Record<FieldKey, string>;
 
-const FIELD_COUNT = 12;
+const FIELD_COUNT = 13;
 
 const EMPTY: FormValues = {
   state: "",
@@ -32,6 +32,7 @@ const EMPTY: FormValues = {
   paid_income_tax_last_year: "",
   monthly_pension: "",
   government_employee_grade: "",
+  is_pregnant_or_new_mother: "",
 };
 
 function toValues(profile: Partial<UserProfile>): FormValues {
@@ -56,6 +57,10 @@ function toValues(profile: Partial<UserProfile>): FormValues {
     monthly_pension:
       profile.monthly_pension != null ? String(profile.monthly_pension) : "",
     government_employee_grade: profile.government_employee_grade ?? "",
+    is_pregnant_or_new_mother:
+      profile.is_pregnant_or_new_mother == null
+        ? ""
+        : String(profile.is_pregnant_or_new_mother),
   };
 }
 
@@ -83,6 +88,10 @@ function toProfile(values: FormValues): Partial<UserProfile> {
   if (values.paid_income_tax_last_year) {
     profile.paid_income_tax_last_year =
       values.paid_income_tax_last_year === "true";
+  }
+  if (values.is_pregnant_or_new_mother) {
+    profile.is_pregnant_or_new_mother =
+      values.is_pregnant_or_new_mother === "true";
   }
 
   if (values.age.trim() !== "" && Number.isFinite(Number(values.age))) {
@@ -147,6 +156,8 @@ interface IntakeFormProps {
   onSubmit: (profile: Partial<UserProfile>) => void;
 }
 
+const CLEAR_CONFIRM_WINDOW_MS = 3000;
+
 export function IntakeForm({
   initialProfile,
   submitting,
@@ -155,6 +166,17 @@ export function IntakeForm({
 }: IntakeFormProps) {
   const [values, setValues] = useState<FormValues>(() =>
     toValues(initialProfile),
+  );
+  const [confirmingClear, setConfirmingClear] = useState(false);
+  const clearConfirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  useEffect(
+    () => () => {
+      if (clearConfirmTimerRef.current) clearTimeout(clearConfirmTimerRef.current);
+    },
+    [],
   );
 
   const set = (key: FieldKey) => (value: string) =>
@@ -168,6 +190,27 @@ export function IntakeForm({
     event.preventDefault();
     if (submitting) return;
     onSubmit(toProfile(values));
+  };
+
+  /** Nothing to lose if the form is already empty -- clear immediately, no confirm step.
+   * Otherwise the button becomes a "click again to confirm" arm-state for a few seconds
+   * rather than clearing on the first click. Ported from frontend/src/schemes/IntakeForm.jsx
+   * (the integrated app's copy of this form) -- keep both in sync if this changes again. */
+  const handleClearClick = () => {
+    if (filledCount === 0) {
+      setValues(EMPTY);
+      return;
+    }
+    if (confirmingClear) {
+      if (clearConfirmTimerRef.current) clearTimeout(clearConfirmTimerRef.current);
+      setConfirmingClear(false);
+      setValues(EMPTY);
+      return;
+    }
+    setConfirmingClear(true);
+    clearConfirmTimerRef.current = setTimeout(() => {
+      setConfirmingClear(false);
+    }, CLEAR_CONFIRM_WINDOW_MS);
   };
 
   return (
@@ -194,7 +237,11 @@ export function IntakeForm({
             type="number"
             inputMode="numeric"
             min={0}
-            max={120}
+            // Matches the backend's actual validated ceiling (src/routes/match.ts: age
+            // z.coerce.number().finite().int().min(0).max(150)) -- 150 is a deliberately
+            // generous data-entry safety bound, not a claim that 150 is a realistic age; the
+            // frontend shouldn't silently reject input the backend already accepts.
+            max={150}
             placeholder="e.g. 34"
             value={values.age}
             onChange={(event) => set("age")(event.target.value)}
@@ -313,6 +360,15 @@ export function IntakeForm({
           options={GOV_EMPLOYEE_GRADES}
           onChange={set("government_employee_grade")}
         />
+
+        <SelectField
+          id="is_pregnant_or_new_mother"
+          label="Pregnant, or a mother of a young child?"
+          value={values.is_pregnant_or_new_mother}
+          hint="Currently pregnant, or the mother of a child under about 5 months old."
+          options={YES_NO}
+          onChange={set("is_pregnant_or_new_mother")}
+        />
       </div>
 
       {errorMessage ? (
@@ -327,11 +383,11 @@ export function IntakeForm({
         </button>
         <button
           type="button"
-          className="btn-link"
-          onClick={() => setValues(EMPTY)}
+          className={`btn-link ${confirmingClear ? "btn-link-confirming" : ""}`}
+          onClick={handleClearClick}
           disabled={submitting}
         >
-          Clear all
+          {confirmingClear ? "Click to confirm" : "Clear all"}
         </button>
         <span className="filled-count">
           {filledCount === 0

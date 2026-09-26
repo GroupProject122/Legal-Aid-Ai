@@ -2,8 +2,9 @@
  * Static metadata about the UserProfile fields, used by the write-time scheme
  * validator. Mirrors prisma/schema.prisma and docs/data-model.md.
  *
- * 12 fields: 8 required + 4 optional/nullable (land_holding,
- * paid_income_tax_last_year, monthly_pension, government_employee_grade).
+ * 13 fields: 8 required + 5 optional/nullable (land_holding,
+ * paid_income_tax_last_year, monthly_pension, government_employee_grade,
+ * is_pregnant_or_new_mother).
  */
 
 export const KNOWN_FIELDS = [
@@ -19,6 +20,7 @@ export const KNOWN_FIELDS = [
   "paid_income_tax_last_year",
   "monthly_pension",
   "government_employee_grade",
+  "is_pregnant_or_new_mother",
 ] as const;
 
 export type KnownField = (typeof KNOWN_FIELDS)[number];
@@ -31,7 +33,10 @@ export const NUMERIC_FIELDS = [
 ] as const;
 
 /** Fields that hold a boolean. */
-export const BOOLEAN_FIELDS = ["paid_income_tax_last_year"] as const;
+export const BOOLEAN_FIELDS = [
+  "paid_income_tax_last_year",
+  "is_pregnant_or_new_mother",
+] as const;
 
 export type NumericField = (typeof NUMERIC_FIELDS)[number];
 export type BooleanField = (typeof BOOLEAN_FIELDS)[number];

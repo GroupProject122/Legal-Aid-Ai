@@ -70,6 +70,19 @@ describe("POST /match", () => {
     expect(res.body.error).toBe("Invalid request body");
   });
 
+  it("rejects a state that isn't a real Indian state/UT with 400", async () => {
+    // Regression test: `state` used to be a bare z.string().min(1), so a direct API call
+    // (bypassing both frontends' dropdowns, which only ever send a real state) could submit
+    // garbage and have it silently never match any state-based condition instead of being
+    // rejected outright. Now reuses the same INDIAN_STATES allowlist validateScheme.ts already
+    // enforces for scheme-authoring data.
+    const res = await request(app).post("/match").send({ state: "Neverland" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Invalid request body");
+    expect(res.body.details.fieldErrors.state).toBeDefined();
+  });
+
   it("handles an empty profile without crashing", async () => {
     const res = await request(app).post("/match").send({});
 

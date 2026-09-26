@@ -44,6 +44,8 @@ model UserProfile {
   /// Monthly pension received, INR whole rupees. 0 is a real value.
   monthlyPension          Int?                     @map("monthly_pension")
   governmentEmployeeGrade GovernmentEmployeeGrade? @map("government_employee_grade")
+  /// Pregnant, or a mother of a child under ~5 months old (PMMVY-style eligibility).
+  isPregnantOrNewMother   Boolean?                 @map("is_pregnant_or_new_mother")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

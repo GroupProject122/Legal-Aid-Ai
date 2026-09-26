@@ -12,7 +12,7 @@ import {
   YES_NO
 } from './options.js';
 
-const FIELD_COUNT = 12;
+const FIELD_COUNT = 13;
 
 const EMPTY = {
   state: '',
@@ -26,7 +26,8 @@ const EMPTY = {
   land_holding: '',
   paid_income_tax_last_year: '',
   monthly_pension: '',
-  government_employee_grade: ''
+  government_employee_grade: '',
+  is_pregnant_or_new_mother: ''
 };
 
 function toValues(profile) {
@@ -47,7 +48,11 @@ function toValues(profile) {
         ? ''
         : String(profile.paid_income_tax_last_year),
     monthly_pension: profile.monthly_pension != null ? String(profile.monthly_pension) : '',
-    government_employee_grade: profile.government_employee_grade ?? ''
+    government_employee_grade: profile.government_employee_grade ?? '',
+    is_pregnant_or_new_mother:
+      profile.is_pregnant_or_new_mother == null
+        ? ''
+        : String(profile.is_pregnant_or_new_mother)
   };
 }
 
@@ -66,6 +71,9 @@ function toProfile(values) {
 
   if (values.paid_income_tax_last_year) {
     profile.paid_income_tax_last_year = values.paid_income_tax_last_year === 'true';
+  }
+  if (values.is_pregnant_or_new_mother) {
+    profile.is_pregnant_or_new_mother = values.is_pregnant_or_new_mother === 'true';
   }
 
   if (values.age.trim() !== '' && Number.isFinite(Number(values.age))) {
@@ -288,6 +296,15 @@ export function IntakeForm({ initialProfile, submitting, errorMessage, onSubmit 
           value={values.government_employee_grade}
           options={GOV_EMPLOYEE_GRADES}
           onChange={set('government_employee_grade')}
+        />
+
+        <SelectField
+          id="scheme-pregnant"
+          label="Pregnant, or a mother of a young child?"
+          value={values.is_pregnant_or_new_mother}
+          hint="Currently pregnant, or the mother of a child under about 5 months old."
+          options={YES_NO}
+          onChange={set('is_pregnant_or_new_mother')}
         />
       </div>
 

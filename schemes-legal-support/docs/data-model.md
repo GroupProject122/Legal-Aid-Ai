@@ -20,7 +20,7 @@ specified here (Prisma does not model it).
 
 ## A) UserProfile
 
-The first 8 fields are **required**; the 4 fields below the rule (added later,
+The first 8 fields are **required**; the 5 fields below the rule (added later,
 from gaps found converting real schemes) are **optional / nullable**. All enum
 values are lower `snake_case` unless noted. The **field key** column is the
 canonical name a `Scheme` eligibility leaf condition refers to via its `field`
@@ -29,7 +29,7 @@ property — these must match exactly.
 For **every** field — required or optional — `null` / `undefined` means
 "unknown / not provided": a leaf condition on that field evaluates to
 `"unknown"` (not `"fail"`) unless its operator is `exists` / `not_exists`.
-The only difference for the 4 optional fields is that a stored `UserProfile`
+The only difference for the 5 optional fields is that a stored `UserProfile`
 row is allowed to leave them `null`.
 
 | Field key              | Type   | Values / notes |
@@ -46,6 +46,7 @@ row is allowed to leave them `null`.
 | `paid_income_tax_last_year`| boolean, nullable | `true` if the family paid income tax in the last assessment year. Used by exclusion rules (e.g. PM-KISAN excludes income-tax payers). |
 | `monthly_pension`          | number (INR), nullable | Monthly pension amount received, in whole rupees. `0` is a real value (receives no pension); `null` = not provided. |
 | `government_employee_grade`| enum, nullable    | `not_applicable` \| `group_a_b_c` \| `group_d_mts`. Serving/retired government post grade. `not_applicable` = not a government employee; `group_d_mts` = Group D / Multi-Tasking Staff (often exempted from exclusions that hit `group_a_b_c`). |
+| `is_pregnant_or_new_mother` | boolean, nullable | `true` if the applicant is currently pregnant, or is the mother of a child under ~5 months old. Used by maternity-benefit schemes (e.g. PMMVY). |
 
 ### TypeScript shape
 
@@ -89,6 +90,7 @@ interface UserProfile {
     | "group_a_b_c"
     | "group_d_mts"
     | null;
+  is_pregnant_or_new_mother?: boolean | null;
 }
 ```
 
@@ -211,13 +213,14 @@ type UserProfileFieldKey =
   | "land_holding"
   | "paid_income_tax_last_year"
   | "monthly_pension"
-  | "government_employee_grade";
+  | "government_employee_grade"
+  | "is_pregnant_or_new_mother";
 ```
 
 Rules:
 
 - Every `LeafCondition.field` **must** be one of the `UserProfile` field keys
-  (12 of them). Any other value is invalid data.
+  (13 of them). Any other value is invalid data.
 - `AND` / `OR` groups take a non-empty `children` array. Nest freely for deeper
   logic.
 - `NOT` wraps exactly one `child`.
@@ -240,10 +243,11 @@ Rules:
 
 The write-time validator narrows "any" by field type: enum fields (incl.
 `land_holding`, `government_employee_grade`) allow
-`equals`/`not_equals`/`in`/`not_in`/`exists`/`not_exists`; the boolean field
-`paid_income_tax_last_year` allows `equals`/`not_equals`/`exists`/`not_exists`
-(value must be `true` or `false`); numeric fields (`age`,
-`annual_family_income`, `monthly_pension`) allow `gte`/`lte`/`exists`/`not_exists`.
+`equals`/`not_equals`/`in`/`not_in`/`exists`/`not_exists`; the boolean fields
+`paid_income_tax_last_year` and `is_pregnant_or_new_mother` allow
+`equals`/`not_equals`/`exists`/`not_exists` (value must be `true` or `false`);
+numeric fields (`age`, `annual_family_income`, `monthly_pension`) allow
+`gte`/`lte`/`exists`/`not_exists`.
 
 > `exists` / `not_exists` are here for forward compatibility. Every
 > `UserProfile` field is currently required, so `exists` is always true today;

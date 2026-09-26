@@ -58,7 +58,7 @@ export type GovernmentEmployeeGrade =
 
 /**
  * The intake fields a leaf condition's `field` may name. The first 8 are
- * required on a stored profile; the last 4 are optional/nullable.
+ * required on a stored profile; the last 5 are optional/nullable.
  */
 export const USER_PROFILE_FIELDS = [
   "state",
@@ -73,6 +73,7 @@ export const USER_PROFILE_FIELDS = [
   "paid_income_tax_last_year",
   "monthly_pension",
   "government_employee_grade",
+  "is_pregnant_or_new_mother",
 ] as const;
 
 export type UserProfileFieldKey = (typeof USER_PROFILE_FIELDS)[number];
@@ -91,6 +92,8 @@ export interface UserProfile {
   paid_income_tax_last_year?: boolean | null;
   monthly_pension?: number | null;
   government_employee_grade?: GovernmentEmployeeGrade | null;
+  /** Pregnant, or a mother of a child under ~5 months old (PMMVY-style eligibility). */
+  is_pregnant_or_new_mother?: boolean | null;
 }
 
 export type Operator =

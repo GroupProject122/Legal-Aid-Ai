@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { prismaSchemeToScheme } from "../lib/schemeMapper";
 import { rankSchemes } from "../matching";
+import { INDIAN_STATES } from "../validation/fieldMeta";
 
 export const matchRouter = Router();
 
@@ -14,7 +15,12 @@ export const matchRouter = Router();
  */
 const profileSchema = z
   .object({
-    state: z.string().min(1),
+    // Reuses the same allowlist validateScheme.ts already enforces for scheme-authoring data
+    // (a scheme's own `state` field, and any eligibility condition's state value) -- this was a
+    // bare z.string().min(1) before, so a direct API call (bypassing both frontends' dropdowns,
+    // which already only ever send a real state) could submit garbage like "Neverland" and have
+    // it silently never match any state-based condition rather than being rejected outright.
+    state: z.enum(INDIAN_STATES),
     age: z.coerce.number().finite().int().min(0).max(150),
     gender: z.enum(["male", "female", "other"]),
     annual_family_income: z.coerce.number().finite().int().min(0),
@@ -58,6 +64,11 @@ const profileSchema = z
       "group_a_b_c",
       "group_d_mts",
     ]),
+    is_pregnant_or_new_mother: z.preprocess((v) => {
+      if (v === true || v === "true") return true;
+      if (v === false || v === "false") return false;
+      return v;
+    }, z.boolean()),
   })
   .partial()
   .strict();
