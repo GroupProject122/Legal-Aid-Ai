@@ -9,7 +9,8 @@ const BASE_URL = '/api/complaint-drafter';
 const SCENARIO_PATHS = {
   tenancy_eviction: 'tenancy-eviction',
   consumer_defective_goods: 'consumer-defective-goods',
-  consumer_misleading_ads: 'consumer-misleading-ads'
+  consumer_misleading_ads: 'consumer-misleading-ads',
+  rti_application: 'rti-application'
 };
 
 /**

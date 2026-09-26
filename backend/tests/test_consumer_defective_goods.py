@@ -40,7 +40,27 @@ def test_non_positive_amount_paid_fails_validation():
             defect_or_deficiency_type="defective_goods",
             defect_description="Screen cracked on first use.",
         )
-    assert exc_info.value.errors()[0]["loc"] == ("amount_paid",)
+    error = exc_info.value.errors()[0]
+    assert error["loc"] == ("amount_paid",)
+    # Regression test, fixed 2026-09-26: amount_paid used to be Field(gt=0), so this surfaced
+    # pydantic's own generic "Input should be greater than 0" instead of a message a non-lawyer
+    # filling in this form can act on.
+    assert "greater than 0" not in error["msg"]
+    assert error["msg"] == "Amount paid must be a positive amount."
+
+
+def test_non_positive_compensation_amount_gets_a_custom_message_not_pydantics_generic_one():
+    with pytest.raises(ValidationError) as exc_info:
+        drafter.ConsumerDefectiveGoodsIntake(
+            **{**base_intake_kwargs(), "relief_sought": ["compensation"]},
+            defect_or_deficiency_type="defective_goods",
+            defect_description="Screen cracked on first use.",
+            compensation_amount=0,
+        )
+    error = exc_info.value.errors()[0]
+    assert error["loc"] == ("compensation_amount",)
+    assert "greater than 0" not in error["msg"]
+    assert "incomplete" in error["msg"]
 
 
 def test_future_transaction_date_fails_validation():

@@ -62,6 +62,39 @@ def test_rent_at_cap_boundary_is_allowed():
     assert intake.monthly_rent == 3500
 
 
+def test_non_positive_monthly_rent_gets_a_custom_message_not_pydantics_generic_one():
+    # Regression test, fixed 2026-09-26: monthly_rent used to be Field(gt=0), so a value of 0
+    # (or negative) surfaced pydantic's own generic "Input should be greater than 0" instead of
+    # a message a non-lawyer filling in this form can act on.
+    with pytest.raises(ValidationError) as exc_info:
+        drafter.TenancyEvictionIntake(
+            **{**base_intake_kwargs(), "monthly_rent": 0},
+            grounds_for_eviction=["arrears"],
+            arrears_amount=1000,
+            arrears_period_months=1,
+        )
+    error = exc_info.value.errors()[0]
+    assert error["loc"] == ("monthly_rent",)
+    assert "greater than 0" not in error["msg"]
+    assert error["msg"] == "Monthly rent must be a positive amount."
+
+
+def test_non_positive_arrears_amount_gets_a_custom_message_not_pydantics_generic_one():
+    # Same fix, for the conditionally-required arrears fields: a *supplied* but non-positive
+    # arrears_amount used to bypass check_conditional_fields_for_grounds's own "incomplete"
+    # message entirely.
+    with pytest.raises(ValidationError) as exc_info:
+        drafter.TenancyEvictionIntake(
+            **base_intake_kwargs(),
+            grounds_for_eviction=["arrears"],
+            arrears_amount=0,
+            arrears_period_months=1,
+        )
+    error = exc_info.value.errors()[0]
+    assert "greater than 0" not in error["msg"]
+    assert "incomplete" in error["msg"]
+
+
 # --- Validation: conditional required fields ---
 
 

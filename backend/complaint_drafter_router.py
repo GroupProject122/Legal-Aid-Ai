@@ -59,6 +59,10 @@ def _validate_misleading_ad_intake(payload: dict[str, Any]) -> drafter.Misleadin
     return _validate_intake(drafter.MisleadingAdvertisementIntake, payload)
 
 
+def _validate_rti_application_intake(payload: dict[str, Any]) -> drafter.RTIApplicationIntake:
+    return _validate_intake(drafter.RTIApplicationIntake, payload)
+
+
 def _generate_draft(payload: dict[str, Any], validate_fn, assemble_fn) -> tuple[Any, drafter.DraftAssemblyResult]:
     intake = validate_fn(payload)
     try:
@@ -218,6 +222,53 @@ def download_misleading_ad_pdf(request: RawIntakeRequest) -> Response:
     except drafter.PdfConversionError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     filename = f"consumer_complaint_{intake.claim_type.value}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+# --- Scenario 4: RTI application ---
+
+
+@router.post("/rti-application/validate")
+def validate_rti_application_intake(request: RawIntakeRequest) -> dict:
+    intake = _validate_rti_application_intake(request.intake)
+    return {"status": "valid", "preferred_mode": intake.preferred_mode.value, "is_bpl_applicant": intake.is_bpl_applicant}
+
+
+@router.post("/rti-application/draft")
+def draft_rti_application(request: RawIntakeRequest) -> dict:
+    intake, result = _generate_draft(request.intake, _validate_rti_application_intake, drafter.assemble_rti_application_draft)
+    logger.info(
+        "RTI application draft generated preferred_mode=%s is_bpl_applicant=%s citation_review_required=%s",
+        intake.preferred_mode.value,
+        intake.is_bpl_applicant,
+        result.citation_review_required,
+    )
+    return {"status": "success", "scenario": "rti_application", **result.metadata()}
+
+
+@router.post("/rti-application/draft/docx")
+def download_rti_application_docx(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(request.intake, _validate_rti_application_intake, drafter.assemble_rti_application_draft)
+    filename = f"rti_application_{intake.public_authority_name.strip().lower().replace(' ', '_') or 'draft'}.docx"
+    return Response(
+        content=result.docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.post("/rti-application/draft/pdf")
+def download_rti_application_pdf(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(request.intake, _validate_rti_application_intake, drafter.assemble_rti_application_draft)
+    try:
+        pdf_bytes = drafter.convert_docx_bytes_to_pdf(result.docx_bytes)
+    except drafter.PdfConversionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    filename = f"rti_application_{intake.public_authority_name.strip().lower().replace(' ', '_') or 'draft'}.pdf"
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",

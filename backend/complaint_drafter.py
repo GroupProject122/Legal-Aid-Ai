@@ -27,6 +27,7 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 TENANCY_EVICTION_TEMPLATE_PATH = TEMPLATES_DIR / "tenancy_eviction_base.docx"
 CONSUMER_GOODS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_defective_goods_base.docx"
 CONSUMER_ADS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_misleading_ads_base.docx"
+RTI_APPLICATION_TEMPLATE_PATH = TEMPLATES_DIR / "rti_application_base.docx"
 
 RENT_CAP_INR = 3500
 RENT_CAP_MESSAGE = (
@@ -113,7 +114,11 @@ class TenancyEvictionIntake(BaseModel):
     # statute resolves in the abstract -- and not something this schema attempts to answer. Enter
     # whatever the tenancy agreement characterizes as rent; if a separate maintenance/service
     # charge exists, get advice on whether it should be included before relying on this field.
-    monthly_rent: float = Field(gt=0)
+    # No Field(gt=0) here -- a bare pydantic constraint fires before any model_validator runs
+    # and reports its own generic "Input should be greater than 0", bypassing the custom message
+    # check_monthly_rent_is_positive below would otherwise give. Same reasoning applies to every
+    # other amount/count field in this file (see the fixed-2026-09-26 note on that validator).
+    monthly_rent: float
     tenancy_start_date: datetime.date
     # Multi-ground petitions (e.g. arrears + subletting pleaded together, or arrears + bona fide
     # requirement in the alternative) are legally common in practice -- as of 2026-09-15 this is
@@ -124,11 +129,22 @@ class TenancyEvictionIntake(BaseModel):
     relief_sought: list[ReliefSought] = Field(min_length=1)
 
     # Conditionally required based on grounds_for_eviction.
-    arrears_amount: float | None = Field(default=None, gt=0)
-    arrears_period_months: int | None = Field(default=None, gt=0)
+    arrears_amount: float | None = None
+    arrears_period_months: int | None = None
     subletting_details: str | None = None
     damage_description: str | None = None
     bona_fide_reason: str | None = None
+
+    @model_validator(mode="after")
+    def check_monthly_rent_is_positive(self) -> "TenancyEvictionIntake":
+        # Fixed 2026-09-26: this used to be a bare Field(gt=0), which reported pydantic's own
+        # generic "Input should be greater than 0" instead of a message a non-lawyer filling in
+        # this form can act on -- every other business-rule check in this file (the rent cap
+        # right below, the future-date checks, etc.) already gets a hand-written message; this
+        # is the one that didn't.
+        if self.monthly_rent <= 0:
+            _raise_field_validation_error(self, "monthly_rent", "Monthly rent must be a positive amount.")
+        return self
 
     @model_validator(mode="after")
     def check_rent_cap(self) -> "TenancyEvictionIntake":
@@ -157,12 +173,24 @@ class TenancyEvictionIntake(BaseModel):
     def check_conditional_fields_for_grounds(self) -> "TenancyEvictionIntake":
         grounds = self.grounds_for_eviction
         if EvictionGround.arrears in grounds:
-            if self.arrears_amount is None or self.arrears_period_months is None:
+            # Fixed 2026-09-26: arrears_amount/arrears_period_months used to be Field(gt=0), so
+            # a supplied-but-non-positive value (e.g. 0) never reached this check at all --
+            # pydantic's own generic "Input should be greater than 0" fired first. Checking
+            # positivity here too means every "this complaint is incomplete" case for arrears
+            # goes through the one message, regardless of whether the field was missing or just
+            # not a positive value.
+            if (
+                self.arrears_amount is None
+                or self.arrears_amount <= 0
+                or self.arrears_period_months is None
+                or self.arrears_period_months <= 0
+            ):
                 _raise_field_validation_error(
                     self,
                     "arrears_amount",
                     "grounds_for_eviction includes 'arrears' but arrears_amount and "
-                    "arrears_period_months were not both supplied. This complaint is incomplete.",
+                    "arrears_period_months were not both supplied as positive values. This "
+                    "complaint is incomplete.",
                 )
         if EvictionGround.subletting in grounds:
             if not self.subletting_details or not self.subletting_details.strip():
@@ -688,7 +716,7 @@ class ConsumerDefectiveGoodsIntake(BaseModel):
     opposite_party_address: str = Field(min_length=1)
     goods_or_service_description: str = Field(min_length=1)
     transaction_date: datetime.date
-    amount_paid: float = Field(gt=0)
+    amount_paid: float
     defect_or_deficiency_type: DefectOrDeficiencyType
     defect_description: str = Field(min_length=1)
     prior_complaint_made: bool
@@ -696,7 +724,16 @@ class ConsumerDefectiveGoodsIntake(BaseModel):
 
     # Conditionally required.
     prior_complaint_response: str | None = None
-    compensation_amount: float | None = Field(default=None, gt=0)
+    compensation_amount: float | None = None
+
+    @model_validator(mode="after")
+    def check_amount_paid_is_positive(self) -> "ConsumerDefectiveGoodsIntake":
+        # Fixed 2026-09-26: no Field(gt=0) here -- see TenancyEvictionIntake's
+        # check_monthly_rent_is_positive for why a bare pydantic constraint on this field would
+        # bypass this custom message.
+        if self.amount_paid <= 0:
+            _raise_field_validation_error(self, "amount_paid", "Amount paid must be a positive amount.")
+        return self
 
     @model_validator(mode="after")
     def check_transaction_date_not_future(self) -> "ConsumerDefectiveGoodsIntake":
@@ -734,12 +771,17 @@ class ConsumerDefectiveGoodsIntake(BaseModel):
 
     @model_validator(mode="after")
     def check_compensation_amount_present(self) -> "ConsumerDefectiveGoodsIntake":
-        if GoodsReliefSought.compensation in self.relief_sought and self.compensation_amount is None:
+        # Fixed 2026-09-26: compensation_amount used to be Field(gt=0), so a supplied-but-zero
+        # value never reached this check -- pydantic's own generic message fired first, even
+        # though the parenthetical below already (accurately, as of now) describes that case.
+        if GoodsReliefSought.compensation in self.relief_sought and (
+            self.compensation_amount is None or self.compensation_amount <= 0
+        ):
             _raise_field_validation_error(
                 self,
                 "compensation_amount",
                 "relief_sought includes 'compensation' but compensation_amount was not supplied "
-                "(or was not a positive amount). This complaint is incomplete.",
+                "as a positive amount. This complaint is incomplete.",
             )
         return self
 
@@ -983,8 +1025,23 @@ class MisleadingAdvertisementIntake(BaseModel):
     relief_sought: list[AdsReliefSought] = Field(min_length=1)
 
     # Not every dark-pattern claim involves a completed purchase.
-    amount_paid: float | None = Field(default=None, gt=0)
-    compensation_amount: float | None = Field(default=None, gt=0)
+    amount_paid: float | None = None
+    compensation_amount: float | None = None
+
+    @model_validator(mode="after")
+    def check_amount_paid_is_positive(self) -> "MisleadingAdvertisementIntake":
+        # Fixed 2026-09-26: no Field(gt=0) here -- see TenancyEvictionIntake's
+        # check_monthly_rent_is_positive for why. amount_paid is optional in this scenario, so
+        # only a *supplied* non-positive value is rejected -- None (no completed purchase) is
+        # still valid and untouched by this check.
+        if self.amount_paid is not None and self.amount_paid <= 0:
+            _raise_field_validation_error(
+                self,
+                "amount_paid",
+                "Amount paid must be a positive amount when supplied. Leave it blank if this did "
+                "not involve a completed purchase.",
+            )
+        return self
 
     @model_validator(mode="after")
     def check_loss_description_specific(self) -> "MisleadingAdvertisementIntake":
@@ -1008,12 +1065,17 @@ class MisleadingAdvertisementIntake(BaseModel):
 
     @model_validator(mode="after")
     def check_compensation_amount_present(self) -> "MisleadingAdvertisementIntake":
-        if AdsReliefSought.compensation in self.relief_sought and self.compensation_amount is None:
+        # Fixed 2026-09-26: same fix as ConsumerDefectiveGoodsIntake's copy of this check -- a
+        # supplied-but-non-positive compensation_amount now reaches this message instead of
+        # pydantic's own generic one.
+        if AdsReliefSought.compensation in self.relief_sought and (
+            self.compensation_amount is None or self.compensation_amount <= 0
+        ):
             _raise_field_validation_error(
                 self,
                 "compensation_amount",
                 "relief_sought includes 'compensation' but compensation_amount was not supplied "
-                "(or was not a positive amount). This complaint is incomplete.",
+                "as a positive amount. This complaint is incomplete.",
             )
         return self
 
@@ -1209,6 +1271,178 @@ def assemble_misleading_advertisement_draft(intake: MisleadingAdvertisementIntak
         citation_used=citation,
         citation_review_required=citation_review_required,
         warnings=warnings,
+    )
+
+
+# --- Scenario 4: Right to Information (RTI) application under the Right to Information Act, 2005 ---
+# Deliberately the simplest scenario in this file: one fixed request, addressed to the Public
+# Information Officer of a named public authority. No "grounds" selection exists (there is only
+# one kind of RTI request this drafts), and there is no "reason for seeking this information"
+# field -- Section 6(2) of the Act entitles an applicant to withhold that reason entirely, and
+# the clause text says so explicitly rather than silently omitting a field that could otherwise
+# look like an oversight.
+
+
+class PreferredMode(str, Enum):
+    certified_copies = "certified_copies"
+    inspection_of_records = "inspection_of_records"
+    electronic_format = "electronic_format"
+
+
+PREFERRED_MODE_LABEL: dict[PreferredMode, str] = {
+    PreferredMode.certified_copies: "Certified copies of the relevant documents/records",
+    PreferredMode.inspection_of_records: "Inspection of the relevant documents/records",
+    PreferredMode.electronic_format: "The information in electronic format (e.g. email, diskette)",
+}
+
+MIN_INFORMATION_SOUGHT_CHARS = 20
+
+
+class RTIApplicationIntake(BaseModel):
+    applicant_name: str = Field(min_length=1)
+    applicant_address: str = Field(min_length=1)
+    public_authority_name: str = Field(min_length=1)
+    public_authority_address: str = Field(min_length=1)
+    # No Field(min_length=1) here -- check_information_sought_specific below already covers
+    # both "empty" and "too short" with one message; a separate min_length constraint would
+    # fire first on an empty string and report pydantic's own generic "String should have at
+    # least 1 character" instead.
+    information_sought: str
+    preferred_mode: PreferredMode
+    is_bpl_applicant: bool
+
+    @model_validator(mode="after")
+    def check_information_sought_specific(self) -> "RTIApplicationIntake":
+        # A vague or overly broad request is a real practical problem for RTI applications, not
+        # just a drafting nicety -- it risks rejection or delay under Section 7(9) of the Act
+        # (information need only be provided "in the form in which it is sought" where that does
+        # not disproportionately divert the public authority's resources). Same
+        # length-based-specificity pattern as MisleadingAdvertisementIntake's
+        # check_loss_description_specific.
+        if len(self.information_sought.strip()) < MIN_INFORMATION_SOUGHT_CHARS:
+            _raise_field_validation_error(
+                self,
+                "information_sought",
+                "information_sought must describe the specific information requested "
+                f"(at least {MIN_INFORMATION_SOUGHT_CHARS} characters). A vague or overly broad "
+                "request risks rejection or delay under Section 7(9) of the Act.",
+            )
+        return self
+
+
+# Pre-verified citation for the request itself. Must resolve against the corpus chunks rag.py
+# loads (source_file + section_number) before a draft using it is allowed to proceed -- same
+# mechanism as CLAUSE_CITATIONS/GOODS_CLAUSE_CITATIONS/ADS_CLAUSE_CITATIONS above. Confirmed
+# against the parsed corpus at authoring time: Section 6(1) ("Request for obtaining
+# information") is a verbatim provision, not a practitioner-convention mapping.
+RTI_REQUEST_CITATION: dict[str, Any] = {
+    "act_short_title": "Right to Information Act, 2005",
+    "section_cite": "Section 6(1)",
+    "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+    "section_number": "6",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+# Only cited when is_bpl_applicant is true (see DraftAssemblyResult.additional_citations) -- the
+# same "additional citation alongside the main one" pattern the consumer scenarios already use
+# for their forum-tier citation. Confirmed against the parsed corpus: the proviso to sub-section
+# (5) of Section 7 ("no such fee shall be charged from the persons who are of below poverty
+# line") is verbatim.
+RTI_BPL_FEE_EXEMPTION_CITATION: dict[str, Any] = {
+    "act_short_title": "Right to Information Act, 2005",
+    "section_cite": "Section 7(5), proviso",
+    "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+    "section_number": "7",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+RTI_CLAUSE_FILE = "rti_information_request_ground.txt"
+
+RTI_FIELD_PROVENANCE: dict[str, str] = {
+    "application_title": "deterministic_rule:fixed title text for RTI Act applications",
+    "applicant_name": "user_supplied",
+    "applicant_address": "user_supplied",
+    "public_authority_name": "user_supplied",
+    "public_authority_address": "user_supplied",
+    "request_clause": "deterministic_rule:rendered from user_supplied information_sought/preferred_mode/is_bpl_applicant",
+    "citation_line": "deterministic_rule:fixed RTI_REQUEST_CITATION",
+    "generated_date_display": "deterministic_rule:today's date, formatted",
+}
+
+
+def _rti_clause_render_fields(intake: RTIApplicationIntake) -> dict[str, Any]:
+    return {
+        "information_sought": intake.information_sought,
+        "preferred_mode_label": PREFERRED_MODE_LABEL[intake.preferred_mode],
+        "is_bpl_applicant": intake.is_bpl_applicant,
+        "bpl_citation_line": (
+            f"(See {RTI_BPL_FEE_EXEMPTION_CITATION['section_cite']} of the "
+            f"{RTI_BPL_FEE_EXEMPTION_CITATION['act_short_title']}.)"
+        ),
+    }
+
+
+def _build_rti_render_context(intake: RTIApplicationIntake) -> dict[str, Any]:
+    request_clause = _render_clause_file(RTI_CLAUSE_FILE, _rti_clause_render_fields(intake))
+    return {
+        "application_title": "APPLICATION UNDER THE RIGHT TO INFORMATION ACT, 2005",
+        "applicant_name": intake.applicant_name,
+        "applicant_address": intake.applicant_address,
+        "public_authority_name": intake.public_authority_name,
+        "public_authority_address": intake.public_authority_address,
+        "request_clause": request_clause,
+        "citation_line": f"(See {RTI_REQUEST_CITATION['section_cite']} of the {RTI_REQUEST_CITATION['act_short_title']}.)",
+        "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
+    }
+
+
+def assemble_rti_application_draft(intake: RTIApplicationIntake) -> DraftAssemblyResult:
+    """Slot-fill the fixed base template for the RTI application scenario.
+
+    No LLM call is made anywhere in this path. Hard-fails (raises) rather than emitting a
+    partial document if a citation doesn't resolve or an unregistered field would render.
+    """
+    _require_citation_resolved(RTI_REQUEST_CITATION, "RTI information request")
+    if intake.is_bpl_applicant:
+        _require_citation_resolved(RTI_BPL_FEE_EXEMPTION_CITATION, "BPL fee exemption")
+
+    context = _build_rti_render_context(intake)
+    _verify_field_provenance(context, RTI_FIELD_PROVENANCE)
+
+    if not RTI_APPLICATION_TEMPLATE_PATH.exists():
+        raise ComplaintDraftError(
+            f"Base template not found: {RTI_APPLICATION_TEMPLATE_PATH}. Run "
+            "build_templates.build_rti_application_base_template() to generate it."
+        )
+
+    doc = DocxTemplate(str(RTI_APPLICATION_TEMPLATE_PATH))
+    doc.render(context, jinja_env=_STRICT_JINJA_ENV)
+    buffer = io.BytesIO()
+    doc.save(buffer)
+
+    warnings: list[str] = []
+    review_warning = _citation_review_warning(RTI_REQUEST_CITATION, "RTI information request")
+    citation_review_required = review_warning is not None
+    if review_warning:
+        warnings.append(review_warning)
+
+    additional_citations = [RTI_BPL_FEE_EXEMPTION_CITATION] if intake.is_bpl_applicant else []
+
+    logger.info(
+        "RTI application draft assembled preferred_mode=%s is_bpl_applicant=%s citation_review_required=%s",
+        intake.preferred_mode.value,
+        intake.is_bpl_applicant,
+        citation_review_required,
+    )
+
+    return DraftAssemblyResult(
+        docx_bytes=buffer.getvalue(),
+        citation_used=RTI_REQUEST_CITATION,
+        citation_review_required=citation_review_required,
+        warnings=warnings,
+        additional_citations=additional_citations,
     )
 
 

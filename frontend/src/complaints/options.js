@@ -78,3 +78,11 @@ export const ADS_RELIEF_OPTIONS = [
   },
   { value: 'corrective_advertisement', label: 'Corrective advertisement' }
 ];
+
+// --- Scenario 4: RTI application (Right to Information Act, 2005) ---
+// Matches complaint_drafter.PreferredMode / PREFERRED_MODE_LABEL.
+export const PREFERRED_MODE_OPTIONS = [
+  { value: 'certified_copies', label: 'Certified copies of the documents/records' },
+  { value: 'inspection_of_records', label: 'Inspection of the documents/records' },
+  { value: 'electronic_format', label: 'Electronic format (e.g. email, diskette)' }
+];

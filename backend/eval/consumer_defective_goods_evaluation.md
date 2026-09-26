@@ -1,7 +1,7 @@
 # Complaint Drafter Evaluation (Consumer Defective Goods / Deficient Service, Consumer Protection Act, 2019)
 
 ## Overall Results
-- Total cases: 13
+- Total cases: 14
 - Grounds covered: defective_goods, deficient_service, short_delivery, spurious_goods, unfair_trade_practice_in_sale
 - Overall accuracy: 100.0%
 - Pass-case accuracy: 100.0% (9 cases)
@@ -9,7 +9,7 @@
 - Citation accuracy: 100.0%
 - Forum-tier accuracy: 100.0%
 - Citation corpus-resolution rate: 100.0%
-- Fail-case (hard validator) accuracy: 100.0% (4 cases)
+- Fail-case (hard validator) accuracy: 100.0% (5 cases)
 - Hard-fail message match rate: 100.0%
 
 ## Valid Drafts Per Ground
@@ -31,20 +31,21 @@
 - `hard_fail_future_transaction_date` expected `fail` -> got `fail`; message matched=True
 - `hard_fail_prior_complaint_missing_response` expected `fail` -> got `fail`; message matched=True
 - `hard_fail_compensation_relief_missing_amount` expected `fail` -> got `fail`; message matched=True
+- `hard_fail_compensation_amount_supplied_as_zero` expected `fail` -> got `fail`; message matched=True
 
 ## Group Breakdown
 - `forum_tier_boundary`: overall accuracy 100.0% (4 cases)
-- `hard_validators`: overall accuracy 100.0% (4 cases)
+- `hard_validators`: overall accuracy 100.0% (5 cases)
 - `valid_per_ground`: overall accuracy 100.0% (5 cases)
 
 ## Failures
 - No failures under the current case labels.
 
 ## Cost And Latency
-- Cases run: 13
+- Cases run: 14
 - LLM calls: 0 (no LLM is part of the drafting path)
-- Average latency: 24.38 ms
-- Max latency: 103 ms
+- Average latency: 23.14 ms
+- Max latency: 108 ms
 
 ## Remaining Limitations
 - Citation resolution checks source_file + section_number/rule_number presence in the corpus rag.py loads, not clause-letter-level textual entailment -- it confirms Section 2 (or the relevant Rule) exists in the corpus, not that the specific sub-clause (10)/(11)/(43)/(47) appears verbatim (verified manually at authoring time; see complaint_drafter.py's GOODS_CLAUSE_CITATIONS comments).

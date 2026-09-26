@@ -21,6 +21,7 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 TENANCY_EVICTION_TEMPLATE_PATH = TEMPLATES_DIR / "tenancy_eviction_base.docx"
 CONSUMER_GOODS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_defective_goods_base.docx"
 CONSUMER_ADS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_misleading_ads_base.docx"
+RTI_APPLICATION_TEMPLATE_PATH = TEMPLATES_DIR / "rti_application_base.docx"
 
 
 def build_tenancy_eviction_base_template() -> None:
@@ -276,11 +277,78 @@ def build_misleading_advertisement_base_template() -> None:
     logger.info("Saved base template to %s", CONSUMER_ADS_TEMPLATE_PATH)
 
 
+def build_rti_application_base_template() -> None:
+    """Fixed section order: heading -> addressee (PIO) block -> applicant block -> subject line
+    -> request body (clause inserted here) -> closing/signature block. A formal letter to a
+    Public Information Officer, not a court/commission pleading -- so no "PARTIES"/"Versus"
+    structure like the other three scenarios; this is the one scenario in this file that isn't a
+    petition or complaint."""
+    document = Document()
+    style = document.styles["Normal"]
+    style.font.name = "Times New Roman"
+    style.font.size = Pt(12)
+
+    def heading(text: str, *, bold: bool = True, center: bool = True, size: int = 12) -> None:
+        paragraph = document.add_paragraph()
+        if center:
+            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = paragraph.add_run(text)
+        run.bold = bold
+        run.font.size = Pt(size)
+
+    def body(text: str) -> None:
+        document.add_paragraph(text)
+
+    # 1. Heading
+    heading("{{ application_title }}")
+    document.add_paragraph()
+
+    # 2. Addressee (Public Information Officer)
+    body("To,")
+    body("The Public Information Officer,")
+    body("{{ public_authority_name }},")
+    body("{{ public_authority_address }}.")
+    document.add_paragraph()
+
+    # 3. Applicant details
+    body("From,")
+    body("{{ applicant_name }},")
+    body("{{ applicant_address }}.")
+    document.add_paragraph()
+
+    # 4. Subject line
+    body("Subject: Request for information under the Right to Information Act, 2005.")
+    document.add_paragraph()
+
+    body("Sir/Madam,")
+    document.add_paragraph()
+
+    # 5. Request body (clause inserted here)
+    heading("REQUEST FOR INFORMATION", center=False)
+    body("{{ request_clause }}")
+    body("{{ citation_line }}")
+    document.add_paragraph()
+
+    # 6. Closing / signature block
+    body("Yours faithfully,")
+    document.add_paragraph()
+    document.add_paragraph()
+    body("________________________________")
+    body("{{ applicant_name }}")
+    body("Applicant")
+    body("Dated: {{ generated_date_display }}")
+
+    TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    document.save(str(RTI_APPLICATION_TEMPLATE_PATH))
+    logger.info("Saved base template to %s", RTI_APPLICATION_TEMPLATE_PATH)
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     build_tenancy_eviction_base_template()
     build_consumer_defective_goods_base_template()
     build_misleading_advertisement_base_template()
+    build_rti_application_base_template()
 
 
 if __name__ == "__main__":

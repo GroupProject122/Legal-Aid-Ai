@@ -15,11 +15,17 @@
         "date_encountered": "2025-06-01",
         "claim_type": "false_claim_about_goods",
         "how_it_caused_loss": "I purchased the cream for Rs. 1200 relying on this claim; it had no effect and no clinical study exists.",
-        "relief_sought": ["discontinuation_of_practice"]
+        "relief_sought": [
+          "discontinuation_of_practice"
+        ]
       },
       "expected_outcome": "pass",
       "expected_clause_file": "ads_false_claim_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(28)(i)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"},
+      "expected_citation": {
+        "section_cite": "Section 2(28)(i)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      },
       "expected_citation_review_required": false
     },
     {
@@ -36,12 +42,18 @@
         "date_encountered": "2025-06-01",
         "claim_type": "misleading_price_representation",
         "how_it_caused_loss": "I paid Rs. 2000 believing I was getting a 60% discount that did not actually exist.",
-        "relief_sought": ["compensation"],
+        "relief_sought": [
+          "compensation"
+        ],
         "compensation_amount": 500
       },
       "expected_outcome": "pass",
       "expected_clause_file": "ads_misleading_price_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(47)(i)(i)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"},
+      "expected_citation": {
+        "section_cite": "Section 2(47)(i)(i)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      },
       "expected_citation_review_required": false
     },
     {
@@ -58,12 +70,19 @@
         "date_encountered": "2025-06-01",
         "claim_type": "false_guarantee_or_warranty",
         "how_it_caused_loss": "The mixer failed after 6 months and the seller refused the promised replacement guarantee entirely.",
-        "relief_sought": ["discontinuation_of_practice", "compensation"],
+        "relief_sought": [
+          "discontinuation_of_practice",
+          "compensation"
+        ],
         "compensation_amount": 1500
       },
       "expected_outcome": "pass",
       "expected_clause_file": "ads_false_guarantee_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(28)(ii)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"},
+      "expected_citation": {
+        "section_cite": "Section 2(28)(ii)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      },
       "expected_citation_review_required": false
     },
     {
@@ -80,11 +99,17 @@
         "date_encountered": "2025-06-01",
         "claim_type": "surrogate_advertisement",
         "how_it_caused_loss": "As a recovering alcoholic I was repeatedly exposed to disguised liquor-brand advertising, undermining my treatment.",
-        "relief_sought": ["discontinuation_of_practice"]
+        "relief_sought": [
+          "discontinuation_of_practice"
+        ]
       },
       "expected_outcome": "pass",
       "expected_clause_file": "ads_surrogate_advertisement_ground.txt",
-      "expected_citation": {"section_cite": "Guideline 6(1), read with the definition in Guideline 2(h)", "source_file": "consumer/misleading_ads_guidelines_2022.pdf", "guideline_number": "6"},
+      "expected_citation": {
+        "section_cite": "Guideline 6(1), read with the definition in Guideline 2(h)",
+        "source_file": "consumer/misleading_ads_guidelines_2022.pdf",
+        "guideline_number": "6"
+      },
       "expected_citation_review_required": false
     },
     {
@@ -101,12 +126,19 @@
         "date_encountered": "2025-06-01",
         "claim_type": "dark_pattern_deceptive_design",
         "how_it_caused_loss": "I was charged Rs. 499 extra for insurance I never selected or wanted, discovered only after payment.",
-        "relief_sought": ["compensation", "discontinuation_of_practice"],
+        "relief_sought": [
+          "compensation",
+          "discontinuation_of_practice"
+        ],
         "compensation_amount": 499
       },
       "expected_outcome": "pass",
       "expected_clause_file": "ads_dark_pattern_ground.txt",
-      "expected_citation": {"section_cite": "Guideline 4, read with the definition in Guideline 2(e)", "source_file": "consumer/dark_patterns_guidelines_2023.pdf", "guideline_number": "4"},
+      "expected_citation": {
+        "section_cite": "Guideline 4, read with the definition in Guideline 2(e)",
+        "source_file": "consumer/dark_patterns_guidelines_2023.pdf",
+        "guideline_number": "4"
+      },
       "expected_citation_review_required": true
     },
     {
@@ -123,7 +155,9 @@
         "date_encountered": "2025-06-01",
         "claim_type": "false_claim_about_goods",
         "how_it_caused_loss": "It didn't work.",
-        "relief_sought": ["discontinuation_of_practice"]
+        "relief_sought": [
+          "discontinuation_of_practice"
+        ]
       },
       "expected_outcome": "fail",
       "expected_failure_message_contains": "at least 20 characters"
@@ -142,7 +176,9 @@
         "date_encountered": "2025-06-01",
         "claim_type": "false_claim_about_goods",
         "how_it_caused_loss": "",
-        "relief_sought": ["discontinuation_of_practice"]
+        "relief_sought": [
+          "discontinuation_of_practice"
+        ]
       },
       "expected_outcome": "fail",
       "expected_failure_message_contains": "at least 20 characters"
@@ -161,7 +197,9 @@
         "date_encountered": "2099-01-01",
         "claim_type": "false_claim_about_goods",
         "how_it_caused_loss": "I purchased the cream relying on this claim and it had no effect at all on my skin.",
-        "relief_sought": ["discontinuation_of_practice"]
+        "relief_sought": [
+          "discontinuation_of_practice"
+        ]
       },
       "expected_outcome": "fail",
       "expected_failure_message_contains": "cannot be in the future"
@@ -180,7 +218,9 @@
         "date_encountered": "2025-06-01",
         "claim_type": "false_claim_about_goods",
         "how_it_caused_loss": "I purchased the cream relying on this claim and it had no effect at all on my skin.",
-        "relief_sought": ["compensation"]
+        "relief_sought": [
+          "compensation"
+        ]
       },
       "expected_outcome": "fail",
       "expected_failure_message_contains": "incomplete"
@@ -199,12 +239,62 @@
         "date_encountered": "2025-06-01",
         "claim_type": "dark_pattern_deceptive_design",
         "how_it_caused_loss": "The manipulative design pressured me into continuing a trial I had already decided to cancel, though I did not complete any purchase.",
-        "relief_sought": ["discontinuation_of_practice"]
+        "relief_sought": [
+          "discontinuation_of_practice"
+        ]
       },
       "expected_outcome": "pass",
       "expected_clause_file": "ads_dark_pattern_ground.txt",
-      "expected_citation": {"section_cite": "Guideline 4, read with the definition in Guideline 2(e)", "source_file": "consumer/dark_patterns_guidelines_2023.pdf", "guideline_number": "4"},
+      "expected_citation": {
+        "section_cite": "Guideline 4, read with the definition in Guideline 2(e)",
+        "source_file": "consumer/dark_patterns_guidelines_2023.pdf",
+        "guideline_number": "4"
+      },
       "expected_citation_review_required": true
+    },
+    {
+      "id": "hard_fail_amount_paid_supplied_as_zero",
+      "group": "hard_validators",
+      "description": "amount_paid supplied as 0 (not omitted) must fail with a custom message -- amount_paid is optional in this scenario, so this is distinct from simply leaving it unset.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "GlowSkin Cosmetics",
+        "opposite_party_address": "9 Ring Road, Bengaluru",
+        "advertisement_or_practice_description": "Print ad describing the cream as clinically proven to remove wrinkles in 3 days",
+        "platform_or_medium": "print",
+        "date_encountered": "2025-06-01",
+        "how_it_caused_loss": "I purchased the cream relying on this claim and it had no effect at all on my skin.",
+        "relief_sought": [
+          "discontinuation_of_practice"
+        ],
+        "claim_type": "false_claim_about_goods",
+        "amount_paid": 0
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "positive amount"
+    },
+    {
+      "id": "hard_fail_compensation_amount_supplied_as_zero",
+      "group": "hard_validators",
+      "description": "compensation_amount supplied as 0 (not missing) must still fail as incomplete.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "GlowSkin Cosmetics",
+        "opposite_party_address": "9 Ring Road, Bengaluru",
+        "advertisement_or_practice_description": "Print ad describing the cream as clinically proven to remove wrinkles in 3 days",
+        "platform_or_medium": "print",
+        "date_encountered": "2025-06-01",
+        "how_it_caused_loss": "I purchased the cream relying on this claim and it had no effect at all on my skin.",
+        "relief_sought": [
+          "compensation"
+        ],
+        "claim_type": "false_claim_about_goods",
+        "compensation_amount": 0
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "incomplete"
     }
   ]
 }

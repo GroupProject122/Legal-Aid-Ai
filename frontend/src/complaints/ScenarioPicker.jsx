@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileWarning, Gavel, Megaphone } from 'lucide-react';
+import { FileQuestion, FileWarning, Gavel, Megaphone } from 'lucide-react';
 
 export const SCENARIOS = [
   {
@@ -25,6 +25,14 @@ export const SCENARIOS = [
     act: 'Consumer Protection Act, 2019',
     description:
       'Draft a complaint over a false claim, a misleading price, a false guarantee, a surrogate advertisement, or a deceptive "dark pattern" design.'
+  },
+  {
+    id: 'rti_application',
+    icon: FileQuestion,
+    title: 'Right to Information (RTI) application',
+    act: 'Right to Information Act, 2005',
+    description:
+      'Draft a request to a government office for documents, records, or information it holds — you are not required to give a reason for asking.'
   }
 ];
 

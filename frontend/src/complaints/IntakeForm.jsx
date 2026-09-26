@@ -8,7 +8,8 @@ import {
   YES_NO,
   PLATFORM_OR_MEDIUM_OPTIONS,
   ADVERTISEMENT_CLAIM_TYPES,
-  ADS_RELIEF_OPTIONS
+  ADS_RELIEF_OPTIONS,
+  PREFERRED_MODE_OPTIONS
 } from './options.js';
 
 /**
@@ -161,6 +162,39 @@ export const FIELD_SCHEMAS = {
       required: true,
       min: 0.01,
       showIf: (v) => (v.relief_sought || []).includes('compensation')
+    }
+  ],
+  rti_application: [
+    { name: 'applicant_name', label: 'Your name', type: 'text', required: true },
+    { name: 'applicant_address', label: 'Your address', type: 'textarea', required: true },
+    {
+      name: 'public_authority_name',
+      label: 'Government office / public authority',
+      type: 'text',
+      required: true,
+      hint: 'The department, office, or authority that holds the information -- your application is addressed to its Public Information Officer.'
+    },
+    { name: 'public_authority_address', label: 'Public authority address', type: 'textarea', required: true },
+    {
+      name: 'information_sought',
+      label: 'What information are you requesting?',
+      type: 'textarea',
+      required: true,
+      hint: 'Be specific — at least 20 characters. You are not required to explain why you want this information (Section 6(2) of the Act).'
+    },
+    {
+      name: 'preferred_mode',
+      label: 'How would you like to receive it?',
+      type: 'select',
+      required: true,
+      options: PREFERRED_MODE_OPTIONS
+    },
+    {
+      name: 'is_bpl_applicant',
+      label: 'Do you belong to a family below the poverty line (BPL)?',
+      type: 'yesno',
+      required: true,
+      hint: 'BPL applicants are exempt from the application fee under Section 7(5) of the Act.'
     }
   ]
 };
