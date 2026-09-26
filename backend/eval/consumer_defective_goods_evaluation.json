@@ -59,9 +59,9 @@
     }
   },
   "latency": {
-    "average_latency_ms": 23.14,
+    "average_latency_ms": 22.57,
     "cases": 14,
-    "max_latency_ms": 108
+    "max_latency_ms": 105
   },
   "overall_metrics": {
     "case_count": 14,
@@ -107,7 +107,7 @@
       "forum_tier_correct": true,
       "group": "valid_per_ground",
       "id": "valid_defective_goods",
-      "latency_ms": 108
+      "latency_ms": 105
     },
     {
       "actual_citation": {
@@ -126,7 +126,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete deficient-service intake should validate and resolve to Section 2(11).",
-      "docx_bytes_generated": 37837,
+      "docx_bytes_generated": 37836,
       "expected_citation": {
         "section_cite": "Section 2(11)",
         "section_number": "2",
@@ -139,7 +139,7 @@
       "forum_tier_correct": true,
       "group": "valid_per_ground",
       "id": "valid_deficient_service",
-      "latency_ms": 31
+      "latency_ms": 27
     },
     {
       "actual_citation": {
@@ -158,7 +158,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete short-delivery intake should validate and resolve to Section 2(10) (quantity prong).",
-      "docx_bytes_generated": 37757,
+      "docx_bytes_generated": 37756,
       "expected_citation": {
         "section_cite": "Section 2(10) (the 'quantity' prong)",
         "section_number": "2",
@@ -171,7 +171,7 @@
       "forum_tier_correct": true,
       "group": "valid_per_ground",
       "id": "valid_short_delivery",
-      "latency_ms": 25
+      "latency_ms": 24
     },
     {
       "actual_citation": {
@@ -190,7 +190,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete spurious-goods intake should validate and resolve to Section 2(43).",
-      "docx_bytes_generated": 37704,
+      "docx_bytes_generated": 37703,
       "expected_citation": {
         "section_cite": "Section 2(43)",
         "section_number": "2",
@@ -203,7 +203,7 @@
       "forum_tier_correct": true,
       "group": "valid_per_ground",
       "id": "valid_spurious_goods",
-      "latency_ms": 24
+      "latency_ms": 25
     },
     {
       "actual_citation": {
@@ -235,7 +235,7 @@
       "forum_tier_correct": true,
       "group": "valid_per_ground",
       "id": "valid_unfair_trade_practice",
-      "latency_ms": 32
+      "latency_ms": 30
     },
     {
       "actual_outcome": "fail",
@@ -311,7 +311,7 @@
       "forum_tier_correct": true,
       "group": "forum_tier_boundary",
       "id": "forum_tier_district_boundary_at_cap",
-      "latency_ms": 23
+      "latency_ms": 25
     },
     {
       "actual_citation": {
@@ -330,7 +330,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "amount_paid one rupee above Rs. 50,00,000 must classify as state tier.",
-      "docx_bytes_generated": 37742,
+      "docx_bytes_generated": 37741,
       "expected_citation": {
         "section_cite": "Section 2(11)",
         "section_number": "2",
@@ -343,7 +343,7 @@
       "forum_tier_correct": true,
       "group": "forum_tier_boundary",
       "id": "forum_tier_state_just_above_district_cap",
-      "latency_ms": 24
+      "latency_ms": 25
     },
     {
       "actual_citation": {
@@ -362,7 +362,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "amount_paid exactly Rs. 2,00,00,000 (does not exceed) must classify as state tier.",
-      "docx_bytes_generated": 37740,
+      "docx_bytes_generated": 37739,
       "expected_citation": {
         "section_cite": "Section 2(11)",
         "section_number": "2",
@@ -375,7 +375,7 @@
       "forum_tier_correct": true,
       "group": "forum_tier_boundary",
       "id": "forum_tier_state_boundary_at_cap",
-      "latency_ms": 25
+      "latency_ms": 24
     },
     {
       "actual_citation": {
@@ -394,7 +394,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "amount_paid one rupee above Rs. 2,00,00,000 must classify as national tier.",
-      "docx_bytes_generated": 37738,
+      "docx_bytes_generated": 37737,
       "expected_citation": {
         "section_cite": "Section 2(11)",
         "section_number": "2",
@@ -407,7 +407,7 @@
       "forum_tier_correct": true,
       "group": "forum_tier_boundary",
       "id": "forum_tier_national_just_above_state_cap",
-      "latency_ms": 32
+      "latency_ms": 31
     },
     {
       "actual_outcome": "fail",

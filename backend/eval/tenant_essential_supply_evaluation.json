@@ -1,0 +1,144 @@
+{
+  "dataset_summary": {
+    "essential_supply_types_covered": [
+      "conservancy_and_sanitary_services",
+      "electricity",
+      "lights_in_passages_and_staircases",
+      "water"
+    ],
+    "total_cases": 5
+  },
+  "evaluation_config": {
+    "act": "Delhi Rent Control Act, 1958",
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/tenant_essential_supply_cases.json",
+    "llm_calls": 0,
+    "note": "Slot-fill drafting pipeline only -- no LLM call is part of this path.",
+    "scenario": "tenant_essential_supply"
+  },
+  "failures": [],
+  "group_breakdown": {
+    "hard_validators": {
+      "case_count": 3,
+      "citation_accuracy": 0.0,
+      "citation_corpus_resolution_rate": 0.0,
+      "fail_case_accuracy": 1.0,
+      "fail_case_count": 3,
+      "hard_fail_message_match_rate": 1.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 0.0,
+      "pass_case_count": 0
+    },
+    "valid_cases": {
+      "case_count": 2,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 2
+    }
+  },
+  "latency": {
+    "average_latency_ms": 26.6,
+    "cases": 5,
+    "max_latency_ms": 106
+  },
+  "overall_metrics": {
+    "case_count": 5,
+    "citation_accuracy": 1.0,
+    "citation_corpus_resolution_rate": 1.0,
+    "fail_case_accuracy": 1.0,
+    "fail_case_count": 3,
+    "hard_fail_message_match_rate": 1.0,
+    "overall_accuracy": 1.0,
+    "pass_case_accuracy": 1.0,
+    "pass_case_count": 2
+  },
+  "results": [
+    {
+      "actual_citation": {
+        "act_short_title": "Delhi Rent Control Act, 1958",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 45",
+        "section_number": "45",
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+      },
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Baseline valid application: water supply cut off.",
+      "docx_bytes_generated": 37601,
+      "expected_citation": {
+        "act_short_title": "Delhi Rent Control Act, 1958",
+        "section_cite": "Section 45"
+      },
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_water_cutoff",
+      "latency_ms": 106
+    },
+    {
+      "actual_citation": {
+        "act_short_title": "Delhi Rent Control Act, 1958",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 45",
+        "section_number": "45",
+        "source_file": "tenancy/delhi_rent_control_act_1958.pdf"
+      },
+      "actual_outcome": "pass",
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Electricity cutoff, landlord gave no reason at all (landlord_stated_reason omitted).",
+      "docx_bytes_generated": 37493,
+      "expected_citation": {
+        "act_short_title": "Delhi Rent Control Act, 1958",
+        "section_cite": "Section 45"
+      },
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_electricity_cutoff_no_stated_reason",
+      "latency_ms": 27
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "how_supply_was_cut_off under 20 characters must fail as too vague.",
+      "expected_outcome": "fail",
+      "failure_message": "how_supply_was_cut_off must describe specifically what the landlord did (at least 20 characters). The Controller must be satisfied the supply or service was actually cut off or withheld before making any order under Section 45.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_short_description",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "date_supply_cut_off in the future must fail.",
+      "expected_outcome": "fail",
+      "failure_message": "date_supply_cut_off cannot be in the future.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_future_cutoff_date",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "Missing property_address (a required field) must fail.",
+      "expected_outcome": "fail",
+      "failure_message": "Field required",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_missing_required_field",
+      "latency_ms": 0
+    }
+  ]
+}

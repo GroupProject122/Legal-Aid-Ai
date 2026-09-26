@@ -1,0 +1,99 @@
+{
+  "notes": "Curated cases for the tenant-essential-supply (Delhi Rent Control Act, 1958, Section 45) complaint-drafter scenario. Each case runs the actual Pydantic validator + citation-resolution + template-assembly pipeline in complaint_drafter.py -- nothing here is mocked. No LLM call anywhere in the path.",
+  "cases": [
+    {
+      "id": "valid_water_cutoff",
+      "group": "valid_cases",
+      "description": "Baseline valid application: water supply cut off.",
+      "intake": {
+        "tenant_name": "Priya Nair",
+        "tenant_address": "23 Lajpat Nagar, New Delhi",
+        "landlord_name": "Mohan Gupta",
+        "landlord_address": "45 Greater Kailash, New Delhi",
+        "property_address": "23 Lajpat Nagar, New Delhi",
+        "essential_supply_type": "water",
+        "date_supply_cut_off": "2026-09-01",
+        "how_supply_was_cut_off": "The landlord instructed the building caretaker to disconnect the main water line to my flat after I refused a rent increase.",
+        "landlord_stated_reason": "He claimed I owed additional maintenance charges not in the tenancy agreement."
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 45",
+        "act_short_title": "Delhi Rent Control Act, 1958"
+      }
+    },
+    {
+      "id": "valid_electricity_cutoff_no_stated_reason",
+      "group": "valid_cases",
+      "description": "Electricity cutoff, landlord gave no reason at all (landlord_stated_reason omitted).",
+      "intake": {
+        "tenant_name": "Arjun Mehta",
+        "tenant_address": "7 Defence Colony, New Delhi",
+        "landlord_name": "Sunita Kapoor",
+        "landlord_address": "18 South Extension, New Delhi",
+        "property_address": "7 Defence Colony, New Delhi",
+        "essential_supply_type": "electricity",
+        "date_supply_cut_off": "2026-08-15",
+        "how_supply_was_cut_off": "The landlord had the meter physically removed from my flat overnight without any notice."
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 45",
+        "act_short_title": "Delhi Rent Control Act, 1958"
+      }
+    },
+    {
+      "id": "hard_fail_short_description",
+      "group": "hard_validators",
+      "description": "how_supply_was_cut_off under 20 characters must fail as too vague.",
+      "intake": {
+        "tenant_name": "Priya Nair",
+        "tenant_address": "23 Lajpat Nagar, New Delhi",
+        "landlord_name": "Mohan Gupta",
+        "landlord_address": "45 Greater Kailash, New Delhi",
+        "property_address": "23 Lajpat Nagar, New Delhi",
+        "essential_supply_type": "water",
+        "date_supply_cut_off": "2026-09-01",
+        "how_supply_was_cut_off": "Water stopped"
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_how_supply_was_cut_off_specific",
+      "expected_failure_message_contains": "at least 20 characters"
+    },
+    {
+      "id": "hard_fail_future_cutoff_date",
+      "group": "hard_validators",
+      "description": "date_supply_cut_off in the future must fail.",
+      "intake": {
+        "tenant_name": "Priya Nair",
+        "tenant_address": "23 Lajpat Nagar, New Delhi",
+        "landlord_name": "Mohan Gupta",
+        "landlord_address": "45 Greater Kailash, New Delhi",
+        "property_address": "23 Lajpat Nagar, New Delhi",
+        "essential_supply_type": "water",
+        "date_supply_cut_off": "2099-01-01",
+        "how_supply_was_cut_off": "The landlord disconnected my water line after a rent dispute."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_date_supply_cut_off_not_future",
+      "expected_failure_message_contains": "cannot be in the future"
+    },
+    {
+      "id": "hard_fail_missing_required_field",
+      "group": "hard_validators",
+      "description": "Missing property_address (a required field) must fail.",
+      "intake": {
+        "tenant_name": "Priya Nair",
+        "tenant_address": "23 Lajpat Nagar, New Delhi",
+        "landlord_name": "Mohan Gupta",
+        "landlord_address": "45 Greater Kailash, New Delhi",
+        "essential_supply_type": "water",
+        "date_supply_cut_off": "2026-09-01",
+        "how_supply_was_cut_off": "The landlord disconnected my water line after a rent dispute."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "field_required",
+      "expected_failure_message_contains": "Field required"
+    }
+  ]
+}

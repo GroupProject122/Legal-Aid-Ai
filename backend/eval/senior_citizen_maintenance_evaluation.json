@@ -1,0 +1,192 @@
+{
+  "dataset_summary": {
+    "respondent_relationships_covered": [
+      "child",
+      "relative_of_childless_senior_citizen"
+    ],
+    "total_cases": 8
+  },
+  "evaluation_config": {
+    "act": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/senior_citizen_maintenance_cases.json",
+    "llm_calls": 0,
+    "note": "Slot-fill drafting pipeline only -- no LLM call is part of this path.",
+    "scenario": "senior_citizen_maintenance"
+  },
+  "failures": [],
+  "group_breakdown": {
+    "hard_validators": {
+      "additional_citation_accuracy": 0.0,
+      "case_count": 6,
+      "citation_accuracy": 0.0,
+      "citation_corpus_resolution_rate": 0.0,
+      "fail_case_accuracy": 1.0,
+      "fail_case_count": 6,
+      "hard_fail_message_match_rate": 1.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 0.0,
+      "pass_case_count": 0
+    },
+    "valid_cases": {
+      "additional_citation_accuracy": 1.0,
+      "case_count": 2,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 2
+    }
+  },
+  "latency": {
+    "average_latency_ms": 23.12,
+    "cases": 8,
+    "max_latency_ms": 148
+  },
+  "overall_metrics": {
+    "additional_citation_accuracy": 1.0,
+    "case_count": 8,
+    "citation_accuracy": 1.0,
+    "citation_corpus_resolution_rate": 1.0,
+    "fail_case_accuracy": 1.0,
+    "fail_case_count": 6,
+    "hard_fail_message_match_rate": 1.0,
+    "overall_accuracy": 1.0,
+    "pass_case_accuracy": 1.0,
+    "pass_case_count": 2
+  },
+  "results": [
+    {
+      "actual_additional_section_cites": [
+        "Section 9(2)"
+      ],
+      "actual_citation": {
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 4(1)(i)",
+        "section_number": "4",
+        "source_file": "constitutional_public_authority/maintenance_and_welfare_of_parents_and_senior_citizens_act_2007.pdf"
+      },
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Baseline valid application against a neglecting child, within the Rs. 10,000 cap.",
+      "docx_bytes_generated": 37482,
+      "expected_additional_section_cites": [
+        "Section 9(2)"
+      ],
+      "expected_citation": {
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+        "section_cite": "Section 4(1)(i)"
+      },
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_child_respondent",
+      "latency_ms": 148
+    },
+    {
+      "actual_additional_section_cites": [
+        "Section 9(2)"
+      ],
+      "actual_citation": {
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 4(1)(ii)",
+        "section_number": "4",
+        "source_file": "constitutional_public_authority/maintenance_and_welfare_of_parents_and_senior_citizens_act_2007.pdf"
+      },
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Childless senior citizen against a relative in possession of/who would inherit their property.",
+      "docx_bytes_generated": 37512,
+      "expected_additional_section_cites": [
+        "Section 9(2)"
+      ],
+      "expected_citation": {
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+        "section_cite": "Section 4(1)(ii)"
+      },
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_relative_respondent_childless",
+      "latency_ms": 37
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "applicant_age below 60 fails -- not a 'senior citizen' under Section 2(h).",
+      "expected_outcome": "fail",
+      "failure_message": "applicant_age must be at least 60. Section 4(1) of the Act limits this application to a \"senior citizen\" as defined in Section 2(h) -- a citizen of India who has attained the age of sixty years or above.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_applicant_under_60",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "Requested amount above Rs. 10,000 exceeds Section 9(2)'s nationwide ceiling.",
+      "expected_outcome": "fail",
+      "failure_message": "requested_monthly_maintenance_amount exceeds Rs. 10,000. Section 9(2) of the Act fixes this as the maximum monthly maintenance allowance a Tribunal may order, nationwide -- a State Government may prescribe a lower figure but never a higher one. This application cannot request more than the statutory ceiling.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_amount_exceeds_statutory_cap",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "Requested amount of zero must fail (not a positive amount), not the generic pydantic message.",
+      "expected_outcome": "fail",
+      "failure_message": "requested_monthly_maintenance_amount must be a positive amount.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_non_positive_amount",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "respondent_relationship is relative_of_childless_senior_citizen but relative_property_connection missing.",
+      "expected_outcome": "fail",
+      "failure_message": "respondent_relationship is 'relative_of_childless_senior_citizen' but relative_property_connection was not supplied. Section 4(4) of the Act requires the respondent to be in possession of, or due to inherit, the Applicant's property -- describe that connection. This application is incomplete.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_missing_relative_property_connection",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "respondent_relationship is child but relative_property_connection was supplied anyway.",
+      "expected_outcome": "fail",
+      "failure_message": "respondent_relationship is 'child' but relative_property_connection was supplied. Set respondent_relationship to 'relative_of_childless_senior_citizen' if that is the actual relationship, or remove this text if the Respondent is the Applicant's child/grandchild.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_stray_relative_property_connection",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "neglect_description under 20 characters must fail as too vague.",
+      "expected_outcome": "fail",
+      "failure_message": "neglect_description must describe the specific neglect or refusal to maintain (at least 20 characters). The Tribunal must be satisfied of actual neglect or refusal under Section 9(1) before it can order maintenance.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_short_neglect_description",
+      "latency_ms": 0
+    }
+  ]
+}

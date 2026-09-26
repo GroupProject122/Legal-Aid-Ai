@@ -22,6 +22,10 @@ TENANCY_EVICTION_TEMPLATE_PATH = TEMPLATES_DIR / "tenancy_eviction_base.docx"
 CONSUMER_GOODS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_defective_goods_base.docx"
 CONSUMER_ADS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_misleading_ads_base.docx"
 RTI_APPLICATION_TEMPLATE_PATH = TEMPLATES_DIR / "rti_application_base.docx"
+RTI_FIRST_APPEAL_TEMPLATE_PATH = TEMPLATES_DIR / "rti_first_appeal_base.docx"
+SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH = TEMPLATES_DIR / "senior_citizen_maintenance_base.docx"
+TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH = TEMPLATES_DIR / "tenant_essential_supply_base.docx"
+BANK_FRAUD_COMPLAINT_TEMPLATE_PATH = TEMPLATES_DIR / "bank_fraud_complaint_base.docx"
 
 
 def build_tenancy_eviction_base_template() -> None:
@@ -343,12 +347,248 @@ def build_rti_application_base_template() -> None:
     logger.info("Saved base template to %s", RTI_APPLICATION_TEMPLATE_PATH)
 
 
+def build_rti_first_appeal_base_template() -> None:
+    """Fixed section order: heading -> addressee (Appellate Authority) block -> appellant block ->
+    subject line -> appeal body (clause inserted here) -> closing/signature block. Same formal-
+    letter shape as build_rti_application_base_template() above -- this is the appeal that follows
+    when the original request goes unanswered or is refused."""
+    document = Document()
+    style = document.styles["Normal"]
+    style.font.name = "Times New Roman"
+    style.font.size = Pt(12)
+
+    def heading(text: str, *, bold: bool = True, center: bool = True, size: int = 12) -> None:
+        paragraph = document.add_paragraph()
+        if center:
+            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = paragraph.add_run(text)
+        run.bold = bold
+        run.font.size = Pt(size)
+
+    def body(text: str) -> None:
+        document.add_paragraph(text)
+
+    heading("{{ application_title }}")
+    document.add_paragraph()
+
+    body("To,")
+    body("The First Appellate Authority,")
+    body("{{ public_authority_name }},")
+    body("{{ public_authority_address }}.")
+    document.add_paragraph()
+
+    body("From,")
+    body("{{ appellant_name }},")
+    body("{{ appellant_address }}.")
+    document.add_paragraph()
+
+    body("Subject: First appeal under Section 19(1) of the Right to Information Act, 2005.")
+    document.add_paragraph()
+
+    body("Sir/Madam,")
+    document.add_paragraph()
+
+    heading("GROUNDS OF APPEAL", center=False)
+    body("{{ appeal_clause }}")
+    body("{{ citation_line }}")
+    document.add_paragraph()
+
+    body("Yours faithfully,")
+    document.add_paragraph()
+    document.add_paragraph()
+    body("________________________________")
+    body("{{ appellant_name }}")
+    body("Appellant")
+    body("Dated: {{ generated_date_display }}")
+
+    TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    document.save(str(RTI_FIRST_APPEAL_TEMPLATE_PATH))
+    logger.info("Saved base template to %s", RTI_FIRST_APPEAL_TEMPLATE_PATH)
+
+
+def build_senior_citizen_maintenance_base_template() -> None:
+    """Fixed section order: heading/forum -> parties -> applicant particulars -> grounds (clause
+    inserted here) -> verification/signature block. An application to the Maintenance Tribunal,
+    not a court petition, but structured the same PARTIES/Versus way as the eviction scenario
+    since it is still an adversarial two-party proceeding."""
+    document = Document()
+    style = document.styles["Normal"]
+    style.font.name = "Times New Roman"
+    style.font.size = Pt(12)
+
+    def heading(text: str, *, bold: bool = True, center: bool = True, size: int = 12) -> None:
+        paragraph = document.add_paragraph()
+        if center:
+            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = paragraph.add_run(text)
+        run.bold = bold
+        run.font.size = Pt(size)
+
+    def body(text: str) -> None:
+        document.add_paragraph(text)
+
+    heading("{{ forum_name }}")
+    heading("{{ application_title }}")
+    document.add_paragraph()
+
+    heading("PARTIES", center=False)
+    body("{{ applicant_name }}, aged {{ applicant_age }} years, residing at {{ applicant_address }}")
+    body("... Applicant")
+    heading("Versus", bold=False)
+    body("{{ respondent_name }}, residing at {{ respondent_address }}")
+    body("... Respondent")
+    document.add_paragraph()
+
+    heading("GROUNDS OF APPLICATION", center=False)
+    body("{{ maintenance_clause }}")
+    body("{{ citation_line }}")
+    document.add_paragraph()
+
+    heading("VERIFICATION", center=False)
+    body(
+        "I, {{ applicant_name }}, the Applicant above named, do hereby verify that the contents "
+        "of the foregoing application are true and correct to the best of my knowledge and "
+        "belief, and that nothing material has been concealed therefrom."
+    )
+    body("Verified at ____________________ on {{ generated_date_display }}.")
+    document.add_paragraph()
+    document.add_paragraph()
+    body("________________________________")
+    body("{{ applicant_name }}")
+    body("Applicant")
+
+    TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    document.save(str(SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH))
+    logger.info("Saved base template to %s", SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH)
+
+
+def build_tenant_essential_supply_base_template() -> None:
+    """Fixed section order: heading/forum -> parties (tenant as Applicant, landlord as
+    Respondent -- reversed from the eviction scenario) -> property particulars -> grounds (clause
+    inserted here) -> verification/signature block."""
+    document = Document()
+    style = document.styles["Normal"]
+    style.font.name = "Times New Roman"
+    style.font.size = Pt(12)
+
+    def heading(text: str, *, bold: bool = True, center: bool = True, size: int = 12) -> None:
+        paragraph = document.add_paragraph()
+        if center:
+            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = paragraph.add_run(text)
+        run.bold = bold
+        run.font.size = Pt(size)
+
+    def body(text: str) -> None:
+        document.add_paragraph(text)
+
+    heading("{{ forum_name }}")
+    heading("{{ application_title }}")
+    document.add_paragraph()
+
+    heading("PARTIES", center=False)
+    body("{{ tenant_name }}, residing at {{ tenant_address }}")
+    body("... Applicant/Tenant")
+    heading("Versus", bold=False)
+    body("{{ landlord_name }}, residing at {{ landlord_address }}")
+    body("... Respondent/Landlord")
+    document.add_paragraph()
+
+    heading("PROPERTY PARTICULARS", center=False)
+    body("The tenanted premises are situated at: {{ property_address }}.")
+    document.add_paragraph()
+
+    heading("GROUNDS OF APPLICATION", center=False)
+    body("{{ essential_supply_clause }}")
+    body("{{ citation_line }}")
+    document.add_paragraph()
+
+    heading("VERIFICATION", center=False)
+    body(
+        "I, {{ tenant_name }}, the Applicant/Tenant above named, do hereby verify that the "
+        "contents of the foregoing application are true and correct to the best of my knowledge "
+        "and belief, and that nothing material has been concealed therefrom."
+    )
+    body("Verified at ____________________ on {{ generated_date_display }}.")
+    document.add_paragraph()
+    document.add_paragraph()
+    body("________________________________")
+    body("{{ tenant_name }}")
+    body("Applicant/Tenant")
+
+    TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    document.save(str(TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH))
+    logger.info("Saved base template to %s", TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH)
+
+
+def build_bank_fraud_complaint_base_template() -> None:
+    """Fixed section order: heading -> addressee (bank) block -> complainant block -> subject
+    line -> complaint body (clause inserted here) -> closing/signature block. A formal letter to
+    a bank's grievance channel, same shape as the RTI scenarios -- not a court/commission
+    pleading."""
+    document = Document()
+    style = document.styles["Normal"]
+    style.font.name = "Times New Roman"
+    style.font.size = Pt(12)
+
+    def heading(text: str, *, bold: bool = True, center: bool = True, size: int = 12) -> None:
+        paragraph = document.add_paragraph()
+        if center:
+            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = paragraph.add_run(text)
+        run.bold = bold
+        run.font.size = Pt(size)
+
+    def body(text: str) -> None:
+        document.add_paragraph(text)
+
+    heading("{{ complaint_title }}")
+    document.add_paragraph()
+
+    body("To,")
+    body("The Nodal Officer / Grievance Redressal Officer,")
+    body("{{ bank_name }},")
+    body("{{ bank_branch_address }}.")
+    document.add_paragraph()
+
+    body("From,")
+    body("{{ complainant_name }},")
+    body("{{ complainant_address }}.")
+    document.add_paragraph()
+
+    body("Subject: Complaint regarding an unauthorized electronic banking transaction.")
+    document.add_paragraph()
+
+    body("Sir/Madam,")
+    document.add_paragraph()
+
+    heading("COMPLAINT", center=False)
+    body("{{ complaint_clause }}")
+    document.add_paragraph()
+
+    body("Yours faithfully,")
+    document.add_paragraph()
+    document.add_paragraph()
+    body("________________________________")
+    body("{{ complainant_name }}")
+    body("Complainant")
+    body("Dated: {{ generated_date_display }}")
+
+    TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    document.save(str(BANK_FRAUD_COMPLAINT_TEMPLATE_PATH))
+    logger.info("Saved base template to %s", BANK_FRAUD_COMPLAINT_TEMPLATE_PATH)
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     build_tenancy_eviction_base_template()
     build_consumer_defective_goods_base_template()
     build_misleading_advertisement_base_template()
     build_rti_application_base_template()
+    build_rti_first_appeal_base_template()
+    build_senior_citizen_maintenance_base_template()
+    build_tenant_essential_supply_base_template()
+    build_bank_fraud_complaint_base_template()
 
 
 if __name__ == "__main__":

@@ -48,8 +48,8 @@
 ## Cost And Latency
 - Cases run: 18
 - LLM calls: 0 (no LLM is part of the drafting path)
-- Average latency: 16.78 ms
-- Max latency: 109 ms
+- Average latency: 16.61 ms
+- Max latency: 106 ms
 
 ## Remaining Limitations
 - This scenario covers 4 grounds only (arrears, subletting, damage, bona_fide_requirement); unauthorized_construction was dropped pending manual legal review of its citation.

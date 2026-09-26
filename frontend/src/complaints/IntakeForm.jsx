@@ -9,7 +9,11 @@ import {
   PLATFORM_OR_MEDIUM_OPTIONS,
   ADVERTISEMENT_CLAIM_TYPES,
   ADS_RELIEF_OPTIONS,
-  PREFERRED_MODE_OPTIONS
+  PREFERRED_MODE_OPTIONS,
+  PIO_RESPONSE_TYPE_OPTIONS,
+  RESPONDENT_RELATIONSHIP_OPTIONS,
+  ESSENTIAL_SUPPLY_TYPE_OPTIONS,
+  ACCOUNT_CATEGORY_OPTIONS
 } from './options.js';
 
 /**
@@ -32,6 +36,7 @@ export const FIELD_SCHEMAS = {
       name: 'monthly_rent',
       label: 'Monthly rent (₹)',
       type: 'number',
+      currency: true,
       required: true,
       min: 0.01,
       hint: 'Must not exceed Rs. 3,500 for this Act to apply (Section 3).'
@@ -50,6 +55,7 @@ export const FIELD_SCHEMAS = {
       name: 'arrears_amount',
       label: 'Arrears amount (₹)',
       type: 'number',
+      currency: true,
       required: true,
       min: 0.01,
       showIf: (v) => (v.grounds_for_eviction || []).includes('arrears')
@@ -92,7 +98,7 @@ export const FIELD_SCHEMAS = {
     { name: 'opposite_party_address', label: 'Seller / service provider address', type: 'textarea', required: true },
     { name: 'goods_or_service_description', label: 'Goods or service in question', type: 'text', required: true },
     { name: 'transaction_date', label: 'Date of transaction', type: 'date', required: true },
-    { name: 'amount_paid', label: 'Amount paid (₹)', type: 'number', required: true, min: 0.01 },
+    { name: 'amount_paid', label: 'Amount paid (₹)', type: 'number', currency: true, required: true, min: 0.01 },
     {
       name: 'defect_or_deficiency_type',
       label: 'Type of issue',
@@ -114,6 +120,7 @@ export const FIELD_SCHEMAS = {
       name: 'compensation_amount',
       label: 'Compensation amount (₹)',
       type: 'number',
+      currency: true,
       required: true,
       min: 0.01,
       showIf: (v) => (v.relief_sought || []).includes('compensation')
@@ -150,6 +157,7 @@ export const FIELD_SCHEMAS = {
       name: 'amount_paid',
       label: 'Amount paid, if any (₹)',
       type: 'number',
+      currency: true,
       required: false,
       min: 0.01,
       hint: 'Leave blank if this did not involve a completed purchase.'
@@ -159,6 +167,7 @@ export const FIELD_SCHEMAS = {
       name: 'compensation_amount',
       label: 'Compensation amount (₹)',
       type: 'number',
+      currency: true,
       required: true,
       min: 0.01,
       showIf: (v) => (v.relief_sought || []).includes('compensation')
@@ -195,6 +204,146 @@ export const FIELD_SCHEMAS = {
       type: 'yesno',
       required: true,
       hint: 'BPL applicants are exempt from the application fee under Section 7(5) of the Act.'
+    }
+  ],
+  rti_first_appeal: [
+    { name: 'appellant_name', label: 'Your name', type: 'text', required: true },
+    { name: 'appellant_address', label: 'Your address', type: 'textarea', required: true },
+    {
+      name: 'public_authority_name',
+      label: 'Government office / public authority',
+      type: 'text',
+      required: true,
+      hint: 'The same office your original RTI request was addressed to.'
+    },
+    { name: 'public_authority_address', label: 'Public authority address', type: 'textarea', required: true },
+    {
+      name: 'information_originally_sought',
+      label: 'What information did you originally request?',
+      type: 'textarea',
+      required: true
+    },
+    { name: 'original_application_date', label: 'Date you filed the original RTI request', type: 'date', required: true },
+    {
+      name: 'pio_response_type',
+      label: "What was the Public Information Officer's response?",
+      type: 'select',
+      required: true,
+      options: PIO_RESPONSE_TYPE_OPTIONS
+    },
+    {
+      name: 'pio_response_date',
+      label: 'Date of that response',
+      type: 'date',
+      required: true,
+      showIf: (v) => v.pio_response_type && v.pio_response_type !== 'no_response_received'
+    },
+    {
+      name: 'grounds_for_appeal',
+      label: 'Why are you appealing?',
+      type: 'textarea',
+      required: true,
+      hint: 'Be specific — at least 20 characters.'
+    }
+  ],
+  senior_citizen_maintenance: [
+    { name: 'applicant_name', label: 'Your name', type: 'text', required: true },
+    { name: 'applicant_address', label: 'Your address', type: 'textarea', required: true },
+    { name: 'applicant_age', label: 'Your age', type: 'number', required: true, min: 60, step: 1, hint: 'Must be 60 or above.' },
+    {
+      name: 'respondent_relationship',
+      label: 'Who are you filing this against?',
+      type: 'select',
+      required: true,
+      options: RESPONDENT_RELATIONSHIP_OPTIONS
+    },
+    { name: 'respondent_name', label: 'Their name', type: 'text', required: true },
+    { name: 'respondent_address', label: 'Their address', type: 'textarea', required: true },
+    {
+      name: 'relative_property_connection',
+      label: 'How do they hold or stand to inherit your property?',
+      type: 'textarea',
+      required: true,
+      showIf: (v) => v.respondent_relationship === 'relative_of_childless_senior_citizen'
+    },
+    {
+      name: 'neglect_description',
+      label: 'Describe how they have neglected or refused to maintain you',
+      type: 'textarea',
+      required: true,
+      hint: 'Be specific — at least 20 characters.'
+    },
+    {
+      name: 'requested_monthly_maintenance_amount',
+      label: 'Requested monthly maintenance (₹)',
+      type: 'number',
+      currency: true,
+      required: true,
+      min: 0.01,
+      hint: 'Cannot exceed Rs. 10,000/month — the statutory ceiling under Section 9(2) of the Act.'
+    }
+  ],
+  tenant_essential_supply: [
+    { name: 'tenant_name', label: 'Your name', type: 'text', required: true },
+    { name: 'tenant_address', label: 'Your address', type: 'textarea', required: true },
+    { name: 'landlord_name', label: 'Landlord name', type: 'text', required: true },
+    { name: 'landlord_address', label: 'Landlord address', type: 'textarea', required: true },
+    { name: 'property_address', label: 'Tenanted property address', type: 'textarea', required: true },
+    {
+      name: 'essential_supply_type',
+      label: 'Which supply/service was cut off or withheld?',
+      type: 'select',
+      required: true,
+      options: ESSENTIAL_SUPPLY_TYPE_OPTIONS
+    },
+    { name: 'date_supply_cut_off', label: 'Date this happened', type: 'date', required: true },
+    {
+      name: 'how_supply_was_cut_off',
+      label: 'Describe what the landlord did',
+      type: 'textarea',
+      required: true,
+      hint: 'Be specific — at least 20 characters.'
+    },
+    {
+      name: 'landlord_stated_reason',
+      label: 'What reason (if any) did the landlord give?',
+      type: 'textarea',
+      required: false
+    }
+  ],
+  bank_fraud_complaint: [
+    { name: 'complainant_name', label: 'Your name', type: 'text', required: true },
+    { name: 'complainant_address', label: 'Your address', type: 'textarea', required: true },
+    { name: 'bank_name', label: 'Bank name', type: 'text', required: true },
+    { name: 'bank_branch_address', label: 'Bank branch address', type: 'textarea', required: true },
+    {
+      name: 'account_category',
+      label: 'Account / card type',
+      type: 'select',
+      required: true,
+      options: ACCOUNT_CATEGORY_OPTIONS
+    },
+    { name: 'transaction_date', label: 'Date of the unauthorized transaction', type: 'date', required: true },
+    { name: 'transaction_amount', label: 'Transaction amount (₹)', type: 'number', currency: true, required: true, min: 0.01 },
+    {
+      name: 'bank_communication_date',
+      label: "Date you received the bank's alert/communication about it",
+      type: 'date',
+      required: true
+    },
+    {
+      name: 'date_first_reported_to_bank',
+      label: 'Date you first reported it to the bank',
+      type: 'date',
+      required: true,
+      hint: 'Your liability tier is calculated from the gap between these two dates.'
+    },
+    {
+      name: 'unauthorized_transaction_description',
+      label: 'Describe the transaction and why it was unauthorized',
+      type: 'textarea',
+      required: true,
+      hint: 'Be specific — at least 20 characters.'
     }
   ]
 };

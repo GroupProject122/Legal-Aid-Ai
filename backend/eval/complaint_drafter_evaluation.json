@@ -67,9 +67,9 @@
     }
   },
   "latency": {
-    "average_latency_ms": 16.78,
+    "average_latency_ms": 16.61,
     "cases": 18,
-    "max_latency_ms": 109
+    "max_latency_ms": 106
   },
   "overall_metrics": {
     "case_count": 18,
@@ -118,7 +118,7 @@
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_arrears",
-      "latency_ms": 109
+      "latency_ms": 106
     },
     {
       "actual_citations": [
@@ -139,7 +139,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete subletting-ground intake should validate and resolve to Section 14(1)(b).",
-      "docx_bytes_generated": 37642,
+      "docx_bytes_generated": 37641,
       "expected_citations": [
         {
           "section_cite": "Section 14(1)(b)",
@@ -175,7 +175,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete damage-ground intake should validate and resolve to Section 14(1)(j).",
-      "docx_bytes_generated": 37602,
+      "docx_bytes_generated": 37601,
       "expected_citations": [
         {
           "section_cite": "Section 14(1)(j)",
@@ -190,7 +190,7 @@
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_damage",
-      "latency_ms": 26
+      "latency_ms": 25
     },
     {
       "actual_citations": [
@@ -211,7 +211,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete bona-fide-requirement intake should validate and resolve to Section 14(1)(e).",
-      "docx_bytes_generated": 37679,
+      "docx_bytes_generated": 37678,
       "expected_citations": [
         {
           "section_cite": "Section 14(1)(e)",
@@ -226,7 +226,7 @@
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_bona_fide_requirement",
-      "latency_ms": 25
+      "latency_ms": 28
     },
     {
       "actual_citations": [
@@ -255,7 +255,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Arrears + subletting pleaded together should validate and render both grounds in statutory order: (a) arrears, then (b) subletting.",
-      "docx_bytes_generated": 37933,
+      "docx_bytes_generated": 37932,
       "expected_citations": [
         {
           "section_cite": "Section 14(1)(a)",
@@ -276,7 +276,7 @@
       "failure_message": null,
       "group": "multi_ground",
       "id": "multi_ground_arrears_subletting",
-      "latency_ms": 32
+      "latency_ms": 31
     },
     {
       "actual_citations": [
@@ -354,7 +354,7 @@
       "failure_message": null,
       "group": "multi_ground",
       "id": "multi_ground_all_four",
-      "latency_ms": 27
+      "latency_ms": 26
     },
     {
       "actual_citations": [
@@ -383,7 +383,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Grounds deliberately selected in non-statutory input order (bona_fide_requirement listed before arrears) must still render in fixed statutory order: (a) arrears before (e) bona fide requirement, regardless of selection order.",
-      "docx_bytes_generated": 37976,
+      "docx_bytes_generated": 37975,
       "expected_citations": [
         {
           "section_cite": "Section 14(1)(a)",

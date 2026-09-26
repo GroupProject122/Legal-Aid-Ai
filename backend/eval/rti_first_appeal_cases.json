@@ -1,0 +1,145 @@
+{
+  "notes": "Curated cases for the RTI-first-appeal (Right to Information Act, 2005, Section 19(1)) complaint-drafter scenario. Each case runs the actual Pydantic validator + citation-resolution + template-assembly pipeline in complaint_drafter.py -- nothing here is mocked. No LLM call anywhere in the path. NOT covered here: check_no_response_received_period_has_expired (rejects a deemed-refusal appeal filed before the 30-day Section 7(1) period has actually expired) -- that check's pass/fail boundary moves with 'today', so a fixed-date case here would silently go stale; it's covered instead by a pytest test that computes its dates relative to datetime.date.today() at test-run time (tests/test_rti_first_appeal.py).",
+  "cases": [
+    {
+      "id": "valid_no_response_received",
+      "group": "valid_cases",
+      "description": "Standard deemed-refusal appeal: no response within 30 days of the original request.",
+      "intake": {
+        "appellant_name": "Anita Verma",
+        "appellant_address": "14 Green Park, New Delhi",
+        "public_authority_name": "Delhi Jal Board",
+        "public_authority_address": "Varunalaya Phase II, Karol Bagh, New Delhi",
+        "information_originally_sought": "Certified copies of all water quality test reports for the Karol Bagh zone from January 2026 to June 2026.",
+        "original_application_date": "2026-08-01",
+        "pio_response_type": "no_response_received",
+        "grounds_for_appeal": "No response was received within the thirty-day period despite the request being clear and specific."
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 19(1)",
+        "act_short_title": "Right to Information Act, 2005"
+      },
+      "expected_additional_section_cites": []
+    },
+    {
+      "id": "valid_request_rejected",
+      "group": "valid_cases",
+      "description": "PIO actively rejected the request -- pio_response_date must be present and appear in the draft.",
+      "intake": {
+        "appellant_name": "Ramesh Yadav",
+        "appellant_address": "B-2, Trilokpuri, New Delhi",
+        "public_authority_name": "Municipal Corporation of Delhi",
+        "public_authority_address": "Town Hall, Chandni Chowk, New Delhi",
+        "information_originally_sought": "A copy of the sanctioned building plan for the community hall in Trilokpuri Block 12.",
+        "original_application_date": "2026-08-01",
+        "pio_response_type": "request_rejected",
+        "pio_response_date": "2026-08-20",
+        "grounds_for_appeal": "The rejection cited no exemption under Section 8 of the Act and gave no reasoned justification."
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 19(1)",
+        "act_short_title": "Right to Information Act, 2005"
+      },
+      "expected_additional_section_cites": []
+    },
+    {
+      "id": "valid_incomplete_information_within_window",
+      "group": "valid_cases",
+      "description": "Incomplete information provided, appeal filed well within the 30-day window -- no lateness warning expected.",
+      "intake": {
+        "appellant_name": "Farhan Ahmed",
+        "appellant_address": "22 Nizamuddin East, New Delhi",
+        "public_authority_name": "Central Board of Secondary Education",
+        "public_authority_address": "Shiksha Kendra, 2 Community Centre, Preet Vihar, Delhi",
+        "information_originally_sought": "The marking scheme used for evaluating Class XII Mathematics answer scripts in the 2026 board examination.",
+        "original_application_date": "2026-09-01",
+        "pio_response_type": "incomplete_information_provided",
+        "pio_response_date": "2026-09-15",
+        "grounds_for_appeal": "Only the final marks were provided, not the marking scheme actually requested in the application."
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 19(1)",
+        "act_short_title": "Right to Information Act, 2005"
+      },
+      "expected_additional_section_cites": [],
+      "expect_lateness_warning": false
+    },
+    {
+      "id": "hard_fail_short_grounds_for_appeal",
+      "group": "hard_validators",
+      "description": "grounds_for_appeal under 20 characters must fail as too vague.",
+      "intake": {
+        "appellant_name": "Anita Verma",
+        "appellant_address": "14 Green Park, New Delhi",
+        "public_authority_name": "Delhi Jal Board",
+        "public_authority_address": "Varunalaya Phase II, Karol Bagh, New Delhi",
+        "information_originally_sought": "Certified copies of all water quality test reports for the Karol Bagh zone.",
+        "original_application_date": "2026-08-01",
+        "pio_response_type": "no_response_received",
+        "grounds_for_appeal": "Not fair"
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_grounds_for_appeal_specific",
+      "expected_failure_message_contains": "at least 20 characters"
+    },
+    {
+      "id": "hard_fail_missing_pio_response_date_when_rejected",
+      "group": "hard_validators",
+      "description": "pio_response_type indicates an actual decision but pio_response_date is missing.",
+      "intake": {
+        "appellant_name": "Ramesh Yadav",
+        "appellant_address": "B-2, Trilokpuri, New Delhi",
+        "public_authority_name": "Municipal Corporation of Delhi",
+        "public_authority_address": "Town Hall, Chandni Chowk, New Delhi",
+        "information_originally_sought": "A copy of the sanctioned building plan for the community hall in Trilokpuri Block 12.",
+        "original_application_date": "2026-08-01",
+        "pio_response_type": "request_rejected",
+        "grounds_for_appeal": "The rejection cited no exemption under Section 8 of the Act."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_pio_response_date_present_when_expected",
+      "expected_failure_message_contains": "This appeal is incomplete"
+    },
+    {
+      "id": "hard_fail_stray_pio_response_date_with_no_response",
+      "group": "hard_validators",
+      "description": "pio_response_type is no_response_received but a pio_response_date was supplied anyway -- contradiction.",
+      "intake": {
+        "appellant_name": "Anita Verma",
+        "appellant_address": "14 Green Park, New Delhi",
+        "public_authority_name": "Delhi Jal Board",
+        "public_authority_address": "Varunalaya Phase II, Karol Bagh, New Delhi",
+        "information_originally_sought": "Certified copies of all water quality test reports for the Karol Bagh zone.",
+        "original_application_date": "2026-08-01",
+        "pio_response_type": "no_response_received",
+        "pio_response_date": "2026-08-20",
+        "grounds_for_appeal": "No response was received within the thirty-day period."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_pio_response_date_not_stray",
+      "expected_failure_message_contains": "reflect the actual response received"
+    },
+    {
+      "id": "hard_fail_response_date_before_application_date",
+      "group": "hard_validators",
+      "description": "pio_response_date cannot be before original_application_date.",
+      "intake": {
+        "appellant_name": "Ramesh Yadav",
+        "appellant_address": "B-2, Trilokpuri, New Delhi",
+        "public_authority_name": "Municipal Corporation of Delhi",
+        "public_authority_address": "Town Hall, Chandni Chowk, New Delhi",
+        "information_originally_sought": "A copy of the sanctioned building plan for the community hall in Trilokpuri Block 12.",
+        "original_application_date": "2026-08-20",
+        "pio_response_type": "request_rejected",
+        "pio_response_date": "2026-08-01",
+        "grounds_for_appeal": "The rejection cited no exemption under Section 8 of the Act."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_pio_response_date_not_before_application",
+      "expected_failure_message_contains": "cannot be before original_application_date"
+    }
+  ]
+}

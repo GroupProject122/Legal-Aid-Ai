@@ -1,0 +1,157 @@
+{
+  "notes": "Curated cases for the senior-citizen-maintenance (Maintenance and Welfare of Parents and Senior Citizens Act, 2007) complaint-drafter scenario. Each case runs the actual Pydantic validator + citation-resolution + template-assembly pipeline in complaint_drafter.py -- nothing here is mocked. No LLM call anywhere in the path.",
+  "cases": [
+    {
+      "id": "valid_child_respondent",
+      "group": "valid_cases",
+      "description": "Baseline valid application against a neglecting child, within the Rs. 10,000 cap.",
+      "intake": {
+        "applicant_name": "Ram Prasad Sharma",
+        "applicant_address": "45 Model Town, Delhi",
+        "applicant_age": 68,
+        "respondent_relationship": "child",
+        "respondent_name": "Suresh Sharma",
+        "respondent_address": "12 Rohini Sector 9, Delhi",
+        "neglect_description": "My son has refused to provide any financial support or food for the last six months despite repeated requests.",
+        "requested_monthly_maintenance_amount": 8000
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 4(1)(i)",
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007"
+      },
+      "expected_additional_section_cites": ["Section 9(2)"]
+    },
+    {
+      "id": "valid_relative_respondent_childless",
+      "group": "valid_cases",
+      "description": "Childless senior citizen against a relative in possession of/who would inherit their property.",
+      "intake": {
+        "applicant_name": "Kamala Devi",
+        "applicant_address": "9 Karol Bagh, Delhi",
+        "applicant_age": 72,
+        "respondent_relationship": "relative_of_childless_senior_citizen",
+        "respondent_name": "Vikram Devi",
+        "respondent_address": "20 Paharganj, Delhi",
+        "relative_property_connection": "is my nephew and currently occupies my ancestral house, which he would inherit as my nearest legal heir",
+        "neglect_description": "My nephew occupies my house rent-free but refuses to pay for my medical expenses or food.",
+        "requested_monthly_maintenance_amount": 10000
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 4(1)(ii)",
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007"
+      },
+      "expected_additional_section_cites": ["Section 9(2)"]
+    },
+    {
+      "id": "hard_fail_applicant_under_60",
+      "group": "hard_validators",
+      "description": "applicant_age below 60 fails -- not a 'senior citizen' under Section 2(h).",
+      "intake": {
+        "applicant_name": "X",
+        "applicant_address": "Y",
+        "applicant_age": 55,
+        "respondent_relationship": "child",
+        "respondent_name": "Z",
+        "respondent_address": "W",
+        "neglect_description": "My child has refused to provide any financial support for months now.",
+        "requested_monthly_maintenance_amount": 5000
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_applicant_age_meets_senior_citizen_threshold",
+      "expected_failure_message_contains": "at least 60"
+    },
+    {
+      "id": "hard_fail_amount_exceeds_statutory_cap",
+      "group": "hard_validators",
+      "description": "Requested amount above Rs. 10,000 exceeds Section 9(2)'s nationwide ceiling.",
+      "intake": {
+        "applicant_name": "X",
+        "applicant_address": "Y",
+        "applicant_age": 70,
+        "respondent_relationship": "child",
+        "respondent_name": "Z",
+        "respondent_address": "W",
+        "neglect_description": "My child has refused to provide any financial support for months now.",
+        "requested_monthly_maintenance_amount": 15000
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_requested_amount_is_positive_and_within_cap",
+      "expected_failure_message_contains": "exceeds Rs. 10,000"
+    },
+    {
+      "id": "hard_fail_non_positive_amount",
+      "group": "hard_validators",
+      "description": "Requested amount of zero must fail (not a positive amount), not the generic pydantic message.",
+      "intake": {
+        "applicant_name": "X",
+        "applicant_address": "Y",
+        "applicant_age": 70,
+        "respondent_relationship": "child",
+        "respondent_name": "Z",
+        "respondent_address": "W",
+        "neglect_description": "My child has refused to provide any financial support for months now.",
+        "requested_monthly_maintenance_amount": 0
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_requested_amount_is_positive_and_within_cap",
+      "expected_failure_message_contains": "must be a positive amount"
+    },
+    {
+      "id": "hard_fail_missing_relative_property_connection",
+      "group": "hard_validators",
+      "description": "respondent_relationship is relative_of_childless_senior_citizen but relative_property_connection missing.",
+      "intake": {
+        "applicant_name": "Kamala Devi",
+        "applicant_address": "9 Karol Bagh, Delhi",
+        "applicant_age": 72,
+        "respondent_relationship": "relative_of_childless_senior_citizen",
+        "respondent_name": "Vikram Devi",
+        "respondent_address": "20 Paharganj, Delhi",
+        "neglect_description": "My nephew occupies my house rent-free but refuses to pay for my medical expenses.",
+        "requested_monthly_maintenance_amount": 8000
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_relative_property_connection_present",
+      "expected_failure_message_contains": "This application is incomplete"
+    },
+    {
+      "id": "hard_fail_stray_relative_property_connection",
+      "group": "hard_validators",
+      "description": "respondent_relationship is child but relative_property_connection was supplied anyway.",
+      "intake": {
+        "applicant_name": "Ram Prasad Sharma",
+        "applicant_address": "45 Model Town, Delhi",
+        "applicant_age": 68,
+        "respondent_relationship": "child",
+        "respondent_name": "Suresh Sharma",
+        "respondent_address": "12 Rohini Sector 9, Delhi",
+        "relative_property_connection": "would inherit my property",
+        "neglect_description": "My son has refused to provide any financial support for six months.",
+        "requested_monthly_maintenance_amount": 8000
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_relative_property_connection_not_stray",
+      "expected_failure_message_contains": "respondent_relationship is 'child'"
+    },
+    {
+      "id": "hard_fail_short_neglect_description",
+      "group": "hard_validators",
+      "description": "neglect_description under 20 characters must fail as too vague.",
+      "intake": {
+        "applicant_name": "X",
+        "applicant_address": "Y",
+        "applicant_age": 70,
+        "respondent_relationship": "child",
+        "respondent_name": "Z",
+        "respondent_address": "W",
+        "neglect_description": "He ignores me",
+        "requested_monthly_maintenance_amount": 5000
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_neglect_description_specific",
+      "expected_failure_message_contains": "at least 20 characters"
+    }
+  ]
+}

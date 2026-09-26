@@ -5964,6 +5964,16 @@ body.has-custom-cursor textarea {
   line-height: 1.45;
 }
 
+/* A softer variant for warnings that aren't about citation confidence (e.g. an RTI first appeal
+   filed outside its 30-day window) -- still worth the reader's attention, but not the same
+   "double-check this before you file it" urgency as the amber citation-review banner above. */
+.complaint-review-banner-notice {
+  color: var(--mocha-soft);
+  background: var(--parchment);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--taupe);
+}
+
 .complaint-forum-tier {
   margin: 4px 0 0;
   font-size: 0.95rem;

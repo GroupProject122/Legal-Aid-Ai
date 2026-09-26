@@ -42,8 +42,8 @@
 ## Cost And Latency
 - Cases run: 12
 - LLM calls: 0 (no LLM is part of the drafting path)
-- Average latency: 19.33 ms
-- Max latency: 100 ms
+- Average latency: 19.67 ms
+- Max latency: 107 ms
 
 ## Remaining Limitations
 - Citation resolution checks source_file + section_number/guideline_number presence in the corpus rag.py loads, not clause-letter-level textual entailment (same limitation as the other two scenarios; see complaint_drafter.py's ADS_CLAUSE_CITATIONS comments).

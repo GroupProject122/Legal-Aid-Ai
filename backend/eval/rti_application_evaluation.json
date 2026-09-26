@@ -44,9 +44,9 @@
     }
   },
   "latency": {
-    "average_latency_ms": 24.17,
+    "average_latency_ms": 24.33,
     "cases": 6,
-    "max_latency_ms": 97
+    "max_latency_ms": 99
   },
   "overall_metrics": {
     "additional_citation_accuracy": 1.0,
@@ -80,7 +80,7 @@
       "citation_review_flag_correct": true,
       "correct": true,
       "description": "Baseline valid application: certified copies, not a BPL applicant, so no fee-exemption clause or additional citation.",
-      "docx_bytes_generated": 37210,
+      "docx_bytes_generated": 37209,
       "expected_additional_section_cites": [],
       "expected_citation": {
         "act_short_title": "Right to Information Act, 2005",
@@ -91,7 +91,7 @@
       "failure_message": null,
       "group": "valid_cases",
       "id": "valid_certified_copies_non_bpl",
-      "latency_ms": 97
+      "latency_ms": 99
     },
     {
       "actual_additional_section_cites": [
@@ -113,7 +113,7 @@
       "citation_review_flag_correct": true,
       "correct": true,
       "description": "BPL applicant requesting inspection of records -- must carry the fee-exemption clause and the additional Section 7(5) citation.",
-      "docx_bytes_generated": 37292,
+      "docx_bytes_generated": 37291,
       "expected_additional_section_cites": [
         "Section 7(5), proviso"
       ],
@@ -146,7 +146,7 @@
       "citation_review_flag_correct": true,
       "correct": true,
       "description": "Preferred mode = electronic format, to cover the third PreferredMode option.",
-      "docx_bytes_generated": 37250,
+      "docx_bytes_generated": 37249,
       "expected_additional_section_cites": [],
       "expected_citation": {
         "act_short_title": "Right to Information Act, 2005",
@@ -157,7 +157,7 @@
       "failure_message": null,
       "group": "valid_cases",
       "id": "valid_electronic_format",
-      "latency_ms": 23
+      "latency_ms": 22
     },
     {
       "actual_outcome": "fail",

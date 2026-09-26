@@ -44,8 +44,8 @@
 ## Cost And Latency
 - Cases run: 14
 - LLM calls: 0 (no LLM is part of the drafting path)
-- Average latency: 23.14 ms
-- Max latency: 108 ms
+- Average latency: 22.57 ms
+- Max latency: 105 ms
 
 ## Remaining Limitations
 - Citation resolution checks source_file + section_number/rule_number presence in the corpus rag.py loads, not clause-letter-level textual entailment -- it confirms Section 2 (or the relevant Rule) exists in the corpus, not that the specific sub-clause (10)/(11)/(43)/(47) appears verbatim (verified manually at authoring time; see complaint_drafter.py's GOODS_CLAUSE_CITATIONS comments).

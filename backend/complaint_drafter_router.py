@@ -63,6 +63,22 @@ def _validate_rti_application_intake(payload: dict[str, Any]) -> drafter.RTIAppl
     return _validate_intake(drafter.RTIApplicationIntake, payload)
 
 
+def _validate_rti_first_appeal_intake(payload: dict[str, Any]) -> drafter.RTIFirstAppealIntake:
+    return _validate_intake(drafter.RTIFirstAppealIntake, payload)
+
+
+def _validate_senior_citizen_maintenance_intake(payload: dict[str, Any]) -> drafter.SeniorCitizenMaintenanceIntake:
+    return _validate_intake(drafter.SeniorCitizenMaintenanceIntake, payload)
+
+
+def _validate_tenant_essential_supply_intake(payload: dict[str, Any]) -> drafter.TenantEssentialSupplyIntake:
+    return _validate_intake(drafter.TenantEssentialSupplyIntake, payload)
+
+
+def _validate_bank_fraud_complaint_intake(payload: dict[str, Any]) -> drafter.BankFraudComplaintIntake:
+    return _validate_intake(drafter.BankFraudComplaintIntake, payload)
+
+
 def _generate_draft(payload: dict[str, Any], validate_fn, assemble_fn) -> tuple[Any, drafter.DraftAssemblyResult]:
     intake = validate_fn(payload)
     try:
@@ -269,6 +285,220 @@ def download_rti_application_pdf(request: RawIntakeRequest) -> Response:
     except drafter.PdfConversionError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     filename = f"rti_application_{intake.public_authority_name.strip().lower().replace(' ', '_') or 'draft'}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+# --- Scenario 5: RTI first appeal ---
+
+
+@router.post("/rti-first-appeal/validate")
+def validate_rti_first_appeal_intake(request: RawIntakeRequest) -> dict:
+    intake = _validate_rti_first_appeal_intake(request.intake)
+    return {"status": "valid", "pio_response_type": intake.pio_response_type.value}
+
+
+@router.post("/rti-first-appeal/draft")
+def draft_rti_first_appeal(request: RawIntakeRequest) -> dict:
+    intake, result = _generate_draft(request.intake, _validate_rti_first_appeal_intake, drafter.assemble_rti_first_appeal_draft)
+    logger.info(
+        "RTI first appeal draft generated pio_response_type=%s citation_review_required=%s",
+        intake.pio_response_type.value,
+        result.citation_review_required,
+    )
+    return {"status": "success", "scenario": "rti_first_appeal", **result.metadata()}
+
+
+@router.post("/rti-first-appeal/draft/docx")
+def download_rti_first_appeal_docx(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(request.intake, _validate_rti_first_appeal_intake, drafter.assemble_rti_first_appeal_draft)
+    filename = f"rti_first_appeal_{intake.public_authority_name.strip().lower().replace(' ', '_') or 'draft'}.docx"
+    return Response(
+        content=result.docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.post("/rti-first-appeal/draft/pdf")
+def download_rti_first_appeal_pdf(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(request.intake, _validate_rti_first_appeal_intake, drafter.assemble_rti_first_appeal_draft)
+    try:
+        pdf_bytes = drafter.convert_docx_bytes_to_pdf(result.docx_bytes)
+    except drafter.PdfConversionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    filename = f"rti_first_appeal_{intake.public_authority_name.strip().lower().replace(' ', '_') or 'draft'}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+# --- Scenario 6: senior citizen maintenance application ---
+
+
+@router.post("/senior-citizen-maintenance/validate")
+def validate_senior_citizen_maintenance_intake(request: RawIntakeRequest) -> dict:
+    intake = _validate_senior_citizen_maintenance_intake(request.intake)
+    return {"status": "valid", "respondent_relationship": intake.respondent_relationship.value}
+
+
+@router.post("/senior-citizen-maintenance/draft")
+def draft_senior_citizen_maintenance(request: RawIntakeRequest) -> dict:
+    intake, result = _generate_draft(
+        request.intake, _validate_senior_citizen_maintenance_intake, drafter.assemble_senior_citizen_maintenance_draft
+    )
+    logger.info(
+        "Senior citizen maintenance draft generated respondent_relationship=%s citation_review_required=%s",
+        intake.respondent_relationship.value,
+        result.citation_review_required,
+    )
+    return {"status": "success", "scenario": "senior_citizen_maintenance", **result.metadata()}
+
+
+@router.post("/senior-citizen-maintenance/draft/docx")
+def download_senior_citizen_maintenance_docx(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(
+        request.intake, _validate_senior_citizen_maintenance_intake, drafter.assemble_senior_citizen_maintenance_draft
+    )
+    filename = f"maintenance_application_{intake.respondent_relationship.value}.docx"
+    return Response(
+        content=result.docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.post("/senior-citizen-maintenance/draft/pdf")
+def download_senior_citizen_maintenance_pdf(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(
+        request.intake, _validate_senior_citizen_maintenance_intake, drafter.assemble_senior_citizen_maintenance_draft
+    )
+    try:
+        pdf_bytes = drafter.convert_docx_bytes_to_pdf(result.docx_bytes)
+    except drafter.PdfConversionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    filename = f"maintenance_application_{intake.respondent_relationship.value}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+# --- Scenario 7: tenant essential-supply complaint ---
+
+
+@router.post("/tenant-essential-supply/validate")
+def validate_tenant_essential_supply_intake(request: RawIntakeRequest) -> dict:
+    intake = _validate_tenant_essential_supply_intake(request.intake)
+    return {"status": "valid", "essential_supply_type": intake.essential_supply_type.value}
+
+
+@router.post("/tenant-essential-supply/draft")
+def draft_tenant_essential_supply(request: RawIntakeRequest) -> dict:
+    intake, result = _generate_draft(
+        request.intake, _validate_tenant_essential_supply_intake, drafter.assemble_tenant_essential_supply_draft
+    )
+    logger.info(
+        "Tenant essential-supply draft generated essential_supply_type=%s citation_review_required=%s",
+        intake.essential_supply_type.value,
+        result.citation_review_required,
+    )
+    return {"status": "success", "scenario": "tenant_essential_supply", **result.metadata()}
+
+
+@router.post("/tenant-essential-supply/draft/docx")
+def download_tenant_essential_supply_docx(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(
+        request.intake, _validate_tenant_essential_supply_intake, drafter.assemble_tenant_essential_supply_draft
+    )
+    filename = f"essential_supply_complaint_{intake.essential_supply_type.value}.docx"
+    return Response(
+        content=result.docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.post("/tenant-essential-supply/draft/pdf")
+def download_tenant_essential_supply_pdf(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(
+        request.intake, _validate_tenant_essential_supply_intake, drafter.assemble_tenant_essential_supply_draft
+    )
+    try:
+        pdf_bytes = drafter.convert_docx_bytes_to_pdf(result.docx_bytes)
+    except drafter.PdfConversionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    filename = f"essential_supply_complaint_{intake.essential_supply_type.value}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+# --- Scenario 8: bank fraud (unauthorized electronic banking transaction) complaint ---
+
+
+@router.post("/bank-fraud-complaint/validate")
+def validate_bank_fraud_complaint_intake(request: RawIntakeRequest) -> dict:
+    intake = _validate_bank_fraud_complaint_intake(request.intake)
+    return {
+        "status": "valid",
+        "account_category": intake.account_category.value,
+        "liability_tier": intake.liability_tier,
+        "elapsed_days_to_report": intake.elapsed_days_to_report,
+    }
+
+
+@router.post("/bank-fraud-complaint/draft")
+def draft_bank_fraud_complaint(request: RawIntakeRequest) -> dict:
+    intake, result = _generate_draft(
+        request.intake, _validate_bank_fraud_complaint_intake, drafter.assemble_bank_fraud_complaint_draft
+    )
+    logger.info(
+        "Bank fraud complaint draft generated account_category=%s liability_tier=%s citation_review_required=%s",
+        intake.account_category.value,
+        intake.liability_tier,
+        result.citation_review_required,
+    )
+    return {
+        "status": "success",
+        "scenario": "bank_fraud_complaint",
+        "liability_tier": intake.liability_tier,
+        "elapsed_days_to_report": intake.elapsed_days_to_report,
+        **result.metadata(),
+    }
+
+
+@router.post("/bank-fraud-complaint/draft/docx")
+def download_bank_fraud_complaint_docx(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(
+        request.intake, _validate_bank_fraud_complaint_intake, drafter.assemble_bank_fraud_complaint_draft
+    )
+    filename = f"bank_fraud_complaint_{intake.bank_name.strip().lower().replace(' ', '_') or 'draft'}.docx"
+    return Response(
+        content=result.docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.post("/bank-fraud-complaint/draft/pdf")
+def download_bank_fraud_complaint_pdf(request: RawIntakeRequest) -> Response:
+    intake, result = _generate_draft(
+        request.intake, _validate_bank_fraud_complaint_intake, drafter.assemble_bank_fraud_complaint_draft
+    )
+    try:
+        pdf_bytes = drafter.convert_docx_bytes_to_pdf(result.docx_bytes)
+    except drafter.PdfConversionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    filename = f"bank_fraud_complaint_{intake.bank_name.strip().lower().replace(' ', '_') or 'draft'}.pdf"
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",

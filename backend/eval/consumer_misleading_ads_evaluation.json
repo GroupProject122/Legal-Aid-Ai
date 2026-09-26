@@ -59,9 +59,9 @@
     }
   },
   "latency": {
-    "average_latency_ms": 19.33,
+    "average_latency_ms": 19.67,
     "cases": 12,
-    "max_latency_ms": 100
+    "max_latency_ms": 107
   },
   "overall_metrics": {
     "case_count": 12,
@@ -95,7 +95,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete false-claim intake should validate and resolve to Section 2(28)(i).",
-      "docx_bytes_generated": 37643,
+      "docx_bytes_generated": 37641,
       "expected_citation": {
         "section_cite": "Section 2(28)(i)",
         "section_number": "2",
@@ -107,7 +107,7 @@
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_false_claim_about_goods",
-      "latency_ms": 100
+      "latency_ms": 107
     },
     {
       "actual_citation": {
@@ -127,7 +127,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete misleading-price intake should validate and resolve to Section 2(47)(i)(i).",
-      "docx_bytes_generated": 37706,
+      "docx_bytes_generated": 37705,
       "expected_citation": {
         "section_cite": "Section 2(47)(i)(i)",
         "section_number": "2",
@@ -159,7 +159,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete false-guarantee intake should validate and resolve to Section 2(28)(ii).",
-      "docx_bytes_generated": 37656,
+      "docx_bytes_generated": 37655,
       "expected_citation": {
         "section_cite": "Section 2(28)(ii)",
         "section_number": "2",
@@ -192,7 +192,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "Complete surrogate-advertisement intake should validate and resolve to Guideline 6 of the misleading-ads guidelines.",
-      "docx_bytes_generated": 37898,
+      "docx_bytes_generated": 37899,
       "expected_citation": {
         "guideline_number": "6",
         "section_cite": "Guideline 6(1), read with the definition in Guideline 2(h)",
@@ -204,7 +204,7 @@
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_surrogate_advertisement",
-      "latency_ms": 25
+      "latency_ms": 24
     },
     {
       "actual_citation": {
@@ -237,7 +237,7 @@
       "failure_message": null,
       "group": "valid_per_ground",
       "id": "valid_dark_pattern_deceptive_design",
-      "latency_ms": 32
+      "latency_ms": 29
     },
     {
       "actual_outcome": "fail",
@@ -302,7 +302,7 @@
       "clause_selection_correct": true,
       "correct": true,
       "description": "A dark-pattern claim with no completed purchase (amount_paid omitted) should still validate -- not every dark-pattern claim involves a transaction.",
-      "docx_bytes_generated": 38167,
+      "docx_bytes_generated": 38166,
       "expected_citation": {
         "guideline_number": "4",
         "section_cite": "Guideline 4, read with the definition in Guideline 2(e)",
@@ -314,7 +314,7 @@
       "failure_message": null,
       "group": "no_transaction_case",
       "id": "valid_dark_pattern_without_purchase",
-      "latency_ms": 24
+      "latency_ms": 25
     },
     {
       "actual_outcome": "fail",

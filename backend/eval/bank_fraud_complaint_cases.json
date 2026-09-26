@@ -1,0 +1,181 @@
+{
+  "notes": "Curated cases for the bank-fraud-complaint (RBI's 2017 Limiting Liability directions + IT Act Section 66D) complaint-drafter scenario. Each case runs the actual Pydantic validator + citation-resolution + template-assembly pipeline in complaint_drafter.py -- nothing here is mocked. No LLM call anywhere in the path. day_gap = (date_first_reported_to_bank - bank_communication_date).days.",
+  "cases": [
+    {
+      "id": "valid_zero_liability_reported_same_day",
+      "group": "valid_cases",
+      "description": "Reported same day as bank communication -- zero liability tier (day_gap=0).",
+      "intake": {
+        "complainant_name": "Suresh Kumar",
+        "complainant_address": "12 Vasant Kunj, New Delhi",
+        "bank_name": "State Bank of India",
+        "bank_branch_address": "Vasant Kunj Branch, New Delhi",
+        "account_category": "standard_account",
+        "transaction_date": "2026-09-10",
+        "transaction_amount": 45000,
+        "bank_communication_date": "2026-09-10",
+        "date_first_reported_to_bank": "2026-09-10",
+        "unauthorized_transaction_description": "An unknown UPI transfer of Rs 45,000 to an unfamiliar UPI ID that I never authorized or recognize."
+      },
+      "expected_outcome": "pass",
+      "expected_liability_tier": "zero",
+      "expected_elapsed_days": 0,
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_additional_section_cites": ["Guideline 7 (Table 1)", "Section 66D"]
+    },
+    {
+      "id": "valid_zero_liability_boundary_day_3",
+      "group": "valid_cases",
+      "description": "Reported exactly 3 days after communication -- still zero liability (boundary).",
+      "intake": {
+        "complainant_name": "Neha Kapoor",
+        "complainant_address": "5 Malviya Nagar, New Delhi",
+        "bank_name": "HDFC Bank",
+        "bank_branch_address": "Malviya Nagar Branch, New Delhi",
+        "account_category": "bsbd_account",
+        "transaction_date": "2026-09-01",
+        "transaction_amount": 3000,
+        "bank_communication_date": "2026-09-01",
+        "date_first_reported_to_bank": "2026-09-04",
+        "unauthorized_transaction_description": "An ATM withdrawal of Rs 3,000 I never made, from a city I was not in at the time."
+      },
+      "expected_outcome": "pass",
+      "expected_liability_tier": "zero",
+      "expected_elapsed_days": 3,
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_additional_section_cites": ["Guideline 7 (Table 1)", "Section 66D"]
+    },
+    {
+      "id": "valid_limited_liability_boundary_day_4",
+      "group": "valid_cases",
+      "description": "Reported 4 days after communication -- limited liability tier (boundary).",
+      "intake": {
+        "complainant_name": "Rakesh Gupta",
+        "complainant_address": "18 Rohini, Delhi",
+        "bank_name": "ICICI Bank",
+        "bank_branch_address": "Rohini Branch, Delhi",
+        "account_category": "high_value_account",
+        "transaction_date": "2026-09-01",
+        "transaction_amount": 200000,
+        "bank_communication_date": "2026-09-01",
+        "date_first_reported_to_bank": "2026-09-05",
+        "unauthorized_transaction_description": "A large NEFT transfer of Rs 2,00,000 to an account I do not recognize and never authorized."
+      },
+      "expected_outcome": "pass",
+      "expected_liability_tier": "limited",
+      "expected_elapsed_days": 4,
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_additional_section_cites": ["Guideline 7 (Table 1)", "Section 66D"]
+    },
+    {
+      "id": "valid_bank_policy_tier_beyond_7_days",
+      "group": "valid_cases",
+      "description": "Reported 10 days after communication -- bank's own policy tier applies.",
+      "intake": {
+        "complainant_name": "Fatima Sheikh",
+        "complainant_address": "9 Jamia Nagar, Delhi",
+        "bank_name": "Punjab National Bank",
+        "bank_branch_address": "Jamia Nagar Branch, Delhi",
+        "account_category": "standard_account",
+        "transaction_date": "2026-08-20",
+        "transaction_amount": 15000,
+        "bank_communication_date": "2026-08-20",
+        "date_first_reported_to_bank": "2026-08-30",
+        "unauthorized_transaction_description": "A UPI transaction of Rs 15,000 that I noticed only after checking my statement much later."
+      },
+      "expected_outcome": "pass",
+      "expected_liability_tier": "bank_policy",
+      "expected_elapsed_days": 10,
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_additional_section_cites": ["Guideline 7 (Table 1)", "Section 66D"]
+    },
+    {
+      "id": "hard_fail_non_positive_transaction_amount",
+      "group": "hard_validators",
+      "description": "transaction_amount of zero must fail with a custom message, not pydantic's generic one.",
+      "intake": {
+        "complainant_name": "X",
+        "complainant_address": "Y",
+        "bank_name": "Z",
+        "bank_branch_address": "W",
+        "account_category": "bsbd_account",
+        "transaction_date": "2026-09-01",
+        "transaction_amount": 0,
+        "bank_communication_date": "2026-09-01",
+        "date_first_reported_to_bank": "2026-09-02",
+        "unauthorized_transaction_description": "An unauthorized transaction I never made or approved."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_transaction_amount_is_positive",
+      "expected_failure_message_contains": "must be a positive amount"
+    },
+    {
+      "id": "hard_fail_communication_before_transaction",
+      "group": "hard_validators",
+      "description": "bank_communication_date before transaction_date is a data inconsistency.",
+      "intake": {
+        "complainant_name": "X",
+        "complainant_address": "Y",
+        "bank_name": "Z",
+        "bank_branch_address": "W",
+        "account_category": "bsbd_account",
+        "transaction_date": "2026-09-05",
+        "transaction_amount": 1000,
+        "bank_communication_date": "2026-09-01",
+        "date_first_reported_to_bank": "2026-09-06",
+        "unauthorized_transaction_description": "An unauthorized transaction I never made or approved."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_bank_communication_date_not_before_transaction",
+      "expected_failure_message_contains": "cannot be before transaction_date"
+    },
+    {
+      "id": "hard_fail_future_transaction_date",
+      "group": "hard_validators",
+      "description": "transaction_date in the future must fail.",
+      "intake": {
+        "complainant_name": "X",
+        "complainant_address": "Y",
+        "bank_name": "Z",
+        "bank_branch_address": "W",
+        "account_category": "bsbd_account",
+        "transaction_date": "2099-01-01",
+        "transaction_amount": 1000,
+        "bank_communication_date": "2099-01-01",
+        "date_first_reported_to_bank": "2099-01-02",
+        "unauthorized_transaction_description": "An unauthorized transaction I never made or approved."
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_transaction_date_not_future",
+      "expected_failure_message_contains": "cannot be in the future"
+    },
+    {
+      "id": "hard_fail_short_description",
+      "group": "hard_validators",
+      "description": "unauthorized_transaction_description under 20 characters must fail as too vague.",
+      "intake": {
+        "complainant_name": "X",
+        "complainant_address": "Y",
+        "bank_name": "Z",
+        "bank_branch_address": "W",
+        "account_category": "bsbd_account",
+        "transaction_date": "2026-09-01",
+        "transaction_amount": 1000,
+        "bank_communication_date": "2026-09-01",
+        "date_first_reported_to_bank": "2026-09-02",
+        "unauthorized_transaction_description": "Money gone"
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_description_specific",
+      "expected_failure_message_contains": "at least 20 characters"
+    }
+  ]
+}
