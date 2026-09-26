@@ -271,13 +271,17 @@ def get_document_summary(document_id: int) -> dict:
 
 
 @app.post("/api/documents/{document_id}/summarize")
-def summarize_uploaded_document(document_id: int) -> dict:
+def summarize_uploaded_document(document_id: int, force: bool = Query(default=False)) -> dict:
     try:
         document = document_store.require_document(document_id)
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-    if document.get("summary_text"):
+    # `force=true` lets the frontend offer a "Regenerate summary" action instead of the cached
+    # summary being permanent for a document's lifetime -- update_summary() already overwrites
+    # unconditionally, so regeneration only needed a way to skip this cache check, not a new
+    # storage path.
+    if document.get("summary_text") and not force:
         return {
             "document_id": document_id,
             "status": "success",
@@ -309,7 +313,6 @@ def summarize_uploaded_document(document_id: int) -> dict:
             "summary_generated_at": document.get("summary_generated_at"),
         }
 
-    document_store.update_summary(document_id, summary_text=None, summary_status=status, summary_model=result.get("model"))
     logger.info(
         "Document summary unavailable document_id=%s status=%s calls=%s latency_ms=%s",
         document_id,
@@ -317,6 +320,24 @@ def summarize_uploaded_document(document_id: int) -> dict:
         result.get("gemini_calls"),
         result.get("latency_ms"),
     )
+    # A failed *regenerate* attempt (force=true) must not destroy a summary that was already
+    # there -- found live-testing this feature: a transient Gemini 503 during a regenerate wiped
+    # summary_text back to None unconditionally, discarding a perfectly good existing summary
+    # over nothing but a retryable network hiccup. Leave the DB untouched and hand the caller
+    # their still-valid old summary back, flagged so the frontend can say the refresh failed
+    # without hiding the summary the user already had.
+    if force and document.get("summary_text"):
+        return {
+            "document_id": document_id,
+            "status": "success",
+            "summary": document["summary_text"],
+            "cached": True,
+            "summary_generated_at": document.get("summary_generated_at"),
+            "regenerate_failed": True,
+            "message": result.get("message") or "A new summary could not be generated right now -- showing your previous summary.",
+        }
+
+    document_store.update_summary(document_id, summary_text=None, summary_status=status, summary_model=result.get("model"))
     return {
         "document_id": document_id,
         "status": status,
