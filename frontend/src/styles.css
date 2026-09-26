@@ -2949,6 +2949,13 @@ body.has-custom-cursor textarea {
   gap: 16px;
 }
 
+/* .summary-result-header gets a 3rd child (the "Freshly generated" / "Saved summary" badge)
+   only when the summary succeeded -- override to a 3-column grid rather than letting the badge
+   fall onto an implicit new row. */
+.summary-result-header:has(.summary-generated-badge) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
 .summary-card-heading h3,
 .summary-result-header h3 {
   margin: 0;
@@ -3105,6 +3112,42 @@ body.has-custom-cursor textarea {
   line-height: 1.72;
   text-align: left;
   white-space: pre-wrap;
+}
+
+.summary-generated-badge {
+  justify-self: end;
+  align-self: start;
+  padding: 4px 10px;
+  color: var(--mocha);
+  background: rgba(255, 248, 236, 0.85);
+  border: 1px solid rgba(179, 125, 57, 0.3);
+  border-radius: 999px;
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.summary-meta {
+  margin: 10px 2px 0;
+  color: rgba(63, 40, 22, 0.55);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.summary-regenerate-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 14px;
+  color: #8a5a1f;
+  background: rgba(232, 178, 108, 0.18);
+  border: 1px solid rgba(179, 125, 57, 0.32);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .summary-disclaimer {

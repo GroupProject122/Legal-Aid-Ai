@@ -10,6 +10,7 @@ import {
   CircleHelp,
   CircleUserRound,
   Clock,
+  Copy,
   Download,
   Ellipsis,
   Eye,
@@ -25,6 +26,7 @@ import {
   Info,
   Landmark,
   Lightbulb,
+  ListChecks,
   LockKeyhole,
   MessageCircle,
   Mic,
@@ -34,6 +36,7 @@ import {
   Paperclip,
   Pencil,
   ReceiptText,
+  RefreshCw,
   Scale,
   Search,
   Send,
@@ -2160,7 +2163,7 @@ function DocumentListCard({ document, onView, onRename, onDelete }) {
 
 const DOCUMENTS_PAGE_SIZE = 20;
 
-function DocumentsPage() {
+function DocumentsPage({ initialSearch = '' }) {
   const [storedDocuments, setStoredDocuments] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(false);
@@ -2169,8 +2172,11 @@ function DocumentsPage() {
   // unfiltered count, not a search-narrowed one.
   const [grandTotal, setGrandTotal] = React.useState(null);
   const [page, setPage] = React.useState(0);
-  const [searchInput, setSearchInput] = React.useState('');
-  const [search, setSearch] = React.useState('');
+  // Seeded from the URL (e.g. Summarize Document's "Identify Key Facts" link lands here already
+  // filtered to that document) -- same debounce-driven `search` still applies afterward, this
+  // just skips the debounce delay on the very first filtered load.
+  const [searchInput, setSearchInput] = React.useState(initialSearch);
+  const [search, setSearch] = React.useState(initialSearch);
   const [status, setStatus] = React.useState('loading');
   const [previewDocument, setPreviewDocument] = React.useState(null);
   const [renameDocument, setRenameDocument] = React.useState(null);
@@ -2427,7 +2433,15 @@ function SummarizeDocumentPage() {
   const [uploadMessage, setUploadMessage] = React.useState('');
   const [summaryStatus, setSummaryStatus] = React.useState('idle');
   const [summaryResult, setSummaryResult] = React.useState(null);
+  // Distinguishes "Generating your summary..." from "Regenerating your summary..." while
+  // summaryStatus is 'loading' for both -- a separate flag rather than another status value so
+  // the loading branch below doesn't have to duplicate itself.
+  const [isRegenerating, setIsRegenerating] = React.useState(false);
+  const [copyStatus, setCopyStatus] = React.useState('idle');
+  const copyTimerRef = React.useRef(null);
   const fileInputRef = React.useRef(null);
+
+  React.useEffect(() => () => window.clearTimeout(copyTimerRef.current), []);
 
   const loadDocuments = React.useCallback(async () => {
     setDocumentStatus('loading');
@@ -2501,7 +2515,7 @@ function SummarizeDocumentPage() {
     }
   };
 
-  const handleSummarize = async () => {
+  const handleSummarize = async ({ force = false } = {}) => {
     if (!selectedDocumentId) {
       setSummaryStatus('failed');
       setSummaryResult({
@@ -2511,11 +2525,12 @@ function SummarizeDocumentPage() {
       return;
     }
     setSummaryStatus('loading');
+    setIsRegenerating(force);
+    setCopyStatus('idle');
     setSummaryResult(null);
     try {
-      const response = await fetch(`/api/documents/${encodeURIComponent(selectedDocumentId)}/summarize`, {
-        method: 'POST'
-      });
+      const url = `/api/documents/${encodeURIComponent(selectedDocumentId)}/summarize${force ? '?force=true' : ''}`;
+      const response = await fetch(url, { method: 'POST' });
       const payload = await safeJsonResponse(response);
       if (!response.ok) {
         throw new Error(payload?.detail || 'The summary could not be generated right now.');
@@ -2541,6 +2556,19 @@ function SummarizeDocumentPage() {
     }
   };
 
+  const handleCopySummary = async () => {
+    if (!summaryResult?.summary) return;
+    try {
+      await navigator.clipboard.writeText(summaryResult.summary);
+      setCopyStatus('copied');
+    } catch (error) {
+      console.error('Could not copy summary to clipboard', error);
+      setCopyStatus('failed');
+    }
+    window.clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = window.setTimeout(() => setCopyStatus('idle'), 2200);
+  };
+
   const resetSelection = () => {
     setSelectedDocumentId('');
     setSelectedFile(null);
@@ -2548,6 +2576,8 @@ function SummarizeDocumentPage() {
     setUploadMessage('');
     setSummaryStatus('idle');
     setSummaryResult(null);
+    setIsRegenerating(false);
+    setCopyStatus('idle');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -2599,12 +2629,15 @@ function SummarizeDocumentPage() {
                   setSelectedDocumentId(event.target.value);
                   setSummaryResult(null);
                   setSummaryStatus('idle');
+                  setIsRegenerating(false);
+                  setCopyStatus('idle');
                 }}
               >
                 <option value="">Select an uploaded document</option>
                 {documents.map((document) => (
                   <option value={document.id} key={document.id}>
                     {document.filename}
+                    {document.summary_status === 'success' ? ' — Summarized' : ''}
                   </option>
                 ))}
               </select>
@@ -2641,7 +2674,7 @@ function SummarizeDocumentPage() {
             {summaryStatus === 'loading' ? (
               <div className="summary-loading-state">
                 <span className="summary-spinner" aria-hidden="true" />
-                <strong>Generating your summary...</strong>
+                <strong>{isRegenerating ? 'Regenerating your summary...' : 'Generating your summary...'}</strong>
                 <p>This may take a few seconds.</p>
               </div>
             ) : (
@@ -2649,7 +2682,7 @@ function SummarizeDocumentPage() {
                 type="button"
                 className="ask-button summary-primary-button"
                 disabled={!selectedDocumentId}
-                onClick={handleSummarize}
+                onClick={() => handleSummarize()}
               >
                 <Sparkles size={17} strokeWidth={1.7} />
                 Summarize Document
@@ -2667,9 +2700,25 @@ function SummarizeDocumentPage() {
                 <h3>Document Summary</h3>
                 <p>{summaryResult.filename}</p>
               </div>
+              {summaryResult.status === 'success' && !summaryResult.regenerate_failed && (
+                <span className="summary-generated-badge">
+                  {summaryResult.cached ? 'Saved summary' : 'Freshly generated'}
+                </span>
+              )}
             </div>
+            {summaryResult.regenerate_failed && (
+              <p className="summary-regenerate-warning">
+                <Info size={15} strokeWidth={1.8} />
+                {summaryResult.message || 'A new summary could not be generated right now -- showing your previous summary.'}
+              </p>
+            )}
             {summaryResult.status === 'success' && summaryResult.summary ? (
-              <div className="summary-result-text">{summaryResult.summary}</div>
+              <>
+                <div className="summary-result-text">{summaryResult.summary}</div>
+                {summaryResult.summary_generated_at && (
+                  <p className="summary-meta">Summarized {formatCaseDate(summaryResult.summary_generated_at)}</p>
+                )}
+              </>
             ) : (
               <p className="summary-error">{summaryResult.message || summaryStatusMessage(summaryResult.status)}</p>
             )}
@@ -2678,6 +2727,33 @@ function SummarizeDocumentPage() {
               <p>This summary is based only on the uploaded document and is provided for general understanding. It is not legal advice.</p>
             </div>
             <div className="summary-result-actions">
+              {summaryResult.status === 'success' && summaryResult.summary && (
+                <button type="button" className="document-outline-button" onClick={handleCopySummary}>
+                  {copyStatus === 'copied' ? <Check size={16} strokeWidth={1.9} /> : <Copy size={16} strokeWidth={1.7} />}
+                  {copyStatus === 'copied' ? 'Copied' : copyStatus === 'failed' ? 'Could not copy' : 'Copy Summary'}
+                </button>
+              )}
+              {summaryResult.status === 'success' && summaryResult.summary && (
+                <button type="button" className="document-outline-button" onClick={() => handleSummarize({ force: true })}>
+                  <RefreshCw size={16} strokeWidth={1.7} />
+                  Regenerate Summary
+                </button>
+              )}
+              {summaryResult.status !== 'success' && (
+                <button type="button" className="document-outline-button" onClick={() => handleSummarize()}>
+                  <RefreshCw size={16} strokeWidth={1.7} />
+                  Try Again
+                </button>
+              )}
+              {summaryResult.document_id && (
+                <a
+                  className="document-outline-button"
+                  href={`#/documents?search=${encodeURIComponent(summaryResult.filename || '')}`}
+                >
+                  <ListChecks size={16} strokeWidth={1.7} />
+                  Identify Key Facts
+                </a>
+              )}
               {summaryResult.document_id && (
                 <a
                   className="document-outline-button"
@@ -4437,6 +4513,7 @@ export default function App() {
   const initialQuery = queryParams.get('q') || '';
   const initialCaseId = queryParams.get('case') || '';
   const initialAttach = queryParams.get('attach') === '1';
+  const initialDocumentSearch = queryParams.get('search') || '';
   const activePage = routeSegments[0] === 'ask'
     ? 'ask'
     : routeSegments[0] === 'complaints'
@@ -4476,7 +4553,7 @@ export default function App() {
         {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} initialAttach={initialAttach} />}
         {activePage === 'complaints' && <ComplaintDrafterPage />}
         {activePage === 'cases' && <MyCasesPage />}
-        {activePage === 'documents' && <DocumentsPage />}
+        {activePage === 'documents' && <DocumentsPage initialSearch={initialDocumentSearch} />}
         {activePage === 'summarize' && <SummarizeDocumentPage />}
         {activePage === 'rights' && <LegalAwarenessPage segments={routeSegments} />}
         {activePage === 'about' && <AboutUsPage />}
