@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 from dataclasses import asdict, dataclass
 from typing import Any
@@ -70,6 +71,15 @@ Use "unsupported" when it is legal but outside the supported domains.
 Use "out_of_scope" when it is clearly not a legal-information issue.
 
 Multi-domain classification is allowed. If multiple domains apply, keep all plausible domains and choose one primary_domain.
+A domain is plausible only when the relationship it governs is actually present in the facts, not
+when a word merely overlaps:
+- tenancy needs a landlord, tenant, lease or rented premises. Being locked out of an online
+  account, or a mobile number being deactivated, is not tenancy.
+- consumer needs goods or services bought or paid for from a trader or service provider.
+- cyber covers online accounts, hacking, online fraud, data, and anything done through electronic
+  communication -- including threats, harassment or abuse sent over WhatsApp, social media, calls
+  or other online channels, even when the sender is a landlord, seller or official.
+- constitutional_public_authority needs a government body, public authority, RTI, legal aid or a fundamental right.
 Use cautious, factual issue summaries only. Do not say a law was violated or that the user has a valid case.
 For primary_domain, return an empty string when there is no primary domain.
 For issue_summary, return an empty string when no summary is appropriate.
@@ -89,7 +99,15 @@ ROUTER_SCHEMA = {
 }
 
 
-def route_issue(message: str, conversation_context: list[dict[str, str]] | None = None) -> RouteDecision:
+def route_issue(
+    message: str,
+    conversation_context: list[dict[str, str]] | None = None,
+    safety_text: str | None = None,
+) -> RouteDecision:
+    """`safety_text`, when given, is what the keyword safety overrides check instead of
+    `message`. A follow-up passes just the latest question as `message` (with the case in
+    `conversation_context`) but the question plus case as `safety_text`, so a short follow-up
+    like "what next" is not forced to "unclear" for lacking the case's keywords."""
     if not GEMINI_API_KEY:
         logger.warning("Gemini router skipped because GEMINI_API_KEY is not configured.")
         return UNCLEAR_FALLBACK
@@ -109,7 +127,7 @@ def route_issue(message: str, conversation_context: list[dict[str, str]] | None 
         )
         parsed = json.loads(response.text or "{}")
         decision = validate_route_decision(parsed)
-        decision = apply_router_safety_overrides(message, decision)
+        decision = apply_router_safety_overrides(safety_text or message, decision)
         decision.latency_ms = int((time.perf_counter() - started) * 1000)
         return decision
     except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
@@ -365,7 +383,13 @@ def has_specific_supported_action(text: str) -> bool:
 
 
 def contains_any(text: str, cues: tuple[str, ...]) -> bool:
-    return any(cue in text for cue in cues)
+    """A cue matches only where a word starts. Plain substring matching found "rent" inside
+    "Current" -- and every follow-up is routed as "Current user question: ...", so tenancy was
+    added to every follow-up, whatever it was about (a WhatsApp account lockout came back as
+    cyber + tenancy and got a Delhi tenancy note). Likewise "rent" in "parent" / "different",
+    "otp" in "footprint". Only the start is anchored, so "hack" still matches "hacking" and
+    "rent" still matches "rented"."""
+    return any(re.search(r"(?<![a-z0-9])" + re.escape(cue), text) for cue in cues)
 
 
 def fallback_unclear_decision() -> RouteDecision:

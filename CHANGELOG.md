@@ -39,6 +39,49 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — follow-up handling, answer focus, routing fix, source viewer (2026-09-26)
+
+- **Follow-up questions are answered, not swallowed.** Keyword rules used to file any message
+  without a "?" as a case fact — with high confidence, so Gemini was never consulted — and reply
+  only "Got it — I've added that to the current case." On a new set of 90 realistic follow-ups
+  (`eval/conversation_state_cases_realistic.json`: no question marks, Hinglish, confusion,
+  keyword traps) 39 of 50 real questions (78%) got no answer; turn-type accuracy was 51%.
+  Now the rules give Gemini a *hint* marked as fallible and Gemini decides (rules alone decide
+  only pure "thanks/ok/hi", and everything if Gemini is down); safety overrides stop a question
+  being swallowed as an acknowledgement or a same-dispute message wiping the conversation; added
+  facts and corrections get a fresh answer on the updated case. After: 99–100% turn-type
+  accuracy, 0 swallowed. Caveat: the rules were tuned on that same set, so treat it as "known
+  failures fixed", not a real-world figure.
+- **Correction memory (`turn_memory.py`).** Each rules-vs-Gemini disagreement is stored
+  (redacted, pending review, own table in `legal_aid.db`, never in the legal vectorstore) and
+  reused as a prompt example; once a person approves it (`python review_turn_corrections.py`),
+  near-identical messages skip the Gemini call. Pending/rejected records expire after 90 days.
+  Names are not redacted — see the module docstring.
+- **Answers reply to the latest message.** Follow-ups were answered as the whole case ("here is
+  how to report the hack") in the third person ("The user is concerned..."). The prompt now
+  separates the latest message from case background, requires a second-person direct reply, fits
+  the reply to the kind of question, and requires every part of a multi-part question to be
+  answered or explicitly marked as not covered. The first paragraph shows under "In short".
+- **Router bug: "rent" matched inside "Current".** Every follow-up is routed as
+  "Current user question: ...", so tenancy was added to *every* follow-up (a WhatsApp lockout came
+  back cyber + tenancy with a Delhi tenancy note). Keyword cues now match at word starts only.
+  Router eval 94% → 98%. Follow-ups also now route on the question with the case in the router's
+  context slot, and domain definitions in the router prompt were tightened.
+- **Tenancy without a location is answered as Delhi.** The non-Delhi check matched "up " for
+  Uttar Pradesh, so "not up to the mark" refused a tenancy question. Now whole-word place names
+  only; no place named means Delhi is assumed, with a closing note — shown only when the answer
+  cites tenancy law.
+- **Source viewer shows the whole cited passage**, laid out for reading (`source_text.py`:
+  repeated search heading dropped, wrapped lines re-joined, list items and sub-sections on their
+  own lines, page headers removed), plus **"Open full PDF at page N"** via
+  `GET /api/corpus/file` — which serves only active manifest documents.
+- **Frontend:** homepage answers in place (shared `useLegalChat` hook) with the follow-up box
+  pinned below the answers; question boxes grow with the text (`AutoGrowTextarea`); Limitations
+  in maroon; "thanks" replies shown as a plain line.
+- **Tests:** 467 passing. New `tests/conftest.py` isolates the turn classifier from the real
+  Gemini key and database. Other test files that do not stub Gemini may still make live calls
+  now that a `backend/.env` key exists — not addressed here.
+
 ## Unreleased — case law ingestion, judgment parser, corpus currency (2026-09-24)
 
 **Full write-up: [`backend/docs/CASE_LAW_AND_CORPUS_CURRENCY.md`](backend/docs/CASE_LAW_AND_CORPUS_CURRENCY.md)**

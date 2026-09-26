@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { AutoGrowTextarea } from '../AutoGrowTextarea.jsx';
+
 import {
   EVICTION_GROUNDS,
   TENANCY_RELIEF_OPTIONS,
@@ -220,7 +222,7 @@ function TextField({ field, value, onChange, error }) {
   return (
     <div className={`scheme-field complaint-field ${error ? 'complaint-field-error' : ''}`}>
       <label htmlFor={`complaint-${field.name}`}>{field.label}<RequiredMark required={field.required} /></label>
-      <input id={`complaint-${field.name}`} type="text" value={value} onChange={(event) => onChange(event.target.value)} />
+      <AutoGrowTextarea id={`complaint-${field.name}`} singleLine value={value} onChange={(event) => onChange(event.target.value)} />
       <FieldMessage hint={field.hint} error={error} />
     </div>
   );
@@ -230,7 +232,7 @@ function TextareaField({ field, value, onChange, error }) {
   return (
     <div className={`scheme-field complaint-field complaint-field-wide ${error ? 'complaint-field-error' : ''}`}>
       <label htmlFor={`complaint-${field.name}`}>{field.label}<RequiredMark required={field.required} /></label>
-      <textarea id={`complaint-${field.name}`} rows={3} value={value} onChange={(event) => onChange(event.target.value)} />
+      <AutoGrowTextarea id={`complaint-${field.name}`} rows={3} value={value} onChange={(event) => onChange(event.target.value)} />
       <FieldMessage hint={field.hint} error={error} />
     </div>
   );

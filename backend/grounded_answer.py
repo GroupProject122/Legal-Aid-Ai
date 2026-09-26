@@ -12,6 +12,7 @@ from google.genai import errors as genai_errors
 from google.genai import types
 
 from config import DISCLAIMER, GEMINI_API_KEY, GEMINI_MODEL
+import source_text
 
 logger = logging.getLogger("legal_aid_ai.grounded_answer")
 
@@ -77,6 +78,16 @@ For ordinary defective-goods, refund, replacement, or non-delivery facts with no
 For multi-domain issues, use the retrieved material to preserve each supported aspect that is actually relevant, such as consumer remedy and cyber reporting, without inventing offences.
 For RTI non-response issues, if retrieved Section 19 appeal material is available, present that appeal route distinctly from any Section 18 complaint material. Do not invent exact deadlines unless the supplied text states them.
 A chunk marked CURRENCY_WARNING is not current law. Never state or imply that such material creates a present-day offence, liability, right, or obligation. If it is relevant, say explicitly that it was struck down, overruled or superseded, and answer from the material that replaced it. Never cite a struck-down provision as a basis on which the user could be charged or held liable.
+Respond to the LATEST USER MESSAGE. The case background is context for tailoring the reply; do not re-summarise the case, and do not answer a question the user did not ask.
+Write issue_summary as a direct reply to the latest message, addressed to the user as "you", in one to three plain sentences that answer it. Never describe the user in the third person ("The user is concerned...", "The user wants...").
+Match the reply to the kind of question:
+- A general or explanatory question ("how does reporting a cyber crime work", "what is a first appeal", "how do civil courts work") gets an explanation of how it works, then how it applies to this case. Do not jump straight to a case-specific action plan, and do not assume the worst about the case.
+- A hypothetical or "what if" question gets an answer to that scenario, including when the scenario is that no legal issue or crime is involved.
+- A "what should I do" question, or the first description of a problem, gets the practical steps.
+Leave any list empty when it does not fit the question; not every reply needs rights, steps, evidence and where to approach.
+Do not repeat the same point in more than one field. Procedural steps belong only in suggested_next_steps; what_this_may_involve explains what the situation is, not what to do.
+Answer every part of a multi-part message. If the user raises an innocent or non-legal explanation (for example a number deactivated by the telecom operator rather than an account taken over), address it: say what the retrieved material says about it, or say plainly in limitations that the retrieved material does not cover it. Never silently drop part of the question.
+For tenancy issues where the user has not said where the property is, assume it is in Delhi and give the most relevant answer from the retrieved Delhi and central-law material. Do not refuse, and do not say the question cannot be answered, because the location was not stated; do not ask for the location. A note about the Delhi assumption is added to the answer separately, so do not add your own.
 Return only the required structured JSON.
 Only include source_chunk_ids from the retrieved chunk IDs listed below.
 Do not include markdown, bullets, numbering prefixes, or raw SVG/icon text inside strings.
@@ -175,9 +186,10 @@ def build_grounded_prompt(
     document_fact_block = "\n".join(f"- {clean_text(item)}" for item in confirmed_case_facts or [] if clean_text(item)) or "None"
     return (
         f"{GROUNDED_SYSTEM_PROMPT}\n\n"
-        "USER FACTS:\n"
-        f"- Original user message: {clean_text(original_message)}\n"
-        f"- Normalized case summary: {clean_text(normalized_case_summary)}\n"
+        "LATEST USER MESSAGE (reply to this):\n"
+        f"{clean_text(original_message)}\n\n"
+        "CASE BACKGROUND (context only -- use it to tailor the reply, do not re-summarise it):\n"
+        f"- Case summary: {clean_text(normalized_case_summary)}\n"
         f"- Routed domain(s): {', '.join(domains)}\n\n"
         "CONFIRMED CASE FACTS FROM USER DOCUMENTS:\n"
         f"{document_fact_block}\n\n"
@@ -248,6 +260,8 @@ def sources_from_ids(source_ids: list[str], chunks_by_id: dict[str, Any]) -> lis
                 "provision": provision_label(chunk),
                 "chunk_id": source_id,
                 "excerpt": short_excerpt(getattr(chunk, "text", "")),
+                # The whole retrieved passage, laid out for reading in the source viewer.
+                "full_text": source_text.readable_source_text(getattr(chunk, "text", "")),
             }
         )
     return sources

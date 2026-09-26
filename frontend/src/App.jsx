@@ -48,6 +48,7 @@ import {
   X
 } from 'lucide-react';
 
+import { AutoGrowTextarea } from './AutoGrowTextarea.jsx';
 import { IntakeForm } from './schemes/IntakeForm.jsx';
 import { ResultsList } from './schemes/ResultsList.jsx';
 import { ApiError, postMatch } from './schemes/api.js';
@@ -56,6 +57,9 @@ import { ScenarioPicker, SCENARIOS } from './complaints/ScenarioPicker.jsx';
 import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
+
+// Template sandbox: an isolated copy of the Home page at #/sample-home (see src/sample/).
+import { SampleHomePage } from './sample/SampleHomePage.jsx';
 
 const navItems = [
   { label: 'Home', icon: Home, page: 'home', href: '#/' },
@@ -477,45 +481,94 @@ function Hero() {
   );
 }
 
-function QueryBox() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const value = new FormData(event.currentTarget).get('legal-query');
-    const query = value.trim();
-    window.location.hash = query ? `#/ask?q=${encodeURIComponent(query)}` : '#/ask';
-  };
+function QueryBox({ chat }) {
+  // The homepage answers in place (see HomeAnswerPanel) rather than redirecting to Ask
+  // Question, so a question typed here and one typed there go through the same useLegalChat.
+  const hasConversation = chat.messages.length > 0;
 
-  // There's no conversation yet to attach a document to on the homepage -- the only real
-  // target for "attach a document" is Ask Question's existing AttachmentModal. Send the user
-  // there and open it immediately (`attach=1`, read by AskQuestionPage on mount), carrying over
-  // anything they'd already typed the same way the submit button does.
-  const handleAttachClick = (event) => {
-    const value = new FormData(event.currentTarget.form).get('legal-query');
-    const query = value.trim();
+  // The only real target for "attach a document" is Ask Question's AttachmentModal. Send the
+  // user there and open it immediately (`attach=1`, read by AskQuestionPage on mount), carrying
+  // over an in-progress conversation (its saved case) or anything already typed.
+  const handleAttachClick = () => {
     const params = new URLSearchParams({ attach: '1' });
+    if (chat.caseId) params.set('case', chat.caseId);
+    const query = chat.input.trim();
     if (query) params.set('q', query);
     window.location.hash = `#/ask?${params.toString()}`;
   };
 
   return (
-    <form className="query-box" onSubmit={handleSubmit}>
+    <form className="query-box" onSubmit={chat.handleSubmit}>
       <div className="query-icon">
         <Sparkles size={20} />
       </div>
-      <input
+      {/* Grows with its content so the whole question stays visible. Enter submits;
+          Shift+Enter starts a new line so the question can be written in paragraphs. */}
+      <AutoGrowTextarea
         name="legal-query"
-        type="text"
-        placeholder="Describe your legal issue in simple words..."
+        value={chat.input}
+        onChange={(event) => chat.setInput(event.target.value)}
+        submitOnEnter
+        placeholder={hasConversation ? 'Ask a follow-up question...' : 'Describe your legal issue in simple words...'}
         aria-label="Describe your legal issue"
       />
       <button className="attach-button" type="button" aria-label="Attach document" onClick={handleAttachClick}>
         <Paperclip size={20} />
       </button>
-      <button className="ask-button query-submit" type="submit">
+      <button className="ask-button query-submit" type="submit" disabled={chat.isLoading}>
         <Sparkles size={15} />
         <span>Ask AI</span>
       </button>
     </form>
+  );
+}
+
+function HomeAnswerPanel({ chat }) {
+  const panelRef = React.useRef(null);
+  const messageCount = chat.messages.length;
+
+  // Bring each new answer into view from its top, so it reads from the start; the follow-up
+  // box stays pinned below it. The homepage scrolls as a whole, unlike the chat panel.
+  React.useEffect(() => {
+    if (!messageCount) return;
+    panelRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [messageCount, chat.isLoading]);
+
+  if (!messageCount) return null;
+
+  const continueHref = chat.caseId ? `#/ask?case=${encodeURIComponent(chat.caseId)}` : '#/ask';
+
+  return (
+    <section className="chat-panel home-answer-panel" aria-label="Legal AI answer">
+      <PanelCorners />
+      <div className="chat-panel-toolbar">
+        <div>
+          <span>◇</span>
+          <p>{chat.category ? `Your question · ${chat.category}` : 'Your question'}</p>
+        </div>
+        <div className="home-answer-actions">
+          <button
+            type="button"
+            className="outline-action"
+            disabled={chat.isLoading || !chat.caseId}
+            title={chat.caseId ? 'Open this conversation on the Ask Question page' : 'Available once the answer has arrived'}
+            onClick={() => { window.location.hash = continueHref; }}
+          >
+            Open in Ask Question
+          </button>
+          <button type="button" className="outline-action" onClick={chat.handleClear}>New Question</button>
+        </div>
+      </div>
+      <div className="home-answer-messages" ref={panelRef}>
+        {chat.messages.map((message) => (
+          message.role === 'user'
+            ? <UserMessage text={message.text} key={message.id} />
+            : message.role === 'assistant_loading'
+              ? <LoadingMessage key={message.id} />
+              : <LegalAIResponse response={message.response} onSourceClick={chat.setSelectedSource} key={message.id} />
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -853,6 +906,22 @@ function LegalAIResponse({ response, onSourceClick }) {
     );
   }
 
+  // "thanks" / "ok" / "hi" get a short conversational reply, not a legal answer -- shown as a
+  // plain line rather than under the legal-answer headings, where it read like a broken answer.
+  const turnType = response?.conversation?.turn_type;
+  if (turnType === 'acknowledgement' || turnType === 'small_talk') {
+    return (
+      <article className="message-row ai-message-row">
+        <div className="message-avatar ai-message-avatar" aria-hidden="true">
+          <Scale size={21} strokeWidth={1.45} />
+        </div>
+        <section className="legal-response-card conversational-reply-card">
+          <p>{cleanDisplayText(answer.issue_summary) || 'You can ask a follow-up question whenever you like.'}</p>
+        </section>
+      </article>
+    );
+  }
+
   return (
     <article className="message-row ai-message-row">
       <div className="message-avatar ai-message-avatar" aria-hidden="true">
@@ -869,15 +938,21 @@ function LegalAIResponse({ response, onSourceClick }) {
           <span className="response-pill">Legal information</span>
         </div>
 
+        {/* issue_summary is written as a direct reply to the user's latest message, so it gets
+            its own heading rather than sitting under "What this may involve". */}
         <div className="response-section">
-          <h4>What this may involve</h4>
+          <h4>In short</h4>
           <p>{cleanDisplayText(answer.issue_summary) || 'The available legal sources do not contain enough information to answer this reliably.'}</p>
-          {whatThisMayInvolve.length > 0 && (
+        </div>
+
+        {whatThisMayInvolve.length > 0 && (
+          <div className="response-section">
+            <h4>What this may involve</h4>
             <ul>
               {whatThisMayInvolve.map((item) => <li key={item}>{item}</li>)}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
 
         {clarificationQuestion ? (
           <div className="response-section">
@@ -923,7 +998,7 @@ function LegalAIResponse({ response, onSourceClick }) {
         )}
 
         {!clarificationQuestion && limitations.length > 0 && (
-          <div className="response-section">
+          <div className="response-section response-limitations">
             <h4>Limitations</h4>
             <ul>
               {limitations.map((item) => <li key={item}>{item}</li>)}
@@ -993,12 +1068,12 @@ function ChatComposer({ value, onChange, onSubmit, onAttach }) {
         <Paperclip size={25} strokeWidth={1.7} />
       </button>
       <label className="sr-only" htmlFor="legal-chat-input">Describe your legal issue</label>
-      <textarea
+      <AutoGrowTextarea
         id="legal-chat-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        submitOnEnter
         placeholder="Describe your legal issue..."
-        rows={1}
         aria-label="Describe your legal issue"
       />
       <button type="button" className="composer-icon-button" aria-label="Use microphone">
@@ -1157,6 +1232,13 @@ function AttachmentModal({ onClose }) {
 
 function SourceExcerptModal({ source, onClose }) {
   const detail = [cleanDisplayText(source.section), source.page ? `Page ${source.page}` : null].filter(Boolean).join(' · ');
+  // full_text is the whole retrieved passage with its line structure (list items, sub-sections)
+  // kept -- so it is not run through cleanDisplayText, which would flatten it to one line.
+  // Answers saved before full_text existed fall back to the short excerpt.
+  const passage = (source.full_text || '').trim();
+  const pdfHref = source.source_file
+    ? `/api/corpus/file?source=${encodeURIComponent(source.source_file)}${source.page ? `#page=${source.page}` : ''}`
+    : null;
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -1176,20 +1258,32 @@ function SourceExcerptModal({ source, onClose }) {
         <h3 id="source-excerpt-title">{cleanDisplayText(source.document)}</h3>
         <p>{detail || 'Retrieved source'}</p>
         <div className="source-excerpt-box">
-          <strong>Retrieved excerpt</strong>
-          <p>{cleanDisplayText(source.excerpt) || 'No excerpt was returned for this source.'}</p>
+          <strong>{passage ? 'Relevant text from this source' : 'Retrieved excerpt'}</strong>
+          <div className="source-passage" tabIndex={0} aria-label="Relevant text from this source">
+            {passage
+              ? passage.split('\n').map((line, index) => <p key={index}>{line}</p>)
+              : <p>{cleanDisplayText(source.excerpt) || 'No excerpt was returned for this source.'}</p>}
+          </div>
         </div>
+        {pdfHref && (
+          <a className="ask-button source-pdf-link" href={pdfHref} target="_blank" rel="noopener noreferrer">
+            <FileText size={16} strokeWidth={1.8} />
+            <span>{source.page ? `Open full PDF at page ${source.page}` : 'Open full PDF'}</span>
+          </a>
+        )}
       </section>
     </div>
   );
 }
 
-function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach = false }) {
+// The whole question -> /api/ask -> answer conversation, shared by the Ask Question page and
+// the homepage so a question gets answered wherever it is typed, with the same clarification,
+// conversation-state, saved-case and document-fact handling on both.
+function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
   const [input, setInput] = React.useState(initialQuery);
   const [messages, setMessages] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [category, setCategory] = React.useState('');
-  const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(initialAttach);
   const [selectedSource, setSelectedSource] = React.useState(null);
   const [clarificationStateId, setClarificationStateId] = React.useState(null);
   const [conversationStateId, setConversationStateId] = React.useState(null);
@@ -1359,6 +1453,40 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     window.sessionStorage.removeItem('legalAidConfirmedFactContext');
     setAttachedFactContext(null);
   };
+
+  return {
+    input,
+    setInput,
+    messages,
+    isLoading,
+    category,
+    selectedSource,
+    setSelectedSource,
+    caseId,
+    attachedFactContext,
+    handleSubmit,
+    handleExample,
+    handleClear,
+    handleDetachFactContext
+  };
+}
+
+function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach = false }) {
+  const {
+    input,
+    setInput,
+    messages,
+    isLoading,
+    category,
+    selectedSource,
+    setSelectedSource,
+    attachedFactContext,
+    handleSubmit,
+    handleExample,
+    handleClear,
+    handleDetachFactContext
+  } = useLegalChat({ initialQuery, initialCaseId });
+  const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(initialAttach);
 
   return (
     <>
@@ -1894,7 +2022,7 @@ function FactCategory({ label, items, onChange, onRemove }) {
         <div className="fact-item" key={`${item.label}-${index}`}>
           <label>
             <span>{item.label || 'Fact'}</span>
-            <input value={item.value || ''} onChange={(event) => onChange(index, event.target.value)} />
+            <AutoGrowTextarea value={item.value || ''} onChange={(event) => onChange(index, event.target.value)} />
           </label>
           <small>{item.source_page ? `Document evidence: page ${item.source_page}` : 'Document evidence'}{item.confidence ? ` - ${item.confidence}` : ''}</small>
           {item.source_excerpt && <blockquote>{item.source_excerpt}</blockquote>}
@@ -3460,6 +3588,7 @@ function InteractiveCursor() {
 }
 
 function HomePage() {
+  const chat = useLegalChat();
   return (
     <>
       <InteractiveCursor />
@@ -3467,12 +3596,18 @@ function HomePage() {
       <HeaderControls />
       <div className="content-frame">
         <Hero />
-        <QueryBox />
+        {/* Once a conversation starts, CSS moves the question box below the answers (as a
+            follow-up box) -- by `order`, not by re-rendering it elsewhere, so it keeps focus. */}
+        <div className={`home-ask ${chat.messages.length ? 'has-conversation' : ''}`}>
+          <QueryBox chat={chat} />
+          <HomeAnswerPanel chat={chat} />
+        </div>
         <CategoryPills />
         <FeatureCards />
         <HomeInfoSections />
       </div>
       <HomeFooter />
+      {chat.selectedSource && <SourceExcerptModal source={chat.selectedSource} onClose={() => chat.setSelectedSource(null)} />}
     </>
   );
 }
@@ -4414,6 +4549,19 @@ function RightsLoadingState({ message }) {
   );
 }
 
+// Pieces the sample home page reuses from the live app. Passed in as props (rather than
+// imported by the sample file) so App.jsx and src/sample/ never import each other.
+const sampleHomeShared = {
+  useLegalChat,
+  HeaderControls,
+  PanelCorners,
+  UserMessage,
+  LoadingMessage,
+  LegalAIResponse,
+  SourceExcerptModal,
+  VintageScales
+};
+
 export default function App() {
   const [route, setRoute] = React.useState(() => window.location.hash || '#/');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
@@ -4437,7 +4585,9 @@ export default function App() {
   const initialQuery = queryParams.get('q') || '';
   const initialCaseId = queryParams.get('case') || '';
   const initialAttach = queryParams.get('attach') === '1';
-  const activePage = routeSegments[0] === 'ask'
+  const activePage = routeSegments[0] === 'sample-home'
+    ? 'sample-home'
+    : routeSegments[0] === 'ask'
     ? 'ask'
     : routeSegments[0] === 'complaints'
       ? 'complaints'
@@ -4456,7 +4606,7 @@ export default function App() {
                   : 'home';
 
   return (
-    <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+    <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''} ${activePage === 'sample-home' ? 'app-shell--sample' : ''}`.trim()}>
       <Sidebar
         activePage={activePage}
         collapsed={isSidebarCollapsed}
@@ -4482,6 +4632,7 @@ export default function App() {
         {activePage === 'about' && <AboutUsPage />}
         {activePage === 'schemes' && <SchemesPage />}
         {activePage === 'home' && <HomePage />}
+        {activePage === 'sample-home' && <SampleHomePage shared={sampleHomeShared} />}
       </main>
     </div>
   );

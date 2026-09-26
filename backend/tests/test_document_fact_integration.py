@@ -69,7 +69,7 @@ def confirmed_context_id(fact_payload: dict | None = None) -> str:
 
 def patch_supported_flow(monkeypatch, captured: dict | None = None, domain: str = "tenancy"):
     captured = captured if captured is not None else {}
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda text: captured.setdefault("route_text", text) and route(domain))
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda text, safety_text=None, **_kw: captured.setdefault("route_text", safety_text or text) and route(domain))
     monkeypatch.setattr(main.rag, "retrieve", lambda text: captured.setdefault("retrieval_text", text) and [legal_chunk(domain)])
     monkeypatch.setattr(main.claim_verifier, "verify_and_sanitize_response", lambda response, chunks: response)
     monkeypatch.setattr(main, "LLM_PROVIDER", "gemini")
@@ -112,7 +112,7 @@ def test_confirmed_context_accepted(monkeypatch):
 
 def test_unconfirmed_extraction_rejected(monkeypatch):
     pending_id = document_facts.store_pending_facts(facts())
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text: route())
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text, **_kw: route())
 
     response = client.post("/api/ask", json={"question": "landlord cut electricity", "confirmed_fact_context_id": pending_id})
 
@@ -194,7 +194,7 @@ def test_legal_claims_still_verified_against_legal_chunks_only(monkeypatch):
 
 def test_corpus_gap_still_blocks_unsupported_jurisdiction(monkeypatch):
     context_id = confirmed_context_id(facts(location="Mumbai"))
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text: route("tenancy"))
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text, **_kw: route("tenancy"))
     monkeypatch.setattr(main.rag, "retrieve", lambda _text: [legal_chunk("tenancy")])
 
     response = client.post("/api/ask", json={"question": "landlord cut electricity", "confirmed_fact_context_id": context_id})

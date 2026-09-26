@@ -390,6 +390,19 @@ def legal_awareness_source_file(source_id: str) -> FileResponse:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
+@app.get("/api/corpus/file")
+def corpus_source_file(source: str) -> FileResponse:
+    """Open a corpus PDF that an answer cited (the "Open full PDF" button in the source viewer),
+    shown inline so the browser's viewer can jump to the cited page via #page=N. Serves only
+    files the corpus manifest lists as active documents -- never archive/, user uploads, or any
+    other path -- so the `source` parameter cannot be used to read arbitrary files."""
+    try:
+        path = legal_education.corpus_pdf_path(source)
+    except legal_education.LegalEducationError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return FileResponse(path, media_type="application/pdf", filename=path.name, content_disposition_type="inline")
+
+
 @app.post("/api/ask")
 def ask(request: AskRequest) -> dict:
     try:
@@ -688,19 +701,28 @@ def handle_active_case_turn(
     if classification.turn_type in {"small_talk", "acknowledgement"}:
         active_case.last_user_intent = classification.turn_type
         return with_conversation_state(conversation_state.acknowledgement_response(active_case), active_case)
-    if classification.turn_type in {"additional_fact", "correction"}:
-        conversation_state.apply_turn_to_state(active_case, question, classification)
-        message = "Got it — I've added that to the current case." if classification.turn_type == "additional_fact" else "Got it — I've updated the current case with your correction."
-        return with_conversation_state(conversation_state.acknowledgement_response(active_case, message), active_case)
 
     if classification.turn_type == "new_issue":
         conversation_state.clear_state(active_case.conversation_state_id)
         return handle_new_issue_without_active_context(question, confirmed_context)
 
+    # Follow-up questions, added facts and corrections all get a fresh answer built on the
+    # updated case. Facts and corrections used to be acknowledged only ("Got it -- I've added
+    # that to the current case"), which left the user with no answer -- and any question the
+    # classifier mistook for a fact got no answer at all.
     conversation_state.apply_turn_to_state(active_case, question, classification)
     document_fact_lines = document_facts.confirmed_fact_lines(confirmed_context)
     combined_message = conversation_state.pipeline_message(question, active_case, document_fact_lines)
-    route = domain_router.route_issue(combined_message)
+    # Route on the latest question with the case in the router's context slot. Routing the
+    # labelled "Current user question: ... Active case summary: ..." block as one message made
+    # the router over-tag domains (a WhatsApp account lockout came back as cyber + tenancy).
+    # The keyword safety overrides still see the combined text, as before.
+    case_background = conversation_state.split_pipeline_message(combined_message)[1]
+    route = domain_router.route_issue(
+        question,
+        conversation_context=[{"role": "earlier case", "content": case_background}],
+        safety_text=combined_message,
+    )
     if route.status == "classified":
         return with_routing(
             handle_classified_issue(
@@ -863,13 +885,23 @@ def answer_grounded_from_context(
         answer = rag.answer(retrieval_text, skip_scope_check=True)
         attach_document_evidence(answer, confirmed_context)
         response = corpus_gap.apply_gap_to_response(answer, pre_gap)
+        response = corpus_gap.delhi_tenancy_note(response, context.domains, raw_check_query)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
     if LLM_PROVIDER != "gemini":
         raise ConfigurationError(f"Unsupported LLM provider: {LLM_PROVIDER}")
+    # In a follow-up, original_message is conversation_state.pipeline_message(): the latest
+    # question with the case summary and known facts appended. Hand the answer writer the
+    # question as the thing to reply to and the rest as background -- otherwise it answers the
+    # whole case ("here is how to report the hack") rather than what was just asked.
+    reply_to, case_background = original_message, retrieval_text
+    split = conversation_state.split_pipeline_message(original_message)
+    if split:
+        reply_to = split[0]
+        case_background = f"{retrieval_text}\n{split[1]}"
     try:
         answer = grounded_answer.generate_grounded_answer(
-            original_message=original_message,
-            normalized_case_summary=retrieval_text,
+            original_message=reply_to,
+            normalized_case_summary=case_background,
             domains=context.domains,
             chunks=chunks,
             confirmed_case_facts=document_facts.confirmed_fact_lines(confirmed_context),
@@ -881,6 +913,7 @@ def answer_grounded_from_context(
             response = corpus_gap.abstention_response(final_gap)
             return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
         response = corpus_gap.apply_gap_to_response(verified_answer, final_gap)
+        response = corpus_gap.delhi_tenancy_note(response, context.domains, raw_check_query)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
     except grounded_answer.GroundedAnswerConfigurationError as exc:
         raise ConfigurationError(str(exc)) from exc

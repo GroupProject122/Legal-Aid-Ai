@@ -48,8 +48,9 @@ def patch_answer_flow(monkeypatch, captured: dict | None = None, domain: str = "
     captured = captured if captured is not None else {}
     monkeypatch.setattr(main.conversation_state, "GEMINI_API_KEY", "")
 
-    def fake_route(text):
-        captured["route_text"] = text
+    def fake_route(text, conversation_context=None, safety_text=None):
+        # safety_text carries question + case for follow-ups; the bare question otherwise.
+        captured["route_text"] = safety_text or text
         return route(domain)
 
     def fake_retrieve(text):
@@ -115,18 +116,37 @@ def test_follow_up_pipeline_uses_previous_case_context(monkeypatch):
     assert "rent for two months" in captured["route_text"].lower()
 
 
-def test_additional_fact_is_acknowledged_without_retrieval(monkeypatch):
+def test_additional_fact_is_added_to_case_and_answered(monkeypatch):
+    # An added fact used to get only "Got it -- I've added that to the current case" with no
+    # retrieval; it is now kept in the case AND answered with the updated case.
     state = conversation_state.create_state(["consumer"], "consumer", "Seller refused refund.", ["Seller refused refund."])
-    called = {"retrieve": False}
-    monkeypatch.setattr(main.rag, "retrieve", lambda _text: called.update(retrieve=True) or [])
+    captured = patch_answer_flow(monkeypatch, domain="consumer")
 
     response = client.post("/api/ask", json={"question": "I paid by UPI.", "conversation_state_id": state.conversation_state_id})
     data = response.json()
 
     assert response.status_code == 200
-    assert called["retrieve"] is False
-    assert data["conversation_state_id"] == state.conversation_state_id
-    assert "UPI" in " ".join(conversation_state.get_state(state.conversation_state_id).known_facts)
+    assert "retrieval_text" in captured
+    assert "upi" in captured["route_text"].lower()
+    assert "refund" in captured["route_text"].lower()
+    assert data["answer"]["issue_summary"] == "Mock grounded answer."
+    assert "UPI" in " ".join(conversation_state.get_state(data["conversation_state_id"]).known_facts)
+
+
+def test_question_without_question_mark_is_answered_not_acknowledged(monkeypatch):
+    # Regression for "but i dont know how civil courts work", which was filed as a case fact
+    # and answered only with "Got it -- I've added that to the current case."
+    state = conversation_state.create_state(["tenancy"], "tenancy", "Delhi tenancy lock-in and deposit dispute.", ["Lease has a 6-month lock-in."])
+    captured = patch_answer_flow(monkeypatch)
+
+    response = client.post(
+        "/api/ask",
+        json={"question": "but i dont know how civil courts work", "conversation_state_id": state.conversation_state_id},
+    )
+
+    assert response.status_code == 200
+    assert "retrieval_text" in captured
+    assert response.json()["answer"]["issue_summary"] == "Mock grounded answer."
 
 
 def test_correction_replaces_prior_amount():
@@ -143,7 +163,7 @@ def test_correction_replaces_prior_amount():
 def test_small_talk_bypasses_legal_pipeline(monkeypatch):
     state = conversation_state.create_state(["tenancy"], "tenancy", "Landlord electricity dispute.", ["landlord cut electricity"])
     called = {"route": False, "retrieve": False}
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text: called.update(route=True) or route())
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text, **_kw: called.update(route=True) or route())
     monkeypatch.setattr(main.rag, "retrieve", lambda _text: called.update(retrieve=True) or [])
 
     response = client.post("/api/ask", json={"question": "thanks", "conversation_state_id": state.conversation_state_id})
@@ -184,6 +204,47 @@ def test_state_can_be_cleared_on_new_question():
     conversation_state.clear_state(state.conversation_state_id)
 
     assert conversation_state.get_state(state.conversation_state_id) is None
+
+
+def test_follow_up_answer_replies_to_latest_question_not_whole_case(monkeypatch):
+    state = conversation_state.create_state(["cyber"], "cyber", "WhatsApp account taken over.", ["Profile picture changed.", "Cannot log in."])
+    captured = patch_answer_flow(monkeypatch, domain="cyber")
+    question = "what if it isnt a crime and my number was deactivated"
+
+    client.post("/api/ask", json={"question": question, "conversation_state_id": state.conversation_state_id})
+
+    assert captured["original_message"] == question
+    assert "Cannot log in" in captured["normalized_case_summary"]
+
+
+def test_follow_up_routes_on_question_with_case_as_context(monkeypatch):
+    state = conversation_state.create_state(["cyber"], "cyber", "Messaging account login lockout.", ["Cannot log in to WhatsApp."])
+    patch_answer_flow(monkeypatch, domain="cyber")
+    calls = {}
+
+    def recording_route(text, conversation_context=None, safety_text=None):
+        calls.update(text=text, context=conversation_context, safety_text=safety_text)
+        return route("cyber")
+
+    monkeypatch.setattr(main.domain_router, "route_issue", recording_route)
+    question = "what if my number was deactivated"
+
+    client.post("/api/ask", json={"question": question, "conversation_state_id": state.conversation_state_id})
+
+    assert calls["text"] == question
+    assert "login lockout" in calls["context"][0]["content"]
+    assert question in calls["safety_text"] and "login lockout" in calls["safety_text"]
+
+
+def test_split_pipeline_message_round_trips():
+    state = conversation_state.create_state(["tenancy"], "tenancy", "Deposit dispute.", ["Lock-in of 6 months."])
+    message = conversation_state.pipeline_message("how do civil courts work", state)
+
+    question, background = conversation_state.split_pipeline_message(message)
+
+    assert question == "how do civil courts work"
+    assert "Deposit dispute." in background
+    assert conversation_state.split_pipeline_message("plain first message") is None
 
 
 def test_pipeline_message_does_not_require_full_chat_history():

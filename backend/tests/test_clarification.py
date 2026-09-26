@@ -116,7 +116,7 @@ def test_rerouting_after_answer_works_and_stops_when_classified(monkeypatch):
 def test_clarification_stops_when_unsupported(monkeypatch):
     monkeypatch.setattr(main.clarification, "GEMINI_API_KEY", "")
     responses = [route("unclear"), route("unsupported")]
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda _message: responses.pop(0))
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda _message, **_kw: responses.pop(0))
     monkeypatch.setattr(main.rag, "answer", lambda *_args, **_kwargs: pytest.fail("retrieval should not run"))
 
     first = client.post("/api/ask", json={"question": "mujhe notice mila hai"}).json()
@@ -133,7 +133,7 @@ def test_clarification_stops_when_unsupported(monkeypatch):
 def test_clarification_stops_when_out_of_scope(monkeypatch):
     monkeypatch.setattr(main.clarification, "GEMINI_API_KEY", "")
     responses = [route("unclear"), route("out_of_scope")]
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda _message: responses.pop(0))
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda _message, **_kw: responses.pop(0))
     monkeypatch.setattr(main.rag, "answer", lambda *_args, **_kwargs: pytest.fail("retrieval should not run"))
 
     first = client.post("/api/ask", json={"question": "help karo"}).json()
@@ -165,7 +165,7 @@ def test_non_informative_reply_detected(monkeypatch):
 
 def test_stuck_loop_exits_safely(monkeypatch):
     monkeypatch.setattr(main.clarification, "GEMINI_API_KEY", "")
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda _message: route("unclear"))
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda _message, **_kw: route("unclear"))
 
     first = client.post("/api/ask", json={"question": "mera matter hai"}).json()
     second = client.post(

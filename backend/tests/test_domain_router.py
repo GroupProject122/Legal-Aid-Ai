@@ -246,3 +246,11 @@ def test_existing_part_7_retrieval_signal_remains_available():
     signals = rag.detect_domain_signals("cyber fraud online payment")
 
     assert "cyber" in signals["primary_domains"]
+
+
+def test_domain_cues_match_whole_words_only():
+    # Regression: "rent" matched inside "Current", and every follow-up is routed as
+    # "Current user question: ...", so tenancy was added to every follow-up.
+    assert domain_router.domains_from_supported_cues("current user question: my whatsapp was hacked") == {"cyber"}
+    assert domain_router.domains_from_supported_cues("my parent has a different problem") == set()
+    assert domain_router.domains_from_supported_cues("i rented a flat and the landlord is hacking my wifi") == {"tenancy", "cyber"}

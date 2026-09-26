@@ -200,6 +200,18 @@ def source_pdf_path(source_id_value: str) -> Path:
     return path
 
 
+def corpus_pdf_path(source_file: str) -> Path:
+    """Resolve a cited corpus PDF, allowing only active manifest documents inside documents/."""
+    documents = load_manifest_documents()
+    source_file = str(source_file or "").replace("\\", "/").strip()
+    if source_file not in documents or source_file.startswith("archive/") or not source_file.lower().endswith(".pdf"):
+        raise LegalEducationError("Source PDF is not available.")
+    path = (DOCUMENTS_DIR / source_file).resolve()
+    if DOCUMENTS_DIR.resolve() not in path.parents or not path.exists():
+        raise LegalEducationError("Source PDF is not available.")
+    return path
+
+
 def load_manifest_documents() -> dict[str, dict[str, Any]]:
     data = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     return {item["source_file"]: item for item in data.get("documents", []) if item.get("source_file")}

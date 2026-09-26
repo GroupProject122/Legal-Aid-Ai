@@ -13,6 +13,7 @@ from google.genai import errors as genai_errors
 from google.genai import types
 
 from config import GEMINI_API_KEY, GEMINI_MODEL
+import turn_memory
 
 logger = logging.getLogger("legal_aid_ai.conversation_state")
 
@@ -75,11 +76,22 @@ Allowed turn_type values:
 - acknowledgement
 - small_talk
 
-Return correction only when the user replaces or corrects an earlier fact.
-Return additional_fact when the user only adds a fact and is not asking a question.
-Return follow_up_question when the message asks about the same legal issue or uses pronouns/context from the active case.
-Return new_issue when the message clearly starts an unrelated legal issue.
-Return acknowledgement or small_talk for thanks, okay, hello, or similar messages that should not run legal retrieval.
+Decide from what the user means, not from punctuation or keywords. Users often type questions
+without a question mark, in lowercase, in Hinglish, or as statements of need or confusion.
+Return follow_up_question for anything that asks for help, information, explanation or guidance
+about the active case, including: "i dont know how civil courts work", "tell me the process",
+"what next", "how do i file it", "ab kya karu", "mujhe samajh nahi aaya", "i cant afford a lawyer",
+and elliptical questions like "and the deposit". A message that both adds a fact and asks
+something is follow_up_question.
+Return additional_fact only when the user adds a fact about the case and is clearly not asking for anything.
+Return correction only when the user replaces or corrects an earlier fact ("sorry, it was Rs. 45,000", "i meant water not electricity").
+Return new_issue ONLY when the message clearly starts a different, unrelated legal problem. A new
+detail, grievance or question about the same dispute, the same people, or the same property is NOT
+a new issue ("the landlord also took my furniture, can i complain about that too" is follow_up_question).
+When unsure between new_issue and anything else, do not choose new_issue: it discards the conversation.
+Return acknowledgement or small_talk ONLY for messages that contain nothing but thanks, okay,
+greetings or similar. If the message also asks or states anything ("ok but what about the deposit"),
+it is not an acknowledgement. When unsure, choose follow_up_question: an acknowledgement gives the user no answer.
 Return strict JSON only.
 """
 
@@ -165,17 +177,51 @@ def cleanup_expired_states(now: float | None = None) -> None:
         ACTIVE_CASE_STATES.pop(state_id, None)
 
 
-def classify_turn(message: str, state: ActiveCaseState) -> TurnClassification:
+def classify_turn(
+    message: str,
+    state: ActiveCaseState,
+    use_memory: bool = True,
+    record_corrections: bool = True,
+) -> TurnClassification:
+    """Keyword rules make a first guess; Gemini makes the decision.
+
+    The rules alone decide only pure acknowledgements / greetings ("thanks", "ok", "hi"), which
+    are exact-vocabulary matches that cannot really be misread -- and everything when Gemini is
+    unavailable, as a fallback. For every other message the rules' guess is passed to Gemini as
+    an explicitly fallible hint, together with similar past messages Gemini has already sorted
+    (turn_memory). An approved past correction that is a near-duplicate of this message is used
+    directly, without a Gemini call. When Gemini disagrees with the rules, the disagreement is
+    recorded (redacted, pending human review) so it can be reused as an example next time.
+
+    use_memory / record_corrections exist so evaluation can score the classifier reproducibly,
+    without reading from or writing to the correction memory."""
     deterministic = deterministic_turn_classification(message, state)
-    if deterministic.confidence == "high" or not GEMINI_API_KEY:
+    if deterministic.confidence == "high":
         return deterministic
 
+    if use_memory:
+        remembered = turn_memory.shortcut_label(message)
+        if remembered:
+            result = TurnClassification(
+                remembered,
+                "high",
+                "Matches a reviewed past correction of a near-identical message.",
+                extracted_facts=[clean_text(message)] if remembered == "additional_fact" else [],
+                corrected_facts=[clean_text(message)] if remembered == "correction" else [],
+                provider="memory",
+            )
+            return apply_turn_safety_overrides(message, state, result)
+
+    if not GEMINI_API_KEY:
+        return deterministic
+
+    examples = turn_memory.similar_examples(message) if use_memory else []
     started = time.perf_counter()
     try:
         client = genai.Client(api_key=GEMINI_API_KEY)
         response = client.models.generate_content(
             model=GEMINI_MODEL,
-            contents=build_turn_prompt(message, state),
+            contents=build_turn_prompt(message, state, rule_hint=deterministic, examples=examples),
             config=types.GenerateContentConfig(
                 temperature=0,
                 response_mime_type="application/json",
@@ -186,44 +232,105 @@ def classify_turn(message: str, state: ActiveCaseState) -> TurnClassification:
         result = validate_turn_classification(parsed)
         result.latency_ms = int((time.perf_counter() - started) * 1000)
         result.provider = "gemini"
-        return apply_turn_safety_overrides(message, state, result)
+        result = apply_turn_safety_overrides(message, state, result)
     except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini turn classification failed safely: %s: %s", exc.__class__.__name__, str(exc))
         deterministic.error = True
         deterministic.latency_ms = int((time.perf_counter() - started) * 1000)
         return deterministic
 
+    if record_corrections and result.turn_type != deterministic.turn_type:
+        turn_memory.record_correction(
+            message=message,
+            domains=state.domains,
+            rule_label=deterministic.turn_type,
+            model_label=result.turn_type,
+            reason=result.reason,
+        )
+    return result
+
+
+# Pure acknowledgement / greeting vocabulary. A message made only of these words is the one case
+# the rules decide alone; one extra word ("ok but what about the deposit") sends it to Gemini.
+ACKNOWLEDGEMENT_WORDS = {
+    "thanks", "thank", "thankyou", "thx", "ty", "you", "so", "very", "much", "a", "lot", "ok", "okay",
+    "okk", "k", "got", "it", "understood", "great", "cool", "fine", "noted", "alright", "sure", "nice",
+    "perfect", "this", "that", "helps", "helped", "helpful", "shukriya", "dhanyavad", "theek", "hai",
+}
+GREETING_WORDS = {"hello", "hi", "hey", "hii", "namaste", "good", "morning", "evening", "afternoon"}
+
+# Question cues for messages typed without a "?". Checked as whole words/phrases.
+QUESTION_START_RE = re.compile(
+    r"^(?:(?:so|and|but|ok|okay|thanks|sorry)[\s,]+)*"
+    r"(?:how|what|why|where|when|who|whom|whose|which|is|are|am|can|could|should|would|will|do|does|did|may|shall|was|were)\b"
+)
+QUESTION_PHRASE_RE = re.compile(
+    r"\b(?:what if|what about|what next|now what|and if|tell me|explain|help me|guide me|advise|"
+    r"i (?:do ?n[o']?t|dont) (?:know|understand)|(?:do ?n[o']?t|dont) understand|not sure|no idea|confused|"
+    r"i (?:want|need|would like) to know|is that (?:right|correct|true)|is it (?:legal|allowed|possible)|"
+    r"can i|can they|can he|can she|can you|should i|do i|what should|what can|"
+    r"kya|kaise|kab|kahan|kyun|kyon|kitna|kitne|kaun|karu|karun|karoon|samajh nahi|ya nahi|batao|bataiye)\b"
+)
+CORRECTION_RE = re.compile(
+    r"^(?:sorry|correction|actually|no wait|wait|oops|my bad)\b|\bi meant\b|\binstead\b|"
+    r"\bnot\s+(?:rs\.?\s*|inr\s*|₹\s*)?[\d,]{2,}|\b(?:it|that) was\b[^.?!]*\bnot\b"
+)
+NEW_ISSUE_MARKERS = ("separately", "different problem", "different issue", "another problem", "another issue", "unrelated", "new problem", "new issue", "on another note")
+OUT_OF_SCOPE_NEW_ISSUE_CUES = ("divorce", "bail", "income tax", "inheritance", "child custody", "salary", "employer", "maintenance from my husband")
+
 
 def deterministic_turn_classification(message: str, state: ActiveCaseState) -> TurnClassification:
+    """The keyword first guess. Only pure acknowledgements/greetings come back with "high"
+    confidence (decided without Gemini); every other label is a hint for Gemini, and the
+    fallback answer when Gemini is unavailable. Ordered so the costly mistakes are the hardest to
+    make: a question is recognised before a correction ("actually can i just stop paying rent"),
+    and anything unrecognised defaults to a follow-up question, never to an acknowledgement."""
     text = clean_text(message)
     lowered = text.lower()
     if is_small_talk(lowered):
-        turn_type = "acknowledgement" if contains_any(lowered, ("thanks", "thank you", "okay", "ok", "got it", "understood")) else "small_talk"
+        turn_type = "small_talk" if is_greeting_only(lowered) else "acknowledgement"
         return TurnClassification(turn_type, "high", "Conversational message that does not need legal retrieval.")
-    if is_correction(lowered):
-        corrected = [text]
-        return TurnClassification("correction", "high", "User appears to correct an earlier fact.", corrected_facts=corrected)
     if clearly_new_issue(lowered, state):
-        return TurnClassification("new_issue", "high", "Latest message appears unrelated to the active case.")
+        return TurnClassification("new_issue", "medium", "Latest message appears unrelated to the active case.")
     if is_question_like(lowered):
         return TurnClassification("follow_up_question", "medium", "Likely asks about the active case.")
+    if is_correction(lowered):
+        return TurnClassification("correction", "medium", "User appears to correct an earlier fact.", corrected_facts=[text])
     if has_fact_content(lowered):
-        return TurnClassification("additional_fact", "high", "User added a factual detail without asking a question.", extracted_facts=[text])
-    if refers_to_existing_case(lowered):
-        return TurnClassification("follow_up_question", "medium", "Likely refers to the active case.")
+        return TurnClassification("additional_fact", "medium", "Reads as a factual statement without a recognised question cue.", extracted_facts=[text])
     return TurnClassification("follow_up_question", "low", "Ambiguous short message in an active legal consultation.")
 
 
-def build_turn_prompt(message: str, state: ActiveCaseState) -> str:
+def build_turn_prompt(
+    message: str,
+    state: ActiveCaseState,
+    rule_hint: TurnClassification | None = None,
+    examples: list[dict[str, str]] | None = None,
+) -> str:
     facts = "\n".join(f"- {fact}" for fact in state.known_facts[-8:]) or "None"
-    return (
-        f"{TURN_CLASSIFIER_PROMPT}\n\n"
-        f"Active case summary:\n{state.case_summary}\n\n"
-        f"Domains: {', '.join(state.domains)}\n"
-        f"Last issue addressed: {state.last_issue_addressed or ''}\n"
-        f"Known facts:\n{facts}\n\n"
-        f"Latest user message:\n{clean_text(message)}"
-    )
+    parts = [
+        TURN_CLASSIFIER_PROMPT,
+        "",
+        f"Active case summary:\n{state.case_summary}",
+        "",
+        f"Domains: {', '.join(state.domains)}",
+        f"Last issue addressed: {state.last_issue_addressed or ''}",
+        f"Known facts:\n{facts}",
+    ]
+    if examples:
+        lines = "\n".join(f'- "{item["message"]}" -> {item["turn_type"]}' for item in examples)
+        parts.extend(["", f"Similar past messages and their correct turn_type (for reference):\n{lines}"])
+    if rule_hint is not None:
+        parts.extend([
+            "",
+            "Keyword-rule pre-classification (a HINT that may be wrong -- verify it against the message's meaning):",
+            f"turn_type={rule_hint.turn_type}; reason: {rule_hint.reason}",
+            "These rules only look for punctuation and keywords. They often mislabel questions typed "
+            "without a question mark as additional_fact, and can mistake phrases like \"it is\" or "
+            "\"actually\" for corrections. Overrule the hint whenever the message means something else.",
+        ])
+    parts.extend(["", f"Latest user message:\n{clean_text(message)}"])
+    return "\n".join(parts)
 
 
 def validate_turn_classification(data: dict[str, Any]) -> TurnClassification:
@@ -244,9 +351,29 @@ def validate_turn_classification(data: dict[str, Any]) -> TurnClassification:
 
 
 def apply_turn_safety_overrides(message: str, state: ActiveCaseState, result: TurnClassification) -> TurnClassification:
-    deterministic = deterministic_turn_classification(message, state)
-    if deterministic.turn_type in {"small_talk", "acknowledgement", "correction", "new_issue"} and deterministic.confidence == "high":
-        return deterministic
+    """Guards against the two mistakes that hurt the user, whoever made them:
+    - swallowing a question: an acknowledgement / small-talk label is only kept when the message
+      is nothing but acknowledgement or greeting words; otherwise it becomes a follow-up question.
+    - wiping the conversation: new_issue is not accepted for a message that points back at the
+      current case ("also", "that", "he", "they"...) unless it carries an explicit new-topic
+      marker ("separately", "unrelated") or an out-of-scope topic cue."""
+    lowered = clean_text(message).lower()
+    if result.turn_type in {"acknowledgement", "small_talk"} and not is_small_talk(lowered):
+        return TurnClassification(
+            "follow_up_question", "medium", "Overrode an acknowledgement label: the message says more than thanks/ok.",
+            provider=result.provider, latency_ms=result.latency_ms,
+        )
+    if (
+        result.turn_type == "new_issue"
+        and refers_to_existing_case(lowered)
+        and not contains_any(lowered, NEW_ISSUE_MARKERS)
+        and not contains_any(lowered, OUT_OF_SCOPE_NEW_ISSUE_CUES)
+        and not other_domain_cues(lowered, state)
+    ):
+        return TurnClassification(
+            "follow_up_question", "medium", "Overrode a new-issue label: the message refers back to the current case.",
+            provider=result.provider, latency_ms=result.latency_ms,
+        )
     return result
 
 
@@ -294,7 +421,7 @@ def pipeline_message(latest_message: str, state: ActiveCaseState, document_fact_
     facts = "\n".join(f"- {fact}" for fact in state.known_facts[-8:])
     document_facts = "\n".join(f"- {fact}" for fact in document_fact_lines or [])
     parts = [
-        f"Current user question: {clean_text(latest_message)}",
+        f"{PIPELINE_QUESTION_PREFIX}{clean_text(latest_message)}",
         f"Active case summary: {state.case_summary}",
     ]
     if facts:
@@ -302,6 +429,20 @@ def pipeline_message(latest_message: str, state: ActiveCaseState, document_fact_
     if document_facts:
         parts.append(f"Confirmed document facts:\n{document_facts}")
     return "\n".join(parts)
+
+
+PIPELINE_QUESTION_PREFIX = "Current user question: "
+
+
+def split_pipeline_message(text: str) -> tuple[str, str] | None:
+    """Undo pipeline_message(): return (latest user question, case background), or None when
+    `text` is not a pipeline message. Lets the answer writer reply to the question the user just
+    asked instead of treating the whole case as the thing to answer."""
+    if not text or not text.startswith(PIPELINE_QUESTION_PREFIX):
+        return None
+    first_line, _, rest = text.partition("\n")
+    question = first_line[len(PIPELINE_QUESTION_PREFIX):].strip()
+    return (question, rest.strip()) if question else None
 
 
 def update_state_after_answer(
@@ -356,36 +497,73 @@ def compact_state_payload(state: ActiveCaseState | None) -> dict[str, Any] | Non
     }
 
 
-def is_small_talk(lowered: str) -> bool:
+def small_talk_words(lowered: str) -> list[str]:
     text = re.sub(r"[^a-z0-9\s]+", " ", lowered)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text in {"thanks", "thank you", "thankyou", "ok", "okay", "got it", "understood", "hello", "hi", "hey"}
+    return text.split()
+
+
+def is_small_talk(lowered: str) -> bool:
+    """True only when every word is acknowledgement/greeting vocabulary ("ok thank you so much",
+    "thank you this helps", "hi"). The previous exact-phrase list missed "ok thank you so much"
+    and "understood thanks", which then fell through to being treated as case facts."""
+    words = small_talk_words(lowered)
+    return bool(words) and len(words) <= 8 and all(word in ACKNOWLEDGEMENT_WORDS | GREETING_WORDS for word in words)
+
+
+def is_greeting_only(lowered: str) -> bool:
+    words = small_talk_words(lowered)
+    return bool(words) and all(word in GREETING_WORDS for word in words)
 
 
 def is_correction(lowered: str) -> bool:
-    return contains_any(lowered, ("sorry", "correction", "actually", "it was", "it is", "not rs", "not ₹", "instead"))
+    """Explicit correction phrasing only. Bare "it is" / "it was" used to count, which turned
+    ordinary facts ("they said it is my fault", "it is still not fixed") into corrections."""
+    return bool(CORRECTION_RE.search(lowered))
+
+
+DOMAIN_CUE_RES = {
+    "consumer": re.compile(r"\b(?:seller|refunds?|products?|orders?|invoice|defective)\b"),
+    "cyber": re.compile(r"\b(?:instagram|hacked|phishing|cyber|online account|blocked me)\b"),
+    "tenancy": re.compile(r"\b(?:landlord|tenants?|rent|rented|electricity|deposit|evict(?:ed|ion)?)\b"),
+    "constitutional_public_authority": re.compile(r"\b(?:rti|article|legal aid|public authority|government)\b"),
+}
+
+
+def other_domain_cues(lowered: str, state: ActiveCaseState) -> set[str]:
+    """Legal areas the message mentions that the current case is NOT about -- the signal that a
+    message is a different problem even when it says "also" ("my RTI application also got no
+    reply" during a consumer case)."""
+    cued = {domain for domain, pattern in DOMAIN_CUE_RES.items() if pattern.search(lowered)}
+    previous = set(state.domains)
+    return cued if (cued and previous and cued.isdisjoint(previous)) else set()
 
 
 def clearly_new_issue(lowered: str, state: ActiveCaseState) -> bool:
-    if contains_any(lowered, ("divorce", "bail", "income tax", "inheritance", "child custody")):
+    if contains_any(lowered, NEW_ISSUE_MARKERS) or contains_any(lowered, OUT_OF_SCOPE_NEW_ISSUE_CUES):
         return True
-    previous = set(state.domains)
-    cue_domains = {
-        "consumer": contains_any(lowered, ("seller", "refund", "product", "order", "invoice", "defective")),
-        "cyber": contains_any(lowered, ("instagram", "hacked", "phishing", "cyber", "online account", "blocked me")),
-        "tenancy": contains_any(lowered, ("landlord", "tenant", "rent", "electricity", "deposit", "evict")),
-        "constitutional_public_authority": contains_any(lowered, ("rti", "article", "legal aid", "public authority", "government")),
-    }
-    active_domains = {domain for domain, present in cue_domains.items() if present}
-    return bool(active_domains and previous and active_domains.isdisjoint(previous) and not refers_to_existing_case(lowered))
+    return bool(other_domain_cues(lowered, state)) and not refers_back_to_people(lowered)
+
+
+def refers_back_to_people(lowered: str) -> bool:
+    """Pronouns / back-references strong enough to tie a message mentioning another legal area
+    to the current case ("can I report him online" in a seller dispute). Deliberately excludes
+    "also"/"too", which join a second problem as often as they extend the first."""
+    return bool(re.search(r"\b(?:he|him|his|she|her|they|them|their|same|earlier|above)\b", lowered)) or "what if" in lowered
 
 
 def is_question_like(lowered: str) -> bool:
-    return "?" in lowered or contains_any(lowered, ("what if", "can i", "can they", "can he", "what should", "what can", "does this", "is this", "should i", "kaise", "kya"))
+    """A "?" is not required: users type questions as statements ("tell me the process",
+    "i dont know how civil courts work"), without punctuation ("how do i file it"), or in
+    Hinglish ("ab kya karu"). Also checks after a comma, so "thanks, and what if they ignore
+    the notice" is recognised."""
+    if "?" in lowered:
+        return True
+    clauses = [clause.strip() for clause in re.split(r"[,;.!]", lowered) if clause.strip()]
+    return any(QUESTION_START_RE.search(clause) for clause in clauses) or bool(QUESTION_PHRASE_RE.search(lowered))
 
 
 def refers_to_existing_case(lowered: str) -> bool:
-    return contains_any(lowered, ("he ", "him", "she ", "they", "this", "that", "it ", "same", "earlier", "above", "what if"))
+    return bool(re.search(r"\b(?:he|him|his|she|her|they|them|their|this|that|it|same|earlier|above|also|too|again|still)\b", lowered)) or "what if" in lowered
 
 
 def has_fact_content(lowered: str) -> bool:

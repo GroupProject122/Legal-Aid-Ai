@@ -26,7 +26,28 @@ def percent(value: float) -> str:
     return f"{value * 100:.1f}%"
 
 
-def evaluate_case(case: dict[str, Any]) -> dict[str, Any]:
+# What the user actually experiences for each turn type. Since additional facts and corrections
+# are re-answered with the updated case (not merely acknowledged), confusing any two labels in
+# the same group is harmless; crossing groups is not -- "reset" wipes the conversation's context
+# and "bypass" gives no answer at all.
+RESPONSE_ACTION = {
+    "follow_up_question": "answer_with_context",
+    "additional_fact": "answer_with_context",
+    "correction": "answer_with_context",
+    "clarification_reply": "answer_with_context",
+    "new_issue": "reset",
+    "acknowledgement": "bypass",
+    "small_talk": "bypass",
+}
+
+
+def classify(case_message: str, state: conversation_state.ActiveCaseState, mode: str) -> conversation_state.TurnClassification:
+    if mode == "live":
+        return conversation_state.classify_turn(case_message, state, use_memory=False, record_corrections=False)
+    return conversation_state.deterministic_turn_classification(case_message, state)
+
+
+def evaluate_case(case: dict[str, Any], mode: str = "rules") -> dict[str, Any]:
     state = conversation_state.create_state(
         domains=case.get("domains", []),
         primary_domain=(case.get("domains") or [None])[0],
@@ -34,7 +55,12 @@ def evaluate_case(case: dict[str, Any]) -> dict[str, Any]:
         known_facts=case.get("known_facts", []),
         confirmed_document_context_id=case.get("confirmed_document_context_id"),
     )
-    classification = conversation_state.deterministic_turn_classification(case["message"], state)
+    classification = classify(case["message"], state, mode)
+    acceptable = case.get("acceptable_turn_types") or [case.get("expected_turn_type")]
+    turn_type_correct = classification.turn_type in acceptable
+    expected_action = RESPONSE_ACTION.get(case.get("expected_turn_type"))
+    predicted_action = RESPONSE_ACTION.get(classification.turn_type)
+    acceptable_actions = {RESPONSE_ACTION.get(item) for item in acceptable}
     if classification.turn_type in {"additional_fact", "correction", "follow_up_question", "clarification_reply"}:
         conversation_state.apply_turn_to_state(state, case["message"], classification)
     if classification.turn_type == "new_issue":
@@ -53,7 +79,7 @@ def evaluate_case(case: dict[str, Any]) -> dict[str, Any]:
         document_context_correct = bool(state.confirmed_document_context_id)
     correct = all(
         [
-            classification.turn_type == case.get("expected_turn_type"),
+            turn_type_correct,
             must_preserve,
             must_not_preserve,
             bypass_correct,
@@ -66,7 +92,14 @@ def evaluate_case(case: dict[str, Any]) -> dict[str, Any]:
         "message": case["message"],
         "expected_turn_type": case.get("expected_turn_type"),
         "predicted_turn_type": classification.turn_type,
-        "turn_type_correct": classification.turn_type == case.get("expected_turn_type"),
+        "provider": classification.provider,
+        "turn_type_correct": turn_type_correct,
+        "expected_action": expected_action,
+        "predicted_action": predicted_action,
+        "action_correct": predicted_action in acceptable_actions,
+        "swallowed": predicted_action == "bypass" and "bypass" not in acceptable_actions,
+        "wrongly_reset": predicted_action == "reset" and "reset" not in acceptable_actions,
+        "missed_reset": expected_action == "reset" and predicted_action != "reset",
         "must_preserve_correct": must_preserve,
         "must_not_preserve_correct": must_not_preserve,
         "bypass_correct": bypass_correct,
@@ -87,6 +120,12 @@ def aggregate(results: list[dict[str, Any]]) -> dict[str, Any]:
     return {
         "case_count": total,
         "overall_accuracy": pct(sum(item["correct"] for item in results), total),
+        "turn_type_accuracy": pct(sum(item["turn_type_correct"] for item in results), total),
+        "response_action_accuracy": pct(sum(item["action_correct"] for item in results), total),
+        "swallowed_rate": pct(sum(item["swallowed"] for item in results), total),
+        "wrong_reset_rate": pct(sum(item["wrongly_reset"] for item in results), total),
+        "missed_reset_rate": subset_rate(new_issue_cases, "missed_reset"),
+        "gemini_decided_rate": pct(sum(item["provider"] == "gemini" for item in results), total),
         "follow_up_classification_accuracy": subset_rate(follow_up_cases, "turn_type_correct"),
         "new_issue_detection_accuracy": subset_rate(new_issue_cases, "turn_type_correct"),
         "additional_fact_preservation_accuracy": subset_rate(additional_fact_cases, "must_preserve_correct"),
@@ -109,8 +148,15 @@ def render_markdown(report: dict[str, Any]) -> str:
         "# Conversation State Evaluation",
         "",
         "## Overall Results",
+        f"- Mode: {report['evaluation_config']['mode']}",
         f"- Cases: {metrics['case_count']}",
         f"- Overall accuracy: {percent(metrics['overall_accuracy'])}",
+        f"- Turn-type accuracy: {percent(metrics['turn_type_accuracy'])}",
+        f"- Response-action accuracy (right kind of response): {percent(metrics['response_action_accuracy'])}",
+        f"- Swallowed (needed an answer, got an acknowledgement): {percent(metrics['swallowed_rate'])}",
+        f"- Wrongly reset (context wiped on a same-case message): {percent(metrics['wrong_reset_rate'])}",
+        f"- Missed reset (new issue kept old context): {percent(metrics['missed_reset_rate'])}",
+        f"- Decided by Gemini: {percent(metrics['gemini_decided_rate'])}",
         f"- Follow-up classification accuracy: {percent(metrics['follow_up_classification_accuracy'])}",
         f"- New-issue detection accuracy: {percent(metrics['new_issue_detection_accuracy'])}",
         f"- Additional-fact preservation accuracy: {percent(metrics['additional_fact_preservation_accuracy'])}",
@@ -135,16 +181,24 @@ def render_markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def evaluate(path: Path) -> dict[str, Any]:
+def evaluate(path: Path, mode: str = "rules") -> dict[str, Any]:
+    """mode="rules" scores the keyword rules alone with no network calls (the fallback used when
+    Gemini is unavailable). mode="live" scores the production path -- rules as a hint, Gemini
+    deciding -- with the correction memory switched off so results are reproducible."""
     previous_key = conversation_state.GEMINI_API_KEY
-    conversation_state.GEMINI_API_KEY = ""
+    if mode == "rules":
+        conversation_state.GEMINI_API_KEY = ""
     try:
         cases = load_cases(path)
-        results = [evaluate_case(case) for case in cases]
+        results = [evaluate_case(case, mode) for case in cases]
     finally:
         conversation_state.GEMINI_API_KEY = previous_key
     return {
-        "evaluation_config": {"case_file": path.as_posix(), "live_gemini_calls": 0},
+        "evaluation_config": {
+            "case_file": path.as_posix(),
+            "mode": mode,
+            "live_gemini_calls": sum(item["provider"] == "gemini" for item in results),
+        },
         "metrics": aggregate(results),
         "results": results,
     }
@@ -153,16 +207,21 @@ def evaluate(path: Path) -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate compact active conversation state.")
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASE_PATH)
+    parser.add_argument("--mode", choices=["rules", "live"], default="rules")
     parser.add_argument("--json-output", type=Path, default=DEFAULT_JSON_OUTPUT)
     parser.add_argument("--md-output", type=Path, default=DEFAULT_MD_OUTPUT)
     args = parser.parse_args()
-    report = evaluate(args.cases)
+    report = evaluate(args.cases, args.mode)
     args.json_output.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     args.md_output.write_text(render_markdown(report), encoding="utf-8")
     print(
         "Conversation state evaluation complete: "
         f"{report['metrics']['case_count']} cases; "
+        f"mode={args.mode}; "
         f"overall_accuracy={percent(report['metrics']['overall_accuracy'])}; "
+        f"response_action_accuracy={percent(report['metrics']['response_action_accuracy'])}; "
+        f"swallowed={percent(report['metrics']['swallowed_rate'])}; "
+        f"wrong_reset={percent(report['metrics']['wrong_reset_rate'])}; "
         f"small_talk_bypass={percent(report['metrics']['small_talk_bypass_rate'])}"
     )
 

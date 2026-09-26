@@ -52,6 +52,16 @@ textarea {
   font: inherit;
 }
 
+/* AutoGrowTextarea sets its own height; these keep text wrapping instead of scrolling. */
+.auto-grow-textarea {
+  display: block;
+  resize: none;
+  overflow-y: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
 button {
   cursor: pointer;
 }
@@ -454,6 +464,9 @@ button {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  /* Same clipping of the background art as .main-panel's overflow: hidden, but `clip` does not
+     make the panel a scroll container -- which would stop the pinned follow-up box sticking. */
+  overflow: clip;
 }
 
 .home-page-panel .home-background-art {
@@ -591,7 +604,8 @@ button {
   padding: 8px 8px 8px 16px;
   display: grid;
   grid-template-columns: auto 1fr auto auto;
-  align-items: center;
+  /* Buttons stay pinned to the bottom row as the question grows to several lines. */
+  align-items: end;
   gap: 8px;
   background: #fffdf8;
   border: 1px solid rgba(120, 78, 40, 0.32);
@@ -611,14 +625,17 @@ button {
   place-items: center;
   width: 26px;
   height: 26px;
+  margin-bottom: 8px;
   color: rgba(122, 71, 28, 0.6);
 }
 
-.query-box input {
+.query-box textarea {
   position: relative;
   z-index: 1;
   width: 100%;
   min-width: 0;
+  max-height: 50vh;
+  padding: 9px 0;
   color: #3f2818;
   background: transparent;
   border: 0;
@@ -627,7 +644,75 @@ button {
   font-size: 1rem;
 }
 
-.query-box input::placeholder {
+/* Homepage question + its in-place answer (HomeAnswerPanel). */
+.home-ask {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Follow-up box: sits under the answers and stays pinned to the bottom of the screen while a
+   long answer is scrolled, so it never has to be scrolled back to. */
+.home-ask.has-conversation .query-box {
+  order: 2;
+  position: sticky;
+  bottom: 16px;
+  z-index: 5;
+  max-width: 860px;
+  box-shadow: 0 -6px 22px rgba(80, 46, 18, 0.1), 0 8px 24px rgba(80, 46, 18, 0.12);
+}
+
+.home-ask.has-conversation .query-box:focus-within {
+  transform: none;
+}
+
+.home-answer-panel {
+  width: 100%;
+  max-width: 860px;
+  min-height: 0;
+  grid-template-rows: auto auto;
+  animation: laFadeUp 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-answer-panel .chat-panel-toolbar {
+  flex-wrap: wrap;
+}
+
+.home-answer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-answer-panel .outline-action:disabled,
+.query-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.home-answer-messages {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 4px 8px;
+  scroll-margin-bottom: 24px;
+}
+
+.home-answer-messages > * {
+  scroll-margin-top: 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-answer-panel {
+    animation: none;
+  }
+}
+
+.query-box textarea::placeholder {
   color: rgba(88, 60, 39, 0.48);
   opacity: 1;
 }
@@ -639,6 +724,7 @@ button {
   place-items: center;
   width: 32px;
   height: 36px;
+  margin-bottom: 3px;
   color: rgba(63, 40, 22, 0.5);
   background: transparent;
   border: 0;
@@ -2039,6 +2125,8 @@ body.has-custom-cursor textarea {
 .user-message p {
   margin: 0;
   line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .user-message time {
@@ -2154,6 +2242,24 @@ body.has-custom-cursor textarea {
 
 .response-section ul {
   padding-left: 20px;
+}
+
+.conversational-reply-card {
+  width: auto;
+  max-width: min(620px, calc(100% - 52px));
+  padding: 12px 18px;
+}
+
+.conversational-reply-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Limitations in maroon so the caveats on an answer are easy to spot. */
+.response-limitations h4,
+.response-limitations li,
+.response-limitations li::marker {
+  color: #7a1f1f;
 }
 
 .step-list {
@@ -2276,7 +2382,8 @@ body.has-custom-cursor textarea {
   z-index: 1;
   display: grid;
   grid-template-columns: auto 1fr auto auto;
-  align-items: center;
+  /* Buttons stay on the bottom row as the question grows. */
+  align-items: end;
   gap: 12px;
   padding: 14px;
   background: linear-gradient(180deg, #ffffff 0%, #fffaf1 100%);
@@ -2293,7 +2400,8 @@ body.has-custom-cursor textarea {
 
 .chat-composer textarea {
   min-height: 56px;
-  max-height: 148px;
+  /* Grows with the question; only scrolls once it would take over the chat view. */
+  max-height: 40vh;
   width: 100%;
   min-width: 0;
   padding: 16px 18px;
@@ -4495,7 +4603,8 @@ body.has-custom-cursor textarea {
   font-size: 0.74rem;
 }
 
-.fact-item input {
+.fact-item textarea {
+  width: 100%;
   min-height: 36px;
   padding: 7px 9px;
   color: var(--mocha);
@@ -4635,7 +4744,49 @@ body.has-custom-cursor textarea {
 }
 
 .source-excerpt-modal {
+  /* Wider than the other small modals: it now holds the whole cited passage. */
+  width: min(680px, 100%);
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
   text-align: left;
+}
+
+.source-excerpt-modal .source-excerpt-box {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The passage scrolls inside the modal, so the title and the PDF button stay in view. */
+.source-passage {
+  min-height: 0;
+  max-height: min(52vh, 520px);
+  overflow-y: auto;
+  padding-right: 6px;
+  overscroll-behavior: contain;
+}
+
+.source-passage p + p {
+  margin-top: 8px;
+}
+
+.source-passage:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 3px;
+}
+
+.source-pdf-link {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .source-excerpt-modal .modal-emblem,
@@ -5339,6 +5490,7 @@ body.has-custom-cursor textarea {
    .scheme-field inputs of type checkbox in the codebase, and without this exclusion they
    inherited width:100%/min-height:46px, stretching each checkbox into the size of a text input. */
 .scheme-field input:not([type='radio']):not([type='checkbox']),
+.scheme-field textarea,
 .scheme-field select {
   width: 100%;
   min-height: 46px;
@@ -5351,6 +5503,7 @@ body.has-custom-cursor textarea {
 }
 
 .scheme-field input:focus-visible,
+.scheme-field textarea:focus-visible,
 .scheme-field select:focus-visible {
   outline: 2px solid var(--caramel);
   outline-offset: 1px;

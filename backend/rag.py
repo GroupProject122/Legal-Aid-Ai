@@ -16,6 +16,7 @@ from sentence_transformers import SentenceTransformer
 
 import grounded_answer
 import claim_verifier
+import source_text
 from config import (
     DISCLAIMER,
     EMBEDDING_MODEL,
@@ -1487,6 +1488,7 @@ def source_payload(chunks: list[RetrievedChunk]) -> list[dict[str, Any]]:
                 "page": chunk.page,
                 "section": source_section_label(chunk),
                 "excerpt": short_excerpt(chunk.text),
+                "full_text": source_text.readable_source_text(chunk.text),
                 "relevance": round(chunk.score, 4),
                 "rerank_score": round(chunk.rerank_score or chunk.score, 4),
             }

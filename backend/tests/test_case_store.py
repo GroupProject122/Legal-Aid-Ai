@@ -486,7 +486,7 @@ def test_api_ask_creates_case_and_appends_follow_up(monkeypatch, tmp_path):
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
     client = TestClient(main.app)
-    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text: main.domain_router.RouteDecision(
+    monkeypatch.setattr(main.domain_router, "route_issue", lambda _text, **_kw: main.domain_router.RouteDecision(
         status="classified",
         domains=["consumer"],
         primary_domain="consumer",
