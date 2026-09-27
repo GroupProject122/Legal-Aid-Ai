@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import case_store
 import main
+from conftest import signed_in_client
 
 
 def assistant_response(domain: str = "consumer") -> dict:
@@ -236,9 +237,9 @@ def test_api_list_cases_paginates(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
+    client, user_id = signed_in_client()
     for i in range(3):
-        main.case_store.create_case(f"issue {i}", "consumer")
+        main.case_store.create_case(f"issue {i}", "consumer", user_id=user_id)
 
     response = client.get("/api/cases", params={"limit": 2, "offset": 0})
 
@@ -253,7 +254,7 @@ def test_api_list_cases_rejects_unknown_domain(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
+    client, user_id = signed_in_client()
 
     response = client.get("/api/cases", params={"domain": "not_a_real_domain"})
 
@@ -264,9 +265,9 @@ def test_api_list_cases_search_param(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
-    main.case_store.create_case("landlord cut off my electricity in Delhi", "tenancy")
-    main.case_store.create_case("seller refused a refund", "consumer")
+    client, user_id = signed_in_client()
+    main.case_store.create_case("landlord cut off my electricity in Delhi", "tenancy", user_id=user_id)
+    main.case_store.create_case("seller refused a refund", "consumer", user_id=user_id)
 
     response = client.get("/api/cases", params={"search": "electricity"})
 
@@ -402,11 +403,12 @@ def test_api_open_case_round_trip_with_temp_db(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
+    client, user_id = signed_in_client()
     case_id = main.case_store.create_case(
         "The seller refused refund.",
         "consumer",
         conversation_state=assistant_response()["conversation_state"],
+        user_id=user_id,
     )
     main.case_store.save_message(case_id, "user", {"text": "The seller refused refund."})
     main.case_store.save_message(case_id, "assistant", assistant_response())
@@ -423,8 +425,8 @@ def test_api_delete_case_removes_history(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
-    case_id = main.case_store.create_case("The seller refused refund.", "consumer")
+    client, user_id = signed_in_client()
+    case_id = main.case_store.create_case("The seller refused refund.", "consumer", user_id=user_id)
     main.case_store.save_message(case_id, "user", {"text": "The seller refused refund."})
     main.case_store.save_message(case_id, "assistant", assistant_response())
 
@@ -439,9 +441,9 @@ def test_api_delete_all_cases_removes_every_saved_case(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
-    first = main.case_store.create_case("The seller refused refund.", "consumer")
-    second = main.case_store.create_case("My landlord cut electricity.", "tenancy")
+    client, user_id = signed_in_client()
+    first = main.case_store.create_case("The seller refused refund.", "consumer", user_id=user_id)
+    second = main.case_store.create_case("My landlord cut electricity.", "tenancy", user_id=user_id)
     main.case_store.save_message(first, "user", {"text": "The seller refused refund."})
     main.case_store.save_message(second, "assistant", assistant_response("tenancy"))
 
@@ -458,8 +460,8 @@ def test_api_rename_case_updates_title(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
-    case_id = main.case_store.create_case("The seller refused refund.", "consumer")
+    client, user_id = signed_in_client()
+    case_id = main.case_store.create_case("The seller refused refund.", "consumer", user_id=user_id)
 
     response = client.patch(f"/api/cases/{case_id}/rename", json={"title": "Phone Refund Dispute"})
 
@@ -473,8 +475,8 @@ def test_api_rename_case_rejects_blank_title(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
-    case_id = main.case_store.create_case("The seller refused refund.", "consumer")
+    client, user_id = signed_in_client()
+    case_id = main.case_store.create_case("The seller refused refund.", "consumer", user_id=user_id)
 
     response = client.patch(f"/api/cases/{case_id}/rename", json={"title": "   "})
 
@@ -485,7 +487,7 @@ def test_api_ask_creates_case_and_appends_follow_up(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
+    client, user_id = signed_in_client()
     monkeypatch.setattr(main.domain_router, "route_issue", lambda _text, **_kw: main.domain_router.RouteDecision(
         status="classified",
         domains=["consumer"],
@@ -517,7 +519,7 @@ def test_api_small_talk_alone_does_not_create_case(monkeypatch, tmp_path):
     db = tmp_path / "legal_aid.db"
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     main.case_store.init_db()
-    client = TestClient(main.app)
+    client, user_id = signed_in_client()
 
     response = client.post("/api/ask", json={"question": "thanks"})
 

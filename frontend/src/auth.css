@@ -1,0 +1,321 @@
+/* Accounts: sign-in / sign-up card, header account menu, and the "sign in to see this" panel.
+   Colours follow the parchment palette in styles.css (dark mode is the page-wide inversion there,
+   so nothing extra is needed for it). */
+
+.auth-content-frame {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 14px 16px 48px;
+}
+
+.auth-card {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding: 30px clamp(20px, 5vw, 36px);
+  background: rgba(255, 250, 241, 0.86);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.auth-card h3 {
+  margin: 0;
+  color: var(--mocha);
+  font-family: var(--serif-display);
+  font-size: 1.45rem;
+  text-align: center;
+}
+
+.auth-card-lead {
+  margin: 0 0 4px;
+  color: rgba(74, 50, 32, 0.76);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.auth-method-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(184, 121, 47, 0.1);
+  border: 1px solid rgba(168, 104, 43, 0.22);
+  border-radius: 10px;
+}
+
+.auth-method-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  color: rgba(63, 40, 22, 0.74);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-method-toggle button.is-active {
+  color: var(--mocha);
+  background: rgba(255, 252, 245, 0.95);
+  box-shadow: 0 2px 6px rgba(73, 45, 20, 0.12);
+}
+
+.auth-method-toggle button:focus-visible,
+.auth-password-input button:focus-visible,
+.account-signin-link:focus-visible,
+.account-dropdown a:focus-visible,
+.account-dropdown button:focus-visible {
+  outline: 2px solid rgba(179, 125, 57, 0.72);
+  outline-offset: 2px;
+}
+
+.auth-field {
+  display: grid;
+  gap: 6px;
+  color: rgba(63, 40, 22, 0.78);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.auth-field small {
+  color: rgba(74, 50, 32, 0.62);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.auth-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: var(--mocha);
+  font: inherit;
+  font-weight: 400;
+  background: rgba(255, 252, 245, 0.95);
+  border: 1px solid rgba(179, 125, 57, 0.32);
+  border-radius: 8px;
+}
+
+.auth-field input:focus {
+  outline: 2px solid rgba(179, 125, 57, 0.5);
+  outline-offset: 0;
+  border-color: rgba(139, 82, 31, 0.6);
+}
+
+.auth-password-input {
+  position: relative;
+}
+
+.auth-password-input input {
+  padding-right: 44px;
+}
+
+.auth-password-input button {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: rgba(63, 40, 22, 0.62);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.auth-error {
+  margin: 0;
+  padding: 9px 12px;
+  color: #b42318;
+  font-size: 0.9rem;
+  background: rgba(199, 63, 44, 0.07);
+  border: 1px solid rgba(199, 63, 44, 0.22);
+  border-radius: 8px;
+}
+
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.auth-switch {
+  margin: 2px 0 0;
+  color: rgba(74, 50, 32, 0.72);
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+.auth-switch a,
+.auth-guest-note a {
+  color: var(--walnut);
+  font-weight: 700;
+}
+
+/* Header: guest "Sign in" pill and signed-in account menu. */
+
+.account-signin-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  margin-left: 4px;
+  padding: 0 14px;
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  background: rgba(184, 121, 47, 0.14);
+  border: 1px solid rgba(120, 78, 40, 0.35);
+  border-radius: 999px;
+}
+
+.account-signin-link:hover {
+  background: rgba(184, 121, 47, 0.22);
+}
+
+.account-menu {
+  position: relative;
+}
+
+/* .top-controls button (styles.css) sizes every header button as a 36px circle; the avatar keeps
+   the .avatar look instead. */
+.top-controls .account-avatar-button {
+  width: 34px;
+  height: 34px;
+  color: var(--mocha);
+  background: rgba(184, 121, 47, 0.14);
+  border: 1px solid rgba(120, 78, 40, 0.35);
+  cursor: pointer;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  min-width: 220px;
+  max-width: min(300px, calc(100vw - 32px));
+  padding: 8px;
+  background: #fffaf1;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.account-dropdown-label {
+  margin: 4px 8px 0;
+  color: rgba(74, 50, 32, 0.6);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.account-dropdown-identity {
+  margin: 2px 8px 8px;
+  padding-bottom: 8px;
+  overflow-wrap: anywhere;
+  color: var(--mocha);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(168, 104, 43, 0.2);
+}
+
+.account-dropdown a,
+.top-controls .account-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  height: auto;
+  min-height: 36px;
+  padding: 0 8px;
+  color: var(--mocha);
+  font: inherit;
+  font-size: 0.94rem;
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  place-items: initial;
+  cursor: pointer;
+}
+
+.account-dropdown a:hover,
+.top-controls .account-dropdown button:hover {
+  background: rgba(120, 78, 40, 0.09);
+}
+
+/* "Sign in to see your cases" panel and the guest note on the Ask page. */
+
+.auth-required-card {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 36px 24px;
+  text-align: center;
+  background: rgba(255, 250, 241, 0.8);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.auth-required-card svg {
+  color: var(--walnut);
+}
+
+.auth-required-card h3 {
+  margin: 0;
+  color: var(--mocha);
+  font-family: var(--serif-display);
+  font-size: 1.3rem;
+}
+
+.auth-required-card p {
+  max-width: 420px;
+  margin: 0;
+  color: rgba(74, 50, 32, 0.76);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.45;
+}
+
+.auth-required-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.auth-guest-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 940px;
+  margin: 0 auto 14px;
+  padding: 9px 14px;
+  color: rgba(63, 40, 22, 0.82);
+  font-size: 0.9rem;
+  background: rgba(184, 121, 47, 0.1);
+  border: 1px solid rgba(168, 104, 43, 0.24);
+  border-radius: 9px;
+}
+
+.auth-guest-note svg {
+  flex: 0 0 auto;
+}

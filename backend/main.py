@@ -4,13 +4,14 @@ import logging
 import re
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Request, Response, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+import auth
 import clarification
 import case_store
 import claim_verifier
@@ -19,6 +20,7 @@ import corpus_gap
 import conversation_state
 import document_extractor
 import document_facts
+import document_relevance
 import document_store
 import document_summarizer
 import domain_router
@@ -43,6 +45,10 @@ logger = logging.getLogger("legal_aid_ai.api")
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     document_store.init_db()
+    auth.init_db()
+    # Cases/documents saved before accounts existed have no owner -- give them to the admin
+    # account rather than leaving them unreachable (nothing is deleted).
+    auth.claim_unowned_data()
     try:
         rag.load()
     except VectorStoreMissingError:
@@ -105,6 +111,9 @@ async def unhandled_exception_handler(_request: Request, exc: Exception) -> JSON
 class AskRequest(BaseModel):
     question: str
     case_id: int | None = None
+    # Documents uploaded inside this chat. A chat's first upload can happen before its first
+    # question has created the case, so the ids are sent along and linked once the case exists.
+    document_ids: list[int] = []
     clarification_state_id: str | None = None
     confirmed_fact_context_id: str | None = None
     conversation_state_id: str | None = None
@@ -128,6 +137,76 @@ class RenameCaseRequest(BaseModel):
     title: str
 
 
+class SignupRequest(BaseModel):
+    email: str | None = None
+    phone: str | None = None
+    password: str
+
+
+class LoginRequest(BaseModel):
+    identifier: str
+    password: str
+
+
+def optional_user(request: Request) -> dict | None:
+    """The logged-in user, or None for a guest."""
+    return auth.user_for_session(request.cookies.get(auth.SESSION_COOKIE))
+
+
+def require_user(user: dict | None = Depends(optional_user)) -> dict:
+    if user is None:
+        raise HTTPException(status_code=401, detail="Please sign in to continue.")
+    return user
+
+
+def start_session(response: Response, user: dict) -> dict:
+    token = auth.create_session(user["id"])
+    response.set_cookie(
+        auth.SESSION_COOKIE,
+        token,
+        max_age=auth.SESSION_DAYS * 24 * 60 * 60,
+        httponly=True,
+        samesite="lax",
+        secure=auth.COOKIE_SECURE,
+        path="/",
+    )
+    return {"user": auth.public_user(user)}
+
+
+@app.post("/api/auth/signup")
+def signup(request: SignupRequest, response: Response) -> dict:
+    try:
+        user = auth.create_user(email=request.email, phone=request.phone, password=request.password)
+    except auth.AuthError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    logger.info("Account created user_id=%s", user["id"])
+    return start_session(response, user)
+
+
+@app.post("/api/auth/login")
+def login(request: LoginRequest, response: Response) -> dict:
+    try:
+        user = auth.authenticate(request.identifier, request.password)
+    except auth.LoginLockedError as exc:
+        raise HTTPException(status_code=429, detail=str(exc)) from exc
+    except auth.AuthError as exc:
+        raise HTTPException(status_code=401, detail=str(exc)) from exc
+    logger.info("Signed in user_id=%s", user["id"])
+    return start_session(response, user)
+
+
+@app.post("/api/auth/logout")
+def logout(request: Request, response: Response) -> dict:
+    auth.delete_session(request.cookies.get(auth.SESSION_COOKIE))
+    response.delete_cookie(auth.SESSION_COOKIE, path="/")
+    return {"status": "signed_out"}
+
+
+@app.get("/api/auth/me")
+def current_account(user: dict | None = Depends(optional_user)) -> dict:
+    return {"user": auth.public_user(user) if user else None}
+
+
 @app.get("/api/health")
 def health() -> dict:
     return {
@@ -146,23 +225,24 @@ def list_saved_cases(
     offset: int = Query(default=0, ge=0),
     search: str | None = Query(default=None, max_length=200),
     domain: str | None = Query(default=None),
+    user: dict = Depends(require_user),
 ) -> dict:
     if domain is not None and domain not in case_store.VALID_CASE_DOMAINS:
         raise HTTPException(status_code=400, detail=f"Unknown domain filter: {domain!r}.")
-    return case_store.list_cases(limit=limit, offset=offset, search=search, domain=domain)
+    return case_store.list_cases(limit=limit, offset=offset, search=search, domain=domain, user_id=user["id"])
 
 
 @app.delete("/api/cases")
-def delete_all_saved_cases() -> dict:
-    deleted_count = case_store.delete_all_cases()
+def delete_all_saved_cases(user: dict = Depends(require_user)) -> dict:
+    deleted_count = case_store.delete_all_cases(user_id=user["id"])
     logger.info("All saved cases deleted count=%s", deleted_count)
     return {"status": "deleted", "deleted_count": deleted_count}
 
 
 @app.patch("/api/cases/{case_id}/rename")
-def rename_saved_case(case_id: int, request: RenameCaseRequest) -> dict:
+def rename_saved_case(case_id: int, request: RenameCaseRequest, user: dict = Depends(require_user)) -> dict:
     try:
-        case = case_store.rename_case(case_id, request.title)
+        case = case_store.rename_case(case_id, request.title, user_id=user["id"])
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if case is None:
@@ -178,8 +258,8 @@ def rename_saved_case(case_id: int, request: RenameCaseRequest) -> dict:
 
 
 @app.get("/api/cases/{case_id}")
-def open_saved_case(case_id: int) -> dict:
-    case = case_store.get_case(case_id)
+def open_saved_case(case_id: int, user: dict = Depends(require_user)) -> dict:
+    case = case_store.get_case(case_id, user_id=user["id"])
     if case is None:
         raise HTTPException(status_code=404, detail="Case not found.")
     conversation_state.restore_state(case.get("conversation_state"))
@@ -198,11 +278,32 @@ def open_saved_case(case_id: int) -> dict:
 
 
 @app.delete("/api/cases/{case_id}")
-def delete_saved_case(case_id: int) -> dict:
-    if not case_store.delete_case(case_id):
+def delete_saved_case(case_id: int, user: dict = Depends(require_user)) -> dict:
+    if not case_store.delete_case(case_id, user_id=user["id"]):
         raise HTTPException(status_code=404, detail="Case not found.")
     logger.info("Saved case deleted case_id=%s", case_id)
     return {"status": "deleted", "case_id": case_id}
+
+
+@app.get("/api/cases/{case_id}/documents")
+def case_documents(case_id: int, user: dict = Depends(require_user)) -> dict:
+    """The documents uploaded or used in this case, plus other documents of the same user that
+    may also be relevant to it (see document_relevance.py)."""
+    case = case_store.get_case(case_id, user_id=user["id"])
+    if case is None:
+        raise HTTPException(status_code=404, detail="Case not found.")
+    documents = document_store.list_documents_for_relevance(user["id"])
+    in_case = [
+        {key: document[key] for key in ("id", "filename", "file_type", "created_at", "updated_at")}
+        for document in documents
+        if case_id in document["case_ids"]
+    ]
+    domains = [case.get("primary_domain"), *((case.get("conversation_state") or {}).get("domains") or [])]
+    return {
+        "case_id": case_id,
+        "documents": in_case,
+        "suggestions": document_relevance.suggest_documents(documents, case_id, domains),
+    }
 
 
 DEFAULT_DOCUMENTS_PAGE_SIZE = 20
@@ -214,30 +315,31 @@ def list_uploaded_documents(
     limit: int = Query(default=DEFAULT_DOCUMENTS_PAGE_SIZE, ge=1, le=MAX_DOCUMENTS_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
     search: str | None = Query(default=None, max_length=200),
+    user: dict = Depends(require_user),
 ) -> dict:
-    return document_store.list_documents(limit=limit, offset=offset, search=search)
+    return document_store.list_documents(limit=limit, offset=offset, search=search, user_id=user["id"])
 
 
 @app.delete("/api/documents")
-def delete_all_uploaded_documents() -> dict:
-    deleted_count = document_store.delete_all_documents()
+def delete_all_uploaded_documents(user: dict = Depends(require_user)) -> dict:
+    deleted_count = document_store.delete_all_documents(user_id=user["id"])
     logger.info("All uploaded documents deleted count=%s", deleted_count)
     return {"status": "deleted", "deleted_count": deleted_count}
 
 
 @app.get("/api/documents/{document_id}")
-def view_uploaded_document(document_id: int) -> dict:
+def view_uploaded_document(document_id: int, user: dict = Depends(require_user)) -> dict:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
         return document_public_payload(document, include_extraction=True)
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @app.get("/api/documents/{document_id}/file")
-def get_uploaded_document_file(document_id: int) -> FileResponse:
+def get_uploaded_document_file(document_id: int, user: dict = Depends(require_user)) -> FileResponse:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
         storage_path = document_store.safe_storage_path(document["storage_path"])
         return FileResponse(
             storage_path,
@@ -249,9 +351,9 @@ def get_uploaded_document_file(document_id: int) -> FileResponse:
 
 
 @app.get("/api/documents/{document_id}/summary")
-def get_document_summary(document_id: int) -> dict:
+def get_document_summary(document_id: int, user: dict = Depends(require_user)) -> dict:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     if not document.get("summary_text"):
@@ -271,9 +373,9 @@ def get_document_summary(document_id: int) -> dict:
 
 
 @app.post("/api/documents/{document_id}/summarize")
-def summarize_uploaded_document(document_id: int) -> dict:
+def summarize_uploaded_document(document_id: int, user: dict = Depends(require_user)) -> dict:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
@@ -327,9 +429,13 @@ def summarize_uploaded_document(document_id: int) -> dict:
 
 
 @app.patch("/api/documents/{document_id}/rename")
-def rename_uploaded_document(document_id: int, request: RenameDocumentRequest) -> dict:
+def rename_uploaded_document(
+    document_id: int,
+    request: RenameDocumentRequest,
+    user: dict = Depends(require_user),
+) -> dict:
     try:
-        document = document_store.rename_document(document_id, request.filename)
+        document = document_store.rename_document(document_id, request.filename, user_id=user["id"])
         logger.info("Document renamed document_id=%s type=%s", document_id, document.get("file_type"))
         return document_public_payload(document, include_extraction=False)
     except document_store.DocumentStoreError as exc:
@@ -337,9 +443,9 @@ def rename_uploaded_document(document_id: int, request: RenameDocumentRequest) -
 
 
 @app.delete("/api/documents/{document_id}")
-def delete_uploaded_document(document_id: int) -> dict:
+def delete_uploaded_document(document_id: int, user: dict = Depends(require_user)) -> dict:
     try:
-        document_store.delete_document(document_id)
+        document_store.delete_document(document_id, user_id=user["id"])
         logger.info("Document deleted document_id=%s", document_id)
         return {"status": "deleted", "document_id": document_id}
     except document_store.DocumentStoreError as exc:
@@ -404,10 +510,13 @@ def corpus_source_file(source: str) -> FileResponse:
 
 
 @app.post("/api/ask")
-def ask(request: AskRequest) -> dict:
+def ask(request: AskRequest, user: dict | None = Depends(optional_user)) -> dict:
+    """Guests can ask questions (follow-ups still work within the conversation), but nothing is
+    saved: only a signed-in user's conversations become cases in My Cases."""
+    user_id = user["id"] if user else None
     try:
         question = validate_question(request.question)
-        persisted_case = load_persisted_case(request.case_id)
+        persisted_case = load_persisted_case(request.case_id, user_id)
         if (
             request.case_id is None
             and request.conversation_state_id is None
@@ -423,7 +532,7 @@ def ask(request: AskRequest) -> dict:
 
         if request.clarification_state_id:
             response = continue_clarification(request.clarification_state_id, question, effective_conversation_state_id)
-            return persist_case_turn(request.case_id, question, response)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response)
 
         confirmed_context = load_confirmed_document_context(request.confirmed_fact_context_id)
         if confirmed_context is None and persisted_case and persisted_case.get("confirmed_document_context"):
@@ -432,12 +541,12 @@ def ask(request: AskRequest) -> dict:
             confirmed_context = load_confirmed_document_context(active_case.confirmed_document_context_id)
         if active_case is not None:
             response = handle_active_case_turn(question, active_case, confirmed_context)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
 
         conflict = detect_document_fact_conflict(question, confirmed_context)
         if conflict:
             response = document_fact_conflict_response(conflict)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
 
         routing_text = document_facts.combined_question_with_confirmed_facts(question, confirmed_context)
         route = domain_router.route_issue(routing_text)
@@ -451,7 +560,7 @@ def ask(request: AskRequest) -> dict:
         )
         if route.status == "classified":
             response = with_routing(handle_classified_issue(question, route, confirmed_context), route)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
         if route.status == "unclear":
             state, clarification_question = clarification.start_clarification(question, route)
             logger.info(
@@ -461,9 +570,11 @@ def ask(request: AskRequest) -> dict:
                 clarification_question.latency_ms,
             )
             response = clarification_response(route, state, clarification_question)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
         response = router_minimal_response(route)
-        return persist_case_turn(request.case_id, question, response, confirmed_context)
+        return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
+    except HTTPException:
+        raise
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except VectorStoreMissingError as exc:
@@ -484,7 +595,16 @@ def ask(request: AskRequest) -> dict:
 
 
 @app.post("/api/documents/extract")
-async def extract_uploaded_document(file: UploadFile = File(...)) -> dict:
+async def extract_uploaded_document(
+    file: UploadFile = File(...),
+    case_id: int | None = Form(default=None),
+    user: dict | None = Depends(optional_user),
+) -> dict:
+    """A signed-in user's upload is saved to their Documents; a guest's upload is read and
+    returned (so it can still be used in the conversation) but not stored. `case_id` (an upload
+    made inside an open chat) also links the document to that case."""
+    if case_id is not None and (user is None or case_store.get_case(case_id, user_id=user["id"]) is None):
+        raise HTTPException(status_code=404, detail="Case not found.")
     try:
         content = await file.read(document_extractor.max_upload_bytes() + 1)
         result = document_extractor.extract_document(
@@ -493,14 +613,17 @@ async def extract_uploaded_document(file: UploadFile = File(...)) -> dict:
             content_type=file.content_type,
         )
         payload = result.to_dict()
-        if result.file_type and result.status != "unsupported":
+        if user is not None and result.file_type and result.status != "unsupported":
             stored_document = document_store.create_uploaded_document(
                 original_filename=file.filename or result.filename,
                 content=content,
                 mime_type=file.content_type,
                 extraction=payload,
+                user_id=user["id"],
             )
             payload["document_id"] = stored_document["id"]
+            if case_id is not None:
+                document_store.link_document_to_case(case_id, stored_document["id"])
         logger.info(
             "Document extraction completed document_id=%s type=%s size=%s status=%s latency_ms=%s",
             payload.get("document_id"),
@@ -535,11 +658,16 @@ def extract_document_facts(request: DocumentFactRequest) -> dict:
 
 
 @app.post("/api/documents/confirm-facts")
-def confirm_document_facts(request: ConfirmFactsRequest) -> dict:
+def confirm_document_facts(request: ConfirmFactsRequest, user: dict | None = Depends(optional_user)) -> dict:
+    if request.document_id is not None and user is None:
+        raise HTTPException(status_code=401, detail="Please sign in to continue.")
     try:
+        if request.document_id is not None:
+            # Ownership check BEFORE confirming, so another user's document id is refused up front.
+            document_store.require_document(request.document_id, user_id=user["id"])
         confirmed = document_facts.confirm_facts(request.fact_extraction_id, request.confirmed_facts)
         if request.document_id is not None:
-            document_store.update_confirmed_fact_context(request.document_id, confirmed.to_dict())
+            document_store.update_confirmed_fact_context(request.document_id, confirmed.to_dict(), user_id=user["id"])
         logger.info("Document facts confirmed fact_extraction_id=%s", request.fact_extraction_id)
         return confirmed.to_dict()
     except document_facts.DocumentFactError as exc:
@@ -551,21 +679,30 @@ def confirm_document_facts(request: ConfirmFactsRequest) -> dict:
         raise HTTPException(status_code=500, detail="Legal Aid AI could not confirm these document facts right now.") from exc
 
 
-def load_persisted_case(case_id: int | None) -> dict | None:
+def load_persisted_case(case_id: int | None, user_id: int | None) -> dict | None:
     if case_id is None:
         return None
-    stored_case = case_store.get_case(case_id)
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Please sign in to continue this case.")
+    stored_case = case_store.get_case(case_id, user_id=user_id)
     if stored_case is None:
         raise HTTPException(status_code=404, detail="Case not found.")
     return stored_case
 
 
 def persist_case_turn(
+    user_id: int | None,
     case_id: int | None,
+    document_ids: list[int],
     question: str,
     response: dict,
     confirmed_context: dict | None = None,
 ) -> dict:
+    """Saves the turn to the user's case (creating it on the first real answer). A guest's turns
+    are never saved. `case_id`, when given, was already checked to belong to `user_id` by
+    load_persisted_case()."""
+    if user_id is None:
+        return response
     if case_id is None and not case_store.should_create_case_for_response(question, response):
         return response
 
@@ -577,8 +714,10 @@ def persist_case_turn(
             primary_domain=routing.get("primary_domain"),
             conversation_state=response.get("conversation_state"),
             confirmed_document_context=confirmed_context,
+            user_id=user_id,
         )
 
+    question_sequence = case_store.next_message_sequence(effective_case_id)
     case_store.save_message(effective_case_id, "user", case_store.user_content_for_storage(question))
     case_store.save_message(effective_case_id, "assistant", case_store.assistant_content_for_storage(response))
     routing = response.get("routing") or {}
@@ -588,8 +727,31 @@ def persist_case_turn(
         conversation_state=response.get("conversation_state"),
         confirmed_document_context=confirmed_context,
     )
+    link_case_documents(user_id, effective_case_id, document_ids, confirmed_context, question_sequence)
     response["case_id"] = effective_case_id
     return response
+
+
+def link_case_documents(
+    user_id: int,
+    case_id: int,
+    document_ids: list[int],
+    confirmed_context: dict | None,
+    question_sequence: int | None = None,
+) -> None:
+    """Link to the case the documents uploaded in this chat, and the document(s) whose confirmed
+    facts were used in it, at the question they came in with (`question_sequence`: the user
+    message just saved). Ids the user does not own are ignored."""
+    to_link = {
+        document_id
+        for document_id in document_ids
+        if document_store.get_document(document_id, user_id=user_id) is not None
+    }
+    context_id = (confirmed_context or {}).get("confirmed_fact_context_id")
+    if context_id:
+        to_link.update(document_store.documents_with_confirmed_context(context_id, user_id))
+    for document_id in to_link:
+        document_store.link_document_to_case(case_id, document_id, message_sequence=question_sequence)
 
 
 def no_case_small_talk_response() -> dict:

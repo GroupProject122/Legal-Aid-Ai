@@ -11,6 +11,7 @@ import case_store
 import document_store
 import document_summarizer
 import main
+from conftest import signed_in_client
 import redaction
 from config import DOCUMENTS_DIR, INDEX_PATH, METADATA_PATH
 
@@ -21,8 +22,15 @@ def configure_temp_store(monkeypatch, tmp_path: Path) -> None:
     document_store.init_db()
 
 
-def create_txt_document(text: str, *, status: str = "success", name: str = "Agreement.txt") -> dict:
+def create_txt_document(
+    text: str,
+    *,
+    status: str = "success",
+    name: str = "Agreement.txt",
+    user_id: int | None = None,
+) -> dict:
     return document_store.create_uploaded_document(
+        user_id=user_id,
         original_filename=name,
         content=text.encode("utf-8"),
         mime_type="text/plain",
@@ -58,7 +66,8 @@ def test_document_with_extracted_text_can_be_summarized(monkeypatch):
 
 def test_cached_summary_prevents_second_gemini_call(monkeypatch, tmp_path):
     configure_temp_store(monkeypatch, tmp_path)
-    document = create_txt_document("Invoice amount Rs. 20,000.")
+    client, user_id = signed_in_client()
+    document = create_txt_document("Invoice amount Rs. 20,000.", user_id=user_id)
     calls = {"count": 0}
 
     def fake_summarize(_extraction):
@@ -66,7 +75,6 @@ def test_cached_summary_prevents_second_gemini_call(monkeypatch, tmp_path):
         return {"status": "success", "summary": "This invoice records an amount of Rs. 20,000.", "model": "test", "gemini_calls": 1}
 
     monkeypatch.setattr(main.document_summarizer, "summarize_document", fake_summarize)
-    client = TestClient(main.app)
 
     first = client.post(f"/api/documents/{document['id']}/summarize")
     second = client.post(f"/api/documents/{document['id']}/summarize")
@@ -80,7 +88,7 @@ def test_cached_summary_prevents_second_gemini_call(monkeypatch, tmp_path):
 
 def test_nonexistent_document_summary_returns_404(monkeypatch, tmp_path):
     configure_temp_store(monkeypatch, tmp_path)
-    client = TestClient(main.app)
+    client, user_id = signed_in_client()
 
     assert client.post("/api/documents/999/summarize").status_code == 404
     assert client.get("/api/documents/999/summary").status_code == 404
@@ -88,8 +96,8 @@ def test_nonexistent_document_summary_returns_404(monkeypatch, tmp_path):
 
 def test_empty_extracted_text_is_rejected(monkeypatch, tmp_path):
     configure_temp_store(monkeypatch, tmp_path)
-    document = create_txt_document("", status="failed")
-    client = TestClient(main.app)
+    client, user_id = signed_in_client()
+    document = create_txt_document("", status="failed", user_id=user_id)
 
     response = client.post(f"/api/documents/{document['id']}/summarize")
 
@@ -100,14 +108,14 @@ def test_empty_extracted_text_is_rejected(monkeypatch, tmp_path):
 
 def test_scanned_ocr_required_document_is_not_summarized(monkeypatch, tmp_path):
     configure_temp_store(monkeypatch, tmp_path)
-    document = create_txt_document("", status="ocr_required", name="Scanned.txt")
+    client, user_id = signed_in_client()
+    document = create_txt_document("", status="ocr_required", name="Scanned.txt", user_id=user_id)
     with case_store.connect() as conn:
         extraction = document["extraction"] | {"status": "ocr_required", "text": ""}
         conn.execute(
             "UPDATE documents SET extraction_status = ?, extracted_text_json = ? WHERE id = ?",
             ("ocr_required", document_store.json_dumps(extraction), document["id"]),
         )
-    client = TestClient(main.app)
 
     response = client.post(f"/api/documents/{document['id']}/summarize")
 
@@ -133,13 +141,13 @@ def test_gemini_failure_returns_safe_response(monkeypatch):
 
 def test_summary_stored_in_sqlite(monkeypatch, tmp_path):
     configure_temp_store(monkeypatch, tmp_path)
-    document = create_txt_document("Legal notice dated 1 August 2026.")
+    client, user_id = signed_in_client()
+    document = create_txt_document("Legal notice dated 1 August 2026.", user_id=user_id)
     monkeypatch.setattr(
         main.document_summarizer,
         "summarize_document",
         lambda _extraction: {"status": "success", "summary": "This document is a notice dated 1 August 2026.", "model": "test"},
     )
-    client = TestClient(main.app)
 
     client.post(f"/api/documents/{document['id']}/summarize")
     stored = document_store.require_document(document["id"])
@@ -236,15 +244,15 @@ def test_max_total_chars_matches_chunking_capacity():
 
 def test_summary_never_enters_legal_corpus_or_faiss(monkeypatch, tmp_path):
     configure_temp_store(monkeypatch, tmp_path)
+    client, user_id = signed_in_client()
     tracked_paths = [DOCUMENTS_DIR / "corpus_manifest.json", INDEX_PATH, METADATA_PATH]
     before = {path: path.stat().st_mtime_ns for path in tracked_paths if path.exists()}
-    document = create_txt_document("This is user document text, not law.")
+    document = create_txt_document("This is user document text, not law.", user_id=user_id)
     monkeypatch.setattr(
         main.document_summarizer,
         "summarize_document",
         lambda _extraction: {"status": "success", "summary": "This summarizes only the user document.", "model": "test"},
     )
-    client = TestClient(main.app)
 
     client.post(f"/api/documents/{document['id']}/summarize")
 

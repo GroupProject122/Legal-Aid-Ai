@@ -47,6 +47,21 @@ def legal_chunk(domain: str = "tenancy") -> rag.RetrievedChunk:
 def patch_answer_flow(monkeypatch, captured: dict | None = None, domain: str = "tenancy"):
     captured = captured if captured is not None else {}
     monkeypatch.setattr(main.conversation_state, "GEMINI_API_KEY", "")
+    # Keep every other pipeline step offline too. With a real key in backend/.env, the live
+    # fact-sufficiency / corpus-gap / clarification calls made these tests flaky (a live
+    # "need more facts" reply meant no answer was generated) and slow.
+    monkeypatch.setattr(main.corpus_gap, "GEMINI_API_KEY", "")
+    monkeypatch.setattr(main.clarification, "GEMINI_API_KEY", "")
+    # These tests are about follow-up handling, not the facts check, so it reports "enough
+    # facts" explicitly rather than depending on a live call or its keyword fallback.
+    monkeypatch.setattr(
+        main.fact_sufficiency,
+        "assess_fact_sufficiency",
+        lambda context: main.fact_sufficiency.FactSufficiencyResult(
+            status="sufficient", missing_facts=[], needs_fact_clarification=False, question=None,
+            reason="test", normalized_case_summary=None, provider="test",
+        ),
+    )
 
     def fake_route(text, conversation_context=None, safety_text=None):
         # safety_text carries question + case for follow-ups; the bare question otherwise.

@@ -67,6 +67,25 @@ source .venv/bin/activate
 uvicorn main:app --reload --port 8000
 ```
 
+## User Accounts
+
+People sign up with an email address or a phone number and a password (Sign in, top right). Saved cases and uploaded documents belong to the account that created them, and no other account can see them. Guests can still ask questions, but their conversations are not saved.
+
+Cases and documents saved before accounts existed are given to an **admin account** (`admin@legalaid.local`) the first time the backend starts. Nothing is deleted. To choose the admin password:
+
+```bash
+cd backend
+python set_admin_password.py
+```
+
+Optional settings in `backend/.env`:
+
+```bash
+LEGAL_AID_ADMIN_EMAIL=admin@legalaid.local   # admin sign-in email (used when the admin account is first created)
+LEGAL_AID_ADMIN_PASSWORD=...                 # otherwise a random one is generated and printed once in the backend log
+AUTH_COOKIE_SECURE=true                      # set when serving over HTTPS
+```
+
 ## Run Frontend
 
 In another terminal:

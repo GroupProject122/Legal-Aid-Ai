@@ -28,7 +28,7 @@ class FakeGemini:
         self.captured = captured
         self.models = self
 
-    def __call__(self, api_key=None):
+    def __call__(self, api_key=None, **_kw):
         return self
 
     def generate_content(self, model, contents, config):
@@ -160,7 +160,7 @@ def test_gemini_new_issue_kept_for_explicitly_new_problem(monkeypatch):
 def test_gemini_failure_falls_back_to_rules(monkeypatch):
     monkeypatch.setattr(conversation_state, "GEMINI_API_KEY", "test-key")
 
-    def broken_client(api_key=None):
+    def broken_client(api_key=None, **_kw):
         raise RuntimeError("network down")
 
     monkeypatch.setattr(conversation_state.genai, "Client", broken_client)

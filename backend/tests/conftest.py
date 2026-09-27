@@ -38,3 +38,26 @@ def isolated_turn_memory(tmp_path, monkeypatch):
     monkeypatch.setattr(conversation_state, "GEMINI_API_KEY", "")
     yield
     turn_memory.set_embedder(None)
+
+
+def signed_in_client(email: str = "user@example.com", password: str = "correct horse battery"):
+    """A TestClient signed in as a freshly created account -> (client, user_id). The session
+    cookie is kept by the client, so every later request is made as this user. The caller must
+    already have pointed case_store.DB_PATH at a temp database."""
+    from fastapi.testclient import TestClient
+
+    import main
+
+    client = TestClient(main.app)
+    response = client.post("/api/auth/signup", json={"email": email, "password": password})
+    assert response.status_code == 200, response.text
+    return client, response.json()["user"]["id"]
+
+
+@pytest.fixture(autouse=True)
+def reset_login_lockouts():
+    import auth
+
+    auth._failed_logins.clear()
+    yield
+    auth._failed_logins.clear()

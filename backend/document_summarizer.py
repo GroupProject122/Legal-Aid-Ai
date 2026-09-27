@@ -7,10 +7,12 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import types
 
 import redaction
+from gemini_http import gemini_http_options
 from config import GEMINI_API_KEY, GEMINI_MODEL
 
 logger = logging.getLogger("legal_aid_ai.document_summarizer")
@@ -168,7 +170,7 @@ def summarize_document(extraction: dict[str, Any]) -> dict[str, Any]:
 
 
 def call_gemini_summary(prompt: str) -> dict[str, Any]:
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
     response = client.models.generate_content(
         model=GEMINI_MODEL,
         contents=prompt,

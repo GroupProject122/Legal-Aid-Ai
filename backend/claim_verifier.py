@@ -7,10 +7,12 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
+from gemini_http import gemini_http_options
 from config import GEMINI_API_KEY, GEMINI_MODEL
 import grounded_answer
 
@@ -121,7 +123,7 @@ def verify_and_sanitize_response(response: dict[str, Any], chunks: list[Any]) ->
         response["verification"]["latency_ms"] = int((time.perf_counter() - started) * 1000)
         response["verification"]["provider"] = "gemini"
         return response
-    except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini claim verification failed: %s: %s", exc.__class__.__name__, str(exc))
         return safe_verification_unavailable(response, claims, deterministic_rejections, exc.__class__.__name__)
 
@@ -182,7 +184,7 @@ def deterministic_invalid_claims(claims: list[Claim], valid_chunks: dict[str, An
 def call_gemini_verifier(claims: list[Claim], chunks_by_id: dict[str, Any]) -> dict[str, dict[str, Any]]:
     if not claims:
         return {}
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
     response = client.models.generate_content(
         model=GEMINI_MODEL,
         contents=build_verification_prompt(claims, chunks_by_id),

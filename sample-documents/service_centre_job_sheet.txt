@@ -1,0 +1,9 @@
+CoolBreeze Authorised Service Centre - Job Sheet
+Job No: CBS-DL-77120        Date: 21/08/2026
+Customer: Priya Sharma, Flat 12B, Green Park Extension, New Delhi 110016
+Product: CoolBreeze 260L Refrigerator, Model CB-260DD, Serial CB26D5X88213
+Complaint: Not cooling since 18/08/2026
+Technician finding: Compressor not working. Gas leakage from condenser coil.
+Remarks: Damage attributed to voltage fluctuation. Not covered under warranty.
+Estimate for repair: Rs. 9,000 (compressor + gas refill), payable by customer.
+Customer remarks: Customer disagrees. Stabiliser was in use since installation.

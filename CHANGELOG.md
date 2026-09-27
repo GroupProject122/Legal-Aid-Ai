@@ -39,6 +39,34 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — accounts, document links to cases, Gemini timeout, dark mode (2026-09-27)
+
+- **User accounts.** Sign up / sign in with email or phone and a password (`auth.py`, scrypt
+  hashes, session cookie). Cases and documents belong to their account; anything saved before
+  accounts existed is given to an admin account on first start (nothing deleted). Set its
+  password with `python set_admin_password.py` (hidden prompt). See README → User Accounts.
+- **Documents ↔ cases.** New `case_documents` table: a document can belong to several cases,
+  linked when uploaded inside a chat or when its confirmed facts are used. Each link records the
+  question it came in with (`message_sequence`; older links are estimated from the link time).
+  The Documents page shows **Go to case** (or **In N cases**, or *Not under any case*), which
+  opens the case scrolled to that question and briefly highlights it (`#/ask?case=ID&msg=N`).
+- **Documents colour-coded like My Cases.** A document takes its case's legal area; one not yet
+  used in a case gets a guess from its name and text (`document_relevance.document_category`),
+  shown with a dashed chip. Card buttons (Open Case / View, edit, delete, Go to case) follow the
+  category colour; consumer, cyber and fundamental-rights colours are at 80% opacity.
+- **Gemini calls time out.** No call had a time limit, so a request on a connection that went
+  stale (e.g. after the computer slept) waited forever and the question never got an answer.
+  Every Gemini client now uses `gemini_http.gemini_http_options()` (default 45 s,
+  `GEMINI_TIMEOUT_SECONDS`), and every call site treats `httpx` network errors like other
+  Gemini failures. A test fails if a client is created without the timeout.
+- **Dark mode button works.** It was a placeholder with no handler. Dark mode inverts the page
+  with a 180° hue rotation (the palette is hard-coded, not in variables), is remembered, and is
+  applied before first paint.
+- **Sample documents** (`sample-documents/`, fictional data with a generator script) and a
+  sample-home template sandbox at `#/sample-home` (`frontend/src/sample/`).
+- **Tests:** 510 passing. Conversation tests no longer make live Gemini calls with a real key
+  (they were flaky and slow).
+
 ## Unreleased — follow-up handling, answer focus, routing fix, source viewer (2026-09-26)
 
 - **Follow-up questions are answered, not swallowed.** Keyword rules used to file any message

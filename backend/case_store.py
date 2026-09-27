@@ -27,10 +27,17 @@ def init_db(db_path: Path | None = None) -> None:
                 updated_at TEXT NOT NULL,
                 primary_domain TEXT,
                 conversation_state_json TEXT,
-                confirmed_document_context_json TEXT
+                confirmed_document_context_json TEXT,
+                user_id INTEGER REFERENCES users(id)
             )
             """
         )
+        # user_id was added when accounts were introduced; databases created earlier get the
+        # column here (existing rows are NULL until auth.claim_unowned_data() assigns them).
+        existing = {row["name"] for row in conn.execute("PRAGMA table_info(cases)").fetchall()}
+        if "user_id" not in existing:
+            conn.execute("ALTER TABLE cases ADD COLUMN user_id INTEGER REFERENCES users(id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_cases_user ON cases(user_id, updated_at DESC)")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS messages (
@@ -45,6 +52,28 @@ def init_db(db_path: Path | None = None) -> None:
             """
         )
         conn.execute("CREATE INDEX IF NOT EXISTS idx_messages_case_sequence ON messages(case_id, sequence_number)")
+        # Which uploaded documents belong to which case (a document can be used in several).
+        # Filled when a document is uploaded inside a chat, or when its confirmed facts are used
+        # in one -- see document_store.link_document_to_case().
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS case_documents (
+                case_id INTEGER NOT NULL,
+                document_id INTEGER NOT NULL,
+                linked_at TEXT NOT NULL,
+                PRIMARY KEY (case_id, document_id),
+                FOREIGN KEY(case_id) REFERENCES cases(id) ON DELETE CASCADE,
+                FOREIGN KEY(document_id) REFERENCES documents(id) ON DELETE CASCADE
+            )
+            """
+        )
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_case_documents_document ON case_documents(document_id)")
+        # message_sequence: where in the case the document came in -- the sequence number of the
+        # user question it was added for -- so the Documents page can open the case at that point.
+        # Added after case_documents existed; older links have NULL (the case opens at the top).
+        link_columns = {row["name"] for row in conn.execute("PRAGMA table_info(case_documents)").fetchall()}
+        if "message_sequence" not in link_columns:
+            conn.execute("ALTER TABLE case_documents ADD COLUMN message_sequence INTEGER")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_cases_updated ON cases(updated_at DESC)")
 
 
@@ -60,6 +89,7 @@ def create_case(
     conversation_state: dict[str, Any] | None = None,
     confirmed_document_context: dict[str, Any] | None = None,
     db_path: Path | None = None,
+    user_id: int | None = None,
 ) -> int:
     init_db(db_path)
     now = utc_timestamp()
@@ -69,9 +99,9 @@ def create_case(
             """
             INSERT INTO cases (
                 title, created_at, updated_at, primary_domain,
-                conversation_state_json, confirmed_document_context_json
+                conversation_state_json, confirmed_document_context_json, user_id
             )
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 title,
@@ -80,15 +110,26 @@ def create_case(
                 primary_domain,
                 json_dumps(conversation_state),
                 json_dumps(sanitize_value(confirmed_document_context)),
+                user_id,
             ),
         )
         return int(cursor.lastrowid)
 
 
-def get_case(case_id: int, db_path: Path | None = None) -> dict[str, Any] | None:
+def owner_clause(user_id: int | None, column: str = "user_id") -> tuple[str, tuple]:
+    """SQL fragment restricting a query to one user's rows. `user_id=None` means "no owner
+    filter" -- only for maintenance scripts and store-level tests; every API endpoint passes the
+    logged-in user's id."""
+    if user_id is None:
+        return "", ()
+    return f" AND {column} = ?", (user_id,)
+
+
+def get_case(case_id: int, db_path: Path | None = None, user_id: int | None = None) -> dict[str, Any] | None:
     init_db(db_path)
+    owner_sql, owner_params = owner_clause(user_id)
     with connect(db_path) as conn:
-        row = conn.execute("SELECT * FROM cases WHERE id = ?", (case_id,)).fetchone()
+        row = conn.execute(f"SELECT * FROM cases WHERE id = ?{owner_sql}", (case_id, *owner_params)).fetchone()  # noqa: S608
     return case_row_to_dict(row) if row else None
 
 
@@ -101,6 +142,7 @@ def list_cases(
     offset: int = 0,
     search: str | None = None,
     domain: str | None = None,
+    user_id: int | None = None,
 ) -> dict[str, Any]:
     """Offset-based pagination, added 2026-09-16: at 957 cases (this dev DB's current volume),
     the old unpaginated version fetched and rendered all of them on every My Cases page load --
@@ -130,6 +172,9 @@ def list_cases(
     if domain:
         where_clauses.append("cases.primary_domain = :domain")
         params["domain"] = domain
+    if user_id is not None:
+        where_clauses.append("cases.user_id = :user_id")
+        params["user_id"] = user_id
     where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
 
     with connect(db_path) as conn:
@@ -157,12 +202,18 @@ def list_cases(
     }
 
 
-def rename_case(case_id: int, title: str, db_path: Path | None = None) -> dict[str, Any] | None:
+def rename_case(
+    case_id: int,
+    title: str,
+    db_path: Path | None = None,
+    user_id: int | None = None,
+) -> dict[str, Any] | None:
     init_db(db_path)
     cleaned_title = normalize_case_title(title)
     now = utc_timestamp()
+    owner_sql, owner_params = owner_clause(user_id)
     with connect(db_path) as conn:
-        existing = conn.execute("SELECT id FROM cases WHERE id = ?", (case_id,)).fetchone()
+        existing = conn.execute(f"SELECT id FROM cases WHERE id = ?{owner_sql}", (case_id, *owner_params)).fetchone()  # noqa: S608
         if existing is None:
             return None
         conn.execute(
@@ -202,24 +253,46 @@ def get_messages(case_id: int, db_path: Path | None = None) -> list[dict[str, An
     return [message_row_to_dict(row) for row in rows]
 
 
-def delete_case(case_id: int, db_path: Path | None = None) -> bool:
+def delete_case(case_id: int, db_path: Path | None = None, user_id: int | None = None) -> bool:
     init_db(db_path)
+    owner_sql, owner_params = owner_clause(user_id)
     with connect(db_path) as conn:
-        existing = conn.execute("SELECT id FROM cases WHERE id = ?", (case_id,)).fetchone()
+        existing = conn.execute(f"SELECT id FROM cases WHERE id = ?{owner_sql}", (case_id, *owner_params)).fetchone()  # noqa: S608
         if existing is None:
             return False
         conn.execute("DELETE FROM messages WHERE case_id = ?", (case_id,))
+        conn.execute("DELETE FROM case_documents WHERE case_id = ?", (case_id,))
         conn.execute("DELETE FROM cases WHERE id = ?", (case_id,))
     return True
 
 
-def delete_all_cases(db_path: Path | None = None) -> int:
+def delete_all_cases(db_path: Path | None = None, user_id: int | None = None) -> int:
+    """Deletes every case (and its messages) -- only the given user's when user_id is passed,
+    which the API always does."""
     init_db(db_path)
     with connect(db_path) as conn:
-        count = int(conn.execute("SELECT COUNT(*) FROM cases").fetchone()[0])
-        conn.execute("DELETE FROM messages")
-        conn.execute("DELETE FROM cases")
+        if user_id is None:
+            count = int(conn.execute("SELECT COUNT(*) FROM cases").fetchone()[0])
+            conn.execute("DELETE FROM messages")
+            conn.execute("DELETE FROM case_documents")
+            conn.execute("DELETE FROM cases")
+            return count
+        count = int(conn.execute("SELECT COUNT(*) FROM cases WHERE user_id = ?", (user_id,)).fetchone()[0])
+        conn.execute("DELETE FROM messages WHERE case_id IN (SELECT id FROM cases WHERE user_id = ?)", (user_id,))
+        conn.execute("DELETE FROM case_documents WHERE case_id IN (SELECT id FROM cases WHERE user_id = ?)", (user_id,))
+        conn.execute("DELETE FROM cases WHERE user_id = ?", (user_id,))
     return count
+
+
+def next_message_sequence(case_id: int, db_path: Path | None = None) -> int:
+    """The sequence number the case's next saved message will get."""
+    init_db(db_path)
+    with connect(db_path) as conn:
+        current = conn.execute(
+            "SELECT COALESCE(MAX(sequence_number), 0) FROM messages WHERE case_id = ?",
+            (case_id,),
+        ).fetchone()[0]
+    return int(current) + 1
 
 
 def save_message(case_id: int, role: str, content: Any, db_path: Path | None = None) -> int:

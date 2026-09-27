@@ -29,6 +29,7 @@ import {
   MessageCircle,
   Mic,
   Moon,
+  Sun,
   MoreHorizontal,
   MoreVertical,
   Paperclip,
@@ -57,6 +58,8 @@ import { ScenarioPicker, SCENARIOS } from './complaints/ScenarioPicker.jsx';
 import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
+
+import { AccountMenu, AuthForm, signInHref, useAuth } from './auth.jsx';
 
 // Template sandbox: an isolated copy of the Home page at #/sample-home (see src/sample/).
 import { SampleHomePage } from './sample/SampleHomePage.jsx';
@@ -189,6 +192,7 @@ function messagesFromSavedCase(savedMessages = []) {
         id: `saved-user-${message.id}`,
         role: 'user',
         text: message.content || '',
+        sequence: message.sequence_number,
         timestamp: message.created_at
       };
     }
@@ -452,19 +456,50 @@ function Sidebar({ activePage = 'home', collapsed = false, onToggle }) {
   );
 }
 
+const THEME_STORAGE_KEY = 'legalAidTheme';
+
+// Dark mode is a whole-page colour inversion (see html[data-theme="dark"] in styles.css): the
+// stylesheet hard-codes its parchment palette in thousands of rules rather than in variables, so
+// inverting -- with a hue rotation that keeps the browns warm -- themes every page at once.
+// The attribute is set on <html> before first paint by the inline script in index.html; every
+// HeaderControls (one per page) reads it from there, so all pages agree.
+function useTheme() {
+  const [theme, setTheme] = React.useState(() => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'));
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch (error) {
+      // Storage can be unavailable (private window, blocked site data); the toggle still works
+      // for this visit, it just is not remembered.
+    }
+    setTheme(next);
+  };
+
+  return [theme, toggleTheme];
+}
+
 function HeaderControls() {
+  const [theme, toggleTheme] = useTheme();
+  const isDark = theme === 'dark';
   return (
     <header className="top-controls" aria-label="Page controls">
-      <button aria-label="Toggle theme">
-        <Moon size={18} />
+      <button
+        type="button"
+        onClick={toggleTheme}
+        aria-pressed={isDark}
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={isDark ? 'Light mode' : 'Dark mode'}
+      >
+        {isDark ? <Sun size={18} /> : <Moon size={18} />}
       </button>
       <button aria-label="Notifications">
         <Bell size={18} />
         <span className="notify-dot" />
       </button>
-      <div className="avatar" aria-label="Profile" role="img">
-        <CircleUserRound size={20} strokeWidth={1.6} />
-      </div>
+      <AccountMenu />
     </header>
   );
 }
@@ -751,9 +786,12 @@ function WelcomeState({ onSelectExample }) {
   );
 }
 
-function UserMessage({ text }) {
+function UserMessage({ text, sequence, highlighted = false }) {
   return (
-    <article className="message-row user-message-row">
+    <article
+      className={`message-row user-message-row ${highlighted ? 'is-focused' : ''}`.trim()}
+      data-sequence={sequence || undefined}
+    >
       <div className="user-message">
         <p>{text}</p>
         <time>10:32 AM</time>
@@ -1087,14 +1125,35 @@ function ChatComposer({ value, onChange, onSubmit, onAttach }) {
   );
 }
 
-function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick }) {
+function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, focusSequence = null, focusKey = '' }) {
   const scrollRef = React.useRef(null);
+  const focusDoneRef = React.useRef(false);
+  const [highlightedSequence, setHighlightedSequence] = React.useState(null);
+
+  // focusKey is case + question, so jumping to question 1 of another case still jumps.
+  React.useEffect(() => {
+    focusDoneRef.current = false;
+  }, [focusKey]);
 
   React.useEffect(() => {
     const node = scrollRef.current;
-    if (!node) return;
+    if (!node) return undefined;
+    // Opened from a document's "go to case" button: show the question the document came in
+    // with, once, instead of the end of the chat. If no question followed the upload, the end
+    // of the chat is where it came in, so the normal scroll-to-bottom is right.
+    if (focusSequence && !focusDoneRef.current && messages.length) {
+      focusDoneRef.current = true;
+      const target = node.querySelector(`[data-sequence="${focusSequence}"]`);
+      if (target) {
+        target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        setHighlightedSequence(focusSequence);
+        const timer = window.setTimeout(() => setHighlightedSequence(null), 3500);
+        return () => window.clearTimeout(timer);
+      }
+    }
     node.scrollTo({ top: node.scrollHeight, behavior: 'smooth' });
-  }, [messages, isLoading]);
+    return undefined;
+  }, [messages, isLoading, focusSequence]);
 
   return (
     <section className="chat-panel" aria-label="Legal AI chat">
@@ -1114,7 +1173,7 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
           <>
             {messages.map((message) => (
               message.role === 'user'
-                ? <UserMessage text={message.text} key={message.id} />
+                ? <UserMessage text={message.text} sequence={message.sequence} highlighted={message.sequence && message.sequence === highlightedSequence} key={message.id} />
                 : message.role === 'assistant_loading'
                   ? <LoadingMessage key={message.id} />
                 : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} key={message.id} />
@@ -1128,7 +1187,7 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
   );
 }
 
-function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFactContext }) {
+function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFactContext, caseId, chatDocuments = [], refreshKey = 0 }) {
   const selectedCategories = category.split(',').map((item) => item.trim()).filter(Boolean);
   return (
     <aside className="query-summary-panel" aria-label="Your query summary">
@@ -1184,6 +1243,8 @@ function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFa
             Detach document facts
           </button>
         )}
+
+        <CaseDocumentsSummary caseId={caseId} chatDocuments={chatDocuments} refreshKey={refreshKey} onAttach={onAttach} />
       </section>
 
       <section className="summary-card tip-card">
@@ -1198,33 +1259,174 @@ function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFa
   );
 }
 
-function AttachmentModal({ onClose }) {
+/** Documents panel in the Ask page's query card: "In this case" (uploaded in this chat, or
+ * whose confirmed facts were used in it) and "May also be relevant" (the user's other documents
+ * that suit this kind of case -- ID/address proof, a rent agreement for a tenancy case, ...; see
+ * backend/document_relevance.py). */
+function CaseDocumentsSummary({ caseId, chatDocuments, refreshKey, onAttach }) {
+  const { user, status: authStatus } = useAuth();
+  const [caseDocuments, setCaseDocuments] = React.useState([]);
+  const [suggestions, setSuggestions] = React.useState([]);
+  const [status, setStatus] = React.useState('idle');
+
+  React.useEffect(() => {
+    if (!user || !caseId) {
+      setCaseDocuments([]);
+      setSuggestions([]);
+      setStatus('idle');
+      return undefined;
+    }
+    let ignore = false;
+    setStatus((current) => (current === 'ready' ? current : 'loading'));
+    fetch(`/api/cases/${encodeURIComponent(caseId)}/documents`)
+      .then((response) => safeJsonResponse(response).then((payload) => {
+        if (!response.ok || !payload || !Array.isArray(payload.documents)) throw new Error('Could not load case documents.');
+        return payload;
+      }))
+      .then((payload) => {
+        if (ignore) return;
+        setCaseDocuments(payload.documents);
+        setSuggestions(payload.suggestions || []);
+        setStatus('ready');
+      })
+      .catch((error) => {
+        console.error('Could not load documents for this case', error);
+        if (!ignore) setStatus('error');
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [user, caseId, refreshKey, chatDocuments.length]);
+
+  if (authStatus === 'loading') return null;
+
+  if (!user) {
+    return (
+      <div className="summary-documents">
+        <div className="summary-item">
+          <FileText size={21} strokeWidth={1.55} />
+          <div>
+            <h4>Documents in this case</h4>
+            <p>Sign in to keep documents with your cases</p>
+          </div>
+        </div>
+        <a className="detach-facts-button summary-documents-link" href={signInHref('signin')}>
+          Sign in
+          <ChevronRight size={16} strokeWidth={1.8} />
+        </a>
+      </div>
+    );
+  }
+
+  // Uploads from this chat show straight away, before the case exists or the list reloads.
+  const inCase = [...caseDocuments];
+  chatDocuments.forEach((document) => {
+    if (!inCase.some((item) => item.id === document.id)) inCase.push(document);
+  });
+  const inCaseIds = new Set(inCase.map((document) => document.id));
+  const otherSuggestions = suggestions.filter((document) => !inCaseIds.has(document.id));
+
+  return (
+    <div className="summary-documents">
+      <div className="summary-item">
+        <FileText size={21} strokeWidth={1.55} />
+        <div>
+          <h4>Documents in this case</h4>
+          <p>
+            {status === 'loading' && inCase.length === 0 && 'Loading...'}
+            {status === 'error' && inCase.length === 0 && 'Could not load documents right now'}
+            {(status === 'ready' || status === 'idle') && inCase.length === 0 && 'None yet'}
+            {inCase.length > 0 && `${inCase.length} document${inCase.length === 1 ? '' : 's'}`}
+          </p>
+        </div>
+      </div>
+      {inCase.length > 0 ? (
+        <SummaryDocumentList documents={inCase} />
+      ) : (
+        (status === 'ready' || status === 'idle') && (
+          <button type="button" className="summary-documents-hint" onClick={onAttach}>
+            Upload a document to this chat with the paperclip.
+          </button>
+        )
+      )}
+
+      {otherSuggestions.length > 0 && (
+        <div className="summary-relevant">
+          <h4>May also be relevant</h4>
+          <p className="summary-relevant-lead">Uploaded in your other chats, and could help here too.</p>
+          <SummaryDocumentList documents={otherSuggestions} showReason />
+        </div>
+      )}
+
+      <a className="detach-facts-button summary-documents-link" href="#/documents">
+        View all documents
+        <ChevronRight size={16} strokeWidth={1.8} />
+      </a>
+    </div>
+  );
+}
+
+function SummaryDocumentList({ documents, showReason = false }) {
+  return (
+    <ul className="summary-document-list">
+      {documents.map((document) => (
+        <li key={document.id}>
+          <FileTypeIcon type={document.file_type} />
+          <div>
+            <a
+              href={`/api/documents/${encodeURIComponent(document.id)}/file`}
+              target="_blank"
+              rel="noreferrer"
+              title={`Open ${document.filename}`}
+            >
+              {document.filename}
+            </a>
+            {showReason && document.relevance_label ? (
+              <small title={document.relevance_reason}>{document.relevance_label}: {document.relevance_reason}</small>
+            ) : (
+              <small>{formatCaseDate(document.created_at)}</small>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function AttachmentModal({ caseId, onUploaded, onFactsConfirmed, onClose }) {
+  const { user } = useAuth();
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section
-        className="attachment-modal"
+        className="attachment-modal chat-upload-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="attachment-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <button type="button" className="modal-close" aria-label="Close upload information" onClick={onClose}>
+        <button type="button" className="modal-close" aria-label="Close document upload" onClick={onClose}>
           <X size={20} />
         </button>
-        <div className="modal-emblem">
-          <ReceiptText size={30} strokeWidth={1.55} />
-        </div>
-        <h3 id="attachment-title">Upload supporting document</h3>
-        <p>You’ll be able to upload notices, receipts, contracts, or screenshots here.</p>
-        <div className="format-list" aria-label="Supported future formats">
-          <span>PDF</span>
-          <span>JPG</span>
-          <span>PNG</span>
-        </div>
-        <div className="modal-note">
-          <Info size={17} strokeWidth={1.7} />
-          <span>Document analysis will be enabled in a later version.</span>
-        </div>
+        <h3 id="attachment-title">Add a document to this chat</h3>
+        <p>
+          Upload a notice, receipt, agreement or similar. Confirm the key facts from it and they will be used when
+          answering your questions in this chat.
+        </p>
+        {!user && (
+          <div className="modal-note">
+            <Info size={17} strokeWidth={1.7} />
+            <span>
+              You are not signed in, so the document will not be saved.{' '}
+              <a href={signInHref('signin')}>Sign in</a> to keep it with this case.
+            </span>
+          </div>
+        )}
+        <UploadDocumentCard
+          caseId={caseId}
+          onUploaded={onUploaded}
+          onFactsConfirmed={onFactsConfirmed}
+          onDone={onClose}
+        />
       </section>
     </div>
   );
@@ -1289,6 +1491,10 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
   const [conversationStateId, setConversationStateId] = React.useState(null);
   const [caseId, setCaseId] = React.useState(initialCaseId || null);
   const [attachedFactContext, setAttachedFactContext] = React.useState(null);
+  // Documents uploaded inside this chat ({id, filename, file_type, created_at}). Their ids go with
+  // every question so the backend links them to the case -- including uploads made before the
+  // first question created the case.
+  const [chatDocuments, setChatDocuments] = React.useState([]);
   const loadingTimer = React.useRef(null);
 
   React.useEffect(() => {
@@ -1363,6 +1569,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
     const activeClarificationStateId = clarificationStateId;
     const activeConversationStateId = conversationStateId;
     const activeCaseId = caseId;
+    const chatDocumentIds = chatDocuments.map((document) => document.id);
     const assistantMessageId = createMessageId('ai-loading');
     setMessages((current) => [
       ...current,
@@ -1377,11 +1584,13 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
           ? {
               question: text,
               clarification_state_id: activeClarificationStateId,
+              ...(chatDocumentIds.length ? { document_ids: chatDocumentIds } : {}),
               ...(activeCaseId ? { case_id: activeCaseId } : {}),
               ...(activeConversationStateId ? { conversation_state_id: activeConversationStateId } : {})
             }
           : {
               question: text,
+              ...(chatDocumentIds.length ? { document_ids: chatDocumentIds } : {}),
               ...(activeCaseId ? { case_id: activeCaseId } : {}),
               ...(activeConversationStateId ? { conversation_state_id: activeConversationStateId } : {}),
               ...(attachedFactContext?.confirmed_fact_context_id
@@ -1444,6 +1653,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
     setCategory('');
     window.sessionStorage.removeItem('legalAidConfirmedFactContext');
     setAttachedFactContext(null);
+    setChatDocuments([]);
     if (window.location.hash.includes('case=')) {
       window.location.hash = '#/ask';
     }
@@ -1452,6 +1662,23 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
   const handleDetachFactContext = () => {
     window.sessionStorage.removeItem('legalAidConfirmedFactContext');
     setAttachedFactContext(null);
+  };
+
+  const handleDocumentUploaded = (upload) => {
+    if (!upload?.document_id) return;
+    setChatDocuments((current) => (current.some((document) => document.id === upload.document_id)
+      ? current
+      : [...current, {
+          id: upload.document_id,
+          filename: upload.filename,
+          file_type: upload.file_type,
+          created_at: new Date().toISOString()
+        }]));
+  };
+
+  const handleFactsConfirmed = (context) => {
+    window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify(context));
+    setAttachedFactContext(context);
   };
 
   return {
@@ -1464,14 +1691,17 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
     setSelectedSource,
     caseId,
     attachedFactContext,
+    chatDocuments,
     handleSubmit,
     handleExample,
     handleClear,
-    handleDetachFactContext
+    handleDetachFactContext,
+    handleDocumentUploaded,
+    handleFactsConfirmed
   };
 }
 
-function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach = false }) {
+function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach = false, initialFocusSequence = null }) {
   const {
     input,
     setInput,
@@ -1481,12 +1711,17 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     selectedSource,
     setSelectedSource,
     attachedFactContext,
+    caseId,
+    chatDocuments,
     handleSubmit,
     handleExample,
     handleClear,
-    handleDetachFactContext
+    handleDetachFactContext,
+    handleDocumentUploaded,
+    handleFactsConfirmed
   } = useLegalChat({ initialQuery, initialCaseId });
   const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(initialAttach);
+  const { user, status: authStatus } = useAuth();
 
   return (
     <>
@@ -1494,6 +1729,15 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
       <HeaderControls />
       <div className="ask-content-frame">
         <AskPageHeader />
+        {authStatus === 'ready' && !user && (
+          <p className="auth-guest-note">
+            <Info size={17} strokeWidth={1.8} aria-hidden="true" />
+            <span>
+              You are not signed in, so this conversation will not be saved.{' '}
+              <a href={signInHref('signin')}>Sign in</a> or <a href={signInHref('signup')}>create an account</a> to keep it in My Cases.
+            </span>
+          </p>
+        )}
         <div className="ask-workspace">
           <ChatPanel
             input={input}
@@ -1505,16 +1749,28 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
             onClear={handleClear}
             onAttach={() => setIsAttachmentOpen(true)}
             onSourceClick={setSelectedSource}
+            focusSequence={initialFocusSequence}
+            focusKey={`${initialCaseId}:${initialFocusSequence || ''}`}
           />
           <QuerySummaryPanel
             category={category}
             onAttach={() => setIsAttachmentOpen(true)}
             attachedFactContext={attachedFactContext}
             onDetachFactContext={handleDetachFactContext}
+            caseId={caseId}
+            chatDocuments={chatDocuments}
+            refreshKey={messages.length}
           />
         </div>
       </div>
-      {isAttachmentOpen && <AttachmentModal onClose={() => setIsAttachmentOpen(false)} />}
+      {isAttachmentOpen && (
+        <AttachmentModal
+          caseId={caseId}
+          onUploaded={handleDocumentUploaded}
+          onFactsConfirmed={handleFactsConfirmed}
+          onClose={() => setIsAttachmentOpen(false)}
+        />
+      )}
       {selectedSource && <SourceExcerptModal source={selectedSource} onClose={() => setSelectedSource(null)} />}
     </>
   );
@@ -1752,7 +2008,7 @@ function DocumentsPanel({ activeTab, setActiveTab, search, setSearch, filteredDo
   );
 }
 
-function UploadDocumentCard({ onUploaded, externalInputRef }) {
+function UploadDocumentCard({ onUploaded, externalInputRef, caseId = null, onFactsConfirmed, onDone }) {
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [status, setStatus] = React.useState('idle');
   const [message, setMessage] = React.useState('');
@@ -1791,6 +2047,7 @@ function UploadDocumentCard({ onUploaded, externalInputRef }) {
     }
     const formData = new FormData();
     formData.append('file', selectedFile);
+    if (caseId) formData.append('case_id', String(caseId));
     setStatus('uploading');
     setMessage('');
     setExtraction(null);
@@ -1894,10 +2151,12 @@ function UploadDocumentCard({ onUploaded, externalInputRef }) {
       }
       setFactStatus('confirmed');
       if (data?.confirmed_fact_context_id) {
-        window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify({
+        const context = {
           confirmed_fact_context_id: data.confirmed_fact_context_id,
           document_type: data.confirmed_facts?.document_type || 'unknown'
-        }));
+        };
+        window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify(context));
+        if (onFactsConfirmed) onFactsConfirmed(context);
       }
       setFactMessage('Facts confirmed. They remain user case facts and are not legal authority.');
     } catch (error) {
@@ -1990,8 +2249,12 @@ function UploadDocumentCard({ onUploaded, externalInputRef }) {
             {factStatus === 'confirming' ? 'Confirming...' : 'Confirm Facts'}
           </button>
           {factStatus === 'confirmed' && (
-            <button type="button" className="browse-button extract-button" onClick={() => { window.location.hash = '#/ask'; }}>
-              Ask a legal question using these facts
+            <button
+              type="button"
+              className="browse-button extract-button"
+              onClick={onDone || (() => { window.location.hash = '#/ask'; })}
+            >
+              {onDone ? 'Use these facts in this chat' : 'Ask a legal question using these facts'}
             </button>
           )}
         </div>
@@ -2248,19 +2511,113 @@ function DocumentDeleteModal({ document, onClose, onDelete }) {
   );
 }
 
-function DocumentListCard({ document, onView, onRename, onDelete }) {
+function caseQuestionHref(link) {
+  const params = new URLSearchParams({ case: String(link.case_id) });
+  if (link.message_sequence) params.set('msg', String(link.message_sequence));
+  return `#/ask?${params.toString()}`;
+}
+
+// "Go to case": opens the case this document was uploaded or used in, scrolled to the question
+// it came in with (message_sequence). A document used in several cases gets a short menu; one
+// never used in a case says so instead of offering a button.
+function DocumentCaseLink({ document }) {
+  const links = document.cases || [];
+  const [open, setOpen] = React.useState(false);
+  const wrapperRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!open) return undefined;
+    const close = (event) => {
+      if (!wrapperRef.current?.contains(event.target)) setOpen(false);
+    };
+    const onKey = (event) => { if (event.key === 'Escape') setOpen(false); };
+    window.addEventListener('mousedown', close);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('mousedown', close);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  if (!links.length) {
+    return <span className="document-no-case">Not under any case</span>;
+  }
+
+  if (links.length === 1) {
+    const [link] = links;
+    return (
+      <button
+        type="button"
+        className="document-case-link"
+        title={`Open "${link.title || 'Legal Question'}"${link.message_sequence ? ' at the question this document was added with' : ''}`}
+        onClick={() => { window.location.hash = caseQuestionHref(link); }}
+      >
+        <BriefcaseBusiness size={16} strokeWidth={1.8} />
+        <span>Go to case</span>
+      </button>
+    );
+  }
+
   return (
-    <article className="document-list-card">
+    <div className="document-case-menu-wrap" ref={wrapperRef}>
+      <button
+        type="button"
+        className="document-case-link"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <BriefcaseBusiness size={16} strokeWidth={1.8} />
+        <span>{`In ${links.length} cases`}</span>
+      </button>
+      {open && (
+        <ul className="document-case-menu" role="menu">
+          {links.map((link) => (
+            <li key={link.case_id} role="none">
+              <button
+                type="button"
+                role="menuitem"
+                className={CASE_DOMAIN_LABELS[link.primary_domain] ? `case-domain-${link.primary_domain}` : ''}
+                onClick={() => { window.location.hash = caseQuestionHref(link); }}
+              >
+                <span className="document-case-menu-swatch" aria-hidden="true" />
+                <span>{link.title || 'Legal Question'}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// Documents are coloured by legal area exactly like My Cases (same .case-domain-* colours).
+// category_source "case": the document was used in a case and takes its area; "inferred": not
+// used in a case yet, so the area was guessed from its name and text -- the chip says so.
+function DocumentListCard({ document, onView, onRename, onDelete }) {
+  const categoryLabel = CASE_DOMAIN_LABELS[document.category];
+  const inferred = document.category_source === 'inferred';
+  return (
+    <article className={`document-list-card ${categoryLabel ? `case-domain-${document.category}` : ''}`.trim()}>
       <FileTypeIcon type={document.file_type} />
       <div className="document-list-main">
         <h3>{document.filename}</h3>
         <p>
+          {categoryLabel && (
+            <span
+              className={`case-domain-chip ${inferred ? 'is-inferred' : ''}`.trim()}
+              title={inferred ? 'Likely category, guessed from the file name and contents' : 'Category of the case this document was used in'}
+            >
+              {categoryLabel}
+            </span>
+          )}
           <Clock size={14} strokeWidth={1.7} />
           {formatCaseDate(document.updated_at || document.created_at)}
           <span className="document-list-size">{formatBytes(document.size_bytes)}</span>
         </p>
       </div>
       <div className="document-list-actions">
+        <DocumentCaseLink document={document} />
         <button
           type="button"
           className="case-rename-icon-button"
@@ -2451,6 +2808,14 @@ function DocumentsPage() {
           </div>
 
           <div className="persisted-documents-bulk-actions">
+            <ul className="case-domain-legend" aria-label="Document category colours">
+              {CASE_DOMAIN_OPTIONS.map((option) => (
+                <li key={option.value}>
+                  <span className={`case-domain-swatch case-domain-${option.value}`} aria-hidden="true" />
+                  {option.label}
+                </li>
+              ))}
+            </ul>
             <button
               type="button"
               className="document-delete-all-button"
@@ -3427,7 +3792,7 @@ function HomeInfoSections() {
             question — it is never sold, shared, or used to build a profile of you.
           </p>
           <ul>
-            <li>Your questions and uploads stay tied to your session.</li>
+            <li>Your saved cases and documents are private to your account.</li>
             <li>Documents are read to help you, not kept for anyone else.</li>
             <li>You can delete a saved case any time from My Cases.</li>
           </ul>
@@ -3617,8 +3982,11 @@ const CASE_DOMAIN_OPTIONS = [
   { value: 'consumer', label: 'Consumer' },
   { value: 'cyber', label: 'Cyber' },
   { value: 'tenancy', label: 'Tenancy' },
-  { value: 'constitutional_public_authority', label: 'Public Authority' }
+  { value: 'constitutional_public_authority', label: 'Fundamental Rights' }
 ];
+// Each case's category (its primary_domain) is shown in its own colour -- see .case-domain-* in
+// styles.css. Cases with no category keep the plain card.
+const CASE_DOMAIN_LABELS = Object.fromEntries(CASE_DOMAIN_OPTIONS.map((option) => [option.value, option.label]));
 
 function MyCasesPage() {
   const [cases, setCases] = React.useState([]);
@@ -3814,6 +4182,14 @@ function MyCasesPage() {
         </div>
 
         <div className="cases-bulk-actions">
+          <ul className="case-domain-legend" aria-label="Case category colours">
+            {CASE_DOMAIN_OPTIONS.map((option) => (
+              <li key={option.value}>
+                <span className={`case-domain-swatch case-domain-${option.value}`} aria-hidden="true" />
+                {option.label}
+              </li>
+            ))}
+          </ul>
           <button
             type="button"
             className="case-delete-all-button"
@@ -3854,13 +4230,21 @@ function MyCasesPage() {
             </div>
           )}
           {status === 'ready' && cases.map((savedCase) => (
-            <article className="case-list-card" key={savedCase.id}>
+            <article
+              className={`case-list-card ${CASE_DOMAIN_LABELS[savedCase.primary_domain] ? `case-domain-${savedCase.primary_domain}` : ''}`.trim()}
+              key={savedCase.id}
+            >
               <div className="case-list-icon" aria-hidden="true">
                 <BriefcaseBusiness size={25} strokeWidth={1.45} />
               </div>
               <div className="case-list-main">
                 <h3>{savedCase.title || 'Legal Question'}</h3>
-                <p><Clock size={14} strokeWidth={1.7} />{formatCaseDate(savedCase.updated_at)}</p>
+                <p>
+                  {CASE_DOMAIN_LABELS[savedCase.primary_domain] && (
+                    <span className="case-domain-chip">{CASE_DOMAIN_LABELS[savedCase.primary_domain]}</span>
+                  )}
+                  <Clock size={14} strokeWidth={1.7} />{formatCaseDate(savedCase.updated_at)}
+                </p>
               </div>
               <div className="case-card-actions">
                 <button
@@ -4562,7 +4946,61 @@ const sampleHomeShared = {
   VintageScales
 };
 
+function AuthPage({ mode, next }) {
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="auth-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>⌘</i></div>
+          <h2>{mode === 'signup' ? 'Create Account' : 'Sign In'}</h2>
+          <div className="header-ornament-line"><i>⌘</i><span /></div>
+          <PageDivider />
+        </header>
+        <AuthForm mode={mode} next={next} />
+      </div>
+    </>
+  );
+}
+
+const SIGN_IN_REQUIRED_COPY = {
+  cases: ['My Cases', 'Sign in to see your saved conversations.', 'Your cases are private to your account. Sign in, or create a free account, to save conversations and pick them up again later.'],
+  documents: ['Documents', 'Sign in to see your documents.', 'Uploaded documents are stored privately in your account. Sign in, or create a free account, to keep and manage them.'],
+  summarize: ['Summarize Document', 'Sign in to summarize documents.', 'Summaries are saved with your documents, which are private to your account. Sign in, or create a free account, to continue.'],
+  ask: ['Ask Question', 'Sign in to open this case.', 'Saved cases are private to the account that created them. Sign in to continue this conversation.']
+};
+
+/** Shown in place of a page that needs an account, when nobody is signed in. */
+function SignInRequired({ page }) {
+  const [title, heading, body] = SIGN_IN_REQUIRED_COPY[page] || SIGN_IN_REQUIRED_COPY.cases;
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="cases-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>⌘</i></div>
+          <h2>{title}</h2>
+          <div className="header-ornament-line"><i>⌘</i><span /></div>
+          <PageDivider />
+        </header>
+        <section className="auth-required-card">
+          <LockKeyhole size={34} strokeWidth={1.45} />
+          <h3>{heading}</h3>
+          <p>{body}</p>
+          <div className="auth-required-actions">
+            <a className="case-open-button" href={signInHref('signin')}>Sign in</a>
+            <a className="document-outline-button" href={signInHref('signup')}>Create account</a>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
+
 export default function App() {
+  const { user, status: authStatus } = useAuth();
   const [route, setRoute] = React.useState(() => window.location.hash || '#/');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
     try {
@@ -4585,7 +5023,11 @@ export default function App() {
   const initialQuery = queryParams.get('q') || '';
   const initialCaseId = queryParams.get('case') || '';
   const initialAttach = queryParams.get('attach') === '1';
-  const activePage = routeSegments[0] === 'sample-home'
+  // #/ask?case=ID&msg=N (from a document's "go to case" button): open the case at question N.
+  const initialFocusSequence = Number.parseInt(queryParams.get('msg') || '', 10) || null;
+  const activePage = routeSegments[0] === 'signin' || routeSegments[0] === 'signup'
+    ? routeSegments[0]
+    : routeSegments[0] === 'sample-home'
     ? 'sample-home'
     : routeSegments[0] === 'ask'
     ? 'ask'
@@ -4604,6 +5046,20 @@ export default function App() {
                 : routeSegments[0] === 'schemes'
                   ? 'schemes'
                   : 'home';
+  // Opening a saved case (#/ask?case=...) needs its owner signed in; asking a new question does not.
+  const needsAccount = ['cases', 'documents', 'summarize'].includes(activePage) || (activePage === 'ask' && Boolean(initialCaseId));
+  const pageToRender = renderPage({
+    activePage,
+    needsAccount,
+    authStatus,
+    user,
+    routeSegments,
+    queryParams,
+    initialQuery,
+    initialCaseId,
+    initialAttach,
+    initialFocusSequence
+  });
 
   return (
     <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''} ${activePage === 'sample-home' ? 'app-shell--sample' : ''}`.trim()}>
@@ -4623,17 +5079,30 @@ export default function App() {
         }}
       />
       <main className={`main-panel ${activePage}-page-panel`}>
-        {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} initialAttach={initialAttach} />}
-        {activePage === 'complaints' && <ComplaintDrafterPage />}
-        {activePage === 'cases' && <MyCasesPage />}
-        {activePage === 'documents' && <DocumentsPage />}
-        {activePage === 'summarize' && <SummarizeDocumentPage />}
-        {activePage === 'rights' && <LegalAwarenessPage segments={routeSegments} />}
-        {activePage === 'about' && <AboutUsPage />}
-        {activePage === 'schemes' && <SchemesPage />}
-        {activePage === 'home' && <HomePage />}
-        {activePage === 'sample-home' && <SampleHomePage shared={sampleHomeShared} />}
+        {pageToRender}
       </main>
     </div>
+  );
+}
+
+function renderPage({ activePage, needsAccount, authStatus, user, routeSegments, queryParams, initialQuery, initialCaseId, initialAttach, initialFocusSequence }) {
+  // Pages holding saved, per-account data. Nothing renders until we know who is signed in, so a
+  // signed-in user never sees a flash of the "sign in" panel (and no request is made as a guest).
+  if (needsAccount && authStatus === 'loading') return null;
+  if (needsAccount && !user) return <SignInRequired page={activePage} />;
+  return (
+    <>
+      {(activePage === 'signin' || activePage === 'signup') && <AuthPage mode={activePage} next={queryParams.get('next') || ''} />}
+      {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} initialAttach={initialAttach} initialFocusSequence={initialFocusSequence} />}
+      {activePage === 'complaints' && <ComplaintDrafterPage />}
+      {activePage === 'cases' && <MyCasesPage />}
+      {activePage === 'documents' && <DocumentsPage />}
+      {activePage === 'summarize' && <SummarizeDocumentPage />}
+      {activePage === 'rights' && <LegalAwarenessPage segments={routeSegments} />}
+      {activePage === 'about' && <AboutUsPage />}
+      {activePage === 'schemes' && <SchemesPage />}
+      {activePage === 'home' && <HomePage />}
+      {activePage === 'sample-home' && <SampleHomePage shared={sampleHomeShared} />}
+    </>
   );
 }

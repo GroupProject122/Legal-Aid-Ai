@@ -116,7 +116,7 @@ def test_invalid_gemini_output_safely_becomes_unclear(monkeypatch):
         models = FakeModels()
 
     monkeypatch.setattr(domain_router, "GEMINI_API_KEY", "test-key")
-    monkeypatch.setattr(domain_router.genai, "Client", lambda api_key: FakeClient())
+    monkeypatch.setattr(domain_router.genai, "Client", lambda api_key, **_kw: FakeClient())
 
     decision = domain_router.route_issue("seller refund nahi de raha")
 
@@ -254,3 +254,32 @@ def test_domain_cues_match_whole_words_only():
     assert domain_router.domains_from_supported_cues("current user question: my whatsapp was hacked") == {"cyber"}
     assert domain_router.domains_from_supported_cues("my parent has a different problem") == set()
     assert domain_router.domains_from_supported_cues("i rented a flat and the landlord is hacking my wifi") == {"tenancy", "cyber"}
+
+
+def test_router_timeout_falls_back_safely(monkeypatch):
+    # Regression: Gemini calls had no time limit, so a stalled connection left the question
+    # unanswered forever. A timeout now raises an httpx error that routing handles safely.
+    import httpx
+
+    def timing_out_client(api_key=None, **_kw):
+        raise httpx.ReadTimeout("timed out")
+
+    monkeypatch.setattr(domain_router, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(domain_router.genai, "Client", timing_out_client)
+
+    decision = domain_router.route_issue("my landlord cut the electricity")
+
+    assert decision.routing_error is True
+    assert decision.status == "unclear"
+
+
+def test_every_gemini_client_has_a_timeout():
+    from gemini_http import gemini_http_options
+
+    assert gemini_http_options().timeout and gemini_http_options().timeout > 0
+    backend = Path(__file__).resolve().parents[1]
+    for path in backend.glob("*.py"):
+        if path.name.startswith("evaluate_"):
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "genai.Client(api_key=GEMINI_API_KEY)" not in text, f"{path.name} creates a Gemini client with no timeout"

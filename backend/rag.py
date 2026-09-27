@@ -9,6 +9,7 @@ from typing import Any
 
 import faiss
 import numpy as np
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
@@ -17,6 +18,7 @@ from sentence_transformers import SentenceTransformer
 import grounded_answer
 import claim_verifier
 import source_text
+from gemini_http import gemini_http_options
 from config import (
     DISCLAIMER,
     EMBEDDING_MODEL,
@@ -1632,7 +1634,7 @@ def gemini_grounded_response(question: str, chunks: list[RetrievedChunk]) -> dic
             f"File: {chunk.source}\nPage: {chunk.page}\nText:\n{chunk.text}"
         )
     context = "\n\n".join(context_blocks)
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
     system_prompt = """You are Legal Aid AI, an informational assistant for Indian legal information.
 
 You must answer the user's question using ONLY the legal source text supplied in the retrieved context.
@@ -1696,7 +1698,7 @@ Return only valid JSON with this exact shape:
         )
         content = response.text or "{}"
         parsed = json.loads(content)
-    except (genai_errors.APIError, TimeoutError, RuntimeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError) as exc:
         raise_classified_gemini_error(exc)
     except (json.JSONDecodeError, KeyError, TypeError) as exc:
         logger.exception("Gemini returned malformed JSON")

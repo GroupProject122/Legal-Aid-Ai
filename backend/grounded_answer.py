@@ -7,10 +7,12 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
+from gemini_http import gemini_http_options
 from config import DISCLAIMER, GEMINI_API_KEY, GEMINI_MODEL
 import source_text
 
@@ -112,7 +114,7 @@ def generate_grounded_answer(
 
     started = time.perf_counter()
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=build_grounded_prompt(original_message, normalized_case_summary, domains, chunks, confirmed_case_facts),
@@ -134,7 +136,7 @@ def generate_grounded_answer(
         return result
     except GroundedAnswerConfigurationError:
         raise
-    except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini grounded answer failed: %s: %s", exc.__class__.__name__, str(exc))
         raise GroundedAnswerError("Gemini could not generate a grounded answer right now.") from exc
 

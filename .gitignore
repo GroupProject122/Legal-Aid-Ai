@@ -7,6 +7,7 @@ backend/vectorstore/
 backend/.env
 backend/.venv/
 backend/legal_aid.db
+backend/legal_aid.db.*.bak
 backend/user_uploads/*
 !backend/user_uploads/.gitkeep
 dist/

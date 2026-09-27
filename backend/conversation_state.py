@@ -8,10 +8,12 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
+from gemini_http import gemini_http_options
 from config import GEMINI_API_KEY, GEMINI_MODEL
 import turn_memory
 
@@ -218,7 +220,7 @@ def classify_turn(
     examples = turn_memory.similar_examples(message) if use_memory else []
     started = time.perf_counter()
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=build_turn_prompt(message, state, rule_hint=deterministic, examples=examples),
@@ -233,7 +235,7 @@ def classify_turn(
         result.latency_ms = int((time.perf_counter() - started) * 1000)
         result.provider = "gemini"
         result = apply_turn_safety_overrides(message, state, result)
-    except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini turn classification failed safely: %s: %s", exc.__class__.__name__, str(exc))
         deterministic.error = True
         deterministic.latency_ms = int((time.perf_counter() - started) * 1000)

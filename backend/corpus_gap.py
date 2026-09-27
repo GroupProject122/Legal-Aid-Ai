@@ -7,10 +7,12 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
+from gemini_http import gemini_http_options
 from config import DISCLAIMER, GEMINI_API_KEY, GEMINI_MODEL
 import grounded_answer
 
@@ -275,7 +277,7 @@ def gemini_gap_assessment(issue_summary: str, domains: list[str], chunks: list[A
         return None
     started = time.perf_counter()
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=build_gap_prompt(issue_summary, domains, chunks),
@@ -287,7 +289,7 @@ def gemini_gap_assessment(issue_summary: str, domains: list[str], chunks: list[A
         )
         parsed = json.loads(response.text or "{}")
         return normalize_gap_result(parsed, source="gemini", latency_ms=int((time.perf_counter() - started) * 1000))
-    except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini corpus-gap assessment failed: %s: %s", exc.__class__.__name__, str(exc))
         return None
 

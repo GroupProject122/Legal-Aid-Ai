@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Legal Aid AI</title>
+    <script>
+      // Apply the saved light/dark choice before the page is drawn, so reloading in dark mode
+      // does not flash the light page first. Toggled by the moon/sun button (useTheme in App.jsx).
+      try {
+        if (window.localStorage.getItem('legalAidTheme') === 'dark') {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      } catch (error) {
+        // Storage unavailable: start in light mode.
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
