@@ -184,7 +184,7 @@ function SampleQueryBox({ chat }) {
   return (
     <form className="sh-query-box" onSubmit={chat.handleSubmit}>
       <div className="sh-query-icon">
-        <Sparkles size={20} />
+        <img src="/legal-aid-logo.png" alt="" className="sh-query-icon-logo" />
       </div>
       <AutoGrowTextarea
         name="legal-query"
@@ -455,7 +455,9 @@ function SampleFooter() {
     <footer className="sh-home-footer">
       <div className="sh-home-footer-inner">
         <div className="sh-home-footer-brand">
-          <div className="sh-home-footer-mark"><Scale size={22} strokeWidth={1.5} /></div>
+          <div className="sh-home-footer-mark">
+            <img src="/legal-aid-logo.png" alt="" className="sh-home-footer-mark-logo" />
+          </div>
           <div>
             <strong>Legal Aid AI</strong>
             <span>Your Rights. Our Guidance.</span>

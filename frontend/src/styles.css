@@ -641,10 +641,18 @@ button {
 .query-icon {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  /* Matches .query-submit's 42px height so both logos sit in the same size slot. */
+  width: 42px;
+  height: 42px;
+  padding: 4px;
   margin-bottom: 8px;
   color: rgba(122, 71, 28, 0.6);
+}
+
+.query-icon-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .query-box textarea {
@@ -780,6 +788,15 @@ button {
   font-family: var(--sans);
   font-size: 0.92rem;
   font-weight: 600;
+}
+
+.query-submit-logo {
+  /* .query-submit is 42px tall; this leaves ~6px above and below before the button's own edge. */
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+  /* .ask-button is a dark brown fill (see above) with cream text -- force the black ink to match. */
+  filter: brightness(0) invert(1);
 }
 
 .ask-button:hover,

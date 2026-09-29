@@ -1603,3 +1603,18 @@ body.sh-has-custom-cursor textarea {
 }
 .sh-home-marquee::before { left: 0; background: linear-gradient(90deg, rgb(var(--sh-paper-rgb)), transparent); }
 .sh-home-marquee::after { right: 0; background: linear-gradient(270deg, rgb(var(--sh-paper-rgb)), transparent); }
+
+/* ---- Logo image (replaces the sparkle icon and the footer Scale icon) ---- */
+.sh-query-icon-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.sh-home-footer-mark-logo {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  /* .sh-home-footer-mark sits on a dark/coloured tile -- force the black ink to white. */
+  filter: brightness(0) invert(1);
+}

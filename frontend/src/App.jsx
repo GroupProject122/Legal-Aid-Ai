@@ -535,7 +535,7 @@ function QueryBox({ chat }) {
   return (
     <form className="query-box" onSubmit={chat.handleSubmit}>
       <div className="query-icon">
-        <Sparkles size={20} />
+        <img src="/legal-aid-logo.png" alt="" className="query-icon-logo" />
       </div>
       {/* Grows with its content so the whole question stays visible. Enter submits;
           Shift+Enter starts a new line so the question can be written in paragraphs. */}
@@ -551,7 +551,7 @@ function QueryBox({ chat }) {
         <Paperclip size={20} />
       </button>
       <button className="ask-button query-submit" type="submit" disabled={chat.isLoading}>
-        <Sparkles size={15} />
+        <img src="/legal-aid-logo.png" alt="" className="query-submit-logo" />
         <span>Ask AI</span>
       </button>
     </form>
