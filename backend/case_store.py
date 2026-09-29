@@ -380,6 +380,8 @@ def assistant_content_for_storage(response: dict[str, Any]) -> dict[str, Any]:
         "limitations",
         "conversation",
         "technical_error",
+        "offline",
+        "offline_notice",
     }
     return sanitize_value({key: value for key, value in response.items() if key in allowed})
 

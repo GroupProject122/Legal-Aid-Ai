@@ -2290,6 +2290,113 @@ body.has-custom-cursor textarea {
   line-height: 1.5;
 }
 
+/* ---- Offline mode: Gemini unreachable, showing what local retrieval alone found. Deliberately
+   grey/neutral throughout -- background, avatar, pill, notice, section text -- so it reads as
+   clearly different from both a normal answer and a technical-error panel. ---- */
+.offline-avatar {
+  color: #f4f4f2;
+  background: linear-gradient(145deg, #8a8a86, #4a4844 74%);
+  border-color: rgba(90, 90, 86, 0.5);
+}
+
+.offline-response-card {
+  background: linear-gradient(180deg, #f4f4f2 0%, #e8e8e5 100%);
+  border-color: rgba(90, 90, 86, 0.3);
+  color: #34322f;
+}
+
+.offline-response-card .response-header {
+  border-bottom-color: rgba(90, 90, 86, 0.18);
+}
+
+.offline-response-card .response-brand {
+  color: #4a4844;
+}
+
+.offline-response-card .response-emblem {
+  color: #4a4844;
+  background: #d8d8d4;
+  border-color: rgba(90, 90, 86, 0.3);
+}
+
+.offline-pill {
+  color: #f4f4f2;
+  background: #6b6a66;
+  border-color: rgba(90, 90, 86, 0.5);
+}
+
+.offline-response-card .response-section {
+  border-top-color: rgba(90, 90, 86, 0.16);
+}
+
+.offline-response-card .response-section:nth-of-type(even) {
+  background: linear-gradient(90deg, transparent, rgba(90, 90, 86, 0.07), transparent);
+}
+
+.offline-response-card .response-section h4 {
+  color: #4a4844;
+}
+
+.offline-response-card .response-disclaimer {
+  border-top-color: rgba(90, 90, 86, 0.16);
+  color: rgba(52, 50, 47, 0.75);
+}
+
+.offline-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #e2e2de;
+  border: 1px solid rgba(90, 90, 86, 0.32);
+  border-radius: 8px;
+  color: #34322f;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.offline-notice svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: #6b6a66;
+}
+
+.offline-response-card .source-card {
+  background: #eeeeec;
+  border-color: rgba(90, 90, 86, 0.28);
+  color: #34322f;
+}
+
+.offline-response-card .source-card:hover {
+  border-color: rgba(90, 90, 86, 0.5);
+}
+
+.offline-section-block {
+  margin-top: 14px;
+}
+
+.offline-section-block:first-child {
+  margin-top: 0;
+}
+
+.offline-section-meta {
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: #4a4844;
+}
+
+.offline-section-text {
+  margin: 0;
+  padding: 12px 14px;
+  background: #eeeeec;
+  border: 1px solid rgba(90, 90, 86, 0.24);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-size: 0.92rem;
+  color: #3c3a37;
+}
+
 /* Limitations in maroon so the caveats on an answer are easy to spot. */
 .response-limitations h4,
 .response-limitations li,

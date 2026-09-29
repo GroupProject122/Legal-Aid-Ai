@@ -65,12 +65,12 @@ createdb schemes_legal_support     # if `createdb` isn't on PATH:
 #   postgresql://<your-macos-user>@localhost:5432/schemes_legal_support?schema=public
 ```
 
-The API listens on `http://localhost:4000` (override with `PORT` in `.env`).
+The API listens on `http://localhost:4001` (override with `PORT` in `.env`).
 
 Check it:
 
 ```bash
-curl http://localhost:4000/health
+curl http://localhost:4001/health
 # { "status": "ok", "service": "schemes-legal-support-backend",
 #   "db": "up", "timestamp": "..." }
 ```
@@ -100,7 +100,7 @@ filtered out of `results`), `matched_hard_conditions`, `unknown_conditions`,
 `matched_soft_conditions`, and a generated `reasoning` string.
 
 ```bash
-curl -s -X POST http://localhost:4000/match -H 'Content-Type: application/json' \
+curl -s -X POST http://localhost:4001/match -H 'Content-Type: application/json' \
   -d '{"occupation":"farmer","annual_family_income":150000}'
 ```
 
@@ -113,10 +113,10 @@ npm run dev
 ```
 
 Vite serves the app on `http://localhost:5173`: an optional 8-field intake form
-that `POST`s to `http://localhost:4000/match` and a grouped results screen
+that `POST`s to `http://localhost:4001/match` and a grouped results screen
 (Likely / Possibly eligible). The backend must be running and seeded. Override
 the API base URL with `VITE_API_BASE_URL` (see `.env.example`); it defaults to
-`http://localhost:4000`.
+`http://localhost:4001`.
 
 Other scripts: `npm run build` (typecheck + production build to `dist/`),
 `npm run preview` (serve the production build), `npm run typecheck`.

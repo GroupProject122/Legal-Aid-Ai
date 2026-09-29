@@ -27,13 +27,14 @@ import domain_router
 import fact_sufficiency
 import grounded_answer
 import legal_education
-from config import DISCLAIMER, FRONTEND_ORIGINS, LLM_PROVIDER
+from config import DISCLAIMER, FRONTEND_ORIGINS, GEMINI_API_KEY, LLM_PROVIDER
 from rag import (
     ConfigurationError,
     LLMError,
     RAGError,
     VectorStoreIncompatibleError,
     VectorStoreMissingError,
+    offline_retrieval_response,
     rag,
     validate_question,
 )
@@ -558,6 +559,9 @@ def ask(request: AskRequest, user: dict | None = Depends(optional_user)) -> dict
             route.confidence,
             route.latency_ms,
         )
+        offline_response = offline_route_response(route, routing_text)
+        if offline_response is not None:
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, offline_response, confirmed_context)
         if route.status == "classified":
             response = with_routing(handle_classified_issue(question, route, confirmed_context), route)
             return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
@@ -885,6 +889,9 @@ def handle_active_case_turn(
         conversation_context=[{"role": "earlier case", "content": case_background}],
         safety_text=combined_message,
     )
+    offline_response = offline_route_response(route, combined_message)
+    if offline_response is not None:
+        return with_conversation_state(offline_response, active_case)
     if route.status == "classified":
         return with_routing(
             handle_classified_issue(
@@ -909,6 +916,9 @@ def handle_new_issue_without_active_context(question: str, confirmed_context: di
         return document_fact_conflict_response(conflict)
     routing_text = document_facts.combined_question_with_confirmed_facts(question, confirmed_context)
     route = domain_router.route_issue(routing_text)
+    offline_response = offline_route_response(route, routing_text)
+    if offline_response is not None:
+        return offline_response
     if route.status == "classified":
         return with_routing(handle_classified_issue(question, route, confirmed_context), route)
     if route.status == "unclear":
@@ -1077,10 +1087,19 @@ def answer_grounded_from_context(
         response = corpus_gap.apply_gap_to_response(verified_answer, final_gap)
         response = corpus_gap.delhi_tenancy_note(response, context.domains, raw_check_query)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
-    except grounded_answer.GroundedAnswerConfigurationError as exc:
-        raise ConfigurationError(str(exc)) from exc
-    except grounded_answer.GroundedAnswerError as exc:
-        raise LLMError(str(exc)) from exc
+    except (grounded_answer.GroundedAnswerConfigurationError, grounded_answer.GroundedAnswerError) as exc:
+        # Routing succeeded (Gemini looked reachable then), but the final answer call itself
+        # failed -- e.g. the connection dropped mid-request, or a transient/quota error. This is
+        # the one point in the pipeline that doesn't already degrade gracefully on its own (every
+        # earlier stage -- router, fact-sufficiency, corpus_gap -- does), so it's the last place
+        # this needs to be caught. Same offline fallback as offline_route_response, built from the
+        # chunks already retrieved locally for this turn.
+        logger.warning(
+            "Falling back to offline local retrieval after Gemini failure: %s: %s",
+            exc.__class__.__name__, exc,
+        )
+        response = offline_retrieval_response(chunks)
+        return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
 
 
 def clarification_response(
@@ -1263,6 +1282,23 @@ def router_minimal_response(route: domain_router.RouteDecision) -> dict:
 def with_routing(response: dict, route: domain_router.RouteDecision) -> dict:
     response["routing"] = route_public_payload(route)
     return response
+
+
+def offline_route_response(route: domain_router.RouteDecision, retrieval_text: str) -> dict | None:
+    """None when Gemini looks reachable (a key is configured and the router did not itself hit a
+    Gemini/network failure); otherwise the offline fallback -- the legal sections already found
+    locally by embeddings + FAISS, handed back directly instead of asking Gemini to write an
+    answer. Called right after domain_router.route_issue() at every call site that runs it, so a
+    fresh question (or a follow-up, which re-routes too) skips the rest of the Gemini-dependent
+    pipeline -- fact-sufficiency, clarification, grounded-answer generation -- all of which would
+    otherwise also have to fail before the user saw anything.
+    route.routing_error is only set when domain_router actually attempted and failed to reach
+    Gemini (see domain_router.route_issue); a missing key never reaches Gemini in the first place,
+    hence the separate `not GEMINI_API_KEY` check."""
+    if LLM_PROVIDER != "gemini" or (GEMINI_API_KEY and not route.routing_error):
+        return None
+    chunks = rag.retrieve(retrieval_text)
+    return with_routing(offline_retrieval_response(chunks), route)
 
 
 def attach_active_case_state(

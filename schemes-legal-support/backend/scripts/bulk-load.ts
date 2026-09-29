@@ -15,7 +15,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const API_BASE = process.env.SCHEMES_API_BASE_URL ?? "http://localhost:4000";
+const API_BASE = process.env.SCHEMES_API_BASE_URL ?? "http://localhost:4001";
 const DEFAULT_FILE = resolve(__dirname, "schemes-batch.json");
 
 interface PostResult {

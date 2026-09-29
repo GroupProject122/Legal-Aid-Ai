@@ -82,6 +82,11 @@ when a word merely overlaps:
   communication -- including threats, harassment or abuse sent over WhatsApp, social media, calls
   or other online channels, even when the sender is a landlord, seller or official.
 - constitutional_public_authority needs a government body, public authority, RTI, legal aid or a fundamental right.
+- A complaint about a bank's, NBFC's or payment company's OWN service (charges, failed transactions not
+  refunded, loans, credit cards, poor handling of a complaint), and any question about the RBI Ombudsman /
+  Banking Ombudsman / Integrated Ombudsman Scheme (RB-IOS), is consumer. The RBI Ombudsman is a grievance forum
+  for customers of banks and payment companies, not a public-authority matter. Fraud by a third party
+  (phishing, UPI scams, hacking) is cyber; add consumer only if the bank's own handling is also complained about.
 Use cautious, factual issue summaries only. Do not say a law was violated or that the user has a valid case.
 For primary_domain, return an empty string when there is no primary domain.
 For issue_summary, return an empty string when no summary is appropriate.
@@ -253,7 +258,48 @@ def apply_router_safety_overrides(message: str, decision: RouteDecision) -> Rout
             decision.domains = merged_domains
             if decision.primary_domain not in merged_domains:
                 decision.primary_domain = merged_domains[0]
-    return decision
+    return route_financial_ombudsman(text, decision)
+
+
+# The RBI's ombudsman handles complaints by *customers* of banks, NBFCs and payment companies,
+# and the scheme sits in the consumer part of the corpus. Its name makes the model read it as a
+# government body, so questions about it were routed to constitutional_public_authority and
+# searched the wrong laws (5 of 8 RBI ombudsman questions in the Set 1 evaluation got no answer).
+FINANCIAL_OMBUDSMAN_CUES = (
+    "rbi ombudsman",
+    "banking ombudsman",
+    "integrated ombudsman",
+    "rb-ios",
+    "rbios",
+    "reserve bank ombudsman",
+    "ombudsman scheme",
+)
+
+
+def route_financial_ombudsman(text: str, decision: RouteDecision) -> RouteDecision:
+    """An RBI/banking ombudsman question is consumer. It stays constitutional_public_authority
+    only if the message also names a genuine public-authority matter (an RTI, a fundamental
+    right...); otherwise that tag is dropped, since it only sends retrieval to the wrong laws."""
+    if not contains_any(text, FINANCIAL_OMBUDSMAN_CUES):
+        return decision
+    domains = list(decision.domains) if decision.status == "classified" else []
+    if "consumer" not in domains:
+        domains.insert(0, "consumer")
+    public_authority_cues = SUPPORTED_DOMAIN_CUES["constitutional_public_authority"]
+    if "constitutional_public_authority" in domains and not contains_any(text, public_authority_cues):
+        domains.remove("constitutional_public_authority")
+    primary = decision.primary_domain if decision.primary_domain in domains else "consumer"
+    return RouteDecision(
+        status="classified",
+        domains=domains,
+        primary_domain=primary,
+        confidence=decision.confidence if decision.status == "classified" else "medium",
+        issue_summary=decision.issue_summary or "Complaint about a bank or payment service to the RBI Ombudsman.",
+        needs_clarification=False,
+        latency_ms=decision.latency_ms,
+        provider=decision.provider,
+        routing_error=decision.routing_error,
+    )
 
 
 UNSUPPORTED_LEGAL_CUES = (

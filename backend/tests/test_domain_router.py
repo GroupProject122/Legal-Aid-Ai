@@ -283,3 +283,40 @@ def test_every_gemini_client_has_a_timeout():
             continue
         text = path.read_text(encoding="utf-8")
         assert "genai.Client(api_key=GEMINI_API_KEY)" not in text, f"{path.name} creates a Gemini client with no timeout"
+
+
+def test_rbi_ombudsman_questions_route_to_consumer():
+    # Regression: "RBI Ombudsman" reads like a government body, so the model routed these to
+    # constitutional_public_authority and retrieval searched the wrong laws.
+    misrouted = domain_router.RouteDecision(
+        status="classified", domains=["constitutional_public_authority"], primary_domain="constitutional_public_authority",
+        confidence="high", issue_summary="RBI Ombudsman complaint", needs_clarification=False,
+    )
+    decision = domain_router.route_financial_ombudsman("is there any fee for filing a complaint with the rbi ombudsman?", misrouted)
+    assert decision.domains == ["consumer"]
+    assert decision.primary_domain == "consumer"
+
+
+def test_rbi_ombudsman_with_real_public_authority_cue_keeps_both():
+    decision = domain_router.RouteDecision(
+        status="classified", domains=["constitutional_public_authority"], primary_domain="constitutional_public_authority",
+        confidence="high", issue_summary="", needs_clarification=False,
+    )
+    routed = domain_router.route_financial_ombudsman("can i file an rti about how the banking ombudsman handled my case", decision)
+    assert set(routed.domains) == {"consumer", "constitutional_public_authority"}
+
+
+def test_unclear_rbi_ombudsman_question_becomes_consumer():
+    unclear = domain_router.RouteDecision(
+        status="unclear", domains=[], primary_domain=None, confidence="low", issue_summary=None, needs_clarification=True,
+    )
+    routed = domain_router.route_financial_ombudsman("what is the rb-ios scheme", unclear)
+    assert routed.status == "classified" and routed.domains == ["consumer"]
+
+
+def test_non_ombudsman_questions_are_untouched():
+    decision = domain_router.RouteDecision(
+        status="classified", domains=["constitutional_public_authority"], primary_domain="constitutional_public_authority",
+        confidence="high", issue_summary="", needs_clarification=False,
+    )
+    assert domain_router.route_financial_ombudsman("my rti application got no reply", decision) is decision

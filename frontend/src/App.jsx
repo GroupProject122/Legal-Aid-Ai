@@ -46,6 +46,7 @@ import {
   Trash2,
   UploadCloud,
   UserRound,
+  WifiOff,
   X
 } from 'lucide-react';
 
@@ -908,6 +909,77 @@ function LegalAIResponse({ response, onSourceClick }) {
   const whereToApproach = (answer.where_to_approach || []).map(cleanDisplayText).filter(Boolean);
   const limitations = (answer.limitations || []).map(cleanDisplayText).filter(Boolean);
   const clarificationQuestion = cleanDisplayText(response?.clarification?.question);
+
+  // No internet / Gemini unreachable: the backend already fell back to what it found locally
+  // (embeddings + FAISS, no network involved) instead of a Gemini-written answer. Shown as its
+  // own grey panel -- distinct from both a normal answer and a technical-error panel -- so it's
+  // obvious this is offline mode, not a broken or a real answer.
+  if (response?.offline) {
+    return (
+      <article className="message-row ai-message-row">
+        <div className="message-avatar ai-message-avatar offline-avatar" aria-hidden="true">
+          <WifiOff size={20} strokeWidth={1.8} />
+        </div>
+        <section className="legal-response-card offline-response-card">
+          <div className="response-header">
+            <div className="response-brand">
+              <div className="response-emblem">
+                <WifiOff size={17} strokeWidth={1.8} />
+              </div>
+              <strong>Legal Aid AI</strong>
+            </div>
+            <span className="response-pill offline-pill">Offline mode</span>
+          </div>
+
+          <div className="offline-notice">
+            <WifiOff size={18} strokeWidth={1.8} />
+            <span>
+              {cleanDisplayText(response.offline_notice) || cleanDisplayText(
+                'You are currently offline. Retrieving the relevant legal section, case, corpus, and law locally from the database and local files.'
+              )}
+            </span>
+          </div>
+
+          {sources.length > 0 ? (
+            <>
+              <div className="response-section">
+                <h4>Sections matched to your question</h4>
+                <div className="source-list">
+                  {sources.map((source) => (
+                    <SourceCard source={source} onClick={onSourceClick} key={`${source.document}-${source.page}-${source.section || 'source'}`} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="response-section">
+                <h4>The section text, as retrieved</h4>
+                {sources.map((source) => (
+                  <div className="offline-section-block" key={`full-${source.document}-${source.page}-${source.section || 'source'}`}>
+                    <p className="offline-section-meta">
+                      {cleanDisplayText(source.document)}
+                      {source.section ? ` — ${cleanDisplayText(source.section)}` : ''}
+                      {source.page ? ` · Page ${source.page}` : ''}
+                    </p>
+                    <p className="offline-section-text">{source.full_text || source.excerpt || 'No excerpt is available for this source.'}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="response-section">
+              <h4>No local matches</h4>
+              <p>No relevant sections were found in the local legal corpus for this question.</p>
+            </div>
+          )}
+
+          <div className="response-disclaimer">
+            <ShieldCheck size={16} strokeWidth={1.7} />
+            <span>{response?.disclaimer || 'This is legal information, not professional legal advice.'}</span>
+          </div>
+        </section>
+      </article>
+    );
+  }
 
   if (response?.technical_error) {
     return (
