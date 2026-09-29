@@ -1,0 +1,52 @@
+{
+  "purpose": "Installation check for ROUGE and BERTScore on sample answer pairs.",
+  "bertscore_model": "roberta-large",
+  "bertscore_rescaled_with_baseline": true,
+  "bertscore_seconds": 4.4,
+  "results": [
+    {
+      "sample": "same meaning, similar words",
+      "app_answer": "You can file a consumer complaint online through the e-Daakhil portal.",
+      "reference_answer": "Yes, a consumer complaint can be filed online using the e-Daakhil portal.",
+      "rouge1_f": 0.8,
+      "rouge2_f": 0.435,
+      "rougeL_f": 0.64,
+      "bertscore_precision": 0.873,
+      "bertscore_recall": 0.788,
+      "bertscore_f1": 0.83
+    },
+    {
+      "sample": "same meaning, different words",
+      "app_answer": "Public authorities must give you the information within 30 days of your request.",
+      "reference_answer": "Information shall be provided within thirty days of receipt of the RTI application.",
+      "rouge1_f": 0.385,
+      "rouge2_f": 0.083,
+      "rougeL_f": 0.308,
+      "bertscore_precision": 0.588,
+      "bertscore_recall": 0.57,
+      "bertscore_f1": 0.58
+    },
+    {
+      "sample": "unrelated answer",
+      "app_answer": "Report the fraud on the National Cybercrime Reporting Portal or call 1930.",
+      "reference_answer": "Information shall be provided within thirty days of receipt of the RTI application.",
+      "rouge1_f": 0.08,
+      "rouge2_f": 0.0,
+      "rougeL_f": 0.08,
+      "bertscore_precision": 0.028,
+      "bertscore_recall": 0.061,
+      "bertscore_f1": 0.046
+    },
+    {
+      "sample": "TRAP: meaning reversed, wording almost identical",
+      "app_answer": "You may not claim a refund for the defective product.",
+      "reference_answer": "You may claim a refund for the defective product.",
+      "rouge1_f": 0.947,
+      "rouge2_f": 0.824,
+      "rougeL_f": 0.947,
+      "bertscore_precision": 0.873,
+      "bertscore_recall": 0.932,
+      "bertscore_f1": 0.902
+    }
+  ]
+}

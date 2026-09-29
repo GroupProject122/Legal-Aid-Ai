@@ -1,0 +1,667 @@
+{
+  "description": "Set 1 - Official Q&A. Questions and answers copied verbatim from official Indian government FAQs (National Consumer Helpline, National Cybercrime Reporting Portal, RBI Integrated Ombudsman Scheme 2026 FAQs, Delhi Government RTI FAQs, NALSA). Every item was checked to be current; FAQs that are outdated or contradict the law were excluded (see README.md). reference_answer is the official answer, the reference for ROUGE and BERTScore. expected_sources lists the dataset documents the team expects the app to retrieve (team-assigned). Only change to official text: PDF extraction artefacts repaired. Collected 2026-09-29.",
+  "cases": [
+    {
+      "id": "consumer_01",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Who is a consumer?",
+      "reference_answer": "A person who buys any goods or services for a consideration, which has been paid or promised or partly paid and partly promised, or under any system of deferred payment also includes the user with approval of such goods or beneficiary of services. As per Consumer Protection Act 2019, the expression “buys any goods” and ‘hires or avails any services” includes offline or online transactions through electronic means or by teleshopping or direct selling or multi-level marketing.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q3"
+    },
+    {
+      "id": "consumer_02",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Who is a not a consumer?",
+      "reference_answer": "A person who obtains; goods free of charge who avails services free of charge who obtains goods for resale or for any commercial purposes who avails services for any commercial purposes who avails services under contract of service As per the provisions of the Act, commercial purpose does not include use by a person of goods bought and used by him exclusively for the purposes of earning his livelihood by means of self-employment.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q4"
+    },
+    {
+      "id": "consumer_03",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Who can make complaint?",
+      "reference_answer": "a consumer; or any voluntary consumer association registered under any law for the time being in force; or the Central Government or any State Government; or the Central Authority; or one or more consumers, where there are numerous consumers having the same interest; or in case of death of a consumer, his legal heir or legal representative; or in case of a consumer being a minor, his parent or legal guardian;",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q7"
+    },
+    {
+      "id": "consumer_04",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Where the complaint can be filed?",
+      "reference_answer": "A complaint shall be instituted in a District Commission within the local limits of whose jurisdiction the: Place of business or residence of opposite parties, or Place of business or residence of complainant, or where the cause of action, wholly or in part, arises",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019",
+        "The Consumer Protection (Jurisdiction of the District Commission, the State Commission and the National Commission) Rules, 2021"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q11"
+    },
+    {
+      "id": "consumer_05",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "What is meant by ‘deficiency’ under the Act?",
+      "reference_answer": "\"Deficiency\" means any fault, imperfection, shortcoming or inadequacy in the quality, nature and manner of performance which is required to be maintained by or under any law for the time being in force or has been undertaken to be performed by a person in pursuance of a contract or otherwise in relation to any service and includes— any act of negligence or omission or commission by such person which causes loss or injury to the consumer; and deliberate withholding of relevant information by such person to the consumer;",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q12"
+    },
+    {
+      "id": "consumer_06",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "What is an unfair contract?",
+      "reference_answer": "“Unfair contract” means a contract between a manufacturer, trader or service provider on one hand, and a consumer on the other, having such terms which cause significant change in the rights of such consumer, including the following: Requiring manifestly excessive security deposits to be given by a consumer for the performance of contractual obligations; or Imposing any penalty on the consumer for the breach of contract thereof which is wholly disproportionate to the loss occurred due to such breach to the other party to the contract; or Refusing to accept early repayment of debts on payment of the applicable penalty; or Entitling a party to the contract to terminate such contract unilaterally, without reasonable cause; or Permitting, or having the effect of permitting, one party to assign the contract to the detriment of the other party who is a consumer, without the consumer’s consent; or Imposing on the consumer any unreasonable charge, obligation or condition which puts such consumer at a disadvantage.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q13"
+    },
+    {
+      "id": "consumer_07",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "What is a misleading advertisement?",
+      "reference_answer": "Misleading advertisement\" in relation to any product or service, means an advertisement, which— falsely describes such product or service; or gives a false guarantee to, or is likely to mislead the consumers as to the nature, substance, quantity or quality of such product or service; or conveys an express or implied representation which, if made by the manufacturer or seller or service provider thereof, would constitute an unfair trade practice; or deliberately conceals important information",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q14"
+    },
+    {
+      "id": "consumer_08",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Can I claim compensation if the product itself is damaged?",
+      "reference_answer": "No, damage of the product itself cannot be the base for product liability compensation.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q29"
+    },
+    {
+      "id": "consumer_09",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Can a consumer complaint be resolved through mediation?",
+      "reference_answer": "Yes. Either at the first hearing after admission, or at later stage if the District Commission is of the view that, there exists an element of settlement, can refer the complaint to Mediation with the consent of the parties. Also, parties at any stage of the complaint can opt for settlement through mediation.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019",
+        "The Consumer Protection (Mediation) Rules, 2020"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q36"
+    },
+    {
+      "id": "consumer_10",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Is there any fee to be paid for Mediation?",
+      "reference_answer": "No, There is no fee prescribed for Mediation.",
+      "expected_sources": [
+        "The Consumer Protection (Mediation) Rules, 2020"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q37"
+    },
+    {
+      "id": "consumer_11",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Can appeal be filed after settlement through mediation?",
+      "reference_answer": "No appeal lies after the settlement of dispute through mediation.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019",
+        "The Consumer Protection (Mediation) Rules, 2020"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q38"
+    },
+    {
+      "id": "consumer_12",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "Does consumer need an advocate to represent his case in the Commission?",
+      "reference_answer": "Consumer Commissions are quasi-judicial bodies to provide simple and speedy justice. These have been kept free from the complicated judicial procedures. The manner is quite informal and free from the shackles of the Civil Court. There is no need for an advocate or any other pleader and consumer can himself or through his representative file and represent his complaint.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q39"
+    },
+    {
+      "id": "consumer_13",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "What is the time limit for filing the complaint?",
+      "reference_answer": "The complaint shall be filed within two years from the date on which the cause of action has arisen. This would mean two years from the day the deficiency in service or defect in goods has arisen/detected. This is also known as the limitation period for filing the complaint.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q41"
+    },
+    {
+      "id": "consumer_14",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "question": "What reliefs are provided by Consumer Commissions?",
+      "reference_answer": "Removal of defects from the goods; Replacement of the goods; Refund of the price paid; Removal of defects or deficiencies in the services; Award of compensation for the loss or injury suffered; Discontinue and not to repeat unfair trade practice or restrictive trade practice; To withdraw hazardous goods from being offered for sale; To cease manufacture of hazardous goods and desist from offering services which are hazardous in nature; If the loss or injury has been suffered by a large number of consumers who are not identifiable conveniently, to pay such sum (not less than 25% of the value of such defective goods or services provided) which shall be determined by the Commission; To issue corrective advertisement to neutralize the effect of misleading advertisement; To provide adequate costs to parties.",
+      "expected_sources": [
+        "The Consumer Protection Act, 2019"
+      ],
+      "source_title": "National Consumer Helpline - Knowledge Base: Consumer Protection Act 2019",
+      "source_url": "https://consumerhelpline.gov.in/public/knowledgebasedetails/Consumer%20Protection%20Act%202019",
+      "notes": "NCH Q43"
+    },
+    {
+      "id": "cyber_01",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "What is the purpose of National Cyber Crime Reporting Portal?",
+      "reference_answer": "This portal is an initiative of Government of India to facilitate victims/ complainants to report cyber crime complaints online. This portal caters all types of cyber crime complaints including complaints pertaining to online , Child Sexual Exploitative and Abuse Material (CSEAM) or sexually explicit content such as Rape/Gang Rape (RGR) content and other cyber crimes such as mobile crimes, online and social media crimes, online financial frauds, ransomware, hacking, cryptocurrency crimes and online cyber trafficking. The portal also provides an option of reporting an anonymous complaint for reporting online or sexually explicit content such as Rape/Gang Rape (RGR) content.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_02",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "Apart from this portal, are there any alternative ways to remove objectionable content from social media websites?",
+      "reference_answer": "Yes, most of the social media website like Facebook, YouTube, Twitter and Instagram etc. have the option of reporting or flagging the objectionable contents. The social media platforms may take appropriate action based on the contents reported to them as per their content policy.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_03",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "Which type of cybercrimes I can report on the portal?",
+      "reference_answer": "There are two options for reporting cybercrimes on the portal: Report Crime related to Women/ Child – Under this section, you can report complaints pertaining to online , (CSEAM) Child Sexual Exploitative and Abuse Material or sexually explicit content such as Rape/Gang Rape (RGR) content. Report Other Cybercrimes – Under this option, you can report complaints pertaining to cybercrimes such as mobile crimes, online and social media crimes, online financial frauds, ransomware, hacking, cryptocurrency crimes and online cyber trafficking.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_04",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "How can I file the complaints about other cybercrimes?",
+      "reference_answer": "In case of other cybercrimes, you can opt for “Report Other Cybercrimes” section. You are required to register yourself using your name and valid Indian mobile number. You will receive a One Time Password (OTP) on your mobile number. The OTP remains valid for 30 minutes only. Once you successfully register your mobile number on the portal, you will be able to report the complaint by selecting appropriate category and sub- category. Under this section, fields marked with a red asterisk (*) are mandatory. It is important that the police authorities receive accurate and complete information related to the complaint. Therefore, you should provide required information such as your name, phone number, email address, details of the complaint and necessary information supporting the complaint.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_05",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "What type of information would be considered as evidence while filing my complaint related to cybercrime?",
+      "reference_answer": "It is important to keep any evidence you may have related to your complaint. Evidence may include: Credit card receipt Bank statement Envelope (if received a letter or item through mail or courier) Brochure/Pamphlet Online money transfer receipt Copy of email URL of webpage Chat transcripts Suspect mobile number screenshot Videos Images Any other kind of document",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_06",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "What happens once I report a complaint?",
+      "reference_answer": "The complaints reported on the portal shall be handled by the concerned State/UT police authorities based on your selection of State/ UT while reporting the complaint.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_07",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "Can I check the status of my complaint?",
+      "reference_answer": "You will be able to check status of your complaint if you have reported the complaint using “Report and Track” option or “Report Other Cybercrime” section available on the portal. The complainant will receive a acknowledgement number which can be used to track the progress of the complaint by logging on the portal and clicking on “check status” option.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_08",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "Can I withdraw my complaint from the portal?",
+      "reference_answer": "A complaint filed under REPORT WOMEN/ CHILD RELATED CRIME section cannot be withdrawn. Complaint filed under REPORT CYBER CRIME section can be withdrawn before it is converted into FIR.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "cyber_09",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "question": "Can I file a complaint if I am an Indian citizen but have been victimized online/ in cyberspace by a foreign national or company?",
+      "reference_answer": "Yes, you may file a complaint related to all types of cyber crime on the portal.",
+      "expected_sources": [
+        "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+        "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+      ],
+      "source_title": "National Cyber Crime Reporting Portal - FAQ (Ministry of Home Affairs)",
+      "source_url": "https://cybercrime.gov.in/webform/FAQ.aspx",
+      "notes": ""
+    },
+    {
+      "id": "banking_01",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "What is the procedure for filing a complaint before the RBI Ombudsman?",
+      "reference_answer": "• Online: through the CMS portal at https://cms.rbi.org.in. • E-mail: by sending the complaint to crpc@rbi.org.in. • Physical mode: by sending the duly signed complaint form with supporting documents to Centralised Receipt and Processing Centre, Reserve Bank of India, Central Vista, Sector 17, Chandigarh - 160017.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q9. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "banking_02",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "Can the complainant track the status of a complaint lodged under RB-IOS, 2026?",
+      "reference_answer": "Yes. After successful registration, the complainant is provided a complaint number. The status of the complaint can be tracked through the CMS portal using the complaint number and mobile number. The complainant may also contact the Contact Center on Toll Free No. 14448 for status-related assistance.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q19. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "banking_03",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "Can a complaint be filed before the RBI Ombudsman through a representative?",
+      "reference_answer": "Yes. A complaint may be filed through an authorised representative of the complainant. However, the authorised representative cannot be an advocate unless the advocate himself/herself is the aggrieved person. The representative should be duly appointed and authorised in writing to represent the complainant before the RBI Ombudsman.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q20. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "banking_04",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "Is there any charge or fee for filing a complaint with the RBI Ombudsman?",
+      "reference_answer": "No. There is no charge or fee for filing or resolving complaints under RB-IOS, 2026. Complainants need not approach any third-party agency or pay any fee to file a complaint with the RBI Ombudsman.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q21. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "banking_05",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "What happens if the complaint is not settled by agreement?",
+      "reference_answer": "If a complaint is not resolved through settlement and is not liable to be rejected under the Scheme, the RBI Ombudsman further examines the matter on the basis of the documents and material available on record. Where, after examining the complaint, the RBI Ombudsman is of the opinion that there has been deficiency in service on the part of the Regulated Entity, the Ombudsman may pass an Award directing the Regulated Entity to take appropriate remedial action and/or pay compensation, as admissible under the Scheme. Before passing an Award, both the complainant and the Regulated Entity are given a reasonable opportunity of being heard, either orally or in writing.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q28. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "banking_06",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "Is there any time limit for filing an appeal?",
+      "reference_answer": "Yes. A complainant may file an appeal within 30 days from the date of receiving the Award. If there is sufficient reason for the delay, the Appellate Authority may allow a further period of up to 30 days. A Regulated Entity may also file an appeal within 30 days from the date of receipt of the complainant’s letter accepting the Award, subject to the required prior approval. The Appellate Authority may allow a further period of up to 30 days if sufficient reason for the delay is shown.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q32. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "banking_07",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "Can I withdraw my complaint at any stage?",
+      "reference_answer": "Yes. A complainant may voluntarily withdraw a complaint at any stage, if he so desires. For withdrawing a complaint, one can log on to the Complaint Management System portal (https://cms.rbi.org.in) and go to the tab “Track a complaint”.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q34. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "banking_08",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "question": "In what languages can a complaint be filed under RB-IOS, 2026?",
+      "reference_answer": "The CMS portal enables filing of complaints in Hindi and English. Facts / description of the complaint may be typed, copied or pasted in the description box in any language, subject to the applicable character limit on the portal. Complaints submitted through e-mail or physical mode may be filed in any language.",
+      "expected_sources": [
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+      ],
+      "source_title": "Reserve Bank of India - FAQs on the Reserve Bank - Integrated Ombudsman Scheme, 2026 (1 July 2026)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/RBIOS01072026.pdf",
+      "notes": "RBI 2026 FAQ Q37. Rule unchanged from the 2021 scheme, so the dataset's 2021 scheme can answer it."
+    },
+    {
+      "id": "rti_01",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "Is it required to give any reason for seeking information?",
+      "reference_answer": "The information seeker is not required to give reasons for seeking information.",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q3"
+    },
+    {
+      "id": "rti_02",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "What is the Time Period for Supply of Information?",
+      "reference_answer": "In normal course, information to an applicant shall be supplied within 30 days from the receipt of application by the public authority. If information sought concerns the life or liberty of a person, it shall be supplied within 48 hours. In case the application is sent through the Assistant Public Information Officer or it is sent to a wrong public authority, five days shall be added to the period of thirty days or 48 hours, as the case may be. (Sec 7(1) of RTI Act, 2005).",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q5"
+    },
+    {
+      "id": "rti_03",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "What is the Method of Seeking Information?",
+      "reference_answer": "A citizen who desires to obtain any information under the Act, should make an application to the Public Information Officer of the concerned public authority in writing in English or Hindi or in the official language of the area in which the application is made. The application should be precise and specific. He should make payment of application fee at the time of submitting the application as prescribed in the Fee Rules. Sec 6(1) of RTI Act, 2005).",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q7"
+    },
+    {
+      "id": "rti_04",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "What is the Fee for the BPL applicant for Seeking Information?",
+      "reference_answer": "If the applicant belongs to below poverty line (BPL) category, he is not required to pay any fee. However, he should submit a proof in support of his claim to belong to the below poverty line. (Sec 7(5) of RTI Act, 2005)",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q15"
+    },
+    {
+      "id": "rti_05",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "Is there any specific Format of Application?",
+      "reference_answer": "There is no prescribed format of application for seeking information. The application can be made on plain paper. The application should, however, have the name and complete postal address of the applicant. (Sec 6(1) of RTI Act, 2005 ). Even in cases where the information is sought electronically, the application should contain name and postal address of the applicant.",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q16"
+    },
+    {
+      "id": "rti_06",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "Is there any provision of Appeal under the RTI Act?",
+      "reference_answer": "If an applicant is not supplied information within the prescribed time of thirty days or 48 hours, as the case may be, or is not satisfied with the information furnished to him, he may prefer an appeal to the first appellate authority who is an officer senior in rank to the Public Information Officer. Such an appeal, should be filed within a period of thirty days from the date on which the limit of 30 days of supply of information is expired or from the date on which the information or decision of the Public Information Officer is received. The appellate authority of the public authority shall dispose of the appeal within a period of thirty days or in exceptional cases within 45 days of the receipt of the appeal. (Sec 19(1) of RTI Act, 2005).",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q20"
+    },
+    {
+      "id": "rti_07",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "Is there any scope for second appeal under the RTI Act?",
+      "reference_answer": "If the first appellate authority fails to pass an order on the appeal within the prescribed period or if the appellant is not satisfied with the order of the first appellate authority, he may prefer a second appeal with the Central Information Commission within ninety days from the date on which the decision should have been made by the first appellate authority or was actually received by the appellant. (Sec 19(3) of RTI Act, 2005)",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q21; trimmed: the list of appeal contents that followed was garbled by the PDF's two-column layout"
+    },
+    {
+      "id": "rti_08",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "question": "Is there any organization(s) exempt from providing information under RTI Act?",
+      "reference_answer": "Yes, certain intelligence and security organisations specified in the Second Schedule, are exempted from providing information excepting the information pertaining to the allegations of corruption and human rights violations",
+      "expected_sources": [
+        "The Right to Information Act, 2005"
+      ],
+      "source_title": "RTI Frequently Asked Questions - Delhi Govt (DSCI)",
+      "source_url": "https://dsci.delhi.gov.in/sites/default/files/dsci/rti/faq-rti_0_1.pdf",
+      "notes": "Delhi RTI FAQ Q29"
+    },
+    {
+      "id": "legalaid_01",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Whether one needs to pay for legal services provided by Legal Services Institutions constituted under the Legal Services Authorities Act, 1987?",
+      "reference_answer": "No. Legal services provided by the Legal Services Institutions are completely free of cost to the beneficiary. All costs involved are borne by the Legal Services Institutions.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q9"
+    },
+    {
+      "id": "legalaid_02",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Does one have to pay any charge/fee for acquiring or submitting an application form for free legal aid?",
+      "reference_answer": "No, there is absolutely no charge for getting or submitting an application form for free legal aid.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q10"
+    },
+    {
+      "id": "legalaid_03",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Are there any Helpline Services provided by NALSA for urgent legal assistance?",
+      "reference_answer": "Yes. One can directly contact on NALSA Helpline Toll-Free Number 15100 to seek urgent legal assistance.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q11"
+    },
+    {
+      "id": "legalaid_04",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "How can one approach NALSA/ SLSA/ DLSA/ TLSC/ HCLSC/ SCLSC? Where can an application for legal aid be made?",
+      "reference_answer": "One may approach the NALSA/SLSA/DLSA/TLSC/HCLSC/SCLSC personally; or by post; or through NALSA’s Legal Services Management System (LSMS) portal; or through e-mail. Depending upon the territorial and subject matter jurisdiction of the case, an individual should approach the following appropriate authority: Taluka Legal Services Committee which is in the premises of the Court in that Taluka; or District Legal Services Authority which is in the premises of the District Court in the District Headquarters; or The concerned State Legal Services Authority (as the State Legal Services Authorities maintain a central panel for some categories of cases such as for the Tribunals etc.); The High Court Legal Services Committee which is in the premises of the concerned High Court; or The Supreme Court Legal Services Committee for cases before the Hon’ble Supreme Court. Each District Legal Services Authority, High Court Legal Services Committee and State Legal Services Authority has a Front Office where an application for legal aid can be filed. One can even access and apply on the online portal of NALSA (https://nalsa.gov.in/) or the website of the State Legal Services Authorities. One can also fill up the ready-made form/application form that is available at the nearest Legal Services Institution and submit the same at either the Legal Services Institution physically, or post the application to the Legal Services Institution. One can even make an application in writing on a simple piece of paper with the necessary details such as: name, gender, residential address, employment status, nationality, whether SC/ST (with proof in support), income per annum (with affidavit), the case for which legal aid is required etc. and submit it physically or send by post Another option is to send the application online i.e. by email to NALSA (at nalsa-dla@nic.in). It is also possible to make an application orally – a Paralegal Volunteer or an officer of the concerned Legal Services Institution will assist the person in such cases.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q12"
+    },
+    {
+      "id": "legalaid_05",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Can one choose a lawyer of his choice while availing free legal aid?",
+      "reference_answer": "It is possible to avail the services of a lawyer of one’s choice from the Panel of lawyers empanelled with the Legal Services Institution concerned. According to Regulation 7(6) of the National Legal Services Authority (Free and Competent Legal Services) Regulations 2010, the application for legal services will be scrutinized by the Member-Secretary or the Secretary and if the applicant has mentioned/expressed his/her choice of a lawyer on the panel, such Member-Secretary or Secretary can consider and allow the same. However, it is not mandatory to permit the same.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q13"
+    },
+    {
+      "id": "legalaid_06",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Can one get free legal consultation only, even if one does not want to pursue a proper case in the courts?",
+      "reference_answer": "Yes, it is possible to get legal consultation only (which is covered under “legal advice and assistance”).",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q14"
+    },
+    {
+      "id": "legalaid_07",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Who is eligible to seek legal aid from the Legal Services Institutions under the Legal Services Authorities Act, 1987? What kind of cases can one apply free legal aid for?",
+      "reference_answer": "As per Section 12 of the Legal Services Authorities Act, 1987, every person who has to file or defend a case shall be entitled to legal services under the Act if that person is– A member of a Scheduled Caste or Scheduled Tribe (on producing a certificate in this regard); A victim of trafficking in human beings or begar as referred to in Article 23 of the Constitution of India 1950; A woman or a child; A person with disability as defined in legislations dealing with rights of persons with disabilities; A person under circumstances of underserved want such as being a victim of a mass disaster, ethnic, violence, caste atrocity, flood, drought, earthquake or industrial disaster; An industrial workman; A person in custody, including custody in a protective home within the meaning of clause (g) of Section 2 of the Immoral Traffic (Prevention) Act, 1956 (104 of 1956), or in an observation home, special home, place of safety, children’s home under the juvenile justice laws, or in a psychiatric hospital or psychiatric nursing home under the Mental Healthcare legislations; or Person in receipt of annual income less than Rs. 03 lakh or such other higher amount as may be prescribed by the State Government, if the case is before a court other than the Supreme Court, and less than rupees twelve thousand or such other higher amount as may be prescribed by the Central Government if the case is before the Supreme Court. In addition to these categories, any person falling within criteria specially created by the State- specific Legal Aid Regulations may also get free legal aid. (SEE QUESTION NO. 30.) NALSA also has come up with specific schemes for providing free legal services to its targeted beneficiaries. The schemes are available at https://nalsa.gov.in/acts-rules/preventive-strategic-legal-services-schemes According to Section 13 (1) of the Legal Services Authorities Act, 1987, any individual who satisfies any criteria under Section 12 is entitled to receive legal services, provided that the concerned Legal Services Institution is satisfied that such person has a genuine case to prosecute or defend the matter. There is hence, no bar as to which kind of cases one can apply and not apply for. All kinds of cases are included as long as the individual satisfies the eligibility under Section 12 of the Legal Services Authorities Act, 1987.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q16"
+    },
+    {
+      "id": "legalaid_08",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Whether a financially independent woman is eligible for free legal aid?",
+      "reference_answer": "Yes, a woman is entitled for free legal aid irrespective of her income or financial status. A woman is eligible to apply for free legal aid by virtue of Section 12(c) of the Legal Services Authorities Act, 1987.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q17"
+    },
+    {
+      "id": "legalaid_09",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Till what age is a child eligible for free legal aid?",
+      "reference_answer": "A child is eligible for free legal aid till the age of majority i.e. 18 years. This is provided in Section 12 (c) of the Legal Services Authorities Act, 1987. So, any child can apply for free legal aid till he turns 18 years old. Even on attaining the age of majority, the child can continue to get free legal aid, if she/ he falls within the other criteria enlisted in Section 12 of the Legal Services Authorities Act, 1987.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q18"
+    },
+    {
+      "id": "legalaid_10",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Are Senior Citizens eligible for free legal aid?",
+      "reference_answer": "Senior citizens’ eligibility for free legal aid depends on the rules framed by the respective State Governments in this regard. In Delhi for example, senior citizens are eligible for free legal aid subject to prescribed ceiling of annual income for senior citizens i.e. Rs. 4 lacs per annum. One may look into the specific State regulations on legal services to check eligibility.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q21"
+    },
+    {
+      "id": "legalaid_11",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "question": "Can persons called for questioning at the Police Station or persons arrested by the Police avail free legal aid?",
+      "reference_answer": "Yes, as per NALSA’s Early Access to Justice at Pre-Arrest, Arrest and Remand framework, persons called for questioning i.e. suspects and persons arrested by the police can also avail free legal aid.",
+      "expected_sources": [
+        "The Legal Services Authorities Act, 1987"
+      ],
+      "source_title": "National Legal Services Authority (NALSA) - FAQs",
+      "source_url": "https://nalsa.gov.in/faqs/",
+      "notes": "NALSA FAQ Q27"
+    }
+  ]
+}
