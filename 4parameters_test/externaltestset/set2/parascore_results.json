@@ -1,0 +1,209 @@
+{
+  "metric": "ParaScore reference-free",
+  "model": "bert-base-uncased",
+  "cases_in_file": 36,
+  "cases_scored": 36,
+  "score_used": "adjusted F-score",
+  "overall_mean_parascore_f1": 0.5140406886736552,
+  "domain_means": {
+    "constitutional_public_authority": {
+      "n": 7,
+      "mean_parascore_f1": 0.5403618897710528
+    },
+    "consumer": {
+      "n": 10,
+      "mean_parascore_f1": 0.5265168637037277
+    },
+    "cyber": {
+      "n": 10,
+      "mean_parascore_f1": 0.4497799962759018
+    },
+    "tenancy": {
+      "n": 9,
+      "mean_parascore_f1": 0.5511069960064359
+    }
+  },
+  "results": [
+    {
+      "id": "consumer_01",
+      "domain": "consumer",
+      "parascore_f1": 0.6082829236984253
+    },
+    {
+      "id": "consumer_02",
+      "domain": "consumer",
+      "parascore_f1": 0.6210048794746399
+    },
+    {
+      "id": "consumer_03",
+      "domain": "consumer",
+      "parascore_f1": 0.6026727557182312
+    },
+    {
+      "id": "consumer_04",
+      "domain": "consumer",
+      "parascore_f1": 0.6388753652572632
+    },
+    {
+      "id": "consumer_05",
+      "domain": "consumer",
+      "parascore_f1": 0.5601136088371277
+    },
+    {
+      "id": "consumer_06",
+      "domain": "consumer",
+      "parascore_f1": 0.43987080454826355
+    },
+    {
+      "id": "consumer_07",
+      "domain": "consumer",
+      "parascore_f1": 0.4251335561275482
+    },
+    {
+      "id": "consumer_08",
+      "domain": "consumer",
+      "parascore_f1": 0.43318864703178406
+    },
+    {
+      "id": "consumer_09",
+      "domain": "consumer",
+      "parascore_f1": 0.4700983464717865
+    },
+    {
+      "id": "consumer_10",
+      "domain": "consumer",
+      "parascore_f1": 0.46592774987220764
+    },
+    {
+      "id": "cyber_01",
+      "domain": "cyber",
+      "parascore_f1": 0.4571631848812103
+    },
+    {
+      "id": "cyber_02",
+      "domain": "cyber",
+      "parascore_f1": 0.45408743619918823
+    },
+    {
+      "id": "cyber_03",
+      "domain": "cyber",
+      "parascore_f1": 0.46799832582473755
+    },
+    {
+      "id": "cyber_04",
+      "domain": "cyber",
+      "parascore_f1": 0.4444977939128876
+    },
+    {
+      "id": "cyber_05",
+      "domain": "cyber",
+      "parascore_f1": 0.4544583261013031
+    },
+    {
+      "id": "cyber_06",
+      "domain": "cyber",
+      "parascore_f1": 0.4575352966785431
+    },
+    {
+      "id": "cyber_07",
+      "domain": "cyber",
+      "parascore_f1": 0.4501941204071045
+    },
+    {
+      "id": "cyber_08",
+      "domain": "cyber",
+      "parascore_f1": 0.4422663152217865
+    },
+    {
+      "id": "cyber_09",
+      "domain": "cyber",
+      "parascore_f1": 0.43319183588027954
+    },
+    {
+      "id": "cyber_10",
+      "domain": "cyber",
+      "parascore_f1": 0.43640732765197754
+    },
+    {
+      "id": "tenancy_01",
+      "domain": "tenancy",
+      "parascore_f1": 0.6097528338432312
+    },
+    {
+      "id": "tenancy_02",
+      "domain": "tenancy",
+      "parascore_f1": 0.568477213382721
+    },
+    {
+      "id": "tenancy_03",
+      "domain": "tenancy",
+      "parascore_f1": 0.6291966438293457
+    },
+    {
+      "id": "tenancy_04",
+      "domain": "tenancy",
+      "parascore_f1": 0.6244593262672424
+    },
+    {
+      "id": "tenancy_05",
+      "domain": "tenancy",
+      "parascore_f1": 0.5954678058624268
+    },
+    {
+      "id": "tenancy_06",
+      "domain": "tenancy",
+      "parascore_f1": 0.5819995403289795
+    },
+    {
+      "id": "tenancy_07",
+      "domain": "tenancy",
+      "parascore_f1": 0.44244852662086487
+    },
+    {
+      "id": "tenancy_08",
+      "domain": "tenancy",
+      "parascore_f1": 0.44650840759277344
+    },
+    {
+      "id": "tenancy_09",
+      "domain": "tenancy",
+      "parascore_f1": 0.4616526663303375
+    },
+    {
+      "id": "public_01",
+      "domain": "constitutional_public_authority",
+      "parascore_f1": 0.4215574860572815
+    },
+    {
+      "id": "public_02",
+      "domain": "constitutional_public_authority",
+      "parascore_f1": 0.4150667190551758
+    },
+    {
+      "id": "public_03",
+      "domain": "constitutional_public_authority",
+      "parascore_f1": 0.4544447064399719
+    },
+    {
+      "id": "public_04",
+      "domain": "constitutional_public_authority",
+      "parascore_f1": 0.5758799314498901
+    },
+    {
+      "id": "public_05",
+      "domain": "constitutional_public_authority",
+      "parascore_f1": 0.6815544962882996
+    },
+    {
+      "id": "public_06",
+      "domain": "constitutional_public_authority",
+      "parascore_f1": 0.5975255966186523
+    },
+    {
+      "id": "public_07",
+      "domain": "constitutional_public_authority",
+      "parascore_f1": 0.6365042924880981
+    }
+  ],
+  "note": "ParaScore is a paraphrase-quality/semantic similarity metric. For Legal Aid AI it is supplementary and should not be interpreted as a direct legal-correctness or factual-grounding score."
+}
