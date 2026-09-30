@@ -5,6 +5,7 @@ import {
   Bot,
   BriefcaseBusiness,
   Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
@@ -2790,20 +2791,91 @@ function summaryStatusMessage(status) {
 }
 
 const aboutFeatures = [
-  ['Ask a Question', 'Describe your issue in plain words and get an answer grounded in real legal sources.'],
-  ['My Cases', 'Save a conversation and pick it up again later.'],
-  ['Documents', 'Upload a notice, receipt, or contract and pull out the key facts.'],
-  ['Summarize Document', 'Get a short, plain-language summary of a legal document.'],
-  ['Know Your Rights', 'Browse common rights and the laws behind them, by topic.'],
-  ['Schemes', 'Find government schemes and services you may be able to use.']
+  ['Ask a Question', 'Describe your issue in plain words and get an answer grounded in real legal sources.', MessageCircle, '#/ask'],
+  ['Draft Complaint', 'Generate a ready-to-file complaint or application from a fixed legal template.', Gavel, '#/complaints'],
+  ['My Cases', 'Save a conversation and pick it up again later.', BriefcaseBusiness, '#/cases'],
+  ['Documents', 'Upload a notice, receipt, or contract and pull out the key facts.', FileText, '#/documents'],
+  ['Summarize Document', 'Get a short, plain-language summary of a legal document.', Sparkles, '#/summarize-document'],
+  ['Know Your Rights', 'Browse common rights and the laws behind them, by topic.', ShieldCheck, '#/rights'],
+  ['Schemes', 'Find government schemes and services you may be able to use.', Gift, '#/schemes']
 ];
 
+const aboutStats = [
+  ['5 legal domains covered', Landmark],
+  ['Source-verified answers', ShieldCheck],
+  ['Always free & confidential', LockKeyhole]
+];
+
+const aboutTrustPillars = [
+  ['Acts & Legislation', 'We use applicable Indian legislation and legal documents included in our verified corpus.', Scale],
+  ['Government Sources', 'Where available, we rely on official government portals and public legal resources.', Globe2],
+  ['Source-Backed Answers', 'Answers can include the legal documents and excerpts used by the system.', FileText]
+];
+
+const aboutSourceExamples = [
+  'Consumer Protection Act, 2019',
+  'Constitution of India',
+  'Right to Information Act, 2005',
+  'Legal Services Authorities Act, 1987'
+];
+
+const aboutAudiences = [
+  ['Consumers dealing with defective goods or poor services', ShoppingCart],
+  ['Tenants facing common tenancy-related disputes', Home],
+  ['People trying to understand a legal notice', FileText],
+  ['People looking for information about their legal rights', Scale],
+  ['People looking for information about legal aid and public services', Landmark]
+];
+
+const aboutSteps = [
+  'You describe the problem in your own words.',
+  'We search official legal sources and government material.',
+  'You get a short answer, suggested next steps, and where to go.'
+];
+
+const aboutFaqs = [
+  [
+    'Is Legal Aid AI free?',
+    'Yes. Legal Aid AI is designed to provide accessible legal information without requiring you to consult a lawyer for every basic question.'
+  ],
+  [
+    'Does Legal Aid AI replace a lawyer?',
+    'No. It provides general legal information and guidance. It does not replace a qualified lawyer or represent you in court.'
+  ],
+  [
+    'Can I use it for every legal problem?',
+    'No. The system covers selected legal areas and sources. It may not contain every law, case, or recent amendment.'
+  ],
+  [
+    'Should I rely on its answer for an important legal matter?',
+    'For serious or time-sensitive matters, verify the information with an official source or qualified legal professional.'
+  ]
+];
+
+function AboutFaqItem({ question, answer, isOpen, onToggle }) {
+  return (
+    <div className={`about-faq-item${isOpen ? ' about-faq-item-open' : ''}`}>
+      <button type="button" className="about-faq-question" onClick={onToggle} aria-expanded={isOpen}>
+        <span>{question}</span>
+        <ChevronDown size={18} strokeWidth={2} className="about-faq-chevron" />
+      </button>
+      <div className="about-faq-answer">
+        <div className="about-faq-answer-inner">
+          <p>{answer}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AboutUsPage() {
+  const [openFaqIndex, setOpenFaqIndex] = React.useState(0);
+
   return (
     <>
       <DocumentsBackgroundArt />
       <HeaderControls />
-      <div className="rights-content-frame">
+      <div className="rights-content-frame about-page">
         <header className="documents-page-header">
           <div className="header-ornament-line"><span /><i>◇</i></div>
           <h2>About Us</h2>
@@ -2812,7 +2884,16 @@ function AboutUsPage() {
           <PageDivider />
         </header>
 
-        <section className="rights-panel">
+        <div className="about-stat-row">
+          {aboutStats.map(([label, Icon]) => (
+            <span className="about-stat-chip" key={label}>
+              <Icon size={16} strokeWidth={2} />
+              {label}
+            </span>
+          ))}
+        </div>
+
+        <section className="rights-panel about-lead-panel">
           <h3>What is Legal Aid AI?</h3>
           <p>
             A free tool that explains your legal rights in simple words, helps you prepare
@@ -2822,142 +2903,111 @@ function AboutUsPage() {
         </section>
 
         <section className="rights-panel">
-  <h3>Why Trust This?</h3>
+          <h3>Why Trust This?</h3>
+          <p>
+            Legal Aid AI is designed to ground its answers in a curated legal corpus rather than
+            relying only on general AI knowledge.
+          </p>
 
-  <p>
-    Legal Aid AI is designed to ground its answers in a curated legal
-    corpus rather than relying only on general AI knowledge.
-  </p>
+          <div className="about-pillar-grid">
+            {aboutTrustPillars.map(([title, detail, Icon]) => (
+              <div className="about-pillar-card" key={title}>
+                <span className="rights-mini-icon"><Icon size={22} strokeWidth={1.8} /></span>
+                <h4>{title}</h4>
+                <p>{detail}</p>
+              </div>
+            ))}
+          </div>
 
-  <ul>
-    <li>
-      <strong>Acts and legislation</strong> — We use applicable Indian
-      legislation and legal documents included in our verified corpus.
-    </li>
-
-    <li>
-      <strong>Government sources</strong> — Where available, we rely on
-      official government portals and public legal resources.
-    </li>
-
-    <li>
-      <strong>Source-backed answers</strong> — Answers can include the
-      legal documents and excerpts used by the system.
-    </li>
-  </ul>
-
-  <p>
-    Examples of sources used in the current project include the
-    Consumer Protection Act, 2019, Constitution of India,
-    Right to Information Act, 2005, and Legal Services Authorities
-    Act, 1987.
-  </p>
-</section>
-
-<section className="rights-panel">
-  <h3>Who This Helps</h3>
-
-  <p>
-    Legal Aid AI is designed for people who need to understand a
-    legal issue before deciding what to do next.
-  </p>
-
-  <ul>
-    <li>Consumers dealing with defective goods or poor services</li>
-    <li>Tenants facing common tenancy-related disputes</li>
-    <li>People trying to understand a legal notice</li>
-    <li>People looking for information about their legal rights</li>
-    <li>People looking for information about legal aid and public services</li>
-  </ul>
-</section>
-
-<section className="rights-panel">
-  <h3>Current Coverage</h3>
-
-  <p>
-    Legal Aid AI currently focuses on selected areas of legal
-    information rather than attempting to cover every area of Indian law.
-  </p>
-
-  <ul>
-    <li>Consumer rights and common consumer issues</li>
-    <li>Tenancy-related issues</li>
-    <li>Cyber-related issues</li>
-    <li>Constitutional and public-authority matters</li>
-    <li>Legal aid and access-to-justice resources</li>
-  </ul>
-
-  <p>
-    Coverage may vary by topic and jurisdiction. Additional legal areas
-    and sources may be added as the project develops.
-  </p>
-</section>
+          <p className="about-pill-row-label">Examples of sources used in the current project:</p>
+          <div className="about-pill-row">
+            {aboutSourceExamples.map((source) => (
+              <span className="about-pill" key={source}>{source}</span>
+            ))}
+          </div>
+        </section>
 
         <section className="rights-panel">
-          <h3>What you can do here</h3>
-          <ul>
-            {aboutFeatures.map(([name, detail]) => (
-              <li key={name}><strong>{name}</strong> — {detail}</li>
+          <h3>Who This Helps</h3>
+          <p>
+            Legal Aid AI is designed for people who need to understand a legal issue before
+            deciding what to do next.
+          </p>
+          <ul className="about-icon-list">
+            {aboutAudiences.map(([text, Icon]) => (
+              <li key={text}>
+                <span className="about-icon-list-icon"><Icon size={16} strokeWidth={2} /></span>
+                {text}
+              </li>
             ))}
           </ul>
         </section>
 
         <section className="rights-panel">
-          <h3>How it works</h3>
-          <ol>
-            <li>You describe the problem in your own words.</li>
-            <li>We search official legal sources and government material.</li>
-            <li>You get a short answer, suggested next steps, and where to go.</li>
+          <h3>What You Can Do Here</h3>
+          <p>Tap any of these to go straight there.</p>
+          <div className="about-feature-grid">
+            {aboutFeatures.map(([name, detail, Icon, href]) => (
+              <button
+                type="button"
+                className="about-feature-card"
+                key={name}
+                onClick={() => { window.location.hash = href; }}
+              >
+                <span className="rights-mini-icon"><Icon size={20} strokeWidth={1.8} /></span>
+                <h4>{name}</h4>
+                <p>{detail}</p>
+                <span className="about-feature-card-cta">
+                  Open <ArrowUpRight size={14} strokeWidth={2} />
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="rights-panel">
+          <h3>How It Works</h3>
+          <ol className="about-steps">
+            {aboutSteps.map((step, index) => (
+              <li key={step}>
+                <span className="about-step-number">{index + 1}</span>
+                <p>{step}</p>
+              </li>
+            ))}
           </ol>
         </section>
 
-       <section className="rights-panel">
-  <h3>Privacy & Data</h3>
-
-  <p>
-    We take privacy seriously, especially because legal questions and
-    uploaded documents may contain sensitive information.
-  </p>
-
-  <ul>
-    <li>Only provide information that is necessary for your question.</li>
-    <li>Avoid sharing passwords, financial credentials, or unnecessary personal information.</li>
-    <li>Uploaded documents should be reviewed before submission to remove information you do not want processed.</li>
-  </ul>
-
-  <p>
-    See the project's privacy policy and technical documentation for
-    details about how data is handled.
-  </p>
-</section>
+        <section className="rights-panel">
+          <h3>Privacy &amp; Data</h3>
+          <p>
+            We take privacy seriously, especially because legal questions and uploaded documents
+            may contain sensitive information.
+          </p>
+          <ul>
+            <li>Only provide information that is necessary for your question.</li>
+            <li>Avoid sharing passwords, financial credentials, or unnecessary personal information.</li>
+            <li>Uploaded documents should be reviewed before submission to remove information you do not want processed.</li>
+          </ul>
+          <p>
+            See the project's privacy policy and technical documentation for details about how
+            data is handled.
+          </p>
+        </section>
 
         <section className="rights-panel">
-  <h3>Frequently Asked Questions</h3>
-
-  <h4>Is Legal Aid AI free?</h4>
-  <p>
-    Yes. Legal Aid AI is designed to provide accessible legal information
-    without requiring you to consult a lawyer for every basic question.
-  </p>
-
-  <h4>Does Legal Aid AI replace a lawyer?</h4>
-  <p>
-    No. It provides general legal information and guidance. It does not
-    replace a qualified lawyer or represent you in court.
-  </p>
-
-  <h4>Can I use it for every legal problem?</h4>
-  <p>
-    No. The system covers selected legal areas and sources. It may not
-    contain every law, case, or recent amendment.
-  </p>
-
-  <h4>Should I rely on its answer for an important legal matter?</h4>
-  <p>
-    For serious or time-sensitive matters, verify the information with
-    an official source or qualified legal professional.
-  </p>
-</section>
+          <h3>Frequently Asked Questions</h3>
+          <div className="about-faq-list">
+            {aboutFaqs.map(([question, answer], index) => (
+              <AboutFaqItem
+                key={question}
+                question={question}
+                answer={answer}
+                isOpen={openFaqIndex === index}
+                onToggle={() => setOpenFaqIndex(openFaqIndex === index ? -1 : index)}
+              />
+            ))}
+          </div>
+        </section>
       </div>
     </>
   );

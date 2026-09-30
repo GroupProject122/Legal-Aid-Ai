@@ -3393,6 +3393,293 @@ body.has-custom-cursor textarea {
   line-height: 1.62;
 }
 
+/* --- About Us page --- */
+
+.about-page .about-lead-panel p {
+  font-size: 1.14rem;
+  line-height: 1.55;
+}
+
+.about-stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 20px;
+}
+
+.about-stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  color: var(--mocha);
+  background: rgba(255, 249, 239, 0.78);
+  border: 1px solid rgba(168, 104, 43, 0.34);
+  border-radius: 999px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 6px 14px rgba(70, 42, 19, 0.06);
+}
+
+.about-stat-chip svg {
+  color: var(--caramel);
+  flex-shrink: 0;
+}
+
+.about-pillar-grid,
+.about-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.about-pillar-card,
+.about-feature-card {
+  padding: 20px 16px;
+  text-align: center;
+  background: rgba(255, 249, 239, 0.55);
+  border: 1px solid rgba(179, 125, 57, 0.2);
+  border-radius: 10px;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.about-pillar-card:hover,
+.about-feature-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(168, 104, 43, 0.4);
+  box-shadow: 0 10px 20px rgba(70, 42, 19, 0.09);
+}
+
+.about-pillar-card .rights-mini-icon,
+.about-feature-card .rights-mini-icon {
+  margin: 0 auto 12px;
+}
+
+.about-pillar-card h4,
+.about-feature-card h4 {
+  margin: 0 0 6px;
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  line-height: 1.25;
+}
+
+.about-pillar-card p,
+.about-feature-card p {
+  margin: 0;
+  color: rgba(63, 40, 22, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* .about-feature-card is a <button> (each one navigates to that feature's page), so it needs
+   the usual button resets on top of the shared card look above. */
+.about-feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  font-family: var(--sans);
+  cursor: pointer;
+}
+
+.about-feature-card:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.about-feature-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  color: var(--caramel);
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.86rem;
+}
+
+.about-feature-card-cta svg {
+  transition: transform 160ms ease;
+}
+
+.about-feature-card:hover .about-feature-card-cta svg,
+.about-feature-card:focus-visible .about-feature-card-cta svg {
+  transform: translate(2px, -2px);
+}
+
+.about-pill-row-label {
+  margin: 22px 0 0 !important;
+  color: var(--taupe);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.about-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.about-pill {
+  padding: 6px 14px;
+  color: var(--mocha-soft);
+  background: rgba(245, 229, 199, 0.6);
+  border: 1px solid rgba(201, 143, 75, 0.32);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.about-icon-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-icon-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: rgba(47, 32, 23, 0.84);
+  line-height: 1.45;
+}
+
+.about-icon-list-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-top: 1px;
+  color: var(--mocha);
+  background: rgba(245, 229, 199, 0.72);
+  border: 1px solid rgba(201, 143, 75, 0.32);
+  border-radius: 50%;
+}
+
+.about-steps {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-steps li {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 18px;
+}
+
+.about-steps li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 15px;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--gold-brown), transparent);
+}
+
+.about-step-number {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--cream);
+  background: var(--mocha);
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.about-steps p {
+  margin: 5px 0 0;
+  color: rgba(63, 40, 22, 0.72);
+  line-height: 1.5;
+}
+
+.about-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.about-faq-item {
+  background: rgba(255, 249, 239, 0.55);
+  border: 1px solid rgba(179, 125, 57, 0.22);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.about-faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 18px;
+  color: var(--mocha);
+  background: transparent;
+  border: 0;
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.about-faq-chevron {
+  flex-shrink: 0;
+  color: var(--caramel);
+  transition: transform 200ms ease;
+}
+
+.about-faq-item-open .about-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.about-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 220ms ease;
+}
+
+.about-faq-item-open .about-faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.about-faq-answer-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.about-faq-answer p {
+  margin: 0;
+  padding: 0 18px 16px;
+  color: rgba(63, 40, 22, 0.75);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .about-icon-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 .rights-issue-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
