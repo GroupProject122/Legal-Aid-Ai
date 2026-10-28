@@ -8166,3 +8166,80 @@ body.has-custom-cursor textarea {
   -webkit-line-clamp: 2;
   line-height: 1.3;
 }
+
+/* --- Read answers aloud (speech/ListenControls.jsx), 2026-10-29 --- */
+.listen-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 12px;
+}
+
+.listen-button,
+.listen-rate {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  color: var(--mocha);
+  background: rgba(255, 250, 242, 0.86);
+  border: 1px solid rgba(151, 91, 38, 0.42);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.listen-button:hover,
+.listen-rate:hover {
+  border-color: rgba(139, 82, 31, 0.68);
+}
+
+.listen-button:focus-visible,
+.listen-rate:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.listen-button[aria-pressed='true'],
+.listen-rate[aria-pressed='true'] {
+  color: #fff9ef;
+  background: linear-gradient(160deg, #7a4a26 0%, #5d3219 100%);
+  border-color: rgba(84, 47, 23, 0.5);
+}
+
+.listen-rates {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.listen-rate {
+  min-width: 46px;
+  justify-content: center;
+  padding: 0 8px;
+}
+
+.listen-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--caramel);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* The answer currently being read. */
+.legal-response-card.is-being-read {
+  box-shadow: 0 0 0 2px rgba(179, 125, 57, 0.55), 0 14px 30px rgba(92, 56, 26, 0.12);
+}
+
+@media (max-width: 520px) {
+  .listen-status {
+    flex-basis: 100%;
+  }
+}

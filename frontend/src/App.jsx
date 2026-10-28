@@ -79,6 +79,8 @@ import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
 import { CaseFileButton } from './caseFile/CaseFileButton.jsx';
+import { ListenControls, useSpeechState } from './speech/ListenControls.jsx';
+import { stopSpeech } from './speech/speechController.js';
 
 import { AccountMenu, AuthForm, signInHref, useAuth } from './auth.jsx';
 
@@ -807,7 +809,9 @@ function SourceCard({ source, onClick }) {
 // question text (already on screen) is read; nothing new is sent to or asked of the backend.
 const LEGAL_AID_QUESTION_PATTERN = /legal[\s-]*aid|free\s+(lawyer|advocate|legal\s+(help|services?|advice|representation))|legal\s+services\s+authority|\b(nalsa|dlsa|dslsa)\b/i;
 
-function LegalAIResponse({ response, onSourceClick, question = '' }) {
+function LegalAIResponse({ response, onSourceClick, question = '', speechId = null }) {
+  const speech = useSpeechState();
+  const isBeingRead = speechId !== null && speech.activeId === speechId;
   const answer = response?.answer || {};
   const sources = response?.sources || [];
   const documentEvidence = response?.document_evidence_used || [];
@@ -951,7 +955,7 @@ function LegalAIResponse({ response, onSourceClick, question = '' }) {
       <div className="message-avatar ai-message-avatar" aria-hidden="true">
         <Scale size={21} strokeWidth={1.45} />
       </div>
-      <section className="legal-response-card">
+      <section className={`legal-response-card${isBeingRead ? ' is-being-read' : ''}`}>
         <div className="response-header">
           <div className="response-brand">
             <div className="response-emblem">
@@ -961,6 +965,7 @@ function LegalAIResponse({ response, onSourceClick, question = '' }) {
           </div>
           <span className="response-pill">Legal information</span>
         </div>
+        {speechId !== null ? <ListenControls speechId={speechId} response={response} /> : null}
 
         {/* issue_summary is written as a direct reply to the user's latest message, so it gets
             its own heading rather than sitting under "What this may involve". */}
@@ -1405,13 +1410,13 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
                 ? <UserMessage text={message.text} sequence={message.sequence} highlighted={message.sequence && message.sequence === highlightedSequence} key={message.id} />
                 : message.role === 'assistant_loading'
                   ? <LoadingMessage key={message.id} />
-                : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} question={precedingUserText(messages, index)} key={message.id} />
+                : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} question={precedingUserText(messages, index)} speechId={message.id} key={message.id} />
             ))}
           </>
         )}
       </div>
 
-      <ChatComposer value={input} onChange={setInput} onSubmit={onSubmit} onAttach={onAttach} />
+      <ChatComposer value={input} onChange={setInput} onSubmit={onSubmit} onAttach={onAttach} onVoiceStart={stopSpeech} />
     </section>
   );
 }
@@ -1795,6 +1800,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
   const submitQuestion = async (question) => {
     const text = question.trim();
     if (!text || isLoading) return;
+    stopSpeech(); // a new question always silences the answer being read
 
     window.clearTimeout(loadingTimer.current);
     const activeClarificationStateId = clarificationStateId;
@@ -1873,6 +1879,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
   };
 
   const handleClear = () => {
+    stopSpeech();
     window.clearTimeout(loadingTimer.current);
     setInput('');
     setMessages([]);
@@ -1955,6 +1962,8 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     handleFactsConfirmed
   } = useLegalChat({ initialQuery, initialCaseId });
   const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(initialAttach);
+  // Leaving the Ask page (any other route unmounts it) stops an answer being read aloud.
+  React.useEffect(() => stopSpeech, []);
   const { user, status: authStatus } = useAuth();
 
   return (

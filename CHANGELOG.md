@@ -48,6 +48,47 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Read answers aloud on the Ask page (2026-10-29)
+
+Frontend only: the browser's own `speechSynthesis`, no backend change, no Gemini request.
+
+- **"Listen"** on each full assistant answer (not on clarification questions, technical errors,
+  offline results or one-line acknowledgements). Never auto-plays.
+- **What is read** (`frontend/src/speech/answerToSpeech.js`, pure functions): "In short"
+  (`issue_summary`), then the suggested next steps, then where to approach. Skipped: sources,
+  citation brackets, disclaimers, limitations. URLs and bare official domains are read as "the
+  link shown on screen"; "S. 69"/"Sec."/"Ss."/"u/s"/"r/w"/"Art."/"Reg." are read in full, "Rs.
+  25,000" as "25,000 rupees".
+- **Voice:** an `en-IN` voice if the browser has one, else any English voice (voices load
+  asynchronously; the voice is picked when speaking starts, after `voiceschanged`). Hinglish in
+  Latin letters is passed through as typed.
+- **Controls:** play, pause/resume, stop, speed 0.75x / 1x / 1.25x remembered in `localStorage`
+  (try/catch). The answer being read is outlined and labelled "Reading aloud".
+- **One at a time** (`speech/speechController.js`, a single app-wide speaker). Speech stops when
+  a new question is sent, when voice recording starts (the existing `onVoiceStart` hook, which
+  nothing was wired to before), when the chat is cleared, when leaving the Ask page, and on
+  `pagehide`.
+- **Long answers** are spoken as sentence-sized chunks (max ~200 characters; Chrome cuts off long
+  single utterances). Pause cancels the current chunk and resume re-reads it from its start --
+  more reliable across chunks than `speechSynthesis.pause()`.
+- Hidden when `speechSynthesis` is missing. `aria-label`/`aria-pressed`, keyboard-operable,
+  phone width, light and dark.
+
+**Tests:** `frontend/src/speech/answerToSpeech.test.js`, 14 tests, run with `npm test` (new
+script; Node's built-in `node --test`, no new dependency).
+
+**Checked in Chromium (headless Chrome via DevTools, on a scratch database; no Gemini):** Chrome
+actually speaks (utterance `start`/`end` events) with the en-IN voice "Rishi"; Listen appears on
+the 2 full answers and not on the acknowledgement; nothing auto-plays; keyboard Enter starts it;
+chunks advance; pause stays silent across chunks and resume re-reads the paused chunk; 1.25x is
+applied and stored; Stop works; starting a second answer stops the first; sending a new message,
+starting voice recording, New Question and navigating away each stop speech; no horizontal
+scroll at 390 px; hidden when `speechSynthesis` is removed; no page errors.
+
+**Limitations:** voice quality and availability depend on the operating system's installed
+voices; without an en-IN voice, Indian names and Hinglish are read with another English accent.
+Pause/resume restarts the current sentence rather than the exact word.
+
 ## Unreleased — end-to-end investigation: offline scope gate, retrieval anchor fix, normaliser flag (2026-10-28)
 
 Follow-up to the 42/54 end-to-end result in the post-merge entry below.
