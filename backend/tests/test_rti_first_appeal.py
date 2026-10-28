@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import datetime as real_datetime
 import io
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -15,6 +17,28 @@ import complaint_drafter as drafter
 import main
 
 client = TestClient(main.app)
+
+# "Today" for the lateness tests below. The base intake's application date is 2026-08-01, so the
+# standard 30-day response period expired 2026-08-31 and the appeal window runs to 2026-09-30.
+FROZEN_TODAY = real_datetime.date(2026, 9, 10)
+
+
+@pytest.fixture
+def frozen_today(monkeypatch):
+    """Make complaint_drafter see FROZEN_TODAY as today, without touching the drafter's logic.
+    The lateness check compares against datetime.date.today(), so a test that hard-codes an
+    application date silently flips from "timely" to "late" once enough real days pass -- which
+    is how test_timely_appeal_has_no_lateness_warning started failing on 2026-10-01."""
+
+    class FrozenDate(real_datetime.date):
+        @classmethod
+        def today(cls):
+            return FROZEN_TODAY
+
+    shim = types.SimpleNamespace(**{name: getattr(real_datetime, name) for name in dir(real_datetime) if not name.startswith("__")})
+    shim.date = FrozenDate
+    monkeypatch.setattr(drafter, "datetime", shim)
+    return FROZEN_TODAY
 
 
 def base_intake_kwargs() -> dict:
@@ -142,7 +166,8 @@ def test_request_rejected_includes_pio_response_date():
     assert "20 August 2026" in joined
 
 
-def test_late_appeal_gets_lateness_warning():
+def test_late_appeal_gets_lateness_warning(frozen_today):
+    # Deemed refusal 2026-07-31; 41 days before FROZEN_TODAY -> outside the 30-day window.
     intake = drafter.RTIFirstAppealIntake(**{**base_intake_kwargs(), "original_application_date": "2026-07-01"})
     result = drafter.assemble_rti_first_appeal_draft(intake)
     assert any("more than 30 days" in w for w in result.warnings)
@@ -150,7 +175,8 @@ def test_late_appeal_gets_lateness_warning():
     assert any("condone the delay" in p for p in paragraphs)
 
 
-def test_timely_appeal_has_no_lateness_warning():
+def test_timely_appeal_has_no_lateness_warning(frozen_today):
+    # Deemed refusal 2026-08-31; 10 days before FROZEN_TODAY -> inside the 30-day window.
     intake = drafter.RTIFirstAppealIntake(**base_intake_kwargs())
     result = drafter.assemble_rti_first_appeal_draft(intake)
     assert not any("more than 30 days" in w for w in result.warnings)

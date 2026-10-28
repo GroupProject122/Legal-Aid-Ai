@@ -3,18 +3,14 @@
 Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives in
 [`frontend/CHANGELOG.md`](frontend/CHANGELOG.md).
 
-> **Known pre-existing test failure (not caused by any change in this file) —
-> `tests/test_rti_first_appeal.py::test_timely_appeal_has_no_lateness_warning`, confirmed
-> 2026-10-28.** The test hardcodes `original_application_date="2026-08-01"` and asserts no
-> "more than 30 days" lateness warning appears. `complaint_drafter.py`'s
-> `assemble_rti_first_appeal_draft()` compares that date + 30 days against **today's real date**
-> (`datetime.date.today()`), not a fixed/mocked one. As real time passes the hardcoded date, the
-> warning correctly starts firing and the test starts failing — pure test-data rot, unrelated to
-> routing, clarification, retrieval, or anything else changed recently. Fix: make the test compute
-> its date relative to `datetime.date.today()` (e.g. `today - timedelta(days=5)`) instead of a
-> fixed calendar date, so it stays "recent" indefinitely. Not fixed here — out of scope for the
-> Hinglish/voice work below — but recorded so every future "1 failed" isn't re-investigated from
-> scratch.
+> **Fixed 2026-10-28 — date-dependent test failure**
+> `tests/test_rti_first_appeal.py::test_timely_appeal_has_no_lateness_warning` hard-coded
+> `original_application_date="2026-08-01"` while `complaint_drafter.py` compares against the real
+> `datetime.date.today()`, so it started failing once real time passed the 30-day appeal window
+> (pure test-data rot). The test (and its counterpart `test_late_appeal_gets_lateness_warning`)
+> now take a `frozen_today` fixture that pins the drafter's "today" to 2026-09-10 by swapping the
+> `datetime` module the drafter sees; the drafter's logic is unchanged. Checked that moving the
+> frozen date past the window makes the timely test fail, so the fixture is what controls it.
 
 > **Known limitation (retrieval, `backend/rag.py`) — domain-signal cue gap, not fixed, found
 > 2026-09-14/15.** `detect_domain_signals()` (which drives `production_candidate_k()`'s
