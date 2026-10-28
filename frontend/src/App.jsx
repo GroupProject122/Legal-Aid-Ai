@@ -26,6 +26,7 @@ import {
   Landmark,
   Lightbulb,
   ListChecks,
+  LoaderCircle,
   LockKeyhole,
   MessageCircle,
   Mic,
@@ -42,6 +43,7 @@ import {
   ShieldCheck,
   ShoppingCart,
   Sparkles,
+  Square,
   Star,
   Tags,
   Trash2,
@@ -903,7 +905,194 @@ function LoadingMessage() {
   );
 }
 
-function ChatComposer({ value, onChange, onSubmit, onAttach }) {
+const MIC_MIME_CANDIDATES = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+const MIC_MAX_RECORDING_MS = 60000;
+const VOICE_PRIVACY_NOTE_KEY = 'legalAidVoicePrivacyNoteShown';
+
+function pickMicRecordingMimeType() {
+  if (typeof MediaRecorder === 'undefined' || !MediaRecorder.isTypeSupported) return '';
+  return MIC_MIME_CANDIDATES.find((type) => MediaRecorder.isTypeSupported(type)) || '';
+}
+
+function getSpeechRecognitionConstructor() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function hasSeenVoicePrivacyNote() {
+  try {
+    return window.localStorage.getItem(VOICE_PRIVACY_NOTE_KEY) === '1';
+  } catch (error) {
+    return true; // storage unavailable -- don't nag every click, just skip the note
+  }
+}
+
+function markVoicePrivacyNoteSeen() {
+  try {
+    window.localStorage.setItem(VOICE_PRIVACY_NOTE_KEY, '1');
+  } catch (error) {
+    // storage unavailable -- nothing to persist, the note will just show again next time
+  }
+}
+
+function ChatComposer({ value, onChange, onSubmit, onAttach, onVoiceStart }) {
+  // idle -> recording -> transcribing -> idle (or back to idle with an error shown).
+  // "recording" covers both our own MediaRecorder capture and the browser-speech-recognition
+  // fallback (see runBrowserSpeechFallback) -- the button looks and behaves the same either way.
+  const [micState, setMicState] = React.useState('idle');
+  const [micError, setMicError] = React.useState('');
+  const [micNotice, setMicNotice] = React.useState('');
+  const mediaRecorderRef = React.useRef(null);
+  const audioChunksRef = React.useRef([]);
+  const streamRef = React.useRef(null);
+  const speechRecognitionRef = React.useRef(null);
+  const micErrorTimerRef = React.useRef(null);
+  const micNoticeTimerRef = React.useRef(null);
+  const recordingTimeoutRef = React.useRef(null);
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  React.useEffect(() => () => {
+    window.clearTimeout(micErrorTimerRef.current);
+    window.clearTimeout(micNoticeTimerRef.current);
+    window.clearTimeout(recordingTimeoutRef.current);
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    speechRecognitionRef.current?.stop();
+  }, []);
+
+  const showMicError = (message) => {
+    setMicError(message);
+    setMicNotice('');
+    setMicState('idle');
+    window.clearTimeout(micErrorTimerRef.current);
+    micErrorTimerRef.current = window.setTimeout(() => setMicError(''), 6000);
+  };
+
+  const showMicNotice = (message, durationMs = 8000) => {
+    setMicNotice(message);
+    window.clearTimeout(micNoticeTimerRef.current);
+    micNoticeTimerRef.current = window.setTimeout(() => setMicNotice(''), durationMs);
+  };
+
+  const appendTranscript = (transcript) => {
+    const trimmed = (transcript || '').trim();
+    if (!trimmed) return;
+    const current = valueRef.current;
+    onChange(current ? `${current} ${trimmed}` : trimmed);
+  };
+
+  const runBrowserSpeechFallback = () => {
+    const SpeechRecognitionCtor = getSpeechRecognitionConstructor();
+    if (!SpeechRecognitionCtor) {
+      showMicError('Voice transcription is temporarily unavailable. Please try again or type your question.');
+      return;
+    }
+    try {
+      const recognition = new SpeechRecognitionCtor();
+      recognition.lang = 'en-IN';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = (event) => {
+        appendTranscript(event.results?.[0]?.[0]?.transcript);
+      };
+      recognition.onerror = () => {
+        showMicError("Could not use your browser's voice recognition either. Please type your question.");
+      };
+      recognition.onend = () => {
+        speechRecognitionRef.current = null;
+        setMicState((current) => (current === 'recording' ? 'idle' : current));
+      };
+      speechRecognitionRef.current = recognition;
+      recognition.start();
+      setMicState('recording');
+      showMicNotice("Gemini voice service is busy, so this is using your browser's built-in recognition instead. Please speak again.", 10000);
+    } catch (error) {
+      showMicError("Could not start your browser's voice recognition. Please type your question.");
+    }
+  };
+
+  const sendForTranscription = async (blob) => {
+    setMicState('transcribing');
+    try {
+      const formData = new FormData();
+      formData.append('file', blob, 'question.webm');
+      const response = await fetch('/api/transcribe', { method: 'POST', body: formData });
+      if (response.status === 503) {
+        runBrowserSpeechFallback();
+        return;
+      }
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.detail || 'Could not transcribe that recording.');
+      }
+      appendTranscript(payload?.transcript);
+      setMicState('idle');
+    } catch (error) {
+      showMicError(error.message || 'Could not transcribe that recording.');
+    }
+  };
+
+  const startRecording = async () => {
+    setMicError('');
+    if (typeof MediaRecorder === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+      showMicError('Voice input is not supported in this browser.');
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      onVoiceStart?.();
+      streamRef.current = stream;
+      const mimeType = pickMicRecordingMimeType();
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) audioChunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => {
+        window.clearTimeout(recordingTimeoutRef.current);
+        streamRef.current?.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+        const recordedBlob = new Blob(audioChunksRef.current, { type: recorder.mimeType || mimeType || 'audio/webm' });
+        audioChunksRef.current = [];
+        sendForTranscription(recordedBlob);
+      };
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setMicState('recording');
+      if (!hasSeenVoicePrivacyNote()) {
+        markVoicePrivacyNoteSeen();
+        showMicNotice("Your voice is sent to Google's Gemini AI to turn it into text. It isn't saved or stored.");
+      }
+      // Browsers (and this app's own backend limit) don't expect a long voice question --
+      // auto-stop so a forgotten-open mic doesn't record indefinitely.
+      recordingTimeoutRef.current = window.setTimeout(() => {
+        if (mediaRecorderRef.current?.state === 'recording') {
+          mediaRecorderRef.current.stop();
+        }
+      }, MIC_MAX_RECORDING_MS);
+    } catch (error) {
+      showMicError('Microphone access was denied. Please type your question instead.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (speechRecognitionRef.current) {
+      speechRecognitionRef.current.stop();
+      return;
+    }
+    mediaRecorderRef.current?.stop();
+  };
+
+  const handleMicClick = () => {
+    if (micState === 'recording') {
+      stopRecording();
+    } else if (micState === 'idle') {
+      startRecording();
+    }
+  };
+
+  const micLabel =
+    micState === 'recording' ? 'Stop recording' : micState === 'transcribing' ? 'Transcribing your question' : 'Use microphone';
+
   return (
     <form className="chat-composer" onSubmit={onSubmit}>
       <button type="button" className="composer-icon-button" aria-label="Attach document" onClick={onAttach}>
@@ -918,9 +1107,29 @@ function ChatComposer({ value, onChange, onSubmit, onAttach }) {
         rows={1}
         aria-label="Describe your legal issue"
       />
-      <button type="button" className="composer-icon-button" aria-label="Use microphone">
-        <Mic size={24} strokeWidth={1.7} />
-      </button>
+      <div className="composer-mic-wrap">
+        {micError ? (
+          <span className="composer-mic-error" role="status">{micError}</span>
+        ) : micNotice ? (
+          <span className="composer-mic-notice" role="status">{micNotice}</span>
+        ) : null}
+        <button
+          type="button"
+          className={`composer-icon-button ${micState === 'recording' ? 'composer-mic-recording' : ''}`}
+          aria-label={micLabel}
+          title={micLabel}
+          onClick={handleMicClick}
+          disabled={micState === 'transcribing'}
+        >
+          {micState === 'transcribing' ? (
+            <LoaderCircle size={24} strokeWidth={1.7} className="composer-mic-spin" />
+          ) : micState === 'recording' ? (
+            <Square size={20} strokeWidth={1.7} />
+          ) : (
+            <Mic size={24} strokeWidth={1.7} />
+          )}
+        </button>
+      </div>
       <button type="submit" className="ask-button composer-submit">
         <Send size={18} strokeWidth={1.8} />
         <span>Ask AI</span>

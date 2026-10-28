@@ -4,6 +4,71 @@ Notes on notable frontend changes so the team can see what moved and why.
 Entries up to and including 2026-09-06 only touch `frontend/src/App.jsx` and
 `frontend/src/styles.css`; later entries may add new files (noted per entry).
 
+## 2026-10-28 — Ask page microphone wired up
+
+The Ask page's mic button (`ChatComposer` in `App.jsx`) existed in the UI already but had no
+`onClick` — clicking it did nothing. It's now wired to actually record and transcribe a spoken
+question, via the new backend endpoint in the root `CHANGELOG.md`'s "Voice input" entry.
+
+- **Flow:** click mic → browser's `getUserMedia({ audio: true })` prompts for mic permission →
+  `MediaRecorder` records (preferring `audio/webm;codecs=opus`, falling back through `audio/webm`
+  / `audio/mp4` / the browser default via `MediaRecorder.isTypeSupported`) → click again (now
+  labelled "Stop recording") to stop → the recorded blob is POSTed to `/api/transcribe` → on
+  success the transcript is inserted into the question textbox (appended to anything already
+  typed, not auto-submitted) so the user can review or edit it before pressing "Ask AI" — voice
+  input never bypasses that review step.
+- **States:** idle (mic icon) → recording (stop-square icon, pulsing red, `aria-label="Stop
+  recording"`) → transcribing (spinning loader icon, button disabled) → back to idle. Recording
+  stream tracks are always released (`stream.getTracks().forEach(track => track.stop())`) on
+  stop, including on unmount.
+- **Fails safe, visibly:** unsupported browser (`MediaRecorder` missing), denied mic permission,
+  or a failed/empty-result transcription all show a small inline error bubble above the mic
+  button (`"Microphone access was denied. Please type your question instead."`, etc.), auto-
+  clearing after 6 seconds, and the button always returns to idle so typing still works. No
+  `alert()`/`confirm()` — the viewer can't rely on those being reliable across browsers, and an
+  inline message fits this app's existing style better.
+- **Bug found and fixed during live verification:** the recording-state red styling
+  (`.composer-mic-recording`) was being silently overridden by the plain
+  `.composer-icon-button:hover`/`:focus-visible` rule, because both were single-class selectors
+  of equal specificity and the button is focused right after being clicked — so the pulsing red
+  state never actually appeared, even though the right class was applied. Fixed by scoping the
+  recording-state rule to `.composer-icon-button.composer-mic-recording` (and its own `:hover`/
+  `:focus-visible` variants) so it wins regardless of focus state. Confirmed via
+  `getComputedStyle()` in a live Playwright run, before and after the fix.
+- **Live-verified with a real (fake-device) microphone**, not just unit-tested: Playwright +
+  Chromium's `--use-fake-device-for-media-stream` / `--use-file-for-fake-audio-capture=<wav>`
+  flags fed a synthesized Hinglish recording into a real `getUserMedia()` call, through the actual
+  mic button, through `/api/transcribe`, back into the textbox — confirmed Latin-letter Hinglish
+  text appeared, not Devanagari. Also confirmed the denied-permission path end-to-end
+  (`--deny-permission-prompts`, no grant): the inline error appeared and the button returned to
+  idle. `npm run build` stayed clean throughout.
+- **60-second recording cap:** a recording auto-stops after `MIC_MAX_RECORDING_MS` (60000) if the
+  user doesn't click stop themselves, matching the backend's 2 MB limit (see root `CHANGELOG.md`)
+  so a forgotten-open mic can't record indefinitely or produce a clip the backend would reject.
+- **First-use privacy note:** the first time ever (tracked via a `localStorage` flag, read/write
+  both wrapped in `try`/`catch` since storage can be unavailable — a private window, blocked site
+  data — in which case the note just shows again next time rather than crashing) a recording
+  successfully starts, a one-time note appears next to the mic button: *"Your voice is sent to
+  Google's Gemini AI to turn it into text. It isn't saved or stored."* It auto-clears after 8
+  seconds and never shows again on that browser. Live-verified via Playwright: shown on first use,
+  absent on second use in the same (non-cleared) browser storage.
+- **Browser `en-IN` speech-recognition fallback on a 503:** if `/api/transcribe` returns 503
+  (Gemini itself is unavailable — see root `CHANGELOG.md`'s "Why 503 is its own status"), the mic
+  button doesn't just fail — it starts the browser's own `SpeechRecognition`/
+  `webkitSpeechRecognition` API with `lang = "en-IN"`, shows a notice explaining the switch
+  ("Gemini voice service is busy, so this is using your browser's built-in recognition instead.
+  Please speak again."), and the user speaks their question a second time, live, into that engine
+  instead. If the browser has no `SpeechRecognition` API at all, it falls back further to the
+  normal inline error message. `stopRecording()` now stops whichever engine is active (our own
+  `MediaRecorder` or the browser's `SpeechRecognition`), and both are stopped on unmount.
+  **Live-verified the detection and hand-off** (route-intercepted a real 503 response and
+  confirmed the fallback notice appeared, `SpeechRecognition.start()` was reached, and the button
+  entered the correct "listening" state) — **not** independently verified that Chromium's bundled
+  speech backend in this sandboxed test environment actually returns a recognized transcript
+  end-to-end (Playwright's Chromium build doesn't ship the API keys a full Chrome install has for
+  its speech service), so real recognition quality from this fallback needs a check in an actual
+  Chrome/Edge browser — see the new manual checklist in `backend/docs/`.
+
 ## 2026-10-28 — New Helplines page, voice-mic hint, shared page chrome extracted
 
 ### Helplines page (`#/helplines`)

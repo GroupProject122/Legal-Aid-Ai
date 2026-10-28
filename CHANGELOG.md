@@ -39,6 +39,98 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Voice input: `voice_transcription.py` + `POST /api/transcribe` (2026-10-28)
+
+**What:** a new backend endpoint so the Ask page's microphone button (previously present in the
+UI but unwired — `aria-label="Use microphone"` with no `onClick`) can turn a spoken question into
+text. Frontend wiring is in `frontend/CHANGELOG.md`.
+
+**Model/SDK check (done first, per the task spec, before building anything):** confirmed live
+that `gemini-flash-lite-latest` (the model this app already uses) and `google-genai` 1.43.0 (the
+installed SDK version) both accept audio input directly, via
+`types.Part.from_bytes(data=..., mime_type="audio/wav")` passed alongside a text prompt to
+`generate_content()`. No model change was needed.
+
+**New file `backend/voice_transcription.py`:** `transcribe_audio(content: bytes, mime_type: str)`
+sends the audio to Gemini with a prompt that requires **Latin-letter output only, even for Hindi
+speech** — this app's entire pipeline (routing, retrieval, `query_normalizer.py`) is built around
+Hinglish written in Latin letters, never Devanagari, so a Devanagari transcript would silently
+break every downstream step. The prompt instruction alone isn't trusted, though —
+`query_normalizer.py` already showed Gemini isn't fully deterministic at `temperature=0` — so the
+transcript is checked programmatically (`contains_devanagari()`, a `ऀ-ॿ` regex) and, if
+it still contains Devanagari, **retried once** with a more forceful prompt; if it's still
+Devanagari after the retry, transcription fails safely rather than handing Devanagari text to a
+pipeline that can't handle it.
+
+Validates content type (`ALLOWED_AUDIO_MIME_TYPES`: wav, webm, mp4/m4a/aac, mp3, ogg) and size
+(`MAX_AUDIO_SIZE_MB`, new `config.py` constant, **2 MB** — comfortably above a 60-second
+opus/webm clip at typical voice bitrates, see the frontend entry for the matching 60-second
+recording cap) before calling Gemini. Raises three distinct error types the endpoint maps to three
+different HTTP statuses: `VoiceTranscriptionError` for a request-shape problem (→ 400);
+`VoiceServiceUnavailableError` if Gemini itself failed to respond — timeout, API/quota error, or
+no API key configured (→ 503, see below for why this status matters); or a plain `RuntimeError`
+with a safe, user-facing message if Gemini responded but the result wasn't usable — no speech
+detected, or still Devanagari after the retry (→ 422). Never returns a blank or Devanagari
+transcript.
+
+**Privacy (explicit task requirement):** audio bytes are read into memory via `UploadFile.read()`
+and never written to disk or any store — there is no file-write code path in
+`voice_transcription.py` or the new endpoint. The transcript text itself is never logged; the one
+log line in `transcribe_audio()` records only byte size, mime type, latency, and transcript
+*character count* — never the transcript content.
+
+**New endpoint in `main.py`:** `POST /api/transcribe` (`UploadFile`), same shape as the existing
+`/api/documents/extract` upload endpoint. Maps `VoiceTranscriptionError` → 400,
+`VoiceServiceUnavailableError` → 503, plain `RuntimeError` → 422, anything unexpected → 500 with a
+generic message (matching the existing document-extraction endpoint's error-handling pattern).
+
+**Why 503 is its own status, not folded into 422:** the frontend treats them differently. A 503
+means *our* transcription service is the problem (Gemini down/timed out/no key) — in that case the
+Ask page's mic button falls back to the browser's own built-in speech recognition (`en-IN`) instead
+of just failing. A 422 means Gemini responded fine but the audio itself didn't produce a usable
+result (silence, or Devanagari that survived the retry) — no fallback would help there, so the
+user just sees a clear message. See `frontend/CHANGELOG.md` for the fallback itself.
+
+**Tests:** 21 backend tests — `tests/test_voice_transcription.py` (17: mime-type validation,
+size/empty/unsupported-format rejection, no-API-key → `VoiceServiceUnavailableError`, successful
+transcription via a mocked Gemini client, the Devanagari-detected-and-retried-successfully path,
+the still-Devanagari-after-retry path (asserts Gemini is called exactly twice, never more), that an
+already-Latin transcript does **not** trigger a second Gemini call, `VoiceServiceUnavailableError`
+on a Gemini timeout/API error vs plain `RuntimeError` on an invalid/empty result, and that a mime
+type with codec parameters like `audio/webm;codecs=opus` is stripped before being passed to
+Gemini) and `tests/test_transcribe_endpoint.py` (4, via `TestClient`: success, 400 on a bad
+request shape, 422 on a transcription failure, 503 on a service-unavailable failure). Full suite:
+618 passed, same 1 pre-existing unrelated failure as before this change (see the "pre-existing
+failure" note added to this file's top for what that is).
+
+**Manual test checklist:** `backend/docs/VOICE_INPUT_MANUAL_TEST_CHECKLIST.md` — 15 specific
+clips to speak through by hand in a real browser with a real microphone (plain English, Hinglish,
+actual spoken Hindi, silence, very short, very long, background noise, denied permission, closing
+the tab mid-recording, the 60-second auto-stop, and cross-browser), plus a note on manually
+forcing the 503 path. Needed because this environment has no microphone or human speaker to
+verify transcription *quality* with — only the plumbing could be automated-tested.
+
+**Live-verified, not just unit-tested:** called the real endpoint (`TestClient`, no mocking) with
+a synthesized WAV recording of "mera landlord deposit nahi de raha" (macOS `say` → `afconvert` to
+16-bit/16kHz PCM WAV) and got back `"mera landlord deposit nahi de raha hai"` — correct Latin-letter
+Hinglish, not Devanagari, not a translation. Also drove the actual browser UI end-to-end with
+Playwright + Chromium's fake-audio-device flags (`--use-fake-device-for-media-stream`,
+`--use-file-for-fake-audio-capture=<wav>`) playing that same recording into a real `getUserMedia()`
+call — see `frontend/CHANGELOG.md` for what that caught (a real CSS bug) and confirmed. Also
+live-tested the mocked-503 path end-to-end (route interception, not a mocked function): confirmed
+the frontend's `en-IN` fallback is actually triggered and `SpeechRecognition.start()` is actually
+called with the right language — see the frontend entry's "Known limitation" for what that test
+could and couldn't confirm about the fallback's actual recognition quality.
+
+**Known limitations:**
+- Transcription accuracy on real human speech (as opposed to this session's synthesized-voice test
+  recording) was not separately measured — no microphone/human speaker was available in this
+  environment. The model/SDK capability and the full plumbing (browser → endpoint → Gemini → text
+  back in the Ask box) are confirmed working; transcription *quality* on real voices, accents, and
+  background noise is unverified — see the new manual test checklist above.
+- The 2 MB / 60-second limits are not load-tested against a genuinely long or large recording in a
+  real browser (only unit-tested against raw byte counts) — checklist item #14 covers this.
+
 ## Unreleased — Hinglish retrieval fix: `query_normalizer.py` (2026-10-28)
 
 **Bug confirmed:** `EMBEDDING_MODEL` (`sentence-transformers/all-MiniLM-L6-v2`) is English-only,

@@ -26,6 +26,7 @@ import fact_sufficiency
 import grounded_answer
 import legal_education
 import query_normalizer
+import voice_transcription
 from config import DISCLAIMER, FRONTEND_ORIGINS, LLM_PROVIDER
 from rag import (
     ConfigurationError,
@@ -526,6 +527,25 @@ async def extract_uploaded_document(file: UploadFile = File(...)) -> dict:
     except Exception as exc:
         logger.exception("Unexpected document extraction error")
         raise HTTPException(status_code=500, detail="Legal Aid AI could not extract text from this document right now.") from exc
+
+
+@app.post("/api/transcribe")
+async def transcribe_voice_question(file: UploadFile = File(...)) -> dict:
+    # Audio is read into memory only and never written to disk or any store -- see
+    # voice_transcription.py's module docstring.
+    try:
+        content = await file.read(voice_transcription.max_audio_bytes() + 1)
+        transcript = voice_transcription.transcribe_audio(content, file.content_type or "")
+        return {"transcript": transcript}
+    except voice_transcription.VoiceTranscriptionError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except voice_transcription.VoiceServiceUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Unexpected voice transcription error")
+        raise HTTPException(status_code=500, detail="Legal Aid AI could not transcribe that recording right now.") from exc
 
 
 @app.post("/api/documents/extract-facts")
