@@ -10,7 +10,7 @@ from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import clarification
@@ -27,6 +27,7 @@ import document_summarizer
 import domain_router
 import fact_sufficiency
 import grounded_answer
+import legal_aid_eligibility
 import legal_education
 import query_normalizer
 import scam_checker
@@ -481,6 +482,28 @@ async def scam_check(request: Request) -> dict:
         return scam_checker.check_message(message).to_dict()
     except scam_checker.ScamCheckInputError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from None
+
+
+@app.post("/api/legal-aid/eligibility")
+async def legal_aid_eligibility_endpoint(request: Request) -> JSONResponse:
+    # Parsed by hand, like /api/scam-check, for the same reason: the answers include caste,
+    # disability, HIV status and income, and the global RequestValidationError handler would log
+    # pydantic's error text (which carries the input). Nothing here is logged or stored, on the
+    # success path or the error path.
+    try:
+        payload = json.loads(await request.body() or b"null")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    if not isinstance(payload, dict):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    try:
+        answers = legal_aid_eligibility.EligibilityRequest.model_validate(payload)
+    except ValidationError as exc:
+        return JSONResponse(
+            status_code=422,
+            content={"detail": "Some answers need fixing.", "errors": legal_aid_eligibility.validation_errors(exc)},
+        )
+    return JSONResponse(content=legal_aid_eligibility.check_eligibility(answers).to_dict())
 
 
 @app.post("/api/ask")

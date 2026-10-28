@@ -20,6 +20,7 @@ import {
   Gavel,
   Gift,
   Globe2,
+  HandHelping,
   HardDrive,
   Home,
   Info,
@@ -71,6 +72,7 @@ import { ApiError, postMatch } from './schemes/api.js';
 import { ScenarioPicker, SCENARIOS } from './complaints/ScenarioPicker.jsx';
 import Helplines from './helplines/Helplines.jsx';
 import ScamCheck from './scamcheck/ScamCheck.jsx';
+import LegalAidCheck from './legalaid/LegalAidCheck.jsx';
 import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
@@ -86,6 +88,7 @@ const navItems = [
   { label: 'Know Your Rights', icon: ShieldCheck, page: 'rights', href: '#/rights' },
   { label: 'Schemes', icon: Gift, page: 'schemes', href: '#/schemes' },
   { label: 'Check a Message', icon: ScanSearch, page: 'scam-check', href: '#/scam-check' },
+  { label: 'Free Legal Aid Check', icon: HandHelping, page: 'legal-aid', href: '#/legal-aid' },
   { label: 'Helplines', icon: Phone, page: 'helplines', href: '#/helplines' },
   { label: 'About Us', icon: CircleHelp, page: 'about', href: '#/about' }
 ];
@@ -138,6 +141,13 @@ const features = [
     button: 'Check Now',
     icon: ScanSearch,
     href: '#/scam-check'
+  },
+  {
+    title: 'Free Legal Aid Check',
+    description: 'See if you qualify for a free lawyer, and where to apply.',
+    button: 'Check Now',
+    icon: HandHelping,
+    href: '#/legal-aid'
   },
   {
     title: 'Helplines',
@@ -710,6 +720,13 @@ async function parseAskResponse(response) {
   return payload;
 }
 
+function precedingUserText(messages, index) {
+  for (let i = index - 1; i >= 0; i -= 1) {
+    if (messages[i].role === 'user') return messages[i].text || '';
+  }
+  return '';
+}
+
 function SourceCard({ source, onClick }) {
   const detail = [cleanDisplayText(source.section), source.page ? `Page ${source.page}` : null].filter(Boolean).join(' · ');
   const documentTitle = cleanDisplayText(source.document);
@@ -726,7 +743,11 @@ function SourceCard({ source, onClick }) {
   );
 }
 
-function LegalAIResponse({ response, onSourceClick }) {
+// Matches a question that asks about free legal aid or a free lawyer. Only the user's own
+// question text (already on screen) is read; nothing new is sent to or asked of the backend.
+const LEGAL_AID_QUESTION_PATTERN = /legal[\s-]*aid|free\s+(lawyer|advocate|legal\s+(help|services?|advice|representation))|legal\s+services\s+authority|\b(nalsa|dlsa|dslsa)\b/i;
+
+function LegalAIResponse({ response, onSourceClick, question = '' }) {
   const answer = response?.answer || {};
   const sources = response?.sources || [];
   const documentEvidence = response?.document_evidence_used || [];
@@ -740,6 +761,8 @@ function LegalAIResponse({ response, onSourceClick }) {
   // Purely a read of the routing field the backend already returns with every answer -- no
   // change to the answer pipeline itself. Only shown on a real answer, not mid-clarification.
   const isCyberRouted = (response?.routing?.domains || []).includes('cyber');
+  const isLegalAidQuestion = (response?.routing?.domains || []).includes('constitutional_public_authority')
+    && LEGAL_AID_QUESTION_PATTERN.test(question);
 
   if (response?.technical_error) {
     return (
@@ -883,6 +906,13 @@ function LegalAIResponse({ response, onSourceClick }) {
           <a className="response-cyber-hint" href="#/helplines">
             <Phone size={14} strokeWidth={2} />
             Lost money to online fraud? Call 1930 as soon as possible.
+          </a>
+        ) : null}
+
+        {!clarificationQuestion && isLegalAidQuestion ? (
+          <a className="response-cyber-hint" href="#/legal-aid">
+            <HandHelping size={14} strokeWidth={2} />
+            Check if you qualify for free legal aid
           </a>
         ) : null}
 
@@ -1195,12 +1225,12 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
           <WelcomeState onSelectExample={onExample} />
         ) : (
           <>
-            {messages.map((message) => (
+            {messages.map((message, index) => (
               message.role === 'user'
                 ? <UserMessage text={message.text} key={message.id} />
                 : message.role === 'assistant_loading'
                   ? <LoadingMessage key={message.id} />
-                : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} key={message.id} />
+                : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} question={precedingUserText(messages, index)} key={message.id} />
             ))}
           </>
         )}
@@ -2944,7 +2974,8 @@ const aboutFeatures = [
   ['Summarize Document', 'Get a short, plain-language summary of a legal document.', Sparkles, '#/summarize-document'],
   ['Know Your Rights', 'Browse common rights and the laws behind them, by topic.', ShieldCheck, '#/rights'],
   ['Schemes', 'Find government schemes and services you may be able to use.', Gift, '#/schemes'],
-  ['Check a Message', 'Paste a suspicious SMS or WhatsApp message to spot common scam warning signs.', ScanSearch, '#/scam-check']
+  ['Check a Message', 'Paste a suspicious SMS or WhatsApp message to spot common scam warning signs.', ScanSearch, '#/scam-check'],
+  ['Free Legal Aid Check', 'Answer a few questions to see if you qualify for a free lawyer, and where to apply.', HandHelping, '#/legal-aid']
 ];
 
 const aboutStats = [
@@ -4737,7 +4768,9 @@ export default function App() {
                     ? 'helplines'
                     : routeSegments[0] === 'scam-check'
                       ? 'scam-check'
-                      : 'home';
+                      : routeSegments[0] === 'legal-aid'
+                        ? 'legal-aid'
+                        : 'home';
 
   return (
     <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
@@ -4767,6 +4800,7 @@ export default function App() {
         {activePage === 'schemes' && <SchemesPage />}
         {activePage === 'helplines' && <Helplines />}
         {activePage === 'scam-check' && <ScamCheck />}
+        {activePage === 'legal-aid' && <LegalAidCheck />}
         {activePage === 'home' && <HomePage />}
       </main>
     </div>

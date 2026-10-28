@@ -126,6 +126,26 @@ never opened. Evaluation: `python evaluate_scam_checker.py` (rules only) and
 `--cases eval/scam_check_cases_heldout.json --tag heldout` for the held-out set. Results are in
 `eval/scam_check_evaluation_*.{json,md}`.
 
+## Free Legal Aid Check
+
+The **Free Legal Aid Check** page (`#/legal-aid`) is a short wizard that tells a user whether
+they are likely entitled to free legal services, why (with the legal source), and where to apply.
+Backend: `backend/legal_aid_eligibility.py`. Fixed rules only, with no Gemini call and no login.
+
+| Endpoint | Body | Returns |
+| --- | --- | --- |
+| `POST /api/legal-aid/eligibility` | `{"state": "Delhi", "court": "other" \| "supreme_court", "categories": [...], "age": 0-120, "annual_income": >= 0 (optional)}` | `result` (`likely_eligible` / `likely_not_eligible` / `cannot_determine`), `headline`, `reason`, `matched_rules[]` (`rule_id`, `jurisdiction`, `reason`, `source`), `where_to_apply[]`, `documents_to_bring[]`, `alternatives[]` (only when not eligible), `needs[]` (`["annual_income"]` when income is required), `notes[]`, `disclaimer`, `last_verified` |
+
+`categories` values: `sc_st`, `trafficking_or_begar`, `woman`, `disability`, `disaster_victim`,
+`industrial_workman`, `in_custody`, `transgender`, `acid_attack_victim`, `hiv_aids`,
+`defence_family`. "Child" is worked out from `age` (under 18). Invalid input returns `422` with
+`{"detail", "errors": [{"field", "message"}]}`. Section 12 sources link to the source viewer;
+Delhi-only rules link to the DSLSA website. Income limits are in one place: `LIMITS` in the
+module. Delhi only: other states and Supreme Court cases return `cannot_determine`, pointing to
+the right authority. The answers are never stored or logged. Evaluation:
+`python evaluate_legal_aid_eligibility.py` (writes
+`eval/legal_aid_eligibility_evaluation.{json,md}`).
+
 The **Schemes** page (`#/schemes`) is served by the same frontend but talks to a
 **separate** backend — see the next section. If the schemes backend isn't
 running, every other page still works; only the Schemes search fails (with a

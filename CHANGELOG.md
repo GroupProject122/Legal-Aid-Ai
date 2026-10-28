@@ -39,6 +39,157 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Free Legal Aid Eligibility Checker: `legal_aid_eligibility.py` + `POST /api/legal-aid/eligibility` + `#/legal-aid` (2026-10-28)
+
+A short wizard that tells a user whether they are likely entitled to free legal services, why
+(with the legal source), and where to apply. **Fixed rules only: no Gemini call, no login.**
+Frontend detail is in `frontend/CHANGELOG.md`.
+
+**Rules and their sources.** Limits and rules were last verified on **2026-10-28**
+(`LAST_VERIFIED`):
+- **Section 12, Legal Services Authorities Act, 1987** (in the corpus;
+  `constitutional_public_authority/legal_services_authorities_act_1987.pdf`, provision
+  `section-12`). Clause letters were checked against the parsed corpus text, and a test re-checks
+  them. Matching any one clause is enough, whatever the income:
+  - (a) SC/ST;
+  - (b) a victim of trafficking or begar;
+  - (c) a woman or a child;
+  - (d) a person with disability;
+  - (e) a victim of mass disaster, ethnic violence, caste atrocity, flood, drought, earthquake or
+    industrial disaster;
+  - (f) an industrial workman;
+  - (g) in custody, including a protective home, juvenile home, or psychiatric hospital or
+    nursing home.
+
+  Clause (h) is the income clause. It sets only a floor ("less than rupees nine thousand or such
+  other higher amount as may be prescribed by the State Government"), so the Delhi figures below
+  apply instead.
+- **Delhi**, from DSLSA's eligibility page
+  (<https://dslsa.org/wd/wings/legal-aid-wing-2/providing-legal-aid-benificiaries/>). The page
+  cites "chapter VI, Rule 9, of the Delhi Legal Services Authority Regulation 2002". The official
+  Delhi page on delhi.nalsa.gov.in ("last updated July 01, 2025") gives the same figures. In
+  `LIMITS`:
+
+  | Limit | Amount | Comparison |
+  | --- | --- | --- |
+  | `delhi_general` | Rs. 3,00,000 | less than |
+  | `delhi_senior_citizen` | Rs. 4,00,000 | less than |
+  | `delhi_transgender` | Rs. 4,00,000 | less than |
+
+  Also eligible with **no income limit**: acid attack victims; persons infected or affected by
+  HIV/AIDS; defence personnel, veterans and their families (NALSA Veer Parivar Sahayata Yojana,
+  2025). Being transgender only raises the limit; on its own it does not make someone eligible.
+- **The Delhi Regulations are not in the corpus.** No official machine-readable copy of the 2002
+  Regulations or their amending notification could be found, so the Delhi rules cite the DSLSA
+  page with `authority: "official_website"` instead of a corpus link. No citation was invented.
+  The document was not added to `documents/`.
+- **"Child" means under 18.** It is worked out from the age the user enters. Gender and every
+  other category are never inferred; the user ticks what applies.
+
+**What changed compared with the brief, and older DSLSA material.** The current figures match
+the brief: 3 lakh, and 4 lakh for senior citizens and transgender persons. But DSLSA's 2019
+application form (`LEGAL-AID-FORM-NEW.pdf`) still prints **Rs. 1 lakh** (general) and
+**Rs. 2 lakh** (senior citizens and transgender persons). Some DSLSA pages, including the Hindi
+FAQ's transgender entry, still show Rs. 2 lakh. We use the current eligibility page. The Veer
+Parivar category appears on the DSLSA page but **not** on the delhi.nalsa.gov.in page; it is
+kept because the scheme is a NALSA scheme run by every State Legal Services Authority.
+
+**Assumptions** (in `ASSUMPTIONS`; users see a short version in `USER_NOTES`):
+- **Individual, not family, income.** The current DSLSA page only says "annual income".
+  Evidence for individual income:
+  - Section 12(h) says a person "in receipt of annual income";
+  - Section 13(2) accepts "an affidavit made by a person as to his income";
+  - DSLSA's own application form asks for the "income of the applicant".
+
+  No source we found mentions family or household income, so the brief's "most cautious reading"
+  fallback was not used: the sources do speak to the question. The result still tells the user
+  the Authority may ask about family support. **Flagged for review.**
+- **A senior citizen is 60 or older.** DSLSA gives no age. We use Section 2(h) of the
+  Maintenance and Welfare of Parents and Senior Citizens Act, 2007 (in the corpus), which is also
+  the age NALSA uses. This only matters for someone aged 60–64 with an income between 3 and
+  4 lakh.
+
+**Logic** (`check_eligibility`):
+- A Supreme Court case gives `cannot_determine`, pointing to the Supreme Court Legal Services
+  Committee, which has a separate Central limit.
+- Any state other than Delhi gives `cannot_determine`, explaining that Section 12 categories
+  apply everywhere but income limits differ by state. It points to that state's legal services
+  authority and 15100.
+
+  In both cases any Section 12 clause the user matches is still listed in `matched_rules` and in
+  the reason ("very likely entitled — the Authority must confirm"). The result itself stays
+  `cannot_determine`.
+- In Delhi, category matches are checked before income. A Section 12 or Delhi-only category gives
+  `likely_eligible` even with a high income.
+- No category and no income gives `cannot_determine` with `needs: ["annual_income"]`. The API
+  asks for income instead of guessing, and the wizard uses this to decide whether to show the
+  income question. The rules live only in the backend.
+- An income below the applicable limit gives `likely_eligible`. Otherwise the result is
+  `likely_not_eligible`, with alternatives:
+  - a free legal aid clinic (NALSA Clinics Regulations 2011, reg. 3);
+  - Lok Adalat (s. 19);
+  - calling 15100;
+  - DSLSA's "free legal advice can be availed by any person", plus the right to appeal a refusal
+    to the Chairman.
+- Every result includes `where_to_apply`. For Delhi:
+  - the DLSA front office;
+  - the DSLSA Central Office at Patiala House;
+  - the Delhi High Court Legal Services Committee for High Court cases;
+  - 1516 and 15100;
+  - how to apply (NALSA Regulations 2010, reg. 3: a form, a letter or an oral request).
+
+  It also includes `documents_to_bring` (an income affidavit under s. 13(2) when the result rests
+  on income) and the fixed disclaimer: "This is a guide, not a final decision. The Legal Services
+  Authority decides your application."
+
+**Validation:**
+- `EligibilityRequest` uses `extra="forbid"`, `court` and `categories` enums, and `state` (1–60
+  characters).
+- `age` must be a whole number from 0 to 120: bools, floats and strings are rejected.
+- `annual_income` must be at least 0 (optional); bools are rejected.
+- Bad input returns `422` with `{"detail", "errors": [{"field", "message"}]}`, one entry per bad
+  field. Messages are fixed text, never built from the input.
+
+**Privacy design:**
+- The answers include caste, disability, HIV status and income, so the module has **no logger**.
+  Nothing is written to the database or a file.
+- The endpoint parses its own body, as `/api/scam-check` does, so the global
+  `RequestValidationError` handler, which logs pydantic's error text including the input, never
+  sees it.
+- A test patches `sqlite3.connect` and file writes to fail, and checks that no application log
+  record is produced, for a good request, an invalid one and an unparseable one.
+- The frontend stores nothing (no localStorage or sessionStorage). It never asks for
+  certificates, Aadhaar or ID numbers, and step 1 says "Your answers are not saved."
+
+**Out of scope:**
+- Income limits for every state other than Delhi.
+- The Supreme Court Legal Services Committee's limit.
+- High Court-specific limits: Delhi High Court cases use the Delhi figures, and the result
+  points to the HCLSC.
+- Whether the user has a prima facie case (s. 13(1)); the Authority decides that.
+
+**Tests and eval:**
+- `tests/test_legal_aid_eligibility.py`: 84 tests, covering
+  - the six worked examples;
+  - 299999 / 300000 / 300001;
+  - transgender at 399999 / 400000;
+  - age 59 / 60 at 3.5 lakh;
+  - age 17 (child) and 18;
+  - every category alone and with high income;
+  - missing income;
+  - Delhi name variants;
+  - field-level 422s;
+  - that every corpus source resolves via `legal_education.get_provision`;
+  - privacy and no-AI checks.
+- `eval/legal_aid_eligibility_cases.json` (32 cases) plus `evaluate_legal_aid_eligibility.py`
+  give **32/32 passed, result accuracy 100%** (`eval/legal_aid_eligibility_evaluation.{json,md}`).
+
+**Found while checking the corpus. Documented here; not fixed:** the NALSA (Free and Competent
+Legal Services) Regulations, 2010 chunks number Regulations 7 and 8 as "147" and "158". A
+footnote number is glued onto the regulation number by the parser. The provision IDs
+`regulation-147` and `regulation-158` are therefore wrong in the source viewer. This checker
+does not cite them.
+
 ## Unreleased — Scam Message Checker: `scam_checker.py` + `POST /api/scam-check` + `#/scam-check` (2026-10-28)
 
 A user pastes a suspicious SMS / WhatsApp / email message and gets the warning signs found in it,

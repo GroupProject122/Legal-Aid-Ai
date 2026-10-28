@@ -34,6 +34,9 @@ backend/
 │   └── case_file.py                 Case File export: assembles a saved case into DOCX/PDF, no LLM
 │                                     (+ case_file_constants.py, templates/case_file_base.docx)
 │
+├── Free Legal Aid Eligibility Checker
+│   └── legal_aid_eligibility.py     Section 12 + Delhi (DSLSA) rules, LIMITS config, no LLM, nothing logged
+│                                     (+ evaluate_legal_aid_eligibility.py, eval/legal_aid_eligibility_*)
 │
 ├── Legal education
 │   ├── legal_education.py

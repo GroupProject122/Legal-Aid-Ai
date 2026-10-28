@@ -4,6 +4,53 @@ Notes on notable frontend changes so the team can see what moved and why.
 Entries up to and including 2026-09-06 only touch `frontend/src/App.jsx` and
 `frontend/src/styles.css`; later entries may add new files (noted per entry).
 
+## 2026-10-28 — Free Legal Aid Check page (`#/legal-aid`)
+
+New files: `src/legalaid/LegalAidCheck.jsx`, `src/legalaid/api.js`, `src/legalaid/options.js`.
+Rules, sources, assumptions and the privacy design are in the root `CHANGELOG.md`'s "Free Legal
+Aid Eligibility Checker" entry.
+
+- **Where:**
+  - a "Free Legal Aid Check" sidebar item (after Check a Message);
+  - a home-page feature card;
+  - an About page feature entry;
+  - on the Ask page, a one-line link "Check if you qualify for free legal aid". It appears when
+    the answer's `routing.domains` includes `constitutional_public_authority` and the user's own
+    question (already on screen) mentions legal aid, a free lawyer, NALSA, DLSA or DSLSA. The
+    link reuses the `.response-cyber-hint` style; nothing new is sent to the backend.
+- **Wizard:**
+  1. In Delhi?
+  2. In the Supreme Court?
+  3. Which of these apply? Checkboxes in plain language, with an exclusive "None of these".
+  4. Age.
+  5. Annual income, shown only when the API answers `needs: ["annual_income"]`. The eligibility
+     rules are never duplicated in the frontend.
+
+  Native radios, checkboxes and inputs inside a `fieldset`/`legend`. Focus moves to each new
+  question's heading, and then to the result heading. Back and Next buttons; Enter submits.
+- **Privacy:** step 1 says "Your answers are not saved." Nothing goes into `localStorage` or
+  `sessionStorage`. The page never asks for certificates, Aadhaar or ID numbers.
+- **Result card:**
+  - green, red or grey for likely eligible, probably not eligible, or can't tell;
+  - the reason, plus each matched rule with its source. Section 12 opens
+    `#/rights/source/…/provision/section-12` in the source viewer; DSLSA rules open the official
+    website in a new tab;
+  - where to apply (`tel:` links for 1516 and 15100), what to bring, and alternatives when not
+    eligible;
+  - a "Good to know" box for assumptions, the disclaimer, "Rules last checked" and Start again.
+- **Checked:**
+  - with a headless-Chromium walkthrough against the running app, not added to the repo because
+    the repo has no Playwright set up;
+  - example 1 (Delhi, woman, 34) gives the green card, and the Section 12(c) link opens the
+    viewer at Section 12;
+  - example 3 at 375px, keyboard only, gives the red card with alternatives, and there is no
+    horizontal scroll;
+  - the Ask-page link appears for "free lawyer" and not for an RTI question (stubbed
+    `/api/ask`).
+- **Dark mode:** the app has no dark mode yet. The header's moon button has no handler and
+  `styles.css` has no dark rules, so there was nothing to check against. This page's colours are
+  `--legalaid-*` tokens on `:root`, ready to be redefined when a theme is added.
+
 ## 2026-10-28 — Check a Message page (`#/scam-check`)
 
 New files: `src/scamcheck/ScamCheck.jsx`, `src/scamcheck/api.js`. Backend design, safety rules

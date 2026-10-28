@@ -1,0 +1,606 @@
+{
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/legal_aid_eligibility_cases.json",
+    "mode": "rules_only",
+    "llm_calls": 0,
+    "limits_last_verified": "2026-10-28",
+    "limits": {
+      "delhi_general": {
+        "amount_inr": 300000,
+        "comparison": "less_than"
+      },
+      "delhi_senior_citizen": {
+        "amount_inr": 400000,
+        "comparison": "less_than"
+      },
+      "delhi_transgender": {
+        "amount_inr": 400000,
+        "comparison": "less_than"
+      }
+    }
+  },
+  "metrics": {
+    "case_count": 32,
+    "passed": 32,
+    "pass_rate": 1.0,
+    "result_accuracy": 1.0
+  },
+  "per_group": {
+    "worked_examples": {
+      "count": 6,
+      "passed": 6
+    },
+    "income_boundary": {
+      "count": 5,
+      "passed": 5
+    },
+    "age_boundary": {
+      "count": 4,
+      "passed": 4
+    },
+    "each_category": {
+      "count": 11,
+      "passed": 11
+    },
+    "category_beats_income": {
+      "count": 2,
+      "passed": 2
+    },
+    "missing_income": {
+      "count": 1,
+      "passed": 1
+    },
+    "out_of_scope": {
+      "count": 3,
+      "passed": 3
+    }
+  },
+  "results": [
+    {
+      "id": "example_1_delhi_woman_no_income",
+      "group": "worked_examples",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ],
+      "rule_ids": [
+        "s12_c_woman"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "example_2_delhi_income_240000",
+      "group": "worked_examples",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_general"
+      ],
+      "rule_ids": [
+        "delhi_income_general"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "example_3_delhi_income_300000",
+      "group": "worked_examples",
+      "expected_result": "likely_not_eligible",
+      "result": "likely_not_eligible",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "alternatives_listed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "example_4_delhi_senior_350000",
+      "group": "worked_examples",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_senior_citizen"
+      ],
+      "rule_ids": [
+        "delhi_income_senior_citizen"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "example_5_maharashtra",
+      "group": "worked_examples",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "example_6_delhi_supreme_court",
+      "group": "worked_examples",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "boundary_general_299999",
+      "group": "income_boundary",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_general"
+      ],
+      "rule_ids": [
+        "delhi_income_general"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "boundary_general_300000",
+      "group": "income_boundary",
+      "expected_result": "likely_not_eligible",
+      "result": "likely_not_eligible",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "alternatives_listed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "boundary_general_300001",
+      "group": "income_boundary",
+      "expected_result": "likely_not_eligible",
+      "result": "likely_not_eligible",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "alternatives_listed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "boundary_transgender_399999",
+      "group": "income_boundary",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_transgender"
+      ],
+      "rule_ids": [
+        "delhi_income_transgender"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "boundary_transgender_400000",
+      "group": "income_boundary",
+      "expected_result": "likely_not_eligible",
+      "result": "likely_not_eligible",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "alternatives_listed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "boundary_senior_age_59",
+      "group": "age_boundary",
+      "expected_result": "likely_not_eligible",
+      "result": "likely_not_eligible",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "alternatives_listed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "boundary_senior_age_60",
+      "group": "age_boundary",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_senior_citizen"
+      ],
+      "rule_ids": [
+        "delhi_income_senior_citizen"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "child_age_17",
+      "group": "age_boundary",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_child"
+      ],
+      "rule_ids": [
+        "s12_c_child"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "adult_age_18_no_income",
+      "group": "age_boundary",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [
+        "annual_income"
+      ],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "needs_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_sc_st",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_a_sc_st"
+      ],
+      "rule_ids": [
+        "s12_a_sc_st"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_trafficking_or_begar",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_b_trafficking_or_begar"
+      ],
+      "rule_ids": [
+        "s12_b_trafficking_or_begar"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_woman",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ],
+      "rule_ids": [
+        "s12_c_woman"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_disability",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_d_disability"
+      ],
+      "rule_ids": [
+        "s12_d_disability"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_disaster_victim",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_e_disaster_victim"
+      ],
+      "rule_ids": [
+        "s12_e_disaster_victim"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_industrial_workman",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_f_industrial_workman"
+      ],
+      "rule_ids": [
+        "s12_f_industrial_workman"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_in_custody",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_g_in_custody"
+      ],
+      "rule_ids": [
+        "s12_g_in_custody"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_acid_attack_victim",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_acid_attack_victim"
+      ],
+      "rule_ids": [
+        "delhi_acid_attack_victim"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_hiv_aids",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_hiv_aids"
+      ],
+      "rule_ids": [
+        "delhi_hiv_aids"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_defence_family",
+      "group": "each_category",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_defence_family"
+      ],
+      "rule_ids": [
+        "delhi_defence_family"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_transgender_alone",
+      "group": "each_category",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [
+        "annual_income"
+      ],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "needs_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "category_plus_high_income",
+      "group": "category_beats_income",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ],
+      "rule_ids": [
+        "s12_c_woman"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "hiv_plus_high_income",
+      "group": "category_beats_income",
+      "expected_result": "likely_eligible",
+      "result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_hiv_aids"
+      ],
+      "rule_ids": [
+        "delhi_hiv_aids"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "no_category_no_income",
+      "group": "missing_income",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [
+        "annual_income"
+      ],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "needs_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "other_state_woman",
+      "group": "out_of_scope",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ],
+      "rule_ids": [
+        "s12_c_woman"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "other_state_delhi_only_category",
+      "group": "out_of_scope",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [],
+      "rule_ids": [],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "supreme_court_sc_st",
+      "group": "out_of_scope",
+      "expected_result": "cannot_determine",
+      "result": "cannot_determine",
+      "expected_rule_ids": [
+        "s12_a_sc_st"
+      ],
+      "rule_ids": [
+        "s12_a_sc_st"
+      ],
+      "needs": [],
+      "evaluation": {
+        "result_correct": true,
+        "rules_correct": true,
+        "passed": true
+      }
+    }
+  ]
+}
