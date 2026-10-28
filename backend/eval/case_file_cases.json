@@ -1,0 +1,260 @@
+{
+  "description": "Fixture cases for the Case File export (case_file.py). Each case is seeded into a temporary SQLite DB through the real storage path (case_store.create_case / save_message / assistant_content_for_storage), with sources built by grounded_answer.sources_from_ids() from real parsed-corpus chunks. 'verified' lists the chunk ids the claim verifier reported as supporting a supported/partially-supported claim; 'unverified' lists cited chunks whose claims did not pass; 'verification': 'not_recorded' simulates an answer saved before verification was persisted.",
+  "cases": [
+    {
+      "id": "consumer_receipt_document",
+      "description": "Consumer case with a confirmed receipt document (facts from it must name the document), a dated purchase, and one unverified source that must be excluded.",
+      "title": "Defective Product Refund",
+      "primary_domain": "consumer",
+      "conversation_state": {
+        "case_summary": "The user bought a phone from Croma that stopped working within a week; the seller refuses a refund.",
+        "domains": ["consumer"]
+      },
+      "documents": [
+        {
+          "filename": "croma_receipt.pdf",
+          "context_id": "ctx_receipt_1",
+          "document_type": "invoice_or_receipt",
+          "facts": {
+            "parties": [{"label": "seller", "value": "Croma Retail, Lajpat Nagar"}],
+            "dates": [{"label": "invoice_date", "value": "12 March 2026"}],
+            "amounts": [{"label": "amount_paid", "value": "Rs. 18,499"}]
+          }
+        }
+      ],
+      "turns": [
+        {
+          "user": "I bought a phone and it stopped working after 5 days. The seller is refusing to refund me. What can I do?",
+          "turn_type": "new_issue",
+          "context_id": "ctx_receipt_1",
+          "reply": {
+            "kind": "answer",
+            "issue_summary": "This looks like a consumer complaint about defective goods and a refused refund.",
+            "where_to_approach": ["District Consumer Disputes Redressal Commission", "National Consumer Helpline (1915) for mediation"],
+            "evidence_to_preserve": ["The purchase invoice or receipt", "Warranty card", "Messages or emails with the seller"],
+            "sources": ["consumer_consumer_protection_act_2019__chunk_0052", "consumer_consumer_protection_act_2019__chunk_0060", "consumer_consumer_protection_act_2019__chunk_0003"],
+            "verified": ["consumer_consumer_protection_act_2019__chunk_0052", "consumer_consumer_protection_act_2019__chunk_0060"],
+            "unverified": ["consumer_consumer_protection_act_2019__chunk_0003"]
+          }
+        },
+        {
+          "user": "I sent the seller a written complaint on 20 March 2026 & they still haven't replied.",
+          "turn_type": "additional_fact",
+          "reply": {"kind": "ack", "message": "Got it — I've added that to the current case."}
+        },
+        {
+          "user": "thanks",
+          "turn_type": "acknowledgement",
+          "reply": {"kind": "ack", "message": "You're welcome."}
+        }
+      ],
+      "expected": {
+        "sections_present": ["cover", "situation", "facts", "timeline", "laws", "where_to_go", "evidence", "lawyer_questions", "free_legal_help", "appendix"],
+        "sections_absent": [],
+        "facts_include": ["Amount paid: Rs. 18,499", "written complaint on 20 March 2026"],
+        "facts_exclude": ["thanks"],
+        "document_fact_label_contains": "croma_receipt.pdf",
+        "timeline_order": ["12 March 2026", "20 March 2026"],
+        "law_count": 2,
+        "law_labels": {"Section 35": "Statute"},
+        "excluded_chunk_ids": ["consumer_consumer_protection_act_2019__chunk_0003"],
+        "uploaded_documents": ["croma_receipt.pdf"],
+        "text_absent": []
+      }
+    },
+    {
+      "id": "cyber_correction",
+      "description": "Cyber case where the user corrects a count: 'actually it was 3 transactions, not 2'. The old fact must be replaced, not shown alongside.",
+      "title": "UPI Fraud Transactions",
+      "primary_domain": "cyber",
+      "conversation_state": {
+        "case_summary": "Unauthorised UPI transactions from the user's bank account. Corrected fact: actually it was 3 transactions, not 2.",
+        "domains": ["cyber"]
+      },
+      "documents": [],
+      "turns": [
+        {
+          "user": "Someone took money from my bank account through UPI without my permission.",
+          "turn_type": "new_issue",
+          "reply": {
+            "kind": "answer",
+            "issue_summary": "This may involve unauthorised electronic banking transactions and cyber fraud.",
+            "where_to_approach": ["Your bank's grievance / fraud reporting channel", "National Cybercrime Reporting Portal (cybercrime.gov.in) or helpline 1930"],
+            "evidence_to_preserve": ["Bank SMS alerts and account statement", "Screenshots of the UPI transactions"],
+            "sources": ["cyber_information_technology_act_2000__chunk_0077", "cyber_rbi_limiting_liability_unauthorised_transactions_2017__chunk_0001"],
+            "verified": ["cyber_information_technology_act_2000__chunk_0077", "cyber_rbi_limiting_liability_unauthorised_transactions_2017__chunk_0001"],
+            "unverified": []
+          }
+        },
+        {
+          "user": "There were 2 unauthorised transactions on 3 September 2026.",
+          "turn_type": "additional_fact",
+          "reply": {"kind": "ack", "message": "Got it — I've added that to the current case."}
+        },
+        {
+          "user": "Sorry, actually it was 3 transactions, not 2.",
+          "turn_type": "correction",
+          "reply": {"kind": "ack", "message": "Got it — I've updated the current case with your correction."}
+        },
+        {
+          "user": "Can the bank refuse to refund me?",
+          "turn_type": "follow_up_question",
+          "reply": {
+            "kind": "answer",
+            "issue_summary": "Whether the bank must refund depends on when you reported the transactions.",
+            "where_to_approach": ["Banking Ombudsman under the RBI Integrated Ombudsman Scheme"],
+            "evidence_to_preserve": ["Bank SMS alerts and account statement", "Proof of when you reported the fraud to the bank"],
+            "sources": ["cyber_rbi_limiting_liability_unauthorised_transactions_2017__chunk_0001"],
+            "verified": ["cyber_rbi_limiting_liability_unauthorised_transactions_2017__chunk_0001"],
+            "unverified": []
+          }
+        }
+      ],
+      "expected": {
+        "sections_present": ["cover", "situation", "facts", "laws", "where_to_go", "evidence", "lawyer_questions", "free_legal_help", "appendix"],
+        "sections_absent": ["timeline"],
+        "facts_include": ["actually it was 3 transactions, not 2"],
+        "facts_exclude": ["There were 2 unauthorised transactions", "Can the bank refuse"],
+        "law_count": 2,
+        "law_labels": {"Section 66D": "Statute"},
+        "excluded_chunk_ids": [],
+        "uploaded_documents": [],
+        "text_absent": []
+      }
+    },
+    {
+      "id": "tenancy_no_dates",
+      "description": "Tenancy case with no full dates anywhere ('last week' only): Timeline must be omitted; no evidence items or documents, so Evidence is omitted too. Two chunks of the same provision must de-duplicate to one law entry.",
+      "title": "Tenancy Electricity Dispute",
+      "primary_domain": "tenancy",
+      "conversation_state": {
+        "case_summary": "",
+        "domains": ["tenancy"]
+      },
+      "documents": [],
+      "turns": [
+        {
+          "user": "Mere landlord ne last week bijli kaat di kyunki maine rent late diya. Main Delhi mein rehta hoon.",
+          "turn_type": "new_issue",
+          "reply": {
+            "kind": "answer",
+            "issue_summary": "Cutting off electricity to pressure a tenant may be covered by the Delhi Rent Control Act.",
+            "where_to_approach": ["Rent Controller, Delhi"],
+            "evidence_to_preserve": [],
+            "sources": ["tenancy_delhi_rent_control_act_1958__chunk_0071", "tenancy_delhi_rent_control_act_1958__chunk_0072"],
+            "verified": ["tenancy_delhi_rent_control_act_1958__chunk_0071", "tenancy_delhi_rent_control_act_1958__chunk_0072"],
+            "unverified": []
+          }
+        }
+      ],
+      "expected": {
+        "sections_present": ["cover", "situation", "facts", "laws", "where_to_go", "lawyer_questions", "free_legal_help", "appendix"],
+        "sections_absent": ["timeline", "evidence"],
+        "facts_include": ["bijli kaat di"],
+        "facts_exclude": [],
+        "situation_label_contains": "Your first message",
+        "law_count": 1,
+        "law_labels": {"Section 45": "Statute"},
+        "excluded_chunk_ids": [],
+        "uploaded_documents": [],
+        "text_absent": []
+      }
+    },
+    {
+      "id": "consumer_case_law_and_summary",
+      "description": "Sources include case law, a compiled summary and official guidance -- each must carry its own label. A second answer has no verification record (saved before it was persisted) and its source must be left out with a note.",
+      "title": "Misleading Green Advertisement",
+      "primary_domain": "consumer",
+      "conversation_state": {
+        "case_summary": "A brand advertised a product as '100% eco-friendly'; the user paid more for it and found the claim was false.",
+        "domains": ["consumer"]
+      },
+      "documents": [],
+      "turns": [
+        {
+          "user": "A brand advertised its bottle as 100% eco-friendly and I paid extra for it on 2026-07-14, but it turned out to be ordinary plastic.",
+          "turn_type": "new_issue",
+          "reply": {
+            "kind": "answer",
+            "issue_summary": "This may be a misleading environmental claim (greenwashing) in an advertisement.",
+            "where_to_approach": ["Central Consumer Protection Authority (CCPA)", "District Consumer Disputes Redressal Commission"],
+            "evidence_to_preserve": ["Screenshot or copy of the advertisement", "Your bill"],
+            "sources": ["consumer_greenwashing_guidelines_2024_summary__chunk_0001", "consumer_misleading_ads_guidelines_2022__chunk_0001", "consumer_case_law_case1_indian_medical_association_v_vp_shantha_1995__chunk_0001"],
+            "verified": ["consumer_greenwashing_guidelines_2024_summary__chunk_0001", "consumer_misleading_ads_guidelines_2022__chunk_0001", "consumer_case_law_case1_indian_medical_association_v_vp_shantha_1995__chunk_0001"],
+            "unverified": []
+          }
+        },
+        {
+          "user": "Do I have to pay a fee to complain?",
+          "turn_type": "follow_up_question",
+          "reply": {
+            "kind": "answer",
+            "issue_summary": "Fees for consumer complaints depend on the value of the claim.",
+            "where_to_approach": [],
+            "evidence_to_preserve": [],
+            "sources": ["consumer_consumer_protection_act_2019__chunk_0052"],
+            "verification": "not_recorded"
+          }
+        }
+      ],
+      "expected": {
+        "sections_present": ["cover", "situation", "facts", "timeline", "laws", "where_to_go", "evidence", "lawyer_questions", "free_legal_help", "appendix"],
+        "sections_absent": [],
+        "facts_include": ["100% eco-friendly"],
+        "facts_exclude": ["Do I have to pay a fee"],
+        "law_count": 3,
+        "law_labels": {
+          "Greenwashing": "Compiled summary — not the official text of the law",
+          "Misleading Advertisements": "Official guidance",
+          "Shantha": "Case law (court judgment)"
+        },
+        "excluded_chunk_ids": ["consumer_consumer_protection_act_2019__chunk_0052"],
+        "notes_contain": "saved before the app began recording",
+        "uploaded_documents": [],
+        "text_absent": []
+      }
+    },
+    {
+      "id": "cyber_otp_redaction",
+      "description": "The user typed an OTP, a spaced Aadhaar-like number, a password and a card number into messages. None may reach the file. Also carries Hinglish, special characters (& < >) and a long unbroken URL for the rendering check.",
+      "title": "Bank KYC Call Fraud",
+      "primary_domain": "cyber",
+      "conversation_state": {
+        "case_summary": "A caller posing as the bank got the user's OTP and money was debited.",
+        "domains": ["cyber"]
+      },
+      "documents": [],
+      "turns": [
+        {
+          "user": "Ek aadmi ne bank se hoon bol ke call kiya on 05/10/2026, maine galti se OTP 482913 bata diya aur mera Aadhaar 2345 6789 0123 bhi. Uske baad Rs. 25,000 kat gaye <urgent> & bank help nahi kar raha.",
+          "turn_type": "new_issue",
+          "reply": {
+            "kind": "answer",
+            "issue_summary": "This may be cheating by personation using a phone call, and an unauthorised debit you should report quickly.",
+            "where_to_approach": ["Cybercrime helpline 1930 or https://cybercrime.gov.in/Webform/Crime_AuthoLogin.aspx?rnt=5&very-long-reference-parameter-to-check-wrapping=abcdefghijklmnopqrstuvwxyz0123456789"],
+            "evidence_to_preserve": ["Call log showing the caller's number", "Bank SMS for the debit"],
+            "sources": ["cyber_information_technology_act_2000__chunk_0077", "cyber_information_technology_act_2000__chunk_0076"],
+            "verified": ["cyber_information_technology_act_2000__chunk_0077"],
+            "unverified": ["cyber_information_technology_act_2000__chunk_0076"]
+          }
+        },
+        {
+          "user": "Also my netbanking password is Sunrise@2026 and my card 4111 1111 1111 1111 was linked, otp hai 1 2 3 4 5 6.",
+          "turn_type": "additional_fact",
+          "reply": {"kind": "ack", "message": "Got it — I've added that to the current case."}
+        }
+      ],
+      "expected": {
+        "sections_present": ["cover", "situation", "facts", "timeline", "laws", "where_to_go", "evidence", "lawyer_questions", "free_legal_help", "appendix"],
+        "sections_absent": [],
+        "facts_include": ["bata diya"],
+        "facts_exclude": [],
+        "law_count": 1,
+        "law_labels": {"Section 66D": "Statute"},
+        "excluded_chunk_ids": ["cyber_information_technology_act_2000__chunk_0076"],
+        "uploaded_documents": [],
+        "text_absent": ["482913", "2345 6789 0123", "Sunrise@2026", "4111 1111 1111 1111", "1 2 3 4 5 6"]
+      }
+    }
+  ]
+}

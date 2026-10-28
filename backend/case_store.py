@@ -148,6 +148,12 @@ def list_cases(
         rows = conn.execute(query, params).fetchall()
 
     items = [case_row_to_dict(row, include_json=False) for row in rows]
+    # has_answers drives the Case File button's enabled state on My Cases (a case with only a
+    # clarification question or an acknowledgement has nothing to export yet). One extra query
+    # over at most one page of cases.
+    answered = case_ids_with_answers([item["id"] for item in items], db_path)
+    for item in items:
+        item["has_answers"] = item["id"] in answered
     return {
         "items": items,
         "total": total,
@@ -308,7 +314,70 @@ def assistant_content_for_storage(response: dict[str, Any]) -> dict[str, Any]:
         "conversation",
         "technical_error",
     }
-    return sanitize_value({key: value for key, value in response.items() if key in allowed})
+    stored = {key: value for key, value in response.items() if key in allowed}
+    verification = compact_verification_for_storage(response.get("verification"))
+    if verification is not None:
+        stored["verification"] = verification
+    return sanitize_value(stored)
+
+
+VERIFIED_SUPPORT_VALUES = frozenset({"supported", "partially_supported"})
+
+
+def compact_verification_for_storage(verification: Any) -> dict[str, Any] | None:
+    """Added 2026-10-28 for the Case File export: which of an answer's sources actually backed a
+    claim that passed claim_verifier.py. The full verification block (every claim's text, the
+    verifier's reasons) was never stored and still isn't -- only the status plus the chunk ids
+    the verifier reported as supporting a supported/partially-supported claim. Without this, a
+    stored answer carries no record of which sources passed verification, so the case file
+    could only guess."""
+    if not isinstance(verification, dict):
+        return None
+    status = verification.get("status")
+    verified_ids: list[str] = []
+    if status == "verified":
+        for result in verification.get("results") or []:
+            if not isinstance(result, dict) or result.get("support") not in VERIFIED_SUPPORT_VALUES:
+                continue
+            for chunk_id in result.get("supporting_chunk_ids") or []:
+                if isinstance(chunk_id, str) and chunk_id not in verified_ids:
+                    verified_ids.append(chunk_id)
+    return {"status": status, "verified_source_chunk_ids": verified_ids}
+
+
+SUBSTANTIVE_ANSWER_FIELDS = (
+    "what_this_may_involve",
+    "possible_legal_position",
+    "suggested_next_steps",
+    "evidence_to_preserve",
+    "where_to_approach",
+)
+
+
+def is_answer_content(content: Any) -> bool:
+    """True for a stored assistant message that is an actual answer to the user's issue -- not an
+    acknowledgement ("Got it -- I've added that..."), a small-talk reply, a clarification
+    question, or a technical error, all of which also carry an `answer.issue_summary`."""
+    if not isinstance(content, dict) or content.get("technical_error"):
+        return False
+    if (content.get("clarification") or {}).get("needed"):
+        return False
+    answer = content.get("answer")
+    if not isinstance(answer, dict) or not str(answer.get("issue_summary") or "").strip():
+        return False
+    return bool(content.get("sources")) or any(answer.get(field) for field in SUBSTANTIVE_ANSWER_FIELDS)
+
+
+def case_ids_with_answers(case_ids: list[int], db_path: Path | None = None) -> set[int]:
+    if not case_ids:
+        return set()
+    placeholders = ",".join("?" for _ in case_ids)
+    with connect(db_path) as conn:
+        rows = conn.execute(
+            f"SELECT case_id, content_json FROM messages WHERE role = 'assistant' AND case_id IN ({placeholders})",  # noqa: S608
+            list(case_ids),
+        ).fetchall()
+    return {int(row["case_id"]) for row in rows if is_answer_content(json_loads(row["content_json"]))}
 
 
 def case_row_to_dict(row: sqlite3.Row, include_json: bool = True) -> dict[str, Any]:

@@ -10,8 +10,10 @@ from __future__ import annotations
 import logging
 
 from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Cm, Pt, RGBColor
 
 from config import BASE_DIR
 
@@ -26,6 +28,7 @@ RTI_FIRST_APPEAL_TEMPLATE_PATH = TEMPLATES_DIR / "rti_first_appeal_base.docx"
 SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH = TEMPLATES_DIR / "senior_citizen_maintenance_base.docx"
 TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH = TEMPLATES_DIR / "tenant_essential_supply_base.docx"
 BANK_FRAUD_COMPLAINT_TEMPLATE_PATH = TEMPLATES_DIR / "bank_fraud_complaint_base.docx"
+CASE_FILE_TEMPLATE_PATH = TEMPLATES_DIR / "case_file_base.docx"
 
 
 def build_tenancy_eviction_base_template() -> None:
@@ -579,6 +582,230 @@ def build_bank_fraud_complaint_base_template() -> None:
     logger.info("Saved base template to %s", BANK_FRAUD_COMPLAINT_TEMPLATE_PATH)
 
 
+def build_case_file_base_template() -> None:
+    """Case File export (case_file.py), not a complaint -- an information pack the user takes to a
+    lawyer or DLSA. Same Times New Roman 12 body as the complaint templates. Fixed section order:
+    cover (with the not-legal-advice notice) -> situation in brief -> facts as stated by you ->
+    timeline -> laws that may apply -> where to go -> evidence checklist -> questions for the
+    lawyer -> free legal help -> about this file -> appendix (conversation record).
+
+    Optional sections sit entirely inside a {%p if ... %} block, heading included, so an
+    omitted section leaves no empty heading behind. There is deliberately no Deadlines or
+    forum-finder section: those features don't exist in the app yet. Section headings use the
+    built-in "Heading 1" style (restyled) so LibreOffice exports them as PDF bookmarks."""
+    document = Document()
+    for section in document.sections:
+        section.left_margin = section.right_margin = Cm(2.2)
+        section.top_margin = section.bottom_margin = Cm(2.0)
+    style = document.styles["Normal"]
+    style.font.name = "Times New Roman"
+    style.font.size = Pt(12)
+    style.paragraph_format.space_after = Pt(4)
+    for name, size in (("Heading 1", 15), ("Heading 2", 12.5)):
+        heading_style = document.styles[name]
+        heading_style.font.name = "Times New Roman"
+        heading_style.font.size = Pt(size)
+        heading_style.font.bold = True
+        heading_style.font.color.rgb = RGBColor(0x3F, 0x28, 0x18)
+        heading_style.paragraph_format.space_before = Pt(16 if name == "Heading 1" else 10)
+        heading_style.paragraph_format.space_after = Pt(6)
+        heading_style.paragraph_format.keep_with_next = True
+        # python-docx's default theme sets an East-Asian/ascii theme font on headings; pin it.
+        fonts = heading_style.element.get_or_add_rPr().get_or_add_rFonts()
+        for attribute in ("w:asciiTheme", "w:hAnsiTheme", "w:eastAsiaTheme", "w:cstheme"):
+            fonts.attrib.pop(qn(attribute), None)
+        for attribute in ("w:ascii", "w:hAnsi", "w:cs"):
+            fonts.set(qn(attribute), "Times New Roman")
+
+    def paragraph(*runs: tuple[str, dict], center: bool = False, indent_cm: float = 0, size: float | None = None, keep_with_next: bool = False):
+        para = document.add_paragraph()
+        if center:
+            para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if indent_cm:
+            para.paragraph_format.left_indent = Cm(indent_cm)
+        if keep_with_next:
+            para.paragraph_format.keep_with_next = True
+        for text, fmt in runs:
+            run = para.add_run(text)
+            run.bold = fmt.get("bold")
+            run.italic = fmt.get("italic")
+            if size or fmt.get("size"):
+                run.font.size = Pt(fmt.get("size") or size)
+            if fmt.get("muted"):
+                run.font.color.rgb = RGBColor(0x5A, 0x37, 0x1D)
+        return para
+
+    def tag(text: str) -> None:
+        # docxtpl {%p ... %} control paragraphs: removed entirely at render time.
+        document.add_paragraph(text)
+
+    def heading(text: str) -> None:
+        document.add_heading(text, level=1)
+
+    def subheading(text: str) -> None:
+        document.add_heading(text, level=2)
+
+    def page_break() -> None:
+        document.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+
+    def shade(cell, fill: str) -> None:
+        properties = cell._tc.get_or_add_tcPr()
+        shading = OxmlElement("w:shd")
+        shading.set(qn("w:val"), "clear")
+        shading.set(qn("w:color"), "auto")
+        shading.set(qn("w:fill"), fill)
+        properties.append(shading)
+
+    # Footer on every page: the notice in short + page number.
+    document.styles["Footer"].font.size = Pt(9)  # the PAGE field run takes the style size
+    footer = document.sections[0].footer.paragraphs[0]
+    footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    footer_run = footer.add_run("Legal information, not legal advice. Not reviewed by a lawyer.  ·  Page ")
+    footer_run.font.size = Pt(9)
+    page_field = OxmlElement("w:fldSimple")
+    page_field.set(qn("w:instr"), "PAGE")
+    field_run = OxmlElement("w:r")
+    field_properties = OxmlElement("w:rPr")
+    field_size = OxmlElement("w:sz")
+    field_size.set(qn("w:val"), "18")
+    field_properties.append(field_size)
+    field_run.append(field_properties)
+    field_text = OxmlElement("w:t")
+    field_text.text = "1"
+    field_run.append(field_text)
+    page_field.append(field_run)
+    footer._p.append(page_field)
+
+    # 1. Cover
+    for _ in range(3):
+        document.add_paragraph()
+    paragraph(("{{ heading }}", {"bold": True}), center=True, size=20)
+    document.add_paragraph()
+    paragraph(("{{ title }}", {"bold": True}), center=True, size=16)
+    document.add_paragraph()
+    paragraph(("Legal area(s): ", {"bold": True}), ("{{ legal_areas }}", {}), center=True)
+    paragraph(("{%if case_created_display %}Case started: {{ case_created_display }}   ·   {% endif %}File generated: {{ generated_on_display }}", {}), center=True)
+    document.add_paragraph()
+    notice_table = document.add_table(rows=1, cols=1)
+    notice_table.style = "Table Grid"
+    notice_cell = notice_table.rows[0].cells[0]
+    shade(notice_cell, "FFF4D6")
+    notice_title = notice_cell.paragraphs[0]
+    notice_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    notice_title_run = notice_title.add_run("IMPORTANT — PLEASE READ")
+    notice_title_run.bold = True
+    notice_body = notice_cell.add_paragraph()
+    notice_body.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    notice_body_run = notice_body.add_run("{{ notice }}")
+    notice_body_run.bold = True
+    notice_body_run.font.size = Pt(13)
+    document.add_paragraph()
+    paragraph(("{{ how_made }}", {"italic": True, "muted": True}), size=10.5)
+    page_break()
+
+    # 2. Situation in brief
+    heading("Your situation in brief")
+    paragraph(("{{ situation.label }}:", {"italic": True, "muted": True}), size=10.5)
+    paragraph(("{{ situation.text }}", {}))
+
+    # 3. Facts as stated by you
+    heading("Facts as stated by you")
+    paragraph(("These are recorded exactly as you gave them. They have not been checked or proven.", {"italic": True, "muted": True}), size=10.5)
+    tag("{%p for fact in facts %}")
+    paragraph(("{{ loop.index }}. {{ fact.text }}", {}), keep_with_next=True)
+    paragraph(("{{ fact.label }}{% if fact.stated_on %}, {{ fact.stated_on }}{% endif %}", {"italic": True, "muted": True}), indent_cm=0.6, size=10)
+    tag("{%p endfor %}")
+
+    # 4. Timeline (only dated facts)
+    tag("{%p if timeline %}")
+    heading("Timeline")
+    paragraph(("Only dates that you or a document you confirmed actually gave, oldest first. No date has been estimated.", {"italic": True, "muted": True}), size=10.5)
+    tag("{%p for event in timeline %}")
+    paragraph(("{{ event.date_display }}", {"bold": True}), ("  —  {{ event.text }}", {}))
+    paragraph(("{{ event.label }}", {"italic": True, "muted": True}), indent_cm=0.6, size=10)
+    tag("{%p endfor %}")
+    tag("{%p endif %}")
+
+    # 5. Laws that may apply
+    tag("{%p if laws %}")
+    heading("Laws that may apply")
+    paragraph(
+        (
+            "Sources Legal Aid AI retrieved from its legal library and checked against its answers to you. "
+            "Whether they actually apply to your case is a question for a lawyer.",
+            {"italic": True, "muted": True},
+        ),
+        size=10.5,
+    )
+    tag("{%p for law in laws %}")
+    paragraph(("{{ law.title }}{% if law.provision %} — {{ law.provision }}{% endif %}", {"bold": True}), keep_with_next=True)
+    paragraph(("{{ law.authority }}{% if law.pages %} · {{ law.pages }}{% endif %}{% if law.warning %} · {{ law.warning }}{% endif %}", {"italic": True, "muted": True}), size=10, keep_with_next=True)
+    paragraph(("“{{ law.excerpt }}”", {}), indent_cm=0.6, size=10.5)
+    tag("{%p endfor %}")
+    tag("{%p endif %}")
+
+    # 6. Where to go
+    tag("{%p if where_to_go %}")
+    heading("Where to go")
+    paragraph(("Places Legal Aid AI's answers to you mentioned for raising this issue.", {"italic": True, "muted": True}), size=10.5)
+    tag("{%p for place in where_to_go %}")
+    paragraph(("•  {{ place }}", {}), indent_cm=0.3)
+    tag("{%p endfor %}")
+    tag("{%p endif %}")
+
+    # 7. Evidence checklist
+    tag("{%p if evidence_items or uploaded_documents %}")
+    heading("Evidence checklist")
+    tag("{%p if evidence_items %}")
+    paragraph(("Tick each item once you have it safely kept (originals and copies).", {"italic": True, "muted": True}), size=10.5)
+    tag("{%p for item in evidence_items %}")
+    paragraph(("☐  {{ item }}", {}), indent_cm=0.3)
+    tag("{%p endfor %}")
+    tag("{%p endif %}")
+    tag("{%p if uploaded_documents %}")
+    subheading("Documents already uploaded")
+    tag("{%p for doc in uploaded_documents %}")
+    paragraph(("☑  {{ doc.name }}{% if doc.date %} (uploaded {{ doc.date }}){% endif %}", {}), indent_cm=0.3)
+    tag("{%p endfor %}")
+    tag("{%p endif %}")
+    tag("{%p endif %}")
+
+    # 8. Questions for the lawyer (fixed list)
+    heading("Questions you may want to ask the lawyer")
+    tag("{%p for question in lawyer_questions %}")
+    paragraph(("{{ loop.index }}. {{ question }}", {}))
+    tag("{%p endfor %}")
+
+    # 9. Free legal help
+    heading("Free legal help")
+    tag("{%p for help in free_help %}")
+    paragraph(("{{ help.name }}", {"bold": True}), ("  —  {{ help.contact }}", {}), keep_with_next=True)
+    paragraph(("{{ help.detail }}", {}), indent_cm=0.6, size=10.5)
+    tag("{%p endfor %}")
+
+    # 10. About this file
+    tag("{%p if notes %}")
+    heading("About this file")
+    tag("{%p for note in notes %}")
+    paragraph(("•  {{ note }}", {}), indent_cm=0.3, size=10.5)
+    tag("{%p endfor %}")
+    tag("{%p endif %}")
+
+    # 11. Appendix -- conversation record. No forced page break: when "About this file" spills
+    # onto a new page, a break here left that page almost empty.
+    heading("Appendix — conversation record")
+    paragraph(("Each message you sent and the app's short reply. The full answers are in the app under My Cases.", {"italic": True, "muted": True}), size=10.5)
+    tag("{%p for entry in appendix %}")
+    paragraph(("{% if entry.date %}{{ entry.date }} — {% endif %}You asked:", {"bold": True}), keep_with_next=True, size=10.5)
+    paragraph(("{{ entry.question }}", {}), indent_cm=0.6, keep_with_next=True)
+    paragraph(("{{ entry.answer_label }}: ", {"bold": True}), ("{{ entry.short_answer }}", {}), indent_cm=0.6, size=10.5)
+    tag("{%p endfor %}")
+
+    TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
+    document.save(str(CASE_FILE_TEMPLATE_PATH))
+    logger.info("Saved base template to %s", CASE_FILE_TEMPLATE_PATH)
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     build_tenancy_eviction_base_template()
@@ -589,6 +816,7 @@ def main() -> None:
     build_senior_citizen_maintenance_base_template()
     build_tenant_essential_supply_base_template()
     build_bank_fraud_complaint_base_template()
+    build_case_file_base_template()
 
 
 if __name__ == "__main__":

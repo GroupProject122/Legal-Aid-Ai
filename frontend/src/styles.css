@@ -6758,3 +6758,164 @@ body.has-custom-cursor textarea {
     grid-template-columns: 1fr;
   }
 }
+/* --- Case File export (caseFile/CaseFileButton.jsx), 2026-10-28 ---
+   Reuses the case-card icon-button and modal look; feature-scoped `case-file-` classes. */
+.chat-panel-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.case-file-trigger {
+  position: relative;
+  display: inline-flex;
+}
+
+.case-file-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.case-file-icon-button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--walnut);
+  background: #fdf7ef;
+  border: 1px solid rgba(150, 101, 56, 0.22);
+  border-radius: 10px;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.case-file-icon-button:hover,
+.case-file-icon-button:focus-visible {
+  outline: 0;
+  background: #f7ece0;
+  border-color: rgba(150, 101, 56, 0.44);
+  box-shadow: 0 8px 16px rgba(92, 56, 26, 0.12);
+}
+
+.case-file-icon-button:focus-visible,
+.case-file-pill:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.case-file-icon-button[aria-disabled='true'],
+.case-file-pill[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+/* Hint for the unavailable state: shown on hover AND keyboard focus (a native `title`
+   tooltip never appears for keyboard users). */
+.case-file-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: min(240px, 70vw);
+  padding: 7px 10px;
+  color: #fff9ef;
+  background: var(--mocha);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 140ms ease;
+}
+
+.case-file-trigger:hover .case-file-tooltip,
+.case-file-trigger:focus-within .case-file-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.case-file-dialog {
+  width: min(480px, 100%);
+  max-height: calc(100dvh - 44px);
+  overflow-y: auto;
+}
+
+.case-file-dialog .case-file-case-title {
+  margin-top: 2px;
+  color: var(--walnut);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.case-file-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  color: var(--ink);
+  text-align: left;
+  background: #fff4d6;
+  border: 1px solid rgba(179, 125, 57, 0.45);
+  border-radius: 10px;
+}
+
+.case-file-notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--caramel);
+}
+
+.case-file-dialog .case-file-notice p {
+  margin: 0;
+  max-width: none;
+  font-weight: 600;
+}
+
+.case-file-dialog .case-file-contents {
+  max-width: none;
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+.case-file-actions {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 520px) {
+  .chat-panel-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .case-file-actions > button {
+    flex: 1 1 100%;
+  }
+
+  /* The existing mobile rule stretches New Question to full width; match it. */
+  .chat-panel-toolbar-actions,
+  .chat-panel-toolbar-actions .case-file-trigger,
+  .chat-panel-toolbar-actions .case-file-pill {
+    width: 100%;
+  }
+
+  .chat-panel-toolbar-actions .case-file-pill {
+    justify-content: center;
+  }
+
+  .case-file-tooltip {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* --- Check a Message (scam checker) page --- */

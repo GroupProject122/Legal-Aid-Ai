@@ -39,6 +39,128 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Case File export: `case_file.py` + `GET /api/cases/{id}/case-file.{pdf,docx}` (2026-10-28)
+
+**What:** one click on a saved case (My Cases, or inside an open case on the Ask page) produces a
+PDF or Word "Case File" the user can take to a lawyer or their District Legal Services Authority.
+
+**Design — assembled, not generated.** No LLM call is made anywhere in the export path, and
+nothing in the file is written for it. Same reasoning as the Complaint Drafter's slot-fill
+templates: every line is traceable to (a) something the user typed, labelled "As stated by you";
+(b) a document fact the user confirmed, labelled with the document's filename; (c) text the app
+already produced and stored for that case (answer fields, the stored case summary — labelled as
+the app's summary); (d) a corpus excerpt the app retrieved *and* that passed claim verification;
+or (e) fixed text in `backend/case_file_constants.py`. Facts are never presented as
+established ("recorded as you stated them; they have not been checked or proven").
+
+**Sections, in order** (`backend/templates/case_file_base.docx`, built by
+`build_templates.build_case_file_base_template()`, rendered by docxtpl, PDF via the Complaint
+Drafter's existing `convert_docx_bytes_to_pdf()` — no second PDF library):
+1. Cover — title, legal area(s), dates, boxed "not legal advice / not reviewed by a lawyer"
+   notice (also in the footer of every page).
+2. Your situation in brief — the stored `conversation_state.case_summary`; if empty, the user's
+   first message, labelled as such.
+3. Facts as stated by you — user messages and confirmed document facts, de-duplicated, in the
+   order given; document facts are inserted at the turn whose answer first used that document.
+   Small talk and pure follow-up questions are left out (they're in the appendix).
+4. Timeline — only *full* dates (day + month + year) actually written by the user or a confirmed
+   document, sorted. Partial dates ("March 2026", "last week", 2-digit years) are ignored, never
+   completed or estimated. Numeric dates are read day-first (noted in the file). Omitted
+   entirely when there are no dated facts.
+5. Laws that may apply — sources de-duplicated by document + provision, each with title,
+   provision, page(s), the stored corpus excerpt and an authority label: "Statute" / "Official
+   guidance" (the Complaint Drafter's existing labels), plus new explicit labels "Case law (court
+   judgment)" (with a warning when the manifest says not/partly good law), "Compiled summary — not
+   the official text of the law", "Procedural guide", "Rules", "Regulations". Only sources the
+   claim verifier reported as supporting a supported/partially-supported claim are included.
+6. Where to go — `where_to_approach` items from all answers, de-duplicated.
+7. Evidence checklist — `evidence_to_preserve` items as ☐ tick boxes, plus "Documents already
+   uploaded" (filename + upload date only, never contents).
+8. Questions you may want to ask the lawyer — fixed, generic list (`LAWYER_QUESTIONS`).
+9. Free legal help — NALSA 15100 and the DLSA (mirrors the Helplines page data).
+10. About this file — honest notes on anything left out and why.
+11. Appendix — each message and the app's one-line reply ("In short" = `issue_summary`), dated.
+
+Every optional section, heading included, sits inside a `{%p if %}` block, so an omitted section
+leaves no empty heading (checked by the eval against the rendered DOCX's actual headings).
+
+**Not included, because the features don't exist yet:** Deadlines (no Deadline Calculator), a
+forum-finder result (no "Where do I file?" finder), and a link to a free-legal-aid eligibility
+checker. There is no heading or placeholder for any of them in the template.
+
+**Supporting changes to existing code (document it, don't hide it):**
+- `case_store.assistant_content_for_storage()` now also stores a *compact* verification record
+  per answer: `{"status", "verified_source_chunk_ids"}` (new `compact_verification_for_storage()`).
+  Before this, which sources passed claim verification was never persisted, so the case file
+  could only have guessed. The full verification block (claim text, verifier reasons) is still
+  not stored. **Consequence for existing cases:** answers saved before today have no record, so
+  their sources are *left out* of "Laws that may apply" (with a note in the file saying so)
+  rather than shown as checked. In this dev DB that is every existing case.
+- `case_store.is_answer_content()` (an actual answer vs an acknowledgement / clarification /
+  technical error) and `list_cases()` items now carry `has_answers`, which enables/disables the
+  button on My Cases. The Ask page mirrors the same rule in `isAnswerResponse()` (App.jsx).
+- `conversation_state.apply_correction()` — **behaviour change in the live app, not just the
+  export.** Corrections only replaced facts sharing a 3+-digit amount or a date, so "actually it
+  was 3 transactions, not 2" left the stale "2 unauthorised transactions" fact in the active state
+  (and in the retrieval context). New `negated_count_phrases()`: when the user names both the new
+  and old count for the same noun ("N noun, not M" / "not M but N noun"), earlier facts containing
+  "M [up to two words] noun" are replaced. Narrow on purpose; the user stated the old value.
+- The export replays corrections using the turn type the app *recorded* for each message (stored
+  on the assistant message) and the same `apply_correction()` rule, one fact at a time so its
+  12-fact cap can't drop anything — it does not re-decide what was a correction.
+- `documents.case_id` has never been populated by the upload flow (0 of 133 rows in the dev DB).
+  Documents are linked to a case by exact `confirmed_fact_context_id` match: confirm-facts stores
+  it on the document row and every answer that used those facts stores it on the message. There
+  is no `case_documents` table; none was added.
+
+**Privacy:**
+- All user-originated and app-generated text goes through `case_file.redact()` = existing
+  `case_store.sanitize_text()` (OTP / PIN / CVV / password / 12-digit / API key / Luhn-valid
+  card) + `fact_sufficiency.sanitize_user_fact()` (spaced Aadhaar-like numbers, Hinglish
+  "otp hai …"). Corpus excerpts (law text) are not altered.
+- Generated per request in memory (`BytesIO`) and streamed back with `Cache-Control: no-store`;
+  nothing is written to the database or kept on disk. The one exception is inherited from the
+  Complaint Drafter: LibreOffice can only convert real files, so PDF conversion uses a
+  `TemporaryDirectory` that is deleted as soon as conversion returns.
+- Logs carry only `case_id`, format and the section list — never case content (tested with
+  `caplog`).
+- **Access control:** the endpoints use the same check as `GET /api/cases/{id}` — the case must
+  exist, else `404`. **This app has no user accounts or sign-in**, so there is no per-user
+  ownership check to mirror and no "guest" state; anyone who can reach the API can export any
+  case, exactly as they can already open or delete it. The requested "another user's case → 404,
+  guest → 401" tests could not be written. Adding auth is a separate, app-wide change.
+
+**Endpoints:** `GET /api/cases/{case_id}/case-file.pdf` and `.../case-file.docx`. `404` unknown
+case; `409` case with no answers yet; `503` on the PDF endpoint when LibreOffice is missing (the
+message tells the user to download the Word version; the dialog then offers it and moves focus to
+it). Filename: `case-file-<slug of title, max 40 chars>-<YYYY-MM-DD>.<ext>`, `[a-z0-9-]` only.
+
+**Frontend:** new `frontend/src/caseFile/` (`api.js`, `CaseFileButton.jsx`) — see
+`frontend/CHANGELOG.md`.
+
+**Tests / eval:** `backend/tests/test_case_file.py` (26 tests: the 5 fixture cases end to end,
+document-labelled facts, correction replacement, no-timeline case, case-law / compiled-summary
+labels, OTP/Aadhaar/password/card redaction, source de-duplication, unverified and unrecorded
+sources excluded, date parsing never estimates, safe filenames, the storage/correction changes,
+API 404/409/503/200 for DOCX and PDF (PDF test skipped without LibreOffice), and "nothing written
+to disk or DB, nothing logged"). `backend/evaluate_case_file.py` + `eval/case_file_cases.json`:
+5 fixture cases seeded through the real storage path with sources built from real parsed-corpus
+chunks; checks each section present/omitted in both the context and the rendered DOCX, and that
+every cited source resolves against `parsed/legal_chunks.jsonl` (chunk id, source file, excerpt).
+Result: 5/5 cases, 119/119 checks.
+
+**Limitations:**
+- Existing cases' sources are excluded (no stored verification record) — see above.
+- A correction replaces the *whole* earlier fact, so other details in that sentence (e.g. a date)
+  go with it — the same rule the live app applies.
+- "Situation in brief" is the stored case summary, which can be an LLM-normalised paraphrase
+  from earlier turns (written at the time, not for this file); it's labelled as the app's summary.
+- Document facts carry no date of their own; the upload date is listed separately.
+- No dark mode: the app has no dark theme anywhere, so the new UI follows the existing light theme.
+- The file's labels are English-only; user text in Hinglish or Devanagari is kept as typed and
+  renders correctly (checked: LibreOffice falls back to a Devanagari font), but copy-pasting
+  Devanagari *out of the PDF* can come out garbled (PDF text-layer shaping); the DOCX is fine.
+
 ## Unreleased — Voice input: `voice_transcription.py` + `POST /api/transcribe` (2026-10-28)
 
 **What:** a new backend endpoint so the Ask page's microphone button (previously present in the

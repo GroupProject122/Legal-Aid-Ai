@@ -72,6 +72,7 @@ import Helplines from './helplines/Helplines.jsx';
 import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
+import { CaseFileButton } from './caseFile/CaseFileButton.jsx';
 
 const navItems = [
   { label: 'Home', icon: Home, page: 'home', href: '#/' },
@@ -1138,7 +1139,18 @@ function ChatComposer({ value, onChange, onSubmit, onAttach, onVoiceStart }) {
   );
 }
 
-function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick }) {
+/** Same rule as backend case_store.is_answer_content(): an actual answer, not an
+ * acknowledgement, clarification question or technical error (all of which also carry an
+ * issue_summary). Drives whether the case file button is enabled. */
+const SUBSTANTIVE_ANSWER_FIELDS = ['what_this_may_involve', 'possible_legal_position', 'suggested_next_steps', 'evidence_to_preserve', 'where_to_approach'];
+function isAnswerResponse(response) {
+  if (!response || response.technical_error || response.clarification?.needed) return false;
+  const answer = response.answer;
+  if (!answer || !String(answer.issue_summary || '').trim()) return false;
+  return (response.sources?.length > 0) || SUBSTANTIVE_ANSWER_FIELDS.some((field) => answer[field]?.length > 0);
+}
+
+function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, caseId, caseTitle }) {
   const scrollRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -1155,7 +1167,17 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
           <span>◇</span>
           <p>Legal consultation workspace</p>
         </div>
-        <button type="button" className="outline-action" onClick={onClear}>New Question</button>
+        <div className="chat-panel-toolbar-actions">
+          {/* Only a saved case can be exported -- an unsaved conversation has no case id yet. */}
+          {caseId ? (
+            <CaseFileButton
+              caseId={caseId}
+              caseTitle={caseTitle}
+              hasAnswers={messages.some((message) => message.role === 'ai' && isAnswerResponse(message.response))}
+            />
+          ) : null}
+          <button type="button" className="outline-action" onClick={onClear}>New Question</button>
+        </div>
       </div>
 
       <div className="chat-scroll" ref={scrollRef}>
@@ -1320,6 +1342,7 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
   const [clarificationStateId, setClarificationStateId] = React.useState(null);
   const [conversationStateId, setConversationStateId] = React.useState(null);
   const [caseId, setCaseId] = React.useState(initialCaseId || null);
+  const [caseTitle, setCaseTitle] = React.useState('');
   const [attachedFactContext, setAttachedFactContext] = React.useState(null);
   const loadingTimer = React.useRef(null);
 
@@ -1341,6 +1364,7 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
         }
         if (ignore) return;
         setCaseId(payload.case?.id || initialCaseId);
+        setCaseTitle(payload.case?.title || '');
         setMessages(messagesFromSavedCase(payload.messages || []));
         const stateId = payload.conversation_state?.conversation_state_id || null;
         setConversationStateId(stateId);
@@ -1473,6 +1497,7 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     setClarificationStateId(null);
     setConversationStateId(null);
     setCaseId(null);
+    setCaseTitle('');
     setCategory('');
     window.sessionStorage.removeItem('legalAidConfirmedFactContext');
     setAttachedFactContext(null);
@@ -1503,6 +1528,8 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
             onClear={handleClear}
             onAttach={() => setIsAttachmentOpen(true)}
             onSourceClick={setSelectedSource}
+            caseId={caseId}
+            caseTitle={caseTitle}
           />
           <QuerySummaryPanel
             category={category}
@@ -3971,6 +3998,12 @@ function MyCasesPage() {
                 >
                   <Pencil size={17} strokeWidth={1.8} />
                 </button>
+                <CaseFileButton
+                  caseId={savedCase.id}
+                  caseTitle={savedCase.title || 'Legal Question'}
+                  hasAnswers={Boolean(savedCase.has_answers)}
+                  compact
+                />
                 <button
                   type="button"
                   className="case-delete-icon-button"

@@ -30,7 +30,10 @@ backend/
 │   ├── document_store.py            persists uploaded documents
 │   ├── document_facts.py            pulls structured facts out of an uploaded document
 │   ├── document_summarizer.py       summarizes an uploaded document
-│   └── case_store.py                stores a user's case/session record
+│   ├── case_store.py                stores a user's case/session record
+│   └── case_file.py                 Case File export: assembles a saved case into DOCX/PDF, no LLM
+│                                     (+ case_file_constants.py, templates/case_file_base.docx)
+│
 │
 ├── Legal education
 │   ├── legal_education.py

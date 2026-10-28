@@ -4,6 +4,35 @@ Notes on notable frontend changes so the team can see what moved and why.
 Entries up to and including 2026-09-06 only touch `frontend/src/App.jsx` and
 `frontend/src/styles.css`; later entries may add new files (noted per entry).
 
+## 2026-10-28 — Case File download (My Cases + Ask page)
+
+New files: `src/caseFile/api.js`, `src/caseFile/CaseFileButton.jsx`. Backend side and the
+"assembled, not generated" design are in the root `CHANGELOG.md`'s "Case File export" entry.
+
+- **Where:** a download icon button on every My Cases card (between Rename and Delete), and a
+  "Download case file" pill next to "New Question" in the Ask page toolbar — shown only once the
+  conversation is a saved case (has a case id); an unsaved conversation has nothing to export.
+- **Disabled state:** a case with no answers yet (only a clarification question, an
+  acknowledgement, or nothing) gets `aria-disabled="true"` rather than `disabled`, so it stays
+  focusable, plus a tooltip ("Available once Legal Aid AI has answered a question in this
+  case.") that shows on hover *and* keyboard focus, linked via `aria-describedby`. My Cases reads
+  the new `has_answers` field from `GET /api/cases`; the Ask page uses `isAnswerResponse()`
+  (App.jsx), which mirrors the backend's `case_store.is_answer_content()`.
+- **Confirmation dialog:** shows the "not legal advice / not reviewed by a lawyer" notice
+  prominently before anything downloads, a one-paragraph description of what's in the file,
+  then "Download PDF" (primary) and "Word (.docx)". Focus starts on "Download PDF"; Tab is
+  trapped in the dialog; Escape closes it and returns focus to the button that opened it.
+- **PDF unavailable (503, LibreOffice missing):** the dialog says so, disables the PDF button,
+  promotes "Word (.docx)" to the primary style and moves focus to it.
+- Reuses `saveBlob()` from `complaints/api.js` for the actual download.
+- **Checked in headless Chrome** (scratch backend + fixture cases): 390px phone width (no
+  horizontal scroll on My Cases or Ask; dialog fits; buttons stack), 1366px desktop, keyboard-only
+  open → Tab cycle → Escape → focus return, a real PDF download with the expected filename, and
+  the 503 → Word fallback path. A mobile-only mismatch (New Question stretched full-width, the new
+  pill didn't) was found that way and fixed.
+- **Dark mode:** the app has no dark theme anywhere (no `prefers-color-scheme` rules, no toggle),
+  so there was nothing to check against; the new UI uses the existing light palette.
+
 ## 2026-10-28 — Ask page microphone wired up
 
 The Ask page's mic button (`ChatComposer` in `App.jsx`) existed in the UI already but had no

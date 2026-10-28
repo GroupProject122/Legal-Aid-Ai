@@ -79,6 +79,35 @@ npm run dev
 
 Open the Vite URL, then use the Ask Question page. The frontend calls `POST /api/ask` through the Vite dev proxy.
 
+## Case File export
+
+From **My Cases** (download icon on each case) or inside an open case on the **Ask** page
+("Download case file"), a user can download a saved case as a PDF or Word file to take to a
+lawyer or the District Legal Services Authority. It is **assembled, not generated**: no LLM call
+is made; every line comes from the saved conversation, user-confirmed document facts, or corpus
+sources that passed claim verification. See `backend/case_file.py` and the 2026-10-28 entry in
+`CHANGELOG.md`.
+
+| Endpoint | Returns |
+| --- | --- |
+| `GET /api/cases/{case_id}/case-file.pdf` | PDF (`application/pdf`) |
+| `GET /api/cases/{case_id}/case-file.docx` | Word document |
+
+Both return `404` for an unknown case (the same check as `GET /api/cases/{case_id}`) and `409` if
+the case has no answers yet. Files are generated per request and streamed back; nothing is
+stored. The filename is `case-file-<short-title>-<YYYY-MM-DD>.<ext>`.
+
+**PDF needs LibreOffice** (`soffice` on `PATH`), the same requirement as the Complaint Drafter's
+PDF download. On macOS: `brew install --cask libreoffice`; on Debian/Ubuntu:
+`sudo apt install libreoffice-writer`. Without it, the `.pdf` endpoint returns `503` with a
+message telling the user to download the Word version instead, and the UI offers that option.
+DOCX export has no extra requirement.
+
+The template lives at `backend/templates/case_file_base.docx`; regenerate it with
+`python -c "import build_templates as b; b.build_case_file_base_template()"` from `backend/`.
+Evaluation: `python evaluate_case_file.py` (5 fixture cases, writes
+`eval/case_file_evaluation.{json,md}`).
+
 The **Schemes** page (`#/schemes`) is served by the same frontend but talks to a
 **separate** backend — see the next section. If the schemes backend isn't
 running, every other page still works; only the Schemes search fails (with a

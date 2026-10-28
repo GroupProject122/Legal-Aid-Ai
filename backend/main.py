@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 import logging
 import re
 from contextlib import asynccontextmanager
@@ -7,11 +8,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import clarification
+import case_file
 import case_store
 import claim_verifier
 import complaint_drafter_router
@@ -197,6 +199,54 @@ def open_saved_case(case_id: int) -> dict:
         "conversation_state": case.get("conversation_state"),
         "confirmed_document_context": case.get("confirmed_document_context"),
     }
+
+
+CASE_FILE_MEDIA_TYPES = {
+    "pdf": "application/pdf",
+    "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
+
+
+def build_case_file_response(case_id: int, file_format: str) -> Response:
+    """Shared by the .pdf/.docx endpoints. Same access check as GET /api/cases/{case_id} (the
+    case must exist -> otherwise 404); this app has no user accounts, so there is no further
+    ownership check to mirror. Generated in memory per request and streamed back -- never saved
+    to disk or the database. Logs ids/counts only, never case content."""
+    case = case_file.load_case_for_export(case_id)
+    if case is None:
+        raise HTTPException(status_code=404, detail="Case not found.")
+    generated_on = datetime.date.today()
+    try:
+        context = case_file.build_case_file_context(case, generated_on=generated_on)
+        if file_format == "pdf":
+            content = case_file.render_case_file_pdf(context)
+        else:
+            content = case_file.render_case_file_docx(context)
+    except case_file.CaseFileError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except case_file.PdfConversionError as exc:
+        logger.warning("Case file PDF conversion unavailable case_id=%s", case_id)
+        raise HTTPException(
+            status_code=503,
+            detail="PDF export isn't available on this server right now (LibreOffice is not installed). Download the Word (.docx) version instead.",
+        ) from exc
+    logger.info("Case file exported case_id=%s format=%s sections=%s", case_id, file_format, ",".join(context["sections"]))
+    filename = case_file.case_file_filename(context["title"], generated_on, file_format)
+    return Response(
+        content=content,
+        media_type=CASE_FILE_MEDIA_TYPES[file_format],
+        headers={"Content-Disposition": f'attachment; filename="{filename}"', "Cache-Control": "no-store"},
+    )
+
+
+@app.get("/api/cases/{case_id}/case-file.pdf")
+def download_case_file_pdf(case_id: int) -> Response:
+    return build_case_file_response(case_id, "pdf")
+
+
+@app.get("/api/cases/{case_id}/case-file.docx")
+def download_case_file_docx(case_id: int) -> Response:
+    return build_case_file_response(case_id, "docx")
 
 
 @app.delete("/api/cases/{case_id}")
