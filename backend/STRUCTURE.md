@@ -23,7 +23,14 @@ backend/
 │   ├── corpus_gap.py                detects when the corpus has no authority for the topic
 │   │                                 (keyword-based; this is where "judgment in" / "held in" /
 │   │                                 "precedent" are flagged as case-law questions — see §4)
-│   └── conversation_state.py        multi-turn conversation/session state
+│   ├── conversation_state.py        multi-turn conversation/session state; sorts each follow-up
+│   │                                 (question / fact / correction / new issue / thanks) --
+│   │                                 keyword rules give a hint, Gemini decides
+│   └── turn_memory.py               correction memory: records rules-vs-Gemini disagreements
+│                                     (redacted, pending review), reuses them as examples and,
+│                                     once approved, as a no-Gemini shortcut. Own table in
+│                                     legal_aid.db -- never in the legal vectorstore
+│                                     Review with: python review_turn_corrections.py
 │
 ├── Document tools (user-uploaded documents, separate from the legal corpus)
 │   ├── document_extractor.py        extracts text from an uploaded .pdf/.docx/.txt

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -699,15 +701,34 @@ def test_saved_faiss_index_loads_and_metadata_order_is_aligned(monkeypatch, tmp_
     assert validation["alignment_sample_positions"][-1]["chunk_id"] == "consumer_test__chunk_0003"
 
 
+class WordTokenizer:
+    """Stands in for the embedding model's tokenizer: one token per whitespace-separated word,
+    with the same call signature and offset_mapping output as a Hugging Face fast tokenizer."""
+
+    def __call__(self, text, add_special_tokens=False, return_offsets_mapping=False):
+        offsets = [(match.start(), match.end()) for match in re.finditer(r"\S+", text)]
+        return {"input_ids": list(range(len(offsets))), "offset_mapping": offsets}
+
+
+class FakeEmbeddingModel:
+    def __init__(self, max_seq_length: int = 256) -> None:
+        self.tokenizer = WordTokenizer()
+        self.max_seq_length = max_seq_length
+
+
+def use_temp_vectorstore(monkeypatch, tmp_path: Path) -> None:
+    vectorstore_dir = tmp_path / "vectorstore"
+    monkeypatch.setattr(ingest, "VECTORSTORE_DIR", vectorstore_dir)
+    monkeypatch.setattr(ingest, "INDEX_PATH", vectorstore_dir / "index.faiss")
+    monkeypatch.setattr(ingest, "METADATA_PATH", vectorstore_dir / "metadata.json")
+
+
 def test_build_vector_store_from_jsonl_uses_jsonl_without_parsing(monkeypatch, tmp_path):
     import rag
 
     chunk = parsed_metadata_fixture()["chunks"][0]
     chunks_path = write_chunks_jsonl(tmp_path, [chunk])
-    vectorstore_dir = tmp_path / "vectorstore"
-    monkeypatch.setattr(ingest, "VECTORSTORE_DIR", vectorstore_dir)
-    monkeypatch.setattr(ingest, "INDEX_PATH", vectorstore_dir / "index.faiss")
-    monkeypatch.setattr(ingest, "METADATA_PATH", vectorstore_dir / "metadata.json")
+    use_temp_vectorstore(monkeypatch, tmp_path)
 
     def fail_parse_documents():
         raise AssertionError("Normal indexing must not parse PDFs")
@@ -718,12 +739,142 @@ def test_build_vector_store_from_jsonl_uses_jsonl_without_parsing(monkeypatch, t
 
     monkeypatch.setattr(ingest, "parse_documents", fail_parse_documents)
     monkeypatch.setattr(rag, "embed_texts", fake_embed_texts)
+    monkeypatch.setattr(rag, "get_sentence_transformer", lambda _name=None: FakeEmbeddingModel())
 
     metadata = ingest.build_vector_store_from_jsonl(chunks_path)
 
     assert metadata["chunk_count"] == 1
     assert metadata["embedding_dimension"] == 384
     assert metadata["index_build"]["saved_validation"]["faiss_vector_count"] == 1
+    assert metadata["vector_chunk_positions"] == [0]
+
+
+# --- Windowed embeddings: every token of a long chunk reaches the search index ---
+
+
+def test_short_chunk_is_embedded_once_unchanged():
+    text = "Section 5 — Short\n5. Short provision text."
+
+    assert ingest.embedding_windows(text, "Section 5 — Short", WordTokenizer(), max_tokens=20) == [text]
+
+
+def test_long_chunk_windows_cover_every_word_within_the_limit_and_repeat_the_heading():
+    heading = "Section 35 — Manner of complaint"
+    words = [f"w{i}" for i in range(100)]
+    text = heading + "\n" + " ".join(words)
+
+    windows = ingest.embedding_windows(text, heading, WordTokenizer(), max_tokens=30)
+
+    assert len(windows) > 1
+    assert windows[0].startswith(heading)
+    assert all(window.startswith(heading + "\n") for window in windows[1:])
+    assert all(len(window.split()) <= 30 - 2 for window in windows)  # room for [CLS] and [SEP]
+    covered = {word for window in windows for word in window.split()}
+    assert set(words) <= covered
+    assert words[-1] in windows[-1].split()
+
+
+def test_consecutive_windows_overlap(monkeypatch):
+    monkeypatch.setattr(ingest, "EMBEDDING_WINDOW_OVERLAP_TOKENS", 4)
+    text = " ".join(f"w{i}" for i in range(60))
+
+    windows = ingest.embedding_windows(text, "", WordTokenizer(), max_tokens=22)
+
+    for earlier, later in zip(windows, windows[1:]):
+        assert set(earlier.split()) & set(later.split())
+
+
+def test_very_long_heading_is_capped(monkeypatch):
+    monkeypatch.setattr(ingest, "EMBEDDING_HEADING_MAX_TOKENS", 3)
+    heading = "Case name with a very long citation and a good law note"
+    text = heading + "\n" + " ".join(f"w{i}" for i in range(80))
+
+    windows = ingest.embedding_windows(text, heading, WordTokenizer(), max_tokens=30)
+
+    assert all(window.startswith("Case name with\n") for window in windows[1:])
+
+
+def test_embedding_heading_is_rebuilt_from_chunk_metadata():
+    chunk = parsed_metadata_fixture()["chunks"][0]
+
+    assert ingest.embedding_heading(chunk) == "Section 1 — Short title"
+
+
+def test_long_chunk_gets_several_vectors_all_pointing_to_it(monkeypatch, tmp_path):
+    import rag
+
+    short = parsed_metadata_fixture()["chunks"][0]
+    long = {**short, "chunk_id": "consumer_test_document__chunk_0002", "text": "Section 1 — Short title\n" + " ".join(f"w{i}" for i in range(200))}
+    chunks_path = write_chunks_jsonl(tmp_path, [short, long])
+    use_temp_vectorstore(monkeypatch, tmp_path)
+    monkeypatch.setattr(rag, "get_sentence_transformer", lambda _name=None: FakeEmbeddingModel(max_seq_length=64))
+    monkeypatch.setattr(rag, "embed_texts", lambda texts: np.ones((len(texts), 384), dtype="float32"))
+
+    metadata = ingest.build_vector_store_from_jsonl(chunks_path)
+
+    positions = metadata["vector_chunk_positions"]
+    assert positions[0] == 0 and set(positions[1:]) == {1} and len(positions) > 2
+    assert metadata["embedding_windows"]["windowed_chunk_count"] == 1
+    assert metadata["index_build"]["saved_validation"]["faiss_vector_count"] == len(positions)
+
+
+def test_saved_index_must_give_every_chunk_a_vector(tmp_path):
+    import faiss
+
+    index = faiss.IndexFlatIP(384)
+    index.add(np.ones((2, 384), dtype="float32"))
+    faiss.write_index(index, str(tmp_path / "index.faiss"))
+    (tmp_path / "metadata.json").write_text(
+        json.dumps({"chunks": [{"chunk_id": "a"}, {"chunk_id": "b"}], "vector_chunk_positions": [0, 0]}),
+        encoding="utf-8",
+    )
+
+    try:
+        ingest.validate_saved_vector_store(tmp_path / "index.faiss", tmp_path / "metadata.json")
+    except ValueError as exc:
+        assert "no vector" in str(exc)
+    else:
+        raise AssertionError("an index missing a chunk's vector must be rejected")
+
+
+def test_search_scores_a_chunk_by_its_best_window_and_returns_distinct_chunks():
+    import faiss
+
+    import rag
+
+    # Vectors 0-2 are windows of chunk 0, vector 3 is chunk 1, vector 4 is chunk 2.
+    vectors = np.zeros((5, 384), dtype="float32")
+    for row, value in enumerate([0.9, 0.95, 0.8, 0.7, 0.5]):
+        vectors[row, 0] = value
+    engine = rag.LegalRAG()
+    engine.index = faiss.IndexFlatIP(384)
+    engine.index.add(vectors)
+    engine.chunks = [{"chunk_id": "c0"}, {"chunk_id": "c1"}, {"chunk_id": "c2"}]
+    engine.vector_chunk_positions = [0, 0, 0, 1, 2]
+    query = np.zeros((1, 384), dtype="float32")
+    query[0, 0] = 1.0
+
+    matches = engine._best_chunk_matches(query, chunk_count=3)
+
+    assert [position for _score, position in matches] == [0, 1, 2]
+    assert matches[0][0] == pytest.approx(0.95)
+
+
+def test_search_still_works_with_an_index_built_before_windows():
+    import faiss
+
+    import rag
+
+    vectors = np.zeros((2, 384), dtype="float32")
+    vectors[0, 0], vectors[1, 0] = 0.4, 0.9
+    engine = rag.LegalRAG()
+    engine.index = faiss.IndexFlatIP(384)
+    engine.index.add(vectors)
+    engine.chunks = [{"chunk_id": "c0"}, {"chunk_id": "c1"}]
+    query = np.zeros((1, 384), dtype="float32")
+    query[0, 0] = 1.0
+
+    assert [position for _score, position in engine._best_chunk_matches(query, chunk_count=2)] == [1, 0]
 
 
 def test_normal_indexing_path_uses_frozen_jsonl_builder(monkeypatch):

@@ -1381,8 +1381,20 @@ def validate_saved_vector_store(index_path: Path, metadata_path: Path) -> dict:
         metadata = json.load(file)
     chunks = metadata.get("chunks", [])
     chunk_ids = [chunk.get("chunk_id") for chunk in chunks]
-    if index.ntotal != len(chunks):
-        raise ValueError(f"FAISS vector count {index.ntotal} does not match metadata count {len(chunks)}.")
+    vector_chunk_positions = metadata.get("vector_chunk_positions")
+    if vector_chunk_positions is None:
+        # Index built before windowed embeddings: exactly one vector per chunk.
+        if index.ntotal != len(chunks):
+            raise ValueError(f"FAISS vector count {index.ntotal} does not match metadata count {len(chunks)}.")
+    else:
+        if index.ntotal != len(vector_chunk_positions):
+            raise ValueError(
+                f"FAISS vector count {index.ntotal} does not match vector_chunk_positions count {len(vector_chunk_positions)}."
+            )
+        if any(not 0 <= position < len(chunks) for position in vector_chunk_positions):
+            raise ValueError("vector_chunk_positions points outside the metadata chunk list.")
+        if set(vector_chunk_positions) != set(range(len(chunks))):
+            raise ValueError("Some chunks have no vector in the FAISS index.")
     if index.d != 384:
         raise ValueError(f"Expected FAISS dimension 384, got {index.d}.")
     if len(set(chunk_ids)) != len(chunk_ids):
@@ -1431,14 +1443,79 @@ def write_metadata_safely(metadata: dict) -> None:
     temp_metadata_path.replace(METADATA_PATH)
 
 
+# The embedding model only reads the first `max_seq_length` tokens of a text (256 for
+# all-MiniLM-L6-v2) and silently ignores the rest. Measured on this corpus: 47% of chunks were
+# longer than that, losing on average a third of their text from search -- a proviso or
+# explanation at the end of a long section could not be found by its wording at all. So a long
+# chunk is embedded as several overlapping windows that together cover every token; each vector
+# points back to its chunk, and retrieval keeps a chunk's best-scoring window
+# (rag.LegalRAG.retrieve_candidates). The chunks themselves -- what Gemini reads, what sources
+# cite -- are unchanged.
+EMBEDDING_WINDOW_OVERLAP_TOKENS = 32
+# Windows after the first repeat the chunk's heading ("Section 35 -- ...", or the case name) so a
+# window from the end of a section still says which section it is. Capped so a long heading
+# (a case name with citation and a good-law note) cannot crowd out the text itself.
+EMBEDDING_HEADING_MAX_TOKENS = 64
+# Headroom for a window's text tokenizing to a few more tokens on its own than it did in place
+# (a window can start part-way through a word). Anything over the limit would just be truncated.
+EMBEDDING_WINDOW_SAFETY_TOKENS = 8
+
+
+def embedding_heading(chunk: dict) -> str:
+    """The heading enrich_chunk_text() put at the top of this chunk, rebuilt from its metadata."""
+    return enrich_chunk_text("", chunk).strip()
+
+
+def embedding_windows(text: str, heading: str, tokenizer, max_tokens: int) -> list[str]:
+    """Split `text` into texts the embedding model reads in full: `[text]` when it already fits,
+    otherwise overlapping windows covering every token. The first window is the start of the
+    chunk as-is (it already begins with the heading); later ones are `heading` + a slice."""
+    budget = max_tokens - 2  # the model adds [CLS] and [SEP]
+    offsets = tokenizer(text, add_special_tokens=False, return_offsets_mapping=True)["offset_mapping"]
+    if len(offsets) <= budget:
+        return [text]
+
+    heading_offsets = (
+        tokenizer(heading, add_special_tokens=False, return_offsets_mapping=True)["offset_mapping"] if heading else []
+    )
+    if len(heading_offsets) > EMBEDDING_HEADING_MAX_TOKENS:
+        heading = heading[: heading_offsets[EMBEDDING_HEADING_MAX_TOKENS - 1][1]]
+        heading_offsets = heading_offsets[:EMBEDDING_HEADING_MAX_TOKENS]
+    body_budget = max(2, budget - len(heading_offsets) - EMBEDDING_WINDOW_SAFETY_TOKENS)
+    # Never more than half a window, so each window always moves forward through the text.
+    overlap = min(EMBEDDING_WINDOW_OVERLAP_TOKENS, body_budget // 2)
+
+    windows = [text[: offsets[budget - 1][1]]]
+    start = budget - overlap
+    while True:
+        end = min(start + body_budget, len(offsets))
+        piece = text[offsets[start][0] : offsets[end - 1][1]].strip()
+        windows.append(f"{heading}\n{piece}" if heading else piece)
+        if end == len(offsets):
+            return windows
+        start = end - overlap
+
+
+def embedding_inputs(chunks: list[dict], tokenizer, max_tokens: int) -> tuple[list[str], list[int]]:
+    """Every text to embed, and for each one the position of the chunk it belongs to."""
+    texts: list[str] = []
+    chunk_positions: list[int] = []
+    for position, chunk in enumerate(chunks):
+        for window in embedding_windows(chunk["text"], embedding_heading(chunk), tokenizer, max_tokens):
+            texts.append(window)
+            chunk_positions.append(position)
+    return texts, chunk_positions
+
+
 def build_vector_store_from_jsonl(chunks_path: Path = LEGAL_CHUNKS_PATH) -> dict:
-    from rag import embed_texts
+    from rag import embed_texts, get_sentence_transformer
 
     started_at = time.perf_counter()
     all_chunks = load_legal_chunks_jsonl(chunks_path)
     pre_index_validation = validate_chunks_for_indexing(all_chunks)
     parsed_metadata = metadata_from_jsonl_chunks(all_chunks, chunks_path)
-    texts = [chunk["text"] for chunk in all_chunks]
+    model = get_sentence_transformer(EMBEDDING_MODEL)
+    texts, vector_chunk_positions = embedding_inputs(all_chunks, model.tokenizer, model.max_seq_length)
     embedding_started_at = time.perf_counter()
     vectors = embed_texts(texts)
     embedding_time_seconds = round(time.perf_counter() - embedding_started_at, 2)
@@ -1446,11 +1523,20 @@ def build_vector_store_from_jsonl(chunks_path: Path = LEGAL_CHUNKS_PATH) -> dict
     index = faiss.IndexFlatIP(vectors.shape[1])
     index.add(vectors)
 
+    windowed_chunks = sum(1 for count in Counter(vector_chunk_positions).values() if count > 1)
     metadata = {
         "embedding_provider": EMBEDDING_PROVIDER,
         "embedding_model": EMBEDDING_MODEL,
         "embedding_dimension": int(vectors.shape[1]),
         "faiss_index_type": "IndexFlatIP",
+        # FAISS vector i belongs to chunks[vector_chunk_positions[i]].
+        "vector_chunk_positions": vector_chunk_positions,
+        "embedding_windows": {
+            "max_tokens": int(model.max_seq_length),
+            "overlap_tokens": EMBEDDING_WINDOW_OVERLAP_TOKENS,
+            "vector_count": len(vector_chunk_positions),
+            "windowed_chunk_count": windowed_chunks,
+        },
         **parsed_metadata,
     }
     saved_validation = write_vector_store_safely(index, metadata)

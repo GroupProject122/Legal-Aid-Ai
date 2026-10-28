@@ -1,0 +1,1324 @@
+{
+  "summary": {
+    "run": {
+      "questions": 50,
+      "scored": 50,
+      "total_minutes": 18.2,
+      "median_seconds_per_question": 21.0,
+      "outcomes": {
+        "grounded_answer": {
+          "n": 38,
+          "full_rouge1": 0.277,
+          "full_rouge2": 0.096,
+          "full_rougeL": 0.179,
+          "full_bertscore_f1": 0.115,
+          "short_rougeL": 0.197,
+          "short_bertscore_f1": 0.221,
+          "retrieval_hit_rate": 0.763,
+          "clarification_rate": 0.342,
+          "ids": [
+            "consumer_03",
+            "consumer_04",
+            "consumer_05",
+            "consumer_07",
+            "consumer_08",
+            "consumer_09",
+            "consumer_10",
+            "consumer_11",
+            "consumer_12",
+            "consumer_13",
+            "cyber_01",
+            "cyber_02",
+            "cyber_03",
+            "cyber_04",
+            "cyber_06",
+            "cyber_07",
+            "cyber_08",
+            "cyber_09",
+            "banking_03",
+            "banking_05",
+            "banking_06",
+            "rti_01",
+            "rti_03",
+            "rti_04",
+            "rti_05",
+            "rti_06",
+            "rti_07",
+            "legalaid_01",
+            "legalaid_02",
+            "legalaid_03",
+            "legalaid_04",
+            "legalaid_05",
+            "legalaid_06",
+            "legalaid_07",
+            "legalaid_08",
+            "legalaid_09",
+            "legalaid_10",
+            "legalaid_11"
+          ]
+        },
+        "insufficient": {
+          "n": 9,
+          "full_rouge1": 0.109,
+          "full_rouge2": 0.003,
+          "full_rougeL": 0.084,
+          "full_bertscore_f1": -0.073,
+          "short_rougeL": 0.056,
+          "short_bertscore_f1": -0.037,
+          "retrieval_hit_rate": 0,
+          "clarification_rate": 0.333,
+          "ids": [
+            "consumer_02",
+            "consumer_14",
+            "banking_01",
+            "banking_02",
+            "banking_04",
+            "banking_07",
+            "banking_08",
+            "rti_02",
+            "rti_08"
+          ]
+        },
+        "clarification_unresolved": {
+          "n": 3,
+          "full_rouge1": 0.07,
+          "full_rouge2": 0.008,
+          "full_rougeL": 0.07,
+          "full_bertscore_f1": -0.097,
+          "short_rougeL": 0.07,
+          "short_bertscore_f1": -0.097,
+          "retrieval_hit_rate": 0,
+          "clarification_rate": 1,
+          "ids": [
+            "consumer_01",
+            "consumer_06",
+            "cyber_05"
+          ]
+        }
+      }
+    },
+    "overall": {
+      "n": 50,
+      "full_rouge1": 0.235,
+      "full_rouge2": 0.074,
+      "full_rougeL": 0.155,
+      "full_bertscore_f1": 0.068,
+      "short_rougeL": 0.164,
+      "short_bertscore_f1": 0.155,
+      "retrieval_hit_rate": 0.58,
+      "clarification_rate": 0.38
+    },
+    "by_topic": {
+      "consumer law": {
+        "n": 14,
+        "full_rouge1": 0.217,
+        "full_rouge2": 0.072,
+        "full_rougeL": 0.164,
+        "full_bertscore_f1": 0.038,
+        "short_rougeL": 0.145,
+        "short_bertscore_f1": 0.099,
+        "retrieval_hit_rate": 0.5,
+        "clarification_rate": 0.643
+      },
+      "cybercrime reporting": {
+        "n": 9,
+        "full_rouge1": 0.233,
+        "full_rouge2": 0.056,
+        "full_rougeL": 0.14,
+        "full_bertscore_f1": 0.062,
+        "short_rougeL": 0.181,
+        "short_bertscore_f1": 0.183,
+        "retrieval_hit_rate": 0.778,
+        "clarification_rate": 0.556
+      },
+      "banking ombudsman (RBI)": {
+        "n": 8,
+        "full_rouge1": 0.227,
+        "full_rouge2": 0.074,
+        "full_rougeL": 0.15,
+        "full_bertscore_f1": 0.05,
+        "short_rougeL": 0.132,
+        "short_bertscore_f1": 0.091,
+        "retrieval_hit_rate": 0.375,
+        "clarification_rate": 0.5
+      },
+      "right to information": {
+        "n": 8,
+        "full_rouge1": 0.238,
+        "full_rouge2": 0.065,
+        "full_rougeL": 0.154,
+        "full_bertscore_f1": 0.074,
+        "short_rougeL": 0.183,
+        "short_bertscore_f1": 0.174,
+        "retrieval_hit_rate": 0.75,
+        "clarification_rate": 0.125
+      },
+      "free legal aid": {
+        "n": 11,
+        "full_rouge1": 0.262,
+        "full_rouge2": 0.1,
+        "full_rougeL": 0.161,
+        "full_bertscore_f1": 0.121,
+        "short_rougeL": 0.185,
+        "short_bertscore_f1": 0.237,
+        "retrieval_hit_rate": 0.545,
+        "clarification_rate": 0
+      }
+    },
+    "not_scored": [],
+    "bertscore_model": "roberta-large",
+    "bertscore_rescaled_with_baseline": true
+  },
+  "items": [
+    {
+      "id": "consumer_01",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "clarification_unresolved",
+      "needed_clarification": true,
+      "outcome": "clarification_unresolved",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.09411764705882351,
+        "rouge2": 0.024096385542168676,
+        "rougeL": 0.09411764705882351,
+        "bertscore_f1": -0.03689059242606163
+      },
+      "short": {
+        "rouge1": 0.09411764705882351,
+        "rouge2": 0.024096385542168676,
+        "rougeL": 0.09411764705882351,
+        "bertscore_f1": -0.036890238523483276
+      },
+      "question": "Who is a consumer?",
+      "app_short_answer": "What happened with the product or service?"
+    },
+    {
+      "id": "consumer_02",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.12068965517241378,
+        "rouge2": 0.017543859649122806,
+        "rougeL": 0.08620689655172414,
+        "bertscore_f1": -0.13932345807552338
+      },
+      "short": {
+        "rouge1": 0.04705882352941177,
+        "rouge2": 0.0,
+        "rougeL": 0.04705882352941177,
+        "bertscore_f1": -0.05724967271089554
+      },
+      "question": "Who is a not a consumer?",
+      "app_short_answer": "The generated answer itself indicates that the retrieved material is insufficient."
+    },
+    {
+      "id": "consumer_03",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.2557077625570776,
+        "rouge2": 0.046082949308755755,
+        "rougeL": 0.1735159817351598,
+        "bertscore_f1": -0.13423438370227814
+      },
+      "short": {
+        "rouge1": 0.22857142857142856,
+        "rouge2": 0.03883495145631068,
+        "rougeL": 0.15238095238095237,
+        "bertscore_f1": -0.027984200045466423
+      },
+      "question": "Who can make complaint?",
+      "app_short_answer": "Based on the facts provided, a consumer complaint before a consumer commission may be filed by the consumer themselves, recognized consumer organizations, or authorized agents, provided the commission guards against unauthorized agents and touts."
+    },
+    {
+      "id": "consumer_04",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.26666666666666666,
+        "rouge2": 0.03389830508474576,
+        "rougeL": 0.21666666666666667,
+        "bertscore_f1": -0.06268907338380814
+      },
+      "short": {
+        "rouge1": 0.16666666666666666,
+        "rouge2": 0.034482758620689655,
+        "rougeL": 0.09999999999999999,
+        "bertscore_f1": 0.03691566735506058
+      },
+      "question": "Where the complaint can be filed?",
+      "app_short_answer": "Based on the facts provided, you may file your consumer complaint before the appropriate District Commission."
+    },
+    {
+      "id": "consumer_05",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.6849315068493151,
+        "rouge2": 0.5138888888888888,
+        "rougeL": 0.6164383561643836,
+        "bertscore_f1": 0.4984506666660309
+      },
+      "short": {
+        "rouge1": 0.4915254237288136,
+        "rouge2": 0.3620689655172414,
+        "rougeL": 0.4067796610169491,
+        "bertscore_f1": 0.390709787607193
+      },
+      "question": "What is meant by ‘deficiency’ under the Act?",
+      "app_short_answer": "Under the Consumer Protection Act, deficiency means any fault, imperfection, shortcoming, or inadequacy in the quality, nature, and manner of performance required to be maintained in relation to a service."
+    },
+    {
+      "id": "consumer_06",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "clarification_unresolved",
+      "needed_clarification": true,
+      "outcome": "clarification_unresolved",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.06629834254143646,
+        "rouge2": 0.0,
+        "rougeL": 0.06629834254143646,
+        "bertscore_f1": -0.14082828164100647
+      },
+      "short": {
+        "rouge1": 0.06629834254143646,
+        "rouge2": 0.0,
+        "rougeL": 0.06629834254143646,
+        "bertscore_f1": -0.14082792401313782
+      },
+      "question": "What is an unfair contract?",
+      "app_short_answer": "The query seeks a general legal definition rather than retrieval based on a specific consumer dispute or transaction."
+    },
+    {
+      "id": "consumer_07",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.2815533980582524,
+        "rouge2": 0.029411764705882353,
+        "rougeL": 0.16504854368932037,
+        "bertscore_f1": -0.059533923864364624
+      },
+      "short": {
+        "rouge1": 0.17241379310344826,
+        "rouge2": 0.03508771929824561,
+        "rougeL": 0.1206896551724138,
+        "bertscore_f1": -0.07048936188220978
+      },
+      "question": "What is a misleading advertisement?",
+      "app_short_answer": "Based on the retrieved material, a misleading advertisement is generally defined through conditions that determine what makes an advertisement valid and non-misleading. It involves representations that must be truthful, honest, and free from exaggeration regarding accuracy, scientific validity, or performance."
+    },
+    {
+      "id": "consumer_08",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.12941176470588237,
+        "rouge2": 0.03571428571428572,
+        "rougeL": 0.09411764705882351,
+        "bertscore_f1": 0.072535939514637
+      },
+      "short": {
+        "rouge1": 0.37037037037037035,
+        "rouge2": 0.038461538461538464,
+        "rougeL": 0.14814814814814817,
+        "bertscore_f1": 0.26630425453186035
+      },
+      "question": "Can I claim compensation if the product itself is damaged?",
+      "app_short_answer": "You may bring a product liability action or seek consumer remedies if a product is damaged or defective. Based on the retrieved material, claims for compensation can be pursued against manufacturers, service providers, or sellers under the Consumer Protection Act."
+    },
+    {
+      "id": "consumer_09",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.2830188679245283,
+        "rouge2": 0.05714285714285714,
+        "rougeL": 0.16037735849056603,
+        "bertscore_f1": 0.08338118344545364
+      },
+      "short": {
+        "rouge1": 0.19565217391304346,
+        "rouge2": 0.022222222222222223,
+        "rougeL": 0.10869565217391304,
+        "bertscore_f1": 0.18006068468093872
+      },
+      "question": "Can a consumer complaint be resolved through mediation?",
+      "app_short_answer": "Yes, based on the retrieved material, a consumer complaint may be resolved through mediation when referred by a Consumer Commission, provided the matter does not fall under excluded categories like medical negligence resulting in grievous injury or serious fraud."
+    },
+    {
+      "id": "consumer_10",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.14035087719298245,
+        "rouge2": 0.03636363636363636,
+        "rougeL": 0.10526315789473682,
+        "bertscore_f1": 0.2842402756214142
+      },
+      "short": {
+        "rouge1": 0.14035087719298245,
+        "rouge2": 0.03636363636363636,
+        "rougeL": 0.10526315789473682,
+        "bertscore_f1": 0.2842402756214142
+      },
+      "question": "Is there any fee to be paid for Mediation?",
+      "app_short_answer": "Based on the Consumer Protection (Mediation) Rules, 2020, the retrieved material does not mention a specific fee to be paid for mediation, though it indicates that if a settlement is reached, you may be entitled to a full refund of the application fee paid in respect of the complaint."
+    },
+    {
+      "id": "consumer_11",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.0909090909090909,
+        "rouge2": 0.0,
+        "rougeL": 0.07792207792207792,
+        "bertscore_f1": 0.07769845426082611
+      },
+      "short": {
+        "rouge1": 0.16666666666666666,
+        "rouge2": 0.0,
+        "rougeL": 0.08333333333333333,
+        "bertscore_f1": 0.23033753037452698
+      },
+      "question": "Can appeal be filed after settlement through mediation?",
+      "app_short_answer": "Based on the retrieved material concerning consumer mediation, parties generally shall not initiate judicial proceedings in respect of a matter that is the subject-matter of the mediation and where they have expressly undertaken not to initiate such proceedings. Therefore, filing an appeal after a settlement may be restricted if it covers the settled subject-matter and such an undertaking was given."
+    },
+    {
+      "id": "consumer_12",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.27329192546583847,
+        "rouge2": 0.05031446540880504,
+        "rougeL": 0.14906832298136646,
+        "bertscore_f1": 0.1231839507818222
+      },
+      "short": {
+        "rouge1": 0.24444444444444444,
+        "rouge2": 0.022727272727272728,
+        "rougeL": 0.15555555555555559,
+        "bertscore_f1": 0.10858706384897232
+      },
+      "question": "Does consumer need an advocate to represent his case in the Commission?",
+      "app_short_answer": "Based on the retrieved material, you as a consumer are permitted to appear in person before the Consumer Commission, or you may choose to appear through an agent or counsel."
+    },
+    {
+      "id": "consumer_13",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.26373626373626374,
+        "rouge2": 0.14760147601476015,
+        "rougeL": 0.21978021978021975,
+        "bertscore_f1": 0.1369473785161972
+      },
+      "short": {
+        "rouge1": 0.45544554455445546,
+        "rouge2": 0.2828282828282828,
+        "rougeL": 0.41584158415841577,
+        "bertscore_f1": 0.34237992763519287
+      },
+      "question": "What is the time limit for filing the complaint?",
+      "app_short_answer": "The retrieved material indicates that you must generally file a consumer complaint within two years from the date on which the cause of action has arisen. However, the consumer commission may entertain a complaint after this period if you satisfy it that there was sufficient cause for not filing within time."
+    },
+    {
+      "id": "consumer_14",
+      "domain": "consumer",
+      "topic": "consumer law",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.0813953488372093,
+        "rouge2": 0.011764705882352941,
+        "rougeL": 0.06976744186046512,
+        "bertscore_f1": -0.17572173476219177
+      },
+      "short": {
+        "rouge1": 0.028368794326241138,
+        "rouge2": 0.0,
+        "rougeL": 0.028368794326241138,
+        "bertscore_f1": -0.12076267600059509
+      },
+      "question": "What reliefs are provided by Consumer Commissions?",
+      "app_short_answer": "The generated answer itself indicates that the retrieved material is insufficient."
+    },
+    {
+      "id": "cyber_01",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.29629629629629634,
+        "rouge2": 0.05970149253731343,
+        "rougeL": 0.17037037037037037,
+        "bertscore_f1": 0.04041973873972893
+      },
+      "short": {
+        "rouge1": 0.304635761589404,
+        "rouge2": 0.05369127516778524,
+        "rougeL": 0.18543046357615894,
+        "bertscore_f1": 0.21861714124679565
+      },
+      "question": "What is the purpose of National Cyber Crime Reporting Portal?",
+      "app_short_answer": "The National Cyber Crime Reporting Portal is an online platform developed by the Ministry of Home Affairs to facilitate the public in reporting cybercrime complaints. It serves as a centralized mechanism for submitting complaints related to various cybercrimes, including offenses against women and children as well as other general cyber offenses."
+    },
+    {
+      "id": "cyber_02",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.21111111111111114,
+        "rouge2": 0.033707865168539325,
+        "rougeL": 0.11111111111111112,
+        "bertscore_f1": -0.05688874050974846
+      },
+      "short": {
+        "rouge1": 0.20253164556962025,
+        "rouge2": 0.0,
+        "rougeL": 0.10126582278481013,
+        "bertscore_f1": 0.015144997276365757
+      },
+      "question": "Apart from this portal, are there any alternative ways to remove objectionable content from social media websites?",
+      "app_short_answer": "Apart from the main portal, you may explore alternative options such as approaching the intermediary's Resident Grievance Officer, appealing to a Grievance Appellate Committee, or utilizing self-regulatory bodies and oversight mechanisms where applicable."
+    },
+    {
+      "id": "cyber_03",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.31746031746031744,
+        "rouge2": 0.0748663101604278,
+        "rougeL": 0.1693121693121693,
+        "bertscore_f1": 0.05697985738515854
+      },
+      "short": {
+        "rouge1": 0.32394366197183094,
+        "rouge2": 0.08571428571428572,
+        "rougeL": 0.16901408450704225,
+        "bertscore_f1": 0.14180335402488708
+      },
+      "question": "Which type of cybercrimes I can report on the portal?",
+      "app_short_answer": "You can report various types of cybercrimes on the National Cyber Crime Reporting Portal under different categories and subcategories, with a special focus on cybercrimes affecting women and children. The retrieved material indicates that the portal facilitates filing complaints for any kind of cybercrime, and you can find specific descriptions of these categories in the dedicated 'Learn about Cybercrime' section on the portal's homepage."
+    },
+    {
+      "id": "cyber_04",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.3952802359882006,
+        "rouge2": 0.0771513353115727,
+        "rougeL": 0.1946902654867257,
+        "bertscore_f1": 0.09863990545272827
+      },
+      "short": {
+        "rouge1": 0.35555555555555557,
+        "rouge2": 0.05617977528089887,
+        "rougeL": 0.18888888888888886,
+        "bertscore_f1": 0.2118276059627533
+      },
+      "question": "How can I file the complaints about other cybercrimes?",
+      "app_short_answer": "You can file complaints regarding other cybercrimes by visiting the official National Cyber Crime Reporting Portal and navigating to the Report Other Cyber Crime section. The retrieved material indicates that you must accept the terms, complete the filing steps, and submit accurate information for your complaint to be reviewed by the respective State or UT police authorities."
+    },
+    {
+      "id": "cyber_05",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "clarification_unresolved",
+      "needed_clarification": true,
+      "outcome": "clarification_unresolved",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.04938271604938271,
+        "rouge2": 0.0,
+        "rougeL": 0.04938271604938271,
+        "bertscore_f1": -0.11307787150144577
+      },
+      "short": {
+        "rouge1": 0.04938271604938271,
+        "rouge2": 0.0,
+        "rougeL": 0.04938271604938271,
+        "bertscore_f1": -0.11307751387357712
+      },
+      "question": "What type of information would be considered as evidence while filing my complaint related to cybercrime?",
+      "app_short_answer": "The query is a purely abstract legal question without an underlying incident, making targeted legal-source retrieval for a specific cybercrime context ineffective."
+    },
+    {
+      "id": "cyber_06",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.17829457364341086,
+        "rouge2": 0.0703125,
+        "rougeL": 0.13953488372093023,
+        "bertscore_f1": 0.17497409880161285
+      },
+      "short": {
+        "rouge1": 0.37142857142857144,
+        "rouge2": 0.08823529411764706,
+        "rougeL": 0.2571428571428572,
+        "bertscore_f1": 0.3411170244216919
+      },
+      "question": "What happens once I report a complaint?",
+      "app_short_answer": "Once you report a complaint on the National Cyber Crime Reporting Portal, you receive a complaint ID as confirmation, and the complaint is forwarded to the jurisdictional State or Union Territory law enforcement agency for necessary action based on the details you provided."
+    },
+    {
+      "id": "cyber_07",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.37860082304526743,
+        "rouge2": 0.11618257261410789,
+        "rougeL": 0.23045267489711932,
+        "bertscore_f1": 0.16391412913799286
+      },
+      "short": {
+        "rouge1": 0.43478260869565216,
+        "rouge2": 0.13333333333333333,
+        "rougeL": 0.2826086956521739,
+        "bertscore_f1": 0.351269006729126
+      },
+      "question": "Can I check the status of my complaint?",
+      "app_short_answer": "You can check the status of your complaint by logging into the National Cyber Crime Reporting Portal using your registered username, mobile number, OTP, and security answer, then selecting the track status option."
+    },
+    {
+      "id": "cyber_08",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.11049723756906077,
+        "rouge2": 0.0223463687150838,
+        "rougeL": 0.055248618784530384,
+        "bertscore_f1": -0.008872134611010551
+      },
+      "short": {
+        "rouge1": 0.22500000000000003,
+        "rouge2": 0.05128205128205128,
+        "rougeL": 0.125,
+        "bertscore_f1": 0.07730185985565186
+      },
+      "question": "Can I withdraw my complaint from the portal?",
+      "app_short_answer": "You are asking whether you can withdraw a complaint that you have already submitted on the National Cyber Crime Reporting Portal. Based on the retrieved material, the portal is used for reporting and tracking complaints which are then forwarded to the respective jurisdictional State or UT law enforcement agencies for action."
+    },
+    {
+      "id": "cyber_09",
+      "domain": "cyber",
+      "topic": "cybercrime reporting",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.1565217391304348,
+        "rouge2": 0.05309734513274336,
+        "rougeL": 0.13913043478260873,
+        "bertscore_f1": 0.20009027421474457
+      },
+      "short": {
+        "rouge1": 0.36363636363636365,
+        "rouge2": 0.14285714285714285,
+        "rougeL": 0.2727272727272727,
+        "bertscore_f1": 0.4016772508621216
+      },
+      "question": "Can I file a complaint if I am an Indian citizen but have been victimized online/ in cyberspace by a foreign national or company?",
+      "app_short_answer": "As an Indian citizen, you may utilize the National Cyber Crime Reporting Portal to report online victimization, as the portal accommodates the transnational and borderless nature of cybercrimes."
+    },
+    {
+      "id": "banking_01",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.06666666666666665,
+        "rouge2": 0.0,
+        "rougeL": 0.044444444444444446,
+        "bertscore_f1": -0.1563645750284195
+      },
+      "short": {
+        "rouge1": 0.03389830508474577,
+        "rouge2": 0.0,
+        "rougeL": 0.03389830508474577,
+        "bertscore_f1": -0.15141430497169495
+      },
+      "question": "What is the procedure for filing a complaint before the RBI Ombudsman?",
+      "app_short_answer": "Retrieved sources do not match the routed legal domain."
+    },
+    {
+      "id": "banking_02",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.1149425287356322,
+        "rouge2": 0.0,
+        "rougeL": 0.09195402298850576,
+        "bertscore_f1": 0.02012493461370468
+      },
+      "short": {
+        "rouge1": 0.03571428571428571,
+        "rouge2": 0.0,
+        "rougeL": 0.03571428571428571,
+        "bertscore_f1": 0.003951529040932655
+      },
+      "question": "Can the complainant track the status of a complaint lodged under RB-IOS, 2026?",
+      "app_short_answer": "Retrieved sources do not match the routed legal domain."
+    },
+    {
+      "id": "banking_03",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.3333333333333333,
+        "rouge2": 0.12359550561797751,
+        "rougeL": 0.18888888888888888,
+        "bertscore_f1": 0.1465533822774887
+      },
+      "short": {
+        "rouge1": 0.375,
+        "rouge2": 0.15384615384615383,
+        "rougeL": 0.2,
+        "bertscore_f1": 0.3132002651691437
+      },
+      "question": "Can a complaint be filed before the RBI Ombudsman through a representative?",
+      "app_short_answer": "Based on the retrieved material, you may file a complaint before the RBI Ombudsman through an authorized representative, provided that physical complaints must be duly signed by you or your authorized representative."
+    },
+    {
+      "id": "banking_04",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.15789473684210525,
+        "rouge2": 0.0,
+        "rougeL": 0.10526315789473685,
+        "bertscore_f1": 0.02088882401585579
+      },
+      "short": {
+        "rouge1": 0.08888888888888888,
+        "rouge2": 0.0,
+        "rougeL": 0.08888888888888888,
+        "bertscore_f1": 0.010027327574789524
+      },
+      "question": "Is there any charge or fee for filing a complaint with the RBI Ombudsman?",
+      "app_short_answer": "Retrieved sources do not match the routed legal domain."
+    },
+    {
+      "id": "banking_05",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.45911949685534587,
+        "rouge2": 0.16455696202531647,
+        "rougeL": 0.27044025157232704,
+        "bertscore_f1": 0.19065871834754944
+      },
+      "short": {
+        "rouge1": 0.4129032258064516,
+        "rouge2": 0.14379084967320263,
+        "rougeL": 0.2967741935483871,
+        "bertscore_f1": 0.36133837699890137
+      },
+      "question": "What happens if the complaint is not settled by agreement?",
+      "app_short_answer": "If your complaint against the bank is not settled by agreement through the RBI Ombudsman, the Ombudsman may proceed to pass an appropriate order or issue a reasoned award based on the available records and after giving both parties a reasonable opportunity to be heard."
+    },
+    {
+      "id": "banking_06",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.4509803921568628,
+        "rouge2": 0.3026315789473684,
+        "rougeL": 0.3202614379084967,
+        "bertscore_f1": 0.24494148790836334
+      },
+      "short": {
+        "rouge1": 0.4000000000000001,
+        "rouge2": 0.20979020979020976,
+        "rougeL": 0.28965517241379307,
+        "bertscore_f1": 0.22089222073554993
+      },
+      "question": "Is there any time limit for filing an appeal?",
+      "app_short_answer": "You are asking about the time limit for filing an appeal regarding a complaint against your bank before the RBI Ombudsman. Based on the Reserve Bank - Integrated Ombudsman Scheme, 2021, a complainant may prefer an appeal before the Appellate Authority within 30 days of the date of receipt of the Award or rejection of the complaint."
+    },
+    {
+      "id": "banking_07",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.14285714285714285,
+        "rouge2": 0.0,
+        "rougeL": 0.09523809523809523,
+        "bertscore_f1": -0.027761708945035934
+      },
+      "short": {
+        "rouge1": 0.07547169811320754,
+        "rouge2": 0.0,
+        "rougeL": 0.07547169811320754,
+        "bertscore_f1": 0.01661732979118824
+      },
+      "question": "Can I withdraw my complaint at any stage?",
+      "app_short_answer": "The generated answer itself indicates that the retrieved material is insufficient."
+    },
+    {
+      "id": "banking_08",
+      "domain": "consumer",
+      "topic": "banking ombudsman (RBI)",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.08695652173913043,
+        "rouge2": 0.0,
+        "rougeL": 0.08695652173913043,
+        "bertscore_f1": -0.04163355752825737
+      },
+      "short": {
+        "rouge1": 0.03278688524590165,
+        "rouge2": 0.0,
+        "rougeL": 0.03278688524590165,
+        "bertscore_f1": -0.04321925342082977
+      },
+      "question": "In what languages can a complaint be filed under RB-IOS, 2026?",
+      "app_short_answer": "Retrieved sources do not match the routed legal domain."
+    },
+    {
+      "id": "rti_01",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.10778443113772454,
+        "rouge2": 0.0606060606060606,
+        "rougeL": 0.10778443113772454,
+        "bertscore_f1": 0.15413011610507965
+      },
+      "short": {
+        "rouge1": 0.375,
+        "rouge2": 0.17391304347826086,
+        "rougeL": 0.3333333333333333,
+        "bertscore_f1": 0.45266711711883545
+      },
+      "question": "Is it required to give any reason for seeking information?",
+      "app_short_answer": "Based on the retrieved material, you are not required to give any reason for requesting information under the Right to Information Act, 2005. You only need to provide personal details that are necessary for contacting you."
+    },
+    {
+      "id": "rti_02",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.12403100775193797,
+        "rouge2": 0.0,
+        "rougeL": 0.09302325581395349,
+        "bertscore_f1": -0.09231583029031754
+      },
+      "short": {
+        "rouge1": 0.06122448979591836,
+        "rouge2": 0.0,
+        "rougeL": 0.06122448979591836,
+        "bertscore_f1": -0.047899357974529266
+      },
+      "question": "What is the Time Period for Supply of Information?",
+      "app_short_answer": "The generated answer itself indicates that the retrieved material is insufficient."
+    },
+    {
+      "id": "rti_03",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.3344709897610922,
+        "rouge2": 0.1168384879725086,
+        "rougeL": 0.1843003412969283,
+        "bertscore_f1": 0.15973657369613647
+      },
+      "short": {
+        "rouge1": 0.32167832167832167,
+        "rouge2": 0.09929078014184396,
+        "rougeL": 0.1958041958041958,
+        "bertscore_f1": 0.22796039283275604
+      },
+      "question": "What is the Method of Seeking Information?",
+      "app_short_answer": "You may seek information from a public authority by submitting a written or electronic request in English, Hindi, or the local official language along with the prescribed fee to the appropriate Central or State Public Information Officer or Assistant Public Information Officer. The retrieved material indicates that you are not required to give reasons for your request other than contact details necessary for communication."
+    },
+    {
+      "id": "rti_04",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.23696682464454977,
+        "rouge2": 0.09569377990430623,
+        "rougeL": 0.17061611374407584,
+        "bertscore_f1": 0.18296262621879578
+      },
+      "short": {
+        "rouge1": 0.3181818181818182,
+        "rouge2": 0.046511627906976744,
+        "rougeL": 0.20454545454545459,
+        "bertscore_f1": 0.25209832191467285
+      },
+      "question": "What is the Fee for the BPL applicant for Seeking Information?",
+      "app_short_answer": "Based on the retrieved material, no fee is charged to a person who is below the poverty line for seeking information under the Right to Information Act, provided that a copy of the certificate issued by the appropriate Government is submitted along with the application."
+    },
+    {
+      "id": "rti_05",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": true,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.25098039215686274,
+        "rouge2": 0.039525691699604744,
+        "rougeL": 0.1803921568627451,
+        "bertscore_f1": 0.03203956037759781
+      },
+      "short": {
+        "rouge1": 0.4102564102564103,
+        "rouge2": 0.08695652173913043,
+        "rougeL": 0.2735042735042735,
+        "bertscore_f1": 0.20644930005073547
+      },
+      "question": "Is there any specific Format of Application?",
+      "app_short_answer": "You are inquiring whether there is a specific format for submitting an RTI application to a government public authority. Based on the retrieved material, an application may be made in writing or through electronic means in English, Hindi, or the official language of the area, accompanied by the prescribed fee and specifying the particulars of the information sought."
+    },
+    {
+      "id": "rti_06",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.3888888888888889,
+        "rouge2": 0.08411214953271028,
+        "rougeL": 0.19444444444444445,
+        "bertscore_f1": 0.12654641270637512
+      },
+      "short": {
+        "rouge1": 0.18404907975460125,
+        "rouge2": 0.02484472049689441,
+        "rougeL": 0.12269938650306748,
+        "bertscore_f1": 0.0972883552312851
+      },
+      "question": "Is there any provision of Appeal under the RTI Act?",
+      "app_short_answer": "Yes, the Right to Information Act provides provisions for filing appeals if you face issues such as a denial of information or a lack of response."
+    },
+    {
+      "id": "rti_07",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.37755102040816324,
+        "rouge2": 0.12371134020618556,
+        "rougeL": 0.2142857142857143,
+        "bertscore_f1": 0.08834699541330338
+      },
+      "short": {
+        "rouge1": 0.24761904761904763,
+        "rouge2": 0.05825242718446603,
+        "rougeL": 0.17142857142857143,
+        "bertscore_f1": 0.14625884592533112
+      },
+      "question": "Is there any scope for second appeal under the RTI Act?",
+      "app_short_answer": "Yes, you may pursue a second appeal under the Right to Information Act, as the retrieved material indicates that decisions of Information Commissions are binding and address appeal proceedings."
+    },
+    {
+      "id": "rti_08",
+      "domain": "constitutional_public_authority",
+      "topic": "right to information",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "insufficient",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.08450704225352113,
+        "rouge2": 0.0,
+        "rougeL": 0.08450704225352113,
+        "bertscore_f1": -0.06101226061582565
+      },
+      "short": {
+        "rouge1": 0.1,
+        "rouge2": 0.0,
+        "rougeL": 0.1,
+        "bertscore_f1": 0.060965292155742645
+      },
+      "question": "Is there any organization(s) exempt from providing information under RTI Act?",
+      "app_short_answer": "The generated answer itself indicates that the retrieved material is insufficient."
+    },
+    {
+      "id": "legalaid_01",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.1868131868131868,
+        "rouge2": 0.09999999999999999,
+        "rougeL": 0.15384615384615383,
+        "bertscore_f1": 0.12128359079360962
+      },
+      "short": {
+        "rouge1": 0.3333333333333333,
+        "rouge2": 0.14634146341463414,
+        "rougeL": 0.23809523809523808,
+        "bertscore_f1": 0.29013490676879883
+      },
+      "question": "Whether one needs to pay for legal services provided by Legal Services Institutions constituted under the Legal Services Authorities Act, 1987?",
+      "app_short_answer": "Based on the retrieved material, persons who satisfy the criteria specified under the law may be entitled to receive free legal services from Legal Services Institutions, provided the concerned Authority is satisfied that there is a prima facie case. Additionally, the Legal Services Institution may bear certain related expenses such as court fees and obtaining certified copies."
+    },
+    {
+      "id": "legalaid_02",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.12087912087912088,
+        "rouge2": 0.08888888888888888,
+        "rougeL": 0.12087912087912088,
+        "bertscore_f1": 0.21497145295143127
+      },
+      "short": {
+        "rouge1": 0.31578947368421056,
+        "rouge2": 0.14545454545454548,
+        "rougeL": 0.21052631578947367,
+        "bertscore_f1": 0.36374905705451965
+      },
+      "question": "Does one have to pay any charge/fee for acquiring or submitting an application form for free legal aid?",
+      "app_short_answer": "Based on the retrieved material, applications for free legal services may be presented in Form-I or even entertained through oral requests, e-mails, or other formats without mentioning any charge or fee for acquiring or submitting the application form."
+    },
+    {
+      "id": "legalaid_03",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.0824742268041237,
+        "rouge2": 0.010416666666666668,
+        "rougeL": 0.06185567010309278,
+        "bertscore_f1": -0.04404565319418907
+      },
+      "short": {
+        "rouge1": 0.22222222222222227,
+        "rouge2": 0.03846153846153846,
+        "rougeL": 0.14814814814814817,
+        "bertscore_f1": 0.20367273688316345
+      },
+      "question": "Are there any Helpline Services provided by NALSA for urgent legal assistance?",
+      "app_short_answer": "You can seek legal assistance through various channels provided by NALSA, including written applications, oral requests, and online facilities. The retrieved material indicates that oral requests and interactive online facilities may be considered for free legal services."
+    },
+    {
+      "id": "legalaid_04",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.3840579710144927,
+        "rouge2": 0.09818181818181818,
+        "rougeL": 0.19202898550724634,
+        "bertscore_f1": -0.024384068325161934
+      },
+      "short": {
+        "rouge1": 0.16621983914209115,
+        "rouge2": 0.04851752021563342,
+        "rougeL": 0.09115281501340482,
+        "bertscore_f1": 0.06105322763323784
+      },
+      "question": "How can one approach NALSA/ SLSA/ DLSA/ TLSC/ HCLSC/ SCLSC? Where can an application for legal aid be made?",
+      "app_short_answer": "You can approach legal services institutions such as NALSA, SLSA, DLSA, TLSC, HCLSC, and SCLSC by submitting an application preferably in Form-I, through oral requests, emails, online facilities, or via legal aid clinics and para-legal volunteers."
+    },
+    {
+      "id": "legalaid_05",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.46874999999999994,
+        "rouge2": 0.18947368421052632,
+        "rougeL": 0.28125,
+        "bertscore_f1": 0.2734130620956421
+      },
+      "short": {
+        "rouge1": 0.2764227642276423,
+        "rouge2": 0.08264462809917356,
+        "rougeL": 0.13008130081300814,
+        "bertscore_f1": 0.2455909550189972
+      },
+      "question": "Can one choose a lawyer of his choice while availing free legal aid?",
+      "app_short_answer": "When you apply for free legal services, you may express your preference for a particular panel lawyer, and that choice may be considered by the Legal Services Institution."
+    },
+    {
+      "id": "legalaid_06",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": false,
+      "full": {
+        "rouge1": 0.1271676300578035,
+        "rouge2": 0.023391812865497075,
+        "rougeL": 0.08092485549132948,
+        "bertscore_f1": 0.056794799864292145
+      },
+      "short": {
+        "rouge1": 0.23333333333333336,
+        "rouge2": 0.034482758620689655,
+        "rougeL": 0.16666666666666666,
+        "bertscore_f1": 0.23973481357097626
+      },
+      "question": "Can one get free legal consultation only, even if one does not want to pursue a proper case in the courts?",
+      "app_short_answer": "You can seek free legal consultation or advice even if you do not wish to pursue formal court proceedings. The retrieved material indicates that legal services institutions can entertain oral or written requests and applications for legal services and provide guidance or assistance."
+    },
+    {
+      "id": "legalaid_07",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.3015267175572519,
+        "rouge2": 0.10344827586206898,
+        "rougeL": 0.133587786259542,
+        "bertscore_f1": -0.045543767511844635
+      },
+      "short": {
+        "rouge1": 0.12993039443155452,
+        "rouge2": 0.06526806526806528,
+        "rougeL": 0.08816705336426912,
+        "bertscore_f1": -0.0031198328360915184
+      },
+      "question": "Who is eligible to seek legal aid from the Legal Services Institutions under the Legal Services Authorities Act, 1987? What kind of cases can one apply free legal aid for?",
+      "app_short_answer": "You are asking who is eligible to seek legal aid from Legal Services Institutions under the Legal Services Authorities Act, 1987, and what kinds of cases free legal aid can be applied for."
+    },
+    {
+      "id": "legalaid_08",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.3941605839416058,
+        "rouge2": 0.1925925925925926,
+        "rougeL": 0.23357664233576642,
+        "bertscore_f1": 0.35886481404304504
+      },
+      "short": {
+        "rouge1": 0.5365853658536586,
+        "rouge2": 0.2750000000000001,
+        "rougeL": 0.3902439024390244,
+        "bertscore_f1": 0.5249042510986328
+      },
+      "question": "Whether a financially independent woman is eligible for free legal aid?",
+      "app_short_answer": "Based on the retrieved material, you may be eligible for free legal aid as a woman regardless of financial independence, because the criteria under Section 12 of the Legal Services Authorities Act, 1987 list women as a separate category entitled to legal services."
+    },
+    {
+      "id": "legalaid_09",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.3942307692307692,
+        "rouge2": 0.18446601941747573,
+        "rougeL": 0.25961538461538464,
+        "bertscore_f1": 0.2394360452890396
+      },
+      "short": {
+        "rouge1": 0.36220472440944884,
+        "rouge2": 0.14400000000000002,
+        "rougeL": 0.23622047244094485,
+        "bertscore_f1": 0.2189197987318039
+      },
+      "question": "Till what age is a child eligible for free legal aid?",
+      "app_short_answer": "Based on the retrieved material, the Legal Services Authorities Act, 1987 entitles every child to free legal services without specifying a precise age limit in that provision. However, the retrieved material does not state a specific upper age limit for a child regarding legal aid eligibility."
+    },
+    {
+      "id": "legalaid_10",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.27615062761506276,
+        "rouge2": 0.0928270042194093,
+        "rougeL": 0.17573221757322177,
+        "bertscore_f1": 0.11692274361848831
+      },
+      "short": {
+        "rouge1": 0.36,
+        "rouge2": 0.16326530612244897,
+        "rougeL": 0.24,
+        "bertscore_f1": 0.24261732399463654
+      },
+      "question": "Are Senior Citizens eligible for free legal aid?",
+      "app_short_answer": "Based on the retrieved legal material, senior citizens may be eligible for free legal aid under the Legal Services Authorities Act, 1987, depending on whether they meet specific criteria such as income thresholds or other applicable categories."
+    },
+    {
+      "id": "legalaid_11",
+      "domain": "constitutional_public_authority",
+      "topic": "free legal aid",
+      "status": "answered",
+      "needed_clarification": false,
+      "outcome": "grounded_answer",
+      "retrieved_expected_source": true,
+      "full": {
+        "rouge1": 0.14634146341463414,
+        "rouge2": 0.012345679012345678,
+        "rougeL": 0.07317073170731707,
+        "bertscore_f1": 0.0684371367096901
+      },
+      "short": {
+        "rouge1": 0.21428571428571427,
+        "rouge2": 0.024390243902439022,
+        "rougeL": 0.09523809523809522,
+        "bertscore_f1": 0.21668852865695953
+      },
+      "question": "Can persons called for questioning at the Police Station or persons arrested by the Police avail free legal aid?",
+      "app_short_answer": "Based on the retrieved material, persons who are in custody, which may include arrest situations, are entitled to free legal services under Section 12 of the Legal Services Authorities Act, 1987. The retrieved material does not explicitly mention questioning at a police station unless it constitutes being in custody."
+    }
+  ]
+}

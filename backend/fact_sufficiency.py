@@ -8,11 +8,13 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
 import domain_router
+from gemini_http import gemini_http_options
 from config import GEMINI_API_KEY, GEMINI_MODEL
 
 logger = logging.getLogger("legal_aid_ai.fact_sufficiency")
@@ -198,7 +200,7 @@ def assess_fact_sufficiency(context: CaseContext) -> FactSufficiencyResult:
 
     started = time.perf_counter()
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=build_fact_prompt(context),
@@ -213,7 +215,7 @@ def assess_fact_sufficiency(context: CaseContext) -> FactSufficiencyResult:
         result = apply_fact_safety_overrides(context, result)
         result.latency_ms = int((time.perf_counter() - started) * 1000)
         return result
-    except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini fact-sufficiency check failed safely: %s: %s", exc.__class__.__name__, str(exc))
         fallback = deterministic if deterministic.needs_fact_clarification else fallback_insufficient(context)
         fallback.latency_ms = int((time.perf_counter() - started) * 1000)

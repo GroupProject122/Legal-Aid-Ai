@@ -116,7 +116,7 @@ def test_invalid_gemini_output_safely_becomes_unclear(monkeypatch):
         models = FakeModels()
 
     monkeypatch.setattr(domain_router, "GEMINI_API_KEY", "test-key")
-    monkeypatch.setattr(domain_router.genai, "Client", lambda api_key: FakeClient())
+    monkeypatch.setattr(domain_router.genai, "Client", lambda api_key, **_kw: FakeClient())
 
     decision = domain_router.route_issue("seller refund nahi de raha")
 
@@ -246,3 +246,77 @@ def test_existing_part_7_retrieval_signal_remains_available():
     signals = rag.detect_domain_signals("cyber fraud online payment")
 
     assert "cyber" in signals["primary_domains"]
+
+
+def test_domain_cues_match_whole_words_only():
+    # Regression: "rent" matched inside "Current", and every follow-up is routed as
+    # "Current user question: ...", so tenancy was added to every follow-up.
+    assert domain_router.domains_from_supported_cues("current user question: my whatsapp was hacked") == {"cyber"}
+    assert domain_router.domains_from_supported_cues("my parent has a different problem") == set()
+    assert domain_router.domains_from_supported_cues("i rented a flat and the landlord is hacking my wifi") == {"tenancy", "cyber"}
+
+
+def test_router_timeout_falls_back_safely(monkeypatch):
+    # Regression: Gemini calls had no time limit, so a stalled connection left the question
+    # unanswered forever. A timeout now raises an httpx error that routing handles safely.
+    import httpx
+
+    def timing_out_client(api_key=None, **_kw):
+        raise httpx.ReadTimeout("timed out")
+
+    monkeypatch.setattr(domain_router, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(domain_router.genai, "Client", timing_out_client)
+
+    decision = domain_router.route_issue("my landlord cut the electricity")
+
+    assert decision.routing_error is True
+    assert decision.status == "unclear"
+
+
+def test_every_gemini_client_has_a_timeout():
+    from gemini_http import gemini_http_options
+
+    assert gemini_http_options().timeout and gemini_http_options().timeout > 0
+    backend = Path(__file__).resolve().parents[1]
+    for path in backend.glob("*.py"):
+        if path.name.startswith("evaluate_"):
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "genai.Client(api_key=GEMINI_API_KEY)" not in text, f"{path.name} creates a Gemini client with no timeout"
+
+
+def test_rbi_ombudsman_questions_route_to_consumer():
+    # Regression: "RBI Ombudsman" reads like a government body, so the model routed these to
+    # constitutional_public_authority and retrieval searched the wrong laws.
+    misrouted = domain_router.RouteDecision(
+        status="classified", domains=["constitutional_public_authority"], primary_domain="constitutional_public_authority",
+        confidence="high", issue_summary="RBI Ombudsman complaint", needs_clarification=False,
+    )
+    decision = domain_router.route_financial_ombudsman("is there any fee for filing a complaint with the rbi ombudsman?", misrouted)
+    assert decision.domains == ["consumer"]
+    assert decision.primary_domain == "consumer"
+
+
+def test_rbi_ombudsman_with_real_public_authority_cue_keeps_both():
+    decision = domain_router.RouteDecision(
+        status="classified", domains=["constitutional_public_authority"], primary_domain="constitutional_public_authority",
+        confidence="high", issue_summary="", needs_clarification=False,
+    )
+    routed = domain_router.route_financial_ombudsman("can i file an rti about how the banking ombudsman handled my case", decision)
+    assert set(routed.domains) == {"consumer", "constitutional_public_authority"}
+
+
+def test_unclear_rbi_ombudsman_question_becomes_consumer():
+    unclear = domain_router.RouteDecision(
+        status="unclear", domains=[], primary_domain=None, confidence="low", issue_summary=None, needs_clarification=True,
+    )
+    routed = domain_router.route_financial_ombudsman("what is the rb-ios scheme", unclear)
+    assert routed.status == "classified" and routed.domains == ["consumer"]
+
+
+def test_non_ombudsman_questions_are_untouched():
+    decision = domain_router.RouteDecision(
+        status="classified", domains=["constitutional_public_authority"], primary_domain="constitutional_public_authority",
+        confidence="high", issue_summary="", needs_clarification=False,
+    )
+    assert domain_router.route_financial_ombudsman("my rti application got no reply", decision) is decision

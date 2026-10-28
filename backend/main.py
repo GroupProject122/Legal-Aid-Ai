@@ -6,13 +6,14 @@ import logging
 import re
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Request, Response, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+import auth
 import clarification
 import case_file
 import case_store
@@ -22,6 +23,7 @@ import corpus_gap
 import conversation_state
 import document_extractor
 import document_facts
+import document_relevance
 import document_store
 import document_summarizer
 import domain_router
@@ -32,13 +34,14 @@ import legal_education
 import query_normalizer
 import scam_checker
 import voice_transcription
-from config import DISCLAIMER, FRONTEND_ORIGINS, LLM_PROVIDER
+from config import DISCLAIMER, FRONTEND_ORIGINS, GEMINI_API_KEY, LLM_PROVIDER
 from rag import (
     ConfigurationError,
     LLMError,
     RAGError,
     VectorStoreIncompatibleError,
     VectorStoreMissingError,
+    offline_retrieval_response,
     rag,
     validate_question,
 )
@@ -50,6 +53,10 @@ logger = logging.getLogger("legal_aid_ai.api")
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     document_store.init_db()
+    auth.init_db()
+    # Cases/documents saved before accounts existed have no owner -- give them to the admin
+    # account rather than leaving them unreachable (nothing is deleted).
+    auth.claim_unowned_data()
     try:
         rag.load()
     except VectorStoreMissingError:
@@ -112,6 +119,9 @@ async def unhandled_exception_handler(_request: Request, exc: Exception) -> JSON
 class AskRequest(BaseModel):
     question: str
     case_id: int | None = None
+    # Documents uploaded inside this chat. A chat's first upload can happen before its first
+    # question has created the case, so the ids are sent along and linked once the case exists.
+    document_ids: list[int] = []
     clarification_state_id: str | None = None
     confirmed_fact_context_id: str | None = None
     conversation_state_id: str | None = None
@@ -135,6 +145,76 @@ class RenameCaseRequest(BaseModel):
     title: str
 
 
+class SignupRequest(BaseModel):
+    email: str | None = None
+    phone: str | None = None
+    password: str
+
+
+class LoginRequest(BaseModel):
+    identifier: str
+    password: str
+
+
+def optional_user(request: Request) -> dict | None:
+    """The logged-in user, or None for a guest."""
+    return auth.user_for_session(request.cookies.get(auth.SESSION_COOKIE))
+
+
+def require_user(user: dict | None = Depends(optional_user)) -> dict:
+    if user is None:
+        raise HTTPException(status_code=401, detail="Please sign in to continue.")
+    return user
+
+
+def start_session(response: Response, user: dict) -> dict:
+    token = auth.create_session(user["id"])
+    response.set_cookie(
+        auth.SESSION_COOKIE,
+        token,
+        max_age=auth.SESSION_DAYS * 24 * 60 * 60,
+        httponly=True,
+        samesite="lax",
+        secure=auth.COOKIE_SECURE,
+        path="/",
+    )
+    return {"user": auth.public_user(user)}
+
+
+@app.post("/api/auth/signup")
+def signup(request: SignupRequest, response: Response) -> dict:
+    try:
+        user = auth.create_user(email=request.email, phone=request.phone, password=request.password)
+    except auth.AuthError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    logger.info("Account created user_id=%s", user["id"])
+    return start_session(response, user)
+
+
+@app.post("/api/auth/login")
+def login(request: LoginRequest, response: Response) -> dict:
+    try:
+        user = auth.authenticate(request.identifier, request.password)
+    except auth.LoginLockedError as exc:
+        raise HTTPException(status_code=429, detail=str(exc)) from exc
+    except auth.AuthError as exc:
+        raise HTTPException(status_code=401, detail=str(exc)) from exc
+    logger.info("Signed in user_id=%s", user["id"])
+    return start_session(response, user)
+
+
+@app.post("/api/auth/logout")
+def logout(request: Request, response: Response) -> dict:
+    auth.delete_session(request.cookies.get(auth.SESSION_COOKIE))
+    response.delete_cookie(auth.SESSION_COOKIE, path="/")
+    return {"status": "signed_out"}
+
+
+@app.get("/api/auth/me")
+def current_account(user: dict | None = Depends(optional_user)) -> dict:
+    return {"user": auth.public_user(user) if user else None}
+
+
 @app.get("/api/health")
 def health() -> dict:
     return {
@@ -153,23 +233,24 @@ def list_saved_cases(
     offset: int = Query(default=0, ge=0),
     search: str | None = Query(default=None, max_length=200),
     domain: str | None = Query(default=None),
+    user: dict = Depends(require_user),
 ) -> dict:
     if domain is not None and domain not in case_store.VALID_CASE_DOMAINS:
         raise HTTPException(status_code=400, detail=f"Unknown domain filter: {domain!r}.")
-    return case_store.list_cases(limit=limit, offset=offset, search=search, domain=domain)
+    return case_store.list_cases(limit=limit, offset=offset, search=search, domain=domain, user_id=user["id"])
 
 
 @app.delete("/api/cases")
-def delete_all_saved_cases() -> dict:
-    deleted_count = case_store.delete_all_cases()
+def delete_all_saved_cases(user: dict = Depends(require_user)) -> dict:
+    deleted_count = case_store.delete_all_cases(user_id=user["id"])
     logger.info("All saved cases deleted count=%s", deleted_count)
     return {"status": "deleted", "deleted_count": deleted_count}
 
 
 @app.patch("/api/cases/{case_id}/rename")
-def rename_saved_case(case_id: int, request: RenameCaseRequest) -> dict:
+def rename_saved_case(case_id: int, request: RenameCaseRequest, user: dict = Depends(require_user)) -> dict:
     try:
-        case = case_store.rename_case(case_id, request.title)
+        case = case_store.rename_case(case_id, request.title, user_id=user["id"])
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if case is None:
@@ -185,8 +266,8 @@ def rename_saved_case(case_id: int, request: RenameCaseRequest) -> dict:
 
 
 @app.get("/api/cases/{case_id}")
-def open_saved_case(case_id: int) -> dict:
-    case = case_store.get_case(case_id)
+def open_saved_case(case_id: int, user: dict = Depends(require_user)) -> dict:
+    case = case_store.get_case(case_id, user_id=user["id"])
     if case is None:
         raise HTTPException(status_code=404, detail="Case not found.")
     conversation_state.restore_state(case.get("conversation_state"))
@@ -210,12 +291,12 @@ CASE_FILE_MEDIA_TYPES = {
 }
 
 
-def build_case_file_response(case_id: int, file_format: str) -> Response:
-    """Shared by the .pdf/.docx endpoints. Same access check as GET /api/cases/{case_id} (the
-    case must exist -> otherwise 404); this app has no user accounts, so there is no further
-    ownership check to mirror. Generated in memory per request and streamed back -- never saved
-    to disk or the database. Logs ids/counts only, never case content."""
-    case = case_file.load_case_for_export(case_id)
+def build_case_file_response(case_id: int, file_format: str, user: dict) -> Response:
+    """Shared by the .pdf/.docx endpoints. Same access check as GET /api/cases/{case_id}:
+    require_user (guest -> 401) and an owner-scoped lookup (someone else's case -> 404, so a
+    case's existence isn't revealed). Generated in memory per request and streamed back -- never
+    saved to disk or the database. Logs ids/counts only, never case content."""
+    case = case_file.load_case_for_export(case_id, user_id=user["id"])
     if case is None:
         raise HTTPException(status_code=404, detail="Case not found.")
     generated_on = datetime.date.today()
@@ -243,21 +324,42 @@ def build_case_file_response(case_id: int, file_format: str) -> Response:
 
 
 @app.get("/api/cases/{case_id}/case-file.pdf")
-def download_case_file_pdf(case_id: int) -> Response:
-    return build_case_file_response(case_id, "pdf")
+def download_case_file_pdf(case_id: int, user: dict = Depends(require_user)) -> Response:
+    return build_case_file_response(case_id, "pdf", user)
 
 
 @app.get("/api/cases/{case_id}/case-file.docx")
-def download_case_file_docx(case_id: int) -> Response:
-    return build_case_file_response(case_id, "docx")
+def download_case_file_docx(case_id: int, user: dict = Depends(require_user)) -> Response:
+    return build_case_file_response(case_id, "docx", user)
 
 
 @app.delete("/api/cases/{case_id}")
-def delete_saved_case(case_id: int) -> dict:
-    if not case_store.delete_case(case_id):
+def delete_saved_case(case_id: int, user: dict = Depends(require_user)) -> dict:
+    if not case_store.delete_case(case_id, user_id=user["id"]):
         raise HTTPException(status_code=404, detail="Case not found.")
     logger.info("Saved case deleted case_id=%s", case_id)
     return {"status": "deleted", "case_id": case_id}
+
+
+@app.get("/api/cases/{case_id}/documents")
+def case_documents(case_id: int, user: dict = Depends(require_user)) -> dict:
+    """The documents uploaded or used in this case, plus other documents of the same user that
+    may also be relevant to it (see document_relevance.py)."""
+    case = case_store.get_case(case_id, user_id=user["id"])
+    if case is None:
+        raise HTTPException(status_code=404, detail="Case not found.")
+    documents = document_store.list_documents_for_relevance(user["id"])
+    in_case = [
+        {key: document[key] for key in ("id", "filename", "file_type", "created_at", "updated_at")}
+        for document in documents
+        if case_id in document["case_ids"]
+    ]
+    domains = [case.get("primary_domain"), *((case.get("conversation_state") or {}).get("domains") or [])]
+    return {
+        "case_id": case_id,
+        "documents": in_case,
+        "suggestions": document_relevance.suggest_documents(documents, case_id, domains),
+    }
 
 
 DEFAULT_DOCUMENTS_PAGE_SIZE = 20
@@ -269,30 +371,31 @@ def list_uploaded_documents(
     limit: int = Query(default=DEFAULT_DOCUMENTS_PAGE_SIZE, ge=1, le=MAX_DOCUMENTS_PAGE_SIZE),
     offset: int = Query(default=0, ge=0),
     search: str | None = Query(default=None, max_length=200),
+    user: dict = Depends(require_user),
 ) -> dict:
-    return document_store.list_documents(limit=limit, offset=offset, search=search)
+    return document_store.list_documents(limit=limit, offset=offset, search=search, user_id=user["id"])
 
 
 @app.delete("/api/documents")
-def delete_all_uploaded_documents() -> dict:
-    deleted_count = document_store.delete_all_documents()
+def delete_all_uploaded_documents(user: dict = Depends(require_user)) -> dict:
+    deleted_count = document_store.delete_all_documents(user_id=user["id"])
     logger.info("All uploaded documents deleted count=%s", deleted_count)
     return {"status": "deleted", "deleted_count": deleted_count}
 
 
 @app.get("/api/documents/{document_id}")
-def view_uploaded_document(document_id: int) -> dict:
+def view_uploaded_document(document_id: int, user: dict = Depends(require_user)) -> dict:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
         return document_public_payload(document, include_extraction=True)
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @app.get("/api/documents/{document_id}/file")
-def get_uploaded_document_file(document_id: int) -> FileResponse:
+def get_uploaded_document_file(document_id: int, user: dict = Depends(require_user)) -> FileResponse:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
         storage_path = document_store.safe_storage_path(document["storage_path"])
         return FileResponse(
             storage_path,
@@ -304,9 +407,9 @@ def get_uploaded_document_file(document_id: int) -> FileResponse:
 
 
 @app.get("/api/documents/{document_id}/summary")
-def get_document_summary(document_id: int) -> dict:
+def get_document_summary(document_id: int, user: dict = Depends(require_user)) -> dict:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     if not document.get("summary_text"):
@@ -326,9 +429,13 @@ def get_document_summary(document_id: int) -> dict:
 
 
 @app.post("/api/documents/{document_id}/summarize")
-def summarize_uploaded_document(document_id: int, force: bool = Query(default=False)) -> dict:
+def summarize_uploaded_document(
+    document_id: int,
+    force: bool = Query(default=False),
+    user: dict = Depends(require_user),
+) -> dict:
     try:
-        document = document_store.require_document(document_id)
+        document = document_store.require_document(document_id, user_id=user["id"])
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
@@ -403,9 +510,13 @@ def summarize_uploaded_document(document_id: int, force: bool = Query(default=Fa
 
 
 @app.patch("/api/documents/{document_id}/rename")
-def rename_uploaded_document(document_id: int, request: RenameDocumentRequest) -> dict:
+def rename_uploaded_document(
+    document_id: int,
+    request: RenameDocumentRequest,
+    user: dict = Depends(require_user),
+) -> dict:
     try:
-        document = document_store.rename_document(document_id, request.filename)
+        document = document_store.rename_document(document_id, request.filename, user_id=user["id"])
         logger.info("Document renamed document_id=%s type=%s", document_id, document.get("file_type"))
         return document_public_payload(document, include_extraction=False)
     except document_store.DocumentStoreError as exc:
@@ -413,9 +524,9 @@ def rename_uploaded_document(document_id: int, request: RenameDocumentRequest) -
 
 
 @app.delete("/api/documents/{document_id}")
-def delete_uploaded_document(document_id: int) -> dict:
+def delete_uploaded_document(document_id: int, user: dict = Depends(require_user)) -> dict:
     try:
-        document_store.delete_document(document_id)
+        document_store.delete_document(document_id, user_id=user["id"])
         logger.info("Document deleted document_id=%s", document_id)
         return {"status": "deleted", "document_id": document_id}
     except document_store.DocumentStoreError as exc:
@@ -506,11 +617,27 @@ async def legal_aid_eligibility_endpoint(request: Request) -> JSONResponse:
     return JSONResponse(content=legal_aid_eligibility.check_eligibility(answers).to_dict())
 
 
+@app.get("/api/corpus/file")
+def corpus_source_file(source: str) -> FileResponse:
+    """Open a corpus PDF that an answer cited (the "Open full PDF" button in the source viewer),
+    shown inline so the browser's viewer can jump to the cited page via #page=N. Serves only
+    files the corpus manifest lists as active documents -- never archive/, user uploads, or any
+    other path -- so the `source` parameter cannot be used to read arbitrary files."""
+    try:
+        path = legal_education.corpus_pdf_path(source)
+    except legal_education.LegalEducationError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return FileResponse(path, media_type="application/pdf", filename=path.name, content_disposition_type="inline")
+
+
 @app.post("/api/ask")
-def ask(request: AskRequest) -> dict:
+def ask(request: AskRequest, user: dict | None = Depends(optional_user)) -> dict:
+    """Guests can ask questions (follow-ups still work within the conversation), but nothing is
+    saved: only a signed-in user's conversations become cases in My Cases."""
+    user_id = user["id"] if user else None
     try:
         question = validate_question(request.question)
-        persisted_case = load_persisted_case(request.case_id)
+        persisted_case = load_persisted_case(request.case_id, user_id)
         if (
             request.case_id is None
             and request.conversation_state_id is None
@@ -526,7 +653,7 @@ def ask(request: AskRequest) -> dict:
 
         if request.clarification_state_id:
             response = continue_clarification(request.clarification_state_id, question, effective_conversation_state_id)
-            return persist_case_turn(request.case_id, question, response)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response)
 
         confirmed_context = load_confirmed_document_context(request.confirmed_fact_context_id)
         if confirmed_context is None and persisted_case and persisted_case.get("confirmed_document_context"):
@@ -535,12 +662,12 @@ def ask(request: AskRequest) -> dict:
             confirmed_context = load_confirmed_document_context(active_case.confirmed_document_context_id)
         if active_case is not None:
             response = handle_active_case_turn(question, active_case, confirmed_context)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
 
         conflict = detect_document_fact_conflict(question, confirmed_context)
         if conflict:
             response = document_fact_conflict_response(conflict)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
 
         routing_text = document_facts.combined_question_with_confirmed_facts(question, confirmed_context)
         route = domain_router.route_issue(routing_text)
@@ -552,9 +679,12 @@ def ask(request: AskRequest) -> dict:
             route.confidence,
             route.latency_ms,
         )
+        offline_response = offline_route_response(route, routing_text)
+        if offline_response is not None:
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, offline_response, confirmed_context)
         if route.status == "classified":
             response = with_routing(handle_classified_issue(question, route, confirmed_context), route)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
         if route.status == "unclear":
             state, clarification_question = clarification.start_clarification(question, route)
             logger.info(
@@ -564,9 +694,11 @@ def ask(request: AskRequest) -> dict:
                 clarification_question.latency_ms,
             )
             response = clarification_response(route, state, clarification_question)
-            return persist_case_turn(request.case_id, question, response, confirmed_context)
+            return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
         response = router_minimal_response(route)
-        return persist_case_turn(request.case_id, question, response, confirmed_context)
+        return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
+    except HTTPException:
+        raise
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except VectorStoreMissingError as exc:
@@ -587,7 +719,16 @@ def ask(request: AskRequest) -> dict:
 
 
 @app.post("/api/documents/extract")
-async def extract_uploaded_document(file: UploadFile = File(...)) -> dict:
+async def extract_uploaded_document(
+    file: UploadFile = File(...),
+    case_id: int | None = Form(default=None),
+    user: dict | None = Depends(optional_user),
+) -> dict:
+    """A signed-in user's upload is saved to their Documents; a guest's upload is read and
+    returned (so it can still be used in the conversation) but not stored. `case_id` (an upload
+    made inside an open chat) also links the document to that case."""
+    if case_id is not None and (user is None or case_store.get_case(case_id, user_id=user["id"]) is None):
+        raise HTTPException(status_code=404, detail="Case not found.")
     try:
         content = await file.read(document_extractor.max_upload_bytes() + 1)
         result = document_extractor.extract_document(
@@ -596,14 +737,17 @@ async def extract_uploaded_document(file: UploadFile = File(...)) -> dict:
             content_type=file.content_type,
         )
         payload = result.to_dict()
-        if result.file_type and result.status != "unsupported":
+        if user is not None and result.file_type and result.status != "unsupported":
             stored_document = document_store.create_uploaded_document(
                 original_filename=file.filename or result.filename,
                 content=content,
                 mime_type=file.content_type,
                 extraction=payload,
+                user_id=user["id"],
             )
             payload["document_id"] = stored_document["id"]
+            if case_id is not None:
+                document_store.link_document_to_case(case_id, stored_document["id"])
         logger.info(
             "Document extraction completed document_id=%s type=%s size=%s status=%s latency_ms=%s",
             payload.get("document_id"),
@@ -657,11 +801,16 @@ def extract_document_facts(request: DocumentFactRequest) -> dict:
 
 
 @app.post("/api/documents/confirm-facts")
-def confirm_document_facts(request: ConfirmFactsRequest) -> dict:
+def confirm_document_facts(request: ConfirmFactsRequest, user: dict | None = Depends(optional_user)) -> dict:
+    if request.document_id is not None and user is None:
+        raise HTTPException(status_code=401, detail="Please sign in to continue.")
     try:
+        if request.document_id is not None:
+            # Ownership check BEFORE confirming, so another user's document id is refused up front.
+            document_store.require_document(request.document_id, user_id=user["id"])
         confirmed = document_facts.confirm_facts(request.fact_extraction_id, request.confirmed_facts)
         if request.document_id is not None:
-            document_store.update_confirmed_fact_context(request.document_id, confirmed.to_dict())
+            document_store.update_confirmed_fact_context(request.document_id, confirmed.to_dict(), user_id=user["id"])
         logger.info("Document facts confirmed fact_extraction_id=%s", request.fact_extraction_id)
         return confirmed.to_dict()
     except document_facts.DocumentFactError as exc:
@@ -673,21 +822,30 @@ def confirm_document_facts(request: ConfirmFactsRequest) -> dict:
         raise HTTPException(status_code=500, detail="Legal Aid AI could not confirm these document facts right now.") from exc
 
 
-def load_persisted_case(case_id: int | None) -> dict | None:
+def load_persisted_case(case_id: int | None, user_id: int | None) -> dict | None:
     if case_id is None:
         return None
-    stored_case = case_store.get_case(case_id)
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Please sign in to continue this case.")
+    stored_case = case_store.get_case(case_id, user_id=user_id)
     if stored_case is None:
         raise HTTPException(status_code=404, detail="Case not found.")
     return stored_case
 
 
 def persist_case_turn(
+    user_id: int | None,
     case_id: int | None,
+    document_ids: list[int],
     question: str,
     response: dict,
     confirmed_context: dict | None = None,
 ) -> dict:
+    """Saves the turn to the user's case (creating it on the first real answer). A guest's turns
+    are never saved. `case_id`, when given, was already checked to belong to `user_id` by
+    load_persisted_case()."""
+    if user_id is None:
+        return response
     if case_id is None and not case_store.should_create_case_for_response(question, response):
         return response
 
@@ -699,8 +857,10 @@ def persist_case_turn(
             primary_domain=routing.get("primary_domain"),
             conversation_state=response.get("conversation_state"),
             confirmed_document_context=confirmed_context,
+            user_id=user_id,
         )
 
+    question_sequence = case_store.next_message_sequence(effective_case_id)
     case_store.save_message(effective_case_id, "user", case_store.user_content_for_storage(question))
     case_store.save_message(effective_case_id, "assistant", case_store.assistant_content_for_storage(response))
     routing = response.get("routing") or {}
@@ -710,8 +870,31 @@ def persist_case_turn(
         conversation_state=response.get("conversation_state"),
         confirmed_document_context=confirmed_context,
     )
+    link_case_documents(user_id, effective_case_id, document_ids, confirmed_context, question_sequence)
     response["case_id"] = effective_case_id
     return response
+
+
+def link_case_documents(
+    user_id: int,
+    case_id: int,
+    document_ids: list[int],
+    confirmed_context: dict | None,
+    question_sequence: int | None = None,
+) -> None:
+    """Link to the case the documents uploaded in this chat, and the document(s) whose confirmed
+    facts were used in it, at the question they came in with (`question_sequence`: the user
+    message just saved). Ids the user does not own are ignored."""
+    to_link = {
+        document_id
+        for document_id in document_ids
+        if document_store.get_document(document_id, user_id=user_id) is not None
+    }
+    context_id = (confirmed_context or {}).get("confirmed_fact_context_id")
+    if context_id:
+        to_link.update(document_store.documents_with_confirmed_context(context_id, user_id))
+    for document_id in to_link:
+        document_store.link_document_to_case(case_id, document_id, message_sequence=question_sequence)
 
 
 def no_case_small_talk_response() -> dict:
@@ -823,19 +1006,31 @@ def handle_active_case_turn(
     if classification.turn_type in {"small_talk", "acknowledgement"}:
         active_case.last_user_intent = classification.turn_type
         return with_conversation_state(conversation_state.acknowledgement_response(active_case), active_case)
-    if classification.turn_type in {"additional_fact", "correction"}:
-        conversation_state.apply_turn_to_state(active_case, question, classification)
-        message = "Got it — I've added that to the current case." if classification.turn_type == "additional_fact" else "Got it — I've updated the current case with your correction."
-        return with_conversation_state(conversation_state.acknowledgement_response(active_case, message), active_case)
 
     if classification.turn_type == "new_issue":
         conversation_state.clear_state(active_case.conversation_state_id)
         return handle_new_issue_without_active_context(question, confirmed_context)
 
+    # Follow-up questions, added facts and corrections all get a fresh answer built on the
+    # updated case. Facts and corrections used to be acknowledged only ("Got it -- I've added
+    # that to the current case"), which left the user with no answer -- and any question the
+    # classifier mistook for a fact got no answer at all.
     conversation_state.apply_turn_to_state(active_case, question, classification)
     document_fact_lines = document_facts.confirmed_fact_lines(confirmed_context)
     combined_message = conversation_state.pipeline_message(question, active_case, document_fact_lines)
-    route = domain_router.route_issue(combined_message)
+    # Route on the latest question with the case in the router's context slot. Routing the
+    # labelled "Current user question: ... Active case summary: ..." block as one message made
+    # the router over-tag domains (a WhatsApp account lockout came back as cyber + tenancy).
+    # The keyword safety overrides still see the combined text, as before.
+    case_background = conversation_state.split_pipeline_message(combined_message)[1]
+    route = domain_router.route_issue(
+        question,
+        conversation_context=[{"role": "earlier case", "content": case_background}],
+        safety_text=combined_message,
+    )
+    offline_response = offline_route_response(route, combined_message)
+    if offline_response is not None:
+        return with_conversation_state(offline_response, active_case)
     if route.status == "classified":
         return with_routing(
             handle_classified_issue(
@@ -860,6 +1055,9 @@ def handle_new_issue_without_active_context(question: str, confirmed_context: di
         return document_fact_conflict_response(conflict)
     routing_text = document_facts.combined_question_with_confirmed_facts(question, confirmed_context)
     route = domain_router.route_issue(routing_text)
+    offline_response = offline_route_response(route, routing_text)
+    if offline_response is not None:
+        return offline_response
     if route.status == "classified":
         return with_routing(handle_classified_issue(question, route, confirmed_context), route)
     if route.status == "unclear":
@@ -1004,13 +1202,23 @@ def answer_grounded_from_context(
         answer = rag.answer(retrieval_text, skip_scope_check=True)
         attach_document_evidence(answer, confirmed_context)
         response = corpus_gap.apply_gap_to_response(answer, pre_gap)
+        response = corpus_gap.delhi_tenancy_note(response, context.domains, raw_check_query)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
     if LLM_PROVIDER != "gemini":
         raise ConfigurationError(f"Unsupported LLM provider: {LLM_PROVIDER}")
+    # In a follow-up, original_message is conversation_state.pipeline_message(): the latest
+    # question with the case summary and known facts appended. Hand the answer writer the
+    # question as the thing to reply to and the rest as background -- otherwise it answers the
+    # whole case ("here is how to report the hack") rather than what was just asked.
+    reply_to, case_background = original_message, retrieval_text
+    split = conversation_state.split_pipeline_message(original_message)
+    if split:
+        reply_to = split[0]
+        case_background = f"{retrieval_text}\n{split[1]}"
     try:
         answer = grounded_answer.generate_grounded_answer(
-            original_message=original_message,
-            normalized_case_summary=retrieval_text,
+            original_message=reply_to,
+            normalized_case_summary=case_background,
             domains=context.domains,
             chunks=chunks,
             confirmed_case_facts=document_facts.confirmed_fact_lines(confirmed_context),
@@ -1022,11 +1230,21 @@ def answer_grounded_from_context(
             response = corpus_gap.abstention_response(final_gap)
             return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
         response = corpus_gap.apply_gap_to_response(verified_answer, final_gap)
+        response = corpus_gap.delhi_tenancy_note(response, context.domains, raw_check_query)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
-    except grounded_answer.GroundedAnswerConfigurationError as exc:
-        raise ConfigurationError(str(exc)) from exc
-    except grounded_answer.GroundedAnswerError as exc:
-        raise LLMError(str(exc)) from exc
+    except (grounded_answer.GroundedAnswerConfigurationError, grounded_answer.GroundedAnswerError) as exc:
+        # Routing succeeded (Gemini looked reachable then), but the final answer call itself
+        # failed -- e.g. the connection dropped mid-request, or a transient/quota error. This is
+        # the one point in the pipeline that doesn't already degrade gracefully on its own (every
+        # earlier stage -- router, fact-sufficiency, corpus_gap -- does), so it's the last place
+        # this needs to be caught. Same offline fallback as offline_route_response, built from the
+        # chunks already retrieved locally for this turn.
+        logger.warning(
+            "Falling back to offline local retrieval after Gemini failure: %s: %s",
+            exc.__class__.__name__, exc,
+        )
+        response = offline_retrieval_response(chunks)
+        return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
 
 
 def clarification_response(
@@ -1209,6 +1427,23 @@ def router_minimal_response(route: domain_router.RouteDecision) -> dict:
 def with_routing(response: dict, route: domain_router.RouteDecision) -> dict:
     response["routing"] = route_public_payload(route)
     return response
+
+
+def offline_route_response(route: domain_router.RouteDecision, retrieval_text: str) -> dict | None:
+    """None when Gemini looks reachable (a key is configured and the router did not itself hit a
+    Gemini/network failure); otherwise the offline fallback -- the legal sections already found
+    locally by embeddings + FAISS, handed back directly instead of asking Gemini to write an
+    answer. Called right after domain_router.route_issue() at every call site that runs it, so a
+    fresh question (or a follow-up, which re-routes too) skips the rest of the Gemini-dependent
+    pipeline -- fact-sufficiency, clarification, grounded-answer generation -- all of which would
+    otherwise also have to fail before the user saw anything.
+    route.routing_error is only set when domain_router actually attempted and failed to reach
+    Gemini (see domain_router.route_issue); a missing key never reaches Gemini in the first place,
+    hence the separate `not GEMINI_API_KEY` check."""
+    if LLM_PROVIDER != "gemini" or (GEMINI_API_KEY and not route.routing_error):
+        return None
+    chunks = rag.retrieve(retrieval_text)
+    return with_routing(offline_retrieval_response(chunks), route)
 
 
 def attach_active_case_state(

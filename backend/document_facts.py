@@ -8,10 +8,12 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
+from gemini_http import gemini_http_options
 from config import GEMINI_API_KEY, GEMINI_MODEL
 
 logger = logging.getLogger("legal_aid_ai.document_facts")
@@ -138,7 +140,7 @@ def extract_facts_from_extraction(extraction: dict[str, Any]) -> dict[str, Any]:
 
 
 def call_gemini_fact_extraction(extraction: dict[str, Any]) -> dict[str, Any]:
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
     response = client.models.generate_content(
         model=GEMINI_MODEL,
         contents=build_fact_prompt(extraction),
@@ -534,6 +536,6 @@ def default_summary(document_type: str) -> str:
 
 
 def safe_error_message(exc: Exception) -> str:
-    if isinstance(exc, (genai_errors.APIError, TimeoutError, json.JSONDecodeError, ValueError, TypeError)):
+    if isinstance(exc, (genai_errors.APIError, TimeoutError, httpx.HTTPError, json.JSONDecodeError, ValueError, TypeError)):
         return str(exc)[:160]
     return "Fact extraction failed."

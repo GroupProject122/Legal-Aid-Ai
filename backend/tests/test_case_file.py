@@ -20,6 +20,7 @@ import complaint_drafter
 import conversation_state
 import evaluate_case_file
 import main
+from conftest import signed_in_client
 
 CASES = {spec["id"]: spec for spec in evaluate_case_file.load_cases()}
 
@@ -40,6 +41,16 @@ def api_db(monkeypatch, tmp_path):
     monkeypatch.setattr(main.case_store, "DB_PATH", db)
     case_store.init_db()
     return db
+
+
+@pytest.fixture
+def owner(api_db):
+    """(client signed in as the case owner, their user id)."""
+    return signed_in_client()
+
+
+def seed(spec_id: str, db: Path, user_id: int) -> int:
+    return evaluate_case_file.seed_case(CASES[spec_id], db, user_id=user_id)
 
 
 # --- The five eval fixtures, end to end (seed -> context -> real DOCX) ---
@@ -195,18 +206,20 @@ def test_is_answer_content_excludes_acknowledgements_and_clarifications():
 # --- API ---
 
 
-def test_list_cases_reports_has_answers(api_db):
-    answered = evaluate_case_file.seed_case(CASES["tenancy_no_dates"], api_db)
-    unanswered = case_store.create_case("My landlord is harassing me", "tenancy")
+def test_list_cases_reports_has_answers(api_db, owner):
+    client, user_id = owner
+    answered = seed("tenancy_no_dates", api_db, user_id)
+    unanswered = case_store.create_case("My landlord is harassing me", "tenancy", user_id=user_id)
     case_store.save_message(unanswered, "user", {"text": "My landlord is harassing me"})
-    items = {item["id"]: item for item in TestClient(main.app).get("/api/cases").json()["items"]}
+    items = {item["id"]: item for item in client.get("/api/cases").json()["items"]}
     assert items[answered]["has_answers"] is True
     assert items[unanswered]["has_answers"] is False
 
 
-def test_api_docx_download(api_db):
-    case_id = evaluate_case_file.seed_case(CASES["consumer_receipt_document"], api_db)
-    response = TestClient(main.app).get(f"/api/cases/{case_id}/case-file.docx")
+def test_api_docx_download(api_db, owner):
+    client, user_id = owner
+    case_id = seed("consumer_receipt_document", api_db, user_id)
+    response = client.get(f"/api/cases/{case_id}/case-file.docx")
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     assert response.headers["cache-control"] == "no-store"
@@ -217,8 +230,8 @@ def test_api_docx_download(api_db):
     assert any(paragraph.text == "Facts as stated by you" for paragraph in document.paragraphs)
 
 
-def test_api_missing_case_returns_same_404_as_open_case(api_db):
-    client = TestClient(main.app)
+def test_api_missing_case_returns_same_404_as_open_case(api_db, owner):
+    client, _user_id = owner
     expected = client.get("/api/cases/9999")
     for suffix in ("case-file.pdf", "case-file.docx"):
         response = client.get(f"/api/cases/9999/{suffix}")
@@ -226,26 +239,29 @@ def test_api_missing_case_returns_same_404_as_open_case(api_db):
         assert response.json() == expected.json()
 
 
-def test_api_case_without_answers_returns_409(api_db):
-    case_id = case_store.create_case("hello there, my landlord", "tenancy")
+def test_api_case_without_answers_returns_409(api_db, owner):
+    client, user_id = owner
+    case_id = case_store.create_case("hello there, my landlord", "tenancy", user_id=user_id)
     case_store.save_message(case_id, "user", {"text": "hello there, my landlord"})
-    response = TestClient(main.app).get(f"/api/cases/{case_id}/case-file.docx")
+    response = client.get(f"/api/cases/{case_id}/case-file.docx")
     assert response.status_code == 409
     assert "no answers yet" in response.json()["detail"]
 
 
-def test_api_pdf_without_libreoffice_returns_503_pointing_to_docx(api_db, monkeypatch):
-    case_id = evaluate_case_file.seed_case(CASES["tenancy_no_dates"], api_db)
+def test_api_pdf_without_libreoffice_returns_503_pointing_to_docx(api_db, owner, monkeypatch):
+    client, user_id = owner
+    case_id = seed("tenancy_no_dates", api_db, user_id)
     monkeypatch.setattr(complaint_drafter.shutil, "which", lambda _name: None)
-    response = TestClient(main.app).get(f"/api/cases/{case_id}/case-file.pdf")
+    response = client.get(f"/api/cases/{case_id}/case-file.pdf")
     assert response.status_code == 503
     assert "Word (.docx)" in response.json()["detail"]
 
 
 @pytest.mark.skipif(not (shutil.which("soffice") or shutil.which("libreoffice")), reason="LibreOffice not installed")
-def test_api_pdf_download_with_libreoffice(api_db):
-    case_id = evaluate_case_file.seed_case(CASES["cyber_otp_redaction"], api_db)
-    response = TestClient(main.app).get(f"/api/cases/{case_id}/case-file.pdf")
+def test_api_pdf_download_with_libreoffice(api_db, owner):
+    client, user_id = owner
+    case_id = seed("cyber_otp_redaction", api_db, user_id)
+    response = client.get(f"/api/cases/{case_id}/case-file.pdf")
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/pdf"
     assert response.content.startswith(b"%PDF")
@@ -271,15 +287,16 @@ def _db_state(db: Path) -> list:
         ]
 
 
-def test_export_writes_nothing_to_disk_or_db_and_logs_no_content(api_db, tmp_path, caplog):
-    case_id = evaluate_case_file.seed_case(CASES["consumer_receipt_document"], api_db)
+def test_export_writes_nothing_to_disk_or_db_and_logs_no_content(api_db, owner, tmp_path, caplog):
+    client, user_id = owner
+    case_id = seed("consumer_receipt_document", api_db, user_id)
     backend_dir = Path(case_file.__file__).resolve().parent
     watched = [tmp_path, backend_dir / "templates", backend_dir / "user_uploads", backend_dir / "eval"]
     before_files, before_db = _snapshot(watched), _db_state(api_db)
     top_level_before = {p.name for p in backend_dir.iterdir()}
 
     caplog.set_level(logging.DEBUG)
-    response = TestClient(main.app).get(f"/api/cases/{case_id}/case-file.docx")
+    response = client.get(f"/api/cases/{case_id}/case-file.docx")
     assert response.status_code == 200
 
     assert _snapshot(watched) == before_files

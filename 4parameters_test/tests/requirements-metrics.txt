@@ -1,0 +1,12 @@
+# Packages for the answer-quality metrics. Install into a separate environment
+# (see README.md), NOT the backend's -- these can change shared library versions.
+#
+# PyTorch CPU-only build first (no GPU needed; much smaller download):
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# then:
+#   pip install -r requirements-metrics.txt
+rouge-score==0.1.2
+bert-score==0.3.13
+
+# Only for make_set1_report.py (builds the Set 1 PDF):
+reportlab==5.0.1

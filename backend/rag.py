@@ -9,6 +9,7 @@ from typing import Any
 
 import faiss
 import numpy as np
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
@@ -16,6 +17,8 @@ from sentence_transformers import SentenceTransformer
 
 import grounded_answer
 import claim_verifier
+import source_text
+from gemini_http import gemini_http_options
 from config import (
     DISCLAIMER,
     EMBEDDING_MODEL,
@@ -742,12 +745,17 @@ class LegalRAG:
         self.index: faiss.Index | None = None
         self.metadata: dict[str, Any] | None = None
         self.chunks: list[dict[str, Any]] = []
+        self.vector_chunk_positions: list[int] | None = None
 
     def load(self) -> None:
         metadata = _load_metadata()
         self.index = faiss.read_index(str(INDEX_PATH))
         self.metadata = metadata
         self.chunks = metadata.get("chunks", [])
+        # FAISS vector i belongs to chunks[vector_chunk_positions[i]]: a long chunk is embedded as
+        # several windows (see ingest.embedding_windows). None for an index built before that,
+        # which has exactly one vector per chunk.
+        self.vector_chunk_positions = metadata.get("vector_chunk_positions")
         provider = metadata.get("embedding_provider")
         model = metadata.get("embedding_model")
         expected_provider = EMBEDDING_PROVIDER
@@ -756,6 +764,7 @@ class LegalRAG:
             self.index = None
             self.metadata = None
             self.chunks = []
+            self.vector_chunk_positions = None
             raise VectorStoreIncompatibleError(
                 "Vector store was built with a different embedding provider/model. "
                 "Delete backend/vectorstore or rerun `python ingest.py` to rebuild it."
@@ -772,11 +781,8 @@ class LegalRAG:
         provider = self.metadata.get("embedding_provider", EMBEDDING_PROVIDER)
         query_vector = embed_texts([retrieval_query(question)], provider=provider)
         candidate_k = min(len(self.chunks), candidate_k or max(TOP_K * 2, 12))
-        scores, indexes = self.index.search(query_vector, candidate_k)
         candidates: list[RetrievedChunk] = []
-        for score, idx in zip(scores[0], indexes[0]):
-            if idx < 0 or idx >= len(self.chunks):
-                continue
+        for score, idx in self._best_chunk_matches(query_vector, candidate_k):
             item = self.chunks[idx]
             candidates.append(
                 RetrievedChunk(
@@ -812,6 +818,29 @@ class LegalRAG:
                 )
             )
         return candidates
+
+    def _best_chunk_matches(self, query_vector: np.ndarray, chunk_count: int) -> list[tuple[float, int]]:
+        """The `chunk_count` best-matching chunks as (score, chunk position), best first. A chunk
+        embedded as several windows scores as its best window. Searches more vectors than chunks
+        wanted, since one chunk's windows can fill several places, and widens until enough
+        distinct chunks are found or the whole index has been searched."""
+        positions = self.vector_chunk_positions
+        vector_total = int(self.index.ntotal)
+        search_k = min(vector_total, chunk_count if positions is None else chunk_count * 3)
+        while True:
+            scores, indexes = self.index.search(query_vector, search_k)
+            best: dict[int, float] = {}
+            for score, idx in zip(scores[0], indexes[0]):
+                if idx < 0:
+                    continue
+                chunk_position = int(idx) if positions is None else positions[idx]
+                if 0 <= chunk_position < len(self.chunks) and chunk_position not in best:
+                    best[chunk_position] = float(score)  # results arrive best first
+                    if len(best) == chunk_count:
+                        break
+            if len(best) >= chunk_count or search_k >= vector_total:
+                return [(score, chunk_position) for chunk_position, score in best.items()]
+            search_k = min(vector_total, search_k * 2)
 
     def retrieve(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
         candidate_k = production_candidate_k(question, top_k)
@@ -884,6 +913,31 @@ def insufficient_response(message: str) -> dict[str, Any]:
         "confidence": "low",
         "insufficient_context": True,
         "disclaimer": DISCLAIMER,
+    }
+
+
+OFFLINE_NOTICE = (
+    "You are currently offline. Retrieving the relevant legal section, case, corpus, "
+    "and law locally from the database and local files."
+)
+
+
+def offline_retrieval_response(chunks: list[RetrievedChunk]) -> dict[str, Any]:
+    """Gemini could not be reached -- no internet, no API key, or Gemini itself is down/rate
+    limited. `chunks` were already found locally (embeddings + FAISS, no network involved), so
+    hand them back directly instead of a Gemini-written answer: the app stays useful offline
+    instead of dead-ending in an error. `source_payload` gives each match's short excerpt AND its
+    full reconstructed text (`full_text`) -- the same text that would otherwise have been sent to
+    Gemini for grounding -- so the frontend can show both "what matched" and "the section as is".
+    The frontend renders this as a distinct (grey) panel rather than a normal grounded answer."""
+    return {
+        "answer": {"issue_summary": "", "possible_rights": [], "next_steps": []},
+        "sources": source_payload(chunks),
+        "confidence": "low",
+        "insufficient_context": not chunks,
+        "disclaimer": DISCLAIMER,
+        "offline": True,
+        "offline_notice": OFFLINE_NOTICE,
     }
 
 
@@ -1487,6 +1541,7 @@ def source_payload(chunks: list[RetrievedChunk]) -> list[dict[str, Any]]:
                 "page": chunk.page,
                 "section": source_section_label(chunk),
                 "excerpt": short_excerpt(chunk.text),
+                "full_text": source_text.readable_source_text(chunk.text),
                 "relevance": round(chunk.score, 4),
                 "rerank_score": round(chunk.rerank_score or chunk.score, 4),
             }
@@ -1630,7 +1685,7 @@ def gemini_grounded_response(question: str, chunks: list[RetrievedChunk]) -> dic
             f"File: {chunk.source}\nPage: {chunk.page}\nText:\n{chunk.text}"
         )
     context = "\n\n".join(context_blocks)
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
     system_prompt = """You are Legal Aid AI, an informational assistant for Indian legal information.
 
 You must answer the user's question using ONLY the legal source text supplied in the retrieved context.
@@ -1694,7 +1749,7 @@ Return only valid JSON with this exact shape:
         )
         content = response.text or "{}"
         parsed = json.loads(content)
-    except (genai_errors.APIError, TimeoutError, RuntimeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError) as exc:
         raise_classified_gemini_error(exc)
     except (json.JSONDecodeError, KeyError, TypeError) as exc:
         logger.exception("Gemini returned malformed JSON")

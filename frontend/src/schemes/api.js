@@ -3,7 +3,7 @@
  *
  * Base URL comes from `VITE_SCHEMES_API_BASE_URL`, defaulting to the
  * `/schemes-api` path — which `vite.config.js` proxies to
- * http://localhost:4000 in dev, mirroring how `/api` proxies to the Python
+ * http://localhost:4001 in dev, mirroring how `/api` proxies to the Python
  * backend. In production set the env var to the deployed origin.
  */
 const BASE_URL = (

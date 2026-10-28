@@ -1,0 +1,257 @@
+{
+  "description": "Test Set 2 for Legal Aid AI. Mixed real-world and synthetic evaluation questions, paraphrased into natural everyday English/Hinglish and fully anonymised. 36 cases: 10 consumer, 10 cyber, 9 Delhi tenancy, 7 constitutional/public-authority (RTI or legal aid). 'source_url' points to a verified, individually checkable real source for real-world cases; synthetic cases are explicitly labelled 'synthetic' and were written to fill out domain/scenario coverage, not derived from any external report. No case in this file uses an invented or unverified URL.",
+  "cases": [
+    {
+      "id": "consumer_01",
+      "domain": "consumer",
+      "question": "my earbuds broke within warranty, company says test report shows no fault and now saying only 3 replacements allowed in 120 days which was never written anywhere when i bought it. can they just make up a new rule like this",
+      "source_url": "https://sudhirrao.com/defective-product-and-warranty-issues-what-are-your-legal-options-in-india/",
+      "notes": "real-world; paraphrased from a published case write-up (names changed in original article to Arjun Sharma/SonicWave/AuraPods, further anonymised here); not a forum post"
+    },
+    {
+      "id": "consumer_02",
+      "domain": "consumer",
+      "question": "bought an iphone from an authorised store in india, camera stopped working within a day, they refused to replace it and only swapped the camera part instead of the whole phone. is that allowed under warranty",
+      "source_url": "https://www.buzzfeednews.com/article/pranavdixit/apple-india-service-repair-complaints",
+      "notes": "real-world; paraphrased from a journalism piece with named, real interviewees (names withheld here); anonymised"
+    },
+    {
+      "id": "consumer_03",
+      "domain": "consumer",
+      "question": "ordered earphones online, they came damaged, company is saying it passed their quality check before dispatch and closed my complaint without any refund or replacement",
+      "source_url": "https://ca.trustpilot.com/review/gonoise.com",
+      "notes": "real-world; paraphrased from a public review page with multiple verified real consumer complaints about one company (not one single identifiable reviewer's permalink)"
+    },
+    {
+      "id": "consumer_04",
+      "domain": "consumer",
+      "question": "seller refund nahi de raha, product wapis bhi le liya but paisa 3 hafte se nahi aaya",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "consumer_05",
+      "domain": "consumer",
+      "question": "online shopping site delivered a used/opened product instead of new, saying no return possible since 7 din nikal gaye",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "consumer_06",
+      "domain": "consumer",
+      "question": "gym membership cancel karne ke baad bhi auto debit ho raha hai mera account se, unhone bola cancellation request unko mili hi nahi",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "consumer_07",
+      "domain": "consumer",
+      "question": "washing machine bought 1.5 years ago under 2 year warranty, defect aa gaya but no cash memo/warranty card kept - can company refuse to fix it just because of that",
+      "source_url": "synthetic",
+      "notes": "synthetic - scenario adapted from a general awareness case study, rewritten as an original question; not a real individual's report"
+    },
+    {
+      "id": "consumer_08",
+      "domain": "consumer",
+      "question": "advertisement bola tha ki product mein X feature hoga, actual product mein wo feature hai hi nahi, company bol rahi 'marketing material was indicative only'",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "consumer_09",
+      "domain": "consumer",
+      "question": "food delivery app charged extra packaging and platform fee that wasn't shown at checkout, is that legal",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "consumer_10",
+      "domain": "consumer",
+      "question": "car service center ne bola gaadi ka issue fix ho gaya but 2 din baad wapis wahi problem aa gayi, teesri baar bhi wahi issue, ab kya karu",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "cyber_01",
+      "domain": "cyber",
+      "question": "got a call saying my account will be blocked, gave otp and money gone from upi. bank not helping",
+      "source_url": "own user testing",
+      "notes": "carried over from the existing external test set (real_world_external_cases.json), same wording"
+    },
+    {
+      "id": "cyber_02",
+      "domain": "cyber",
+      "question": "someone called claiming to be from my bank saying they're issuing a new debit card after a merger and needed an otp to 'process' it, i shared it and money got deducted in several transactions before i realised. bank is saying it was a valid two-factor transaction so not their fault",
+      "source_url": "https://www.tribuneindia.com/news/chandigarh/upi-fraud-chandigarh-consumer-commission-directs-bank-to-refund-rs-97000/",
+      "notes": "real-world; paraphrased from a reported consumer-commission case against a bank; anonymised, no names/amounts kept exact"
+    },
+    {
+      "id": "cyber_03",
+      "domain": "cyber",
+      "question": "unknown number called and asked for the otp on my phone saying it was needed to complete some verification, i gave it and money got debited immediately",
+      "source_url": "https://www.tribuneindia.com/news/j-k/cyber-police-recover-money-lost-in-fraud-bank-transaction-50070",
+      "notes": "real-world; paraphrased from a police-reported cyber fraud case; anonymised"
+    },
+    {
+      "id": "cyber_04",
+      "domain": "cyber",
+      "question": "was trying to recharge fastag, someone called saying they're from the bank's customer care, sent me a QR code to scan to 'fix' it, money got deducted the moment i scanned and entered my upi pin, then more amounts got deducted after that",
+      "source_url": "https://www.deccanherald.com/india/karnataka/bengaluru/fastag-user-loses-rs-50k-after-sharing-upi-pin-796584.html",
+      "notes": "real-world; paraphrased from a reported cyber fraud case; anonymised"
+    },
+    {
+      "id": "cyber_05",
+      "domain": "cyber",
+      "question": "tried withdrawing cash from an atm using the cardless option in my bank app, instead the money went out through upi to some unknown account, then i searched online for the bank/npci helpline number and called what i thought was the official number, ended up losing a lot more after that call",
+      "source_url": "https://www.deccanherald.com/amp/story/india%2Fmaharashtra%2Ftrying-to-save-rs-5000-mumbai-woman-loses-rs-6-lakh-to-cyber-fraudsters-3219529",
+      "notes": "real-world; paraphrased from a police-reported cyber fraud case (fake helpline number found via search engine); anonymised"
+    },
+    {
+      "id": "cyber_06",
+      "domain": "cyber",
+      "question": "caller said they're from my bank and a new passbook/debit card is being issued after our bank merged with another one, asked for otp 'as procedure', i shared multiple otps that day before realising it was fraud, police took 3 days to even register my complaint",
+      "source_url": "https://www.deccanherald.com/india/karnataka/bengaluru/online-fraudsters-target-customers-of-merged-banks-912791.html",
+      "notes": "real-world; paraphrased from a reported cyber fraud case; anonymised"
+    },
+    {
+      "id": "cyber_07",
+      "domain": "cyber",
+      "question": "someone offered a job, said i'd be posted to another city, asked me to scan a QR code to pay a small 'advance' fee, money got deducted, then they asked for otp saying it was for a refund, i shared it and lost a lot more from my credit card",
+      "source_url": "https://www.tribuneindia.com/news/chandigarh/2-city-residents-fall-prey-to-cyber-fraud-371127/amp",
+      "notes": "real-world; paraphrased from a reported cyber fraud case (fake job offer + QR/OTP scam); anonymised"
+    },
+    {
+      "id": "cyber_08",
+      "domain": "cyber",
+      "question": "woke up to messages that a large amount was withdrawn from my account in two transactions, i never got any call or otp request at all, reported to bank and police immediately, can the bank still refuse to refund since i didn't share anything",
+      "source_url": "https://www.tribuneindia.com/news/himachal/bank-account-hacked-mandi-resident-loses-rs-7-44-lakh-642164/amp",
+      "notes": "real-world; paraphrased from a reported cyber fraud/hacking case where no OTP was shared by the victim; anonymised"
+    },
+    {
+      "id": "cyber_09",
+      "domain": "cyber",
+      "question": "instagram account hack ho gaya, hacker use kar ke mere contacts se paise maang raha hai, kaise complaint karu aur account wapis kaise le",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "cyber_10",
+      "domain": "cyber",
+      "question": "someone made a fake profile using my photos and is messaging my friends and family, what can i legally do about this",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "tenancy_01",
+      "domain": "tenancy",
+      "question": "landlord not giving back my deposit after i left the flat, says paint damage but it was already like that. what can i do",
+      "source_url": "https://www.reddit.com/r/LegalAdviceIndia/...",
+      "notes": "carried over from the existing external test set (real_world_external_cases.json); flagging that this source_url was a placeholder, not a real link i verified - needs a real link or should be marked synthetic before this goes in the final set"
+    },
+    {
+      "id": "tenancy_02",
+      "domain": "tenancy",
+      "question": "landlord in delhi filed an eviction case against me for a commercial shop, my lawyer missed the deadline to file our reply due to some paperwork delays, can i still get a chance to contest the eviction now",
+      "source_url": "https://advocategandhi.com/delhi-high-court-rejects-belated-leave-to-defend-application-where-tenant-failed-to-prove-circumstances-beyond-his-control/",
+      "notes": "real-world; paraphrased from a reported Delhi High Court judgment on a Kashmere Gate shop eviction; anonymised"
+    },
+    {
+      "id": "tenancy_03",
+      "domain": "tenancy",
+      "question": "my landlord in delhi filed eviction papers claiming the signatures on the petition were mine, i believe they were forged - can the rent controller's decision be challenged on that basis",
+      "source_url": "https://advocategandhi.com/delhi-high-court-sets-aside-eviction-order-after-rent-controller-failed-to-examine-alleged-forged-signatures-and-bona-fide-requirement-for-commercial-premises/",
+      "notes": "real-world; paraphrased from a reported Delhi High Court judgment; anonymised"
+    },
+    {
+      "id": "tenancy_04",
+      "domain": "tenancy",
+      "question": "landlord bol raha hai flat unhe khud use karna hai isliye eviction case daal diya, but hume laga unki financial situation dekh kar case weak hoga - kya court landlord ki financial condition dekhti hai eviction case mein",
+      "source_url": "https://www.scconline.com/blog/post/2025/07/11/del-hc-landlord-tenant-financial-status-eviction-petition/",
+      "notes": "real-world; paraphrased from a reported Delhi High Court judgment on a Dwarka eviction case; anonymised"
+    },
+    {
+      "id": "tenancy_05",
+      "domain": "tenancy",
+      "question": "landlord electricity cut kar raha hai kyunki rent thoda late ho gaya, ye legal hai kya",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "tenancy_06",
+      "domain": "tenancy",
+      "question": "delhi mein rent agreement 11 months ka tha, landlord ab bol raha hai turant khali karo warna police bula lenge, without any notice period diye",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "tenancy_07",
+      "domain": "tenancy",
+      "question": "broker demanded a large 'token' amount before showing the rent agreement, now saying it's non-refundable even though we didn't go ahead with the flat",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "tenancy_08",
+      "domain": "tenancy",
+      "question": "landlord entering the flat without informing us whenever he wants, even when we're not home, kya ye allowed hai delhi mein",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "tenancy_09",
+      "domain": "tenancy",
+      "question": "rent agreement mein likha tha deposit 2 months ka hoga but landlord ne 4 months maang liya move-in ke time, kya ye challenge kiya ja sakta hai",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "public_01",
+      "domain": "constitutional_public_authority",
+      "question": "filed an rti almost 2 months ago asking for some government files, no response at all, department says they have very few staff currently. what can i actually do now",
+      "source_url": "https://etvbharat.com/en/state/maharashtra-state-information-dept-mired-in-delays-as-80-percent-posts-remain-vacant-delaying-over-63000-rti-appeals-filed-by-citizens-enn26092501079",
+      "notes": "real-world; paraphrased from a reported systemic RTI-delay story; anonymised as an individual applicant's question"
+    },
+    {
+      "id": "public_02",
+      "domain": "constitutional_public_authority",
+      "question": "rti daali thi ek sarkari scheme ke fund allocation ke baare mein, office bol raha ye file dusre department mein hai, phir wahan bhejte hain phir wapis, mahino se ho raha hai ye",
+      "source_url": "https://www.legalserviceindia.com/Legal-Articles/rti-act-2005-deoghar-jharkhand-delays-rural-challenges/",
+      "notes": "real-world; paraphrased from a published field-research article describing genuine, recurring RTI file-transfer delays; anonymised, not one specific individual's case"
+    },
+    {
+      "id": "public_03",
+      "domain": "constitutional_public_authority",
+      "question": "RTI ka reply nahi mila",
+      "source_url": "synthetic",
+      "notes": "synthetic - short/realistic phrasing consistent with existing domain_router_queries.json style, not sourced externally"
+    },
+    {
+      "id": "public_04",
+      "domain": "constitutional_public_authority",
+      "question": "mujhe free legal aid chahiye, court case ladne ke liye paisa nahi hai",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "public_05",
+      "domain": "constitutional_public_authority",
+      "question": "how do i actually find out which district legal services authority covers my area in delhi, and is there really no fee for it",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "public_06",
+      "domain": "constitutional_public_authority",
+      "question": "govt office ne mera rti application receive karne se hi mana kar diya, bina koi reason bataye, ye legal hai kya",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    },
+    {
+      "id": "public_07",
+      "domain": "constitutional_public_authority",
+      "question": "rti mein jo information mangi thi wo mili but galat/incomplete thi, ab kya first appeal file karna padega ya seedha commission ja sakte hain",
+      "source_url": "synthetic",
+      "notes": "synthetic - written for domain/scenario coverage, not sourced externally"
+    }
+  ]
+}

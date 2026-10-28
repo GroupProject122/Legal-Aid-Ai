@@ -7,7 +7,7 @@ import { matchRouter } from "./routes/match";
 import { schemesRouter } from "./routes/schemes";
 
 export const app = express();
-const PORT = Number(process.env.PORT ?? 4000);
+const PORT = Number(process.env.PORT ?? 4001);
 
 app.use(cors());
 app.use(express.json());

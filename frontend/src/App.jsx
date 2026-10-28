@@ -51,6 +51,7 @@ import {
   Trash2,
   UploadCloud,
   UserRound,
+  WifiOff,
   X
 } from 'lucide-react';
 
@@ -65,6 +66,7 @@ import {
   DocumentsBackgroundArt
 } from './shared/PageChrome.jsx';
 
+import { AutoGrowTextarea } from './AutoGrowTextarea.jsx';
 import { IntakeForm } from './schemes/IntakeForm.jsx';
 import { ResultsList } from './schemes/ResultsList.jsx';
 import { ApiError, postMatch } from './schemes/api.js';
@@ -77,6 +79,11 @@ import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
 import { CaseFileButton } from './caseFile/CaseFileButton.jsx';
+
+import { AccountMenu, AuthForm, signInHref, useAuth } from './auth.jsx';
+
+// Template sandbox: an isolated copy of the Home page at #/sample-home (see src/sample/).
+import { SampleHomePage } from './sample/SampleHomePage.jsx';
 
 const navItems = [
   { label: 'Home', icon: Home, page: 'home', href: '#/' },
@@ -230,6 +237,7 @@ function messagesFromSavedCase(savedMessages = []) {
         id: `saved-user-${message.id}`,
         role: 'user',
         text: message.content || '',
+        sequence: message.sequence_number,
         timestamp: message.created_at
       };
     }
@@ -417,45 +425,94 @@ function Hero() {
   );
 }
 
-function QueryBox() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const value = new FormData(event.currentTarget).get('legal-query');
-    const query = value.trim();
-    window.location.hash = query ? `#/ask?q=${encodeURIComponent(query)}` : '#/ask';
-  };
+function QueryBox({ chat }) {
+  // The homepage answers in place (see HomeAnswerPanel) rather than redirecting to Ask
+  // Question, so a question typed here and one typed there go through the same useLegalChat.
+  const hasConversation = chat.messages.length > 0;
 
-  // There's no conversation yet to attach a document to on the homepage -- the only real
-  // target for "attach a document" is Ask Question's existing AttachmentModal. Send the user
-  // there and open it immediately (`attach=1`, read by AskQuestionPage on mount), carrying over
-  // anything they'd already typed the same way the submit button does.
-  const handleAttachClick = (event) => {
-    const value = new FormData(event.currentTarget.form).get('legal-query');
-    const query = value.trim();
+  // The only real target for "attach a document" is Ask Question's AttachmentModal. Send the
+  // user there and open it immediately (`attach=1`, read by AskQuestionPage on mount), carrying
+  // over an in-progress conversation (its saved case) or anything already typed.
+  const handleAttachClick = () => {
     const params = new URLSearchParams({ attach: '1' });
+    if (chat.caseId) params.set('case', chat.caseId);
+    const query = chat.input.trim();
     if (query) params.set('q', query);
     window.location.hash = `#/ask?${params.toString()}`;
   };
 
   return (
-    <form className="query-box" onSubmit={handleSubmit}>
+    <form className="query-box" onSubmit={chat.handleSubmit}>
       <div className="query-icon">
-        <Sparkles size={20} />
+        <img src="/legal-aid-logo.png" alt="" className="query-icon-logo" />
       </div>
-      <input
+      {/* Grows with its content so the whole question stays visible. Enter submits;
+          Shift+Enter starts a new line so the question can be written in paragraphs. */}
+      <AutoGrowTextarea
         name="legal-query"
-        type="text"
-        placeholder="Describe your legal issue in simple words..."
+        value={chat.input}
+        onChange={(event) => chat.setInput(event.target.value)}
+        submitOnEnter
+        placeholder={hasConversation ? 'Ask a follow-up question...' : 'Describe your legal issue in simple words...'}
         aria-label="Describe your legal issue"
       />
       <button className="attach-button" type="button" aria-label="Attach document" onClick={handleAttachClick}>
         <Paperclip size={20} />
       </button>
-      <button className="ask-button query-submit" type="submit">
-        <Sparkles size={15} />
+      <button className="ask-button query-submit" type="submit" disabled={chat.isLoading}>
+        <img src="/legal-aid-logo.png" alt="" className="query-submit-logo" />
         <span>Ask AI</span>
       </button>
     </form>
+  );
+}
+
+function HomeAnswerPanel({ chat }) {
+  const panelRef = React.useRef(null);
+  const messageCount = chat.messages.length;
+
+  // Bring each new answer into view from its top, so it reads from the start; the follow-up
+  // box stays pinned below it. The homepage scrolls as a whole, unlike the chat panel.
+  React.useEffect(() => {
+    if (!messageCount) return;
+    panelRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [messageCount, chat.isLoading]);
+
+  if (!messageCount) return null;
+
+  const continueHref = chat.caseId ? `#/ask?case=${encodeURIComponent(chat.caseId)}` : '#/ask';
+
+  return (
+    <section className="chat-panel home-answer-panel" aria-label="Legal AI answer">
+      <PanelCorners />
+      <div className="chat-panel-toolbar">
+        <div>
+          <span>◇</span>
+          <p>{chat.category ? `Your question · ${chat.category}` : 'Your question'}</p>
+        </div>
+        <div className="home-answer-actions">
+          <button
+            type="button"
+            className="outline-action"
+            disabled={chat.isLoading || !chat.caseId}
+            title={chat.caseId ? 'Open this conversation on the Ask Question page' : 'Available once the answer has arrived'}
+            onClick={() => { window.location.hash = continueHref; }}
+          >
+            Open in Ask Question
+          </button>
+          <button type="button" className="outline-action" onClick={chat.handleClear}>New Question</button>
+        </div>
+      </div>
+      <div className="home-answer-messages" ref={panelRef}>
+        {chat.messages.map((message) => (
+          message.role === 'user'
+            ? <UserMessage text={message.text} key={message.id} />
+            : message.role === 'assistant_loading'
+              ? <LoadingMessage key={message.id} />
+              : <LegalAIResponse response={message.response} onSourceClick={chat.setSelectedSource} key={message.id} />
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -628,9 +685,12 @@ function WelcomeState({ onSelectExample }) {
   );
 }
 
-function UserMessage({ text }) {
+function UserMessage({ text, sequence, highlighted = false }) {
   return (
-    <article className="message-row user-message-row">
+    <article
+      className={`message-row user-message-row ${highlighted ? 'is-focused' : ''}`.trim()}
+      data-sequence={sequence || undefined}
+    >
       <div className="user-message">
         <p>{text}</p>
         <time>10:32 AM</time>
@@ -764,6 +824,77 @@ function LegalAIResponse({ response, onSourceClick, question = '' }) {
   const isLegalAidQuestion = (response?.routing?.domains || []).includes('constitutional_public_authority')
     && LEGAL_AID_QUESTION_PATTERN.test(question);
 
+  // No internet / Gemini unreachable: the backend already fell back to what it found locally
+  // (embeddings + FAISS, no network involved) instead of a Gemini-written answer. Shown as its
+  // own grey panel -- distinct from both a normal answer and a technical-error panel -- so it's
+  // obvious this is offline mode, not a broken or a real answer.
+  if (response?.offline) {
+    return (
+      <article className="message-row ai-message-row">
+        <div className="message-avatar ai-message-avatar offline-avatar" aria-hidden="true">
+          <WifiOff size={20} strokeWidth={1.8} />
+        </div>
+        <section className="legal-response-card offline-response-card">
+          <div className="response-header">
+            <div className="response-brand">
+              <div className="response-emblem">
+                <WifiOff size={17} strokeWidth={1.8} />
+              </div>
+              <strong>Legal Aid AI</strong>
+            </div>
+            <span className="response-pill offline-pill">Offline mode</span>
+          </div>
+
+          <div className="offline-notice">
+            <WifiOff size={18} strokeWidth={1.8} />
+            <span>
+              {cleanDisplayText(response.offline_notice) || cleanDisplayText(
+                'You are currently offline. Retrieving the relevant legal section, case, corpus, and law locally from the database and local files.'
+              )}
+            </span>
+          </div>
+
+          {sources.length > 0 ? (
+            <>
+              <div className="response-section">
+                <h4>Sections matched to your question</h4>
+                <div className="source-list">
+                  {sources.map((source) => (
+                    <SourceCard source={source} onClick={onSourceClick} key={`${source.document}-${source.page}-${source.section || 'source'}`} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="response-section">
+                <h4>The section text, as retrieved</h4>
+                {sources.map((source) => (
+                  <div className="offline-section-block" key={`full-${source.document}-${source.page}-${source.section || 'source'}`}>
+                    <p className="offline-section-meta">
+                      {cleanDisplayText(source.document)}
+                      {source.section ? ` — ${cleanDisplayText(source.section)}` : ''}
+                      {source.page ? ` · Page ${source.page}` : ''}
+                    </p>
+                    <p className="offline-section-text">{source.full_text || source.excerpt || 'No excerpt is available for this source.'}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="response-section">
+              <h4>No local matches</h4>
+              <p>No relevant sections were found in the local legal corpus for this question.</p>
+            </div>
+          )}
+
+          <div className="response-disclaimer">
+            <ShieldCheck size={16} strokeWidth={1.7} />
+            <span>{response?.disclaimer || 'This is legal information, not professional legal advice.'}</span>
+          </div>
+        </section>
+      </article>
+    );
+  }
+
   if (response?.technical_error) {
     return (
       <article className="message-row ai-message-row">
@@ -799,6 +930,22 @@ function LegalAIResponse({ response, onSourceClick, question = '' }) {
     );
   }
 
+  // "thanks" / "ok" / "hi" get a short conversational reply, not a legal answer -- shown as a
+  // plain line rather than under the legal-answer headings, where it read like a broken answer.
+  const turnType = response?.conversation?.turn_type;
+  if (turnType === 'acknowledgement' || turnType === 'small_talk') {
+    return (
+      <article className="message-row ai-message-row">
+        <div className="message-avatar ai-message-avatar" aria-hidden="true">
+          <Scale size={21} strokeWidth={1.45} />
+        </div>
+        <section className="legal-response-card conversational-reply-card">
+          <p>{cleanDisplayText(answer.issue_summary) || 'You can ask a follow-up question whenever you like.'}</p>
+        </section>
+      </article>
+    );
+  }
+
   return (
     <article className="message-row ai-message-row">
       <div className="message-avatar ai-message-avatar" aria-hidden="true">
@@ -815,15 +962,21 @@ function LegalAIResponse({ response, onSourceClick, question = '' }) {
           <span className="response-pill">Legal information</span>
         </div>
 
+        {/* issue_summary is written as a direct reply to the user's latest message, so it gets
+            its own heading rather than sitting under "What this may involve". */}
         <div className="response-section">
-          <h4>What this may involve</h4>
+          <h4>In short</h4>
           <p>{cleanDisplayText(answer.issue_summary) || 'The available legal sources do not contain enough information to answer this reliably.'}</p>
-          {whatThisMayInvolve.length > 0 && (
+        </div>
+
+        {whatThisMayInvolve.length > 0 && (
+          <div className="response-section">
+            <h4>What this may involve</h4>
             <ul>
               {whatThisMayInvolve.map((item) => <li key={item}>{item}</li>)}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
 
         {clarificationQuestion ? (
           <div className="response-section">
@@ -869,7 +1022,7 @@ function LegalAIResponse({ response, onSourceClick, question = '' }) {
         )}
 
         {!clarificationQuestion && limitations.length > 0 && (
-          <div className="response-section">
+          <div className="response-section response-limitations">
             <h4>Limitations</h4>
             <ul>
               {limitations.map((item) => <li key={item}>{item}</li>)}
@@ -1140,12 +1293,12 @@ function ChatComposer({ value, onChange, onSubmit, onAttach, onVoiceStart }) {
         <Paperclip size={25} strokeWidth={1.7} />
       </button>
       <label className="sr-only" htmlFor="legal-chat-input">Describe your legal issue</label>
-      <textarea
+      <AutoGrowTextarea
         id="legal-chat-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        submitOnEnter
         placeholder="Describe your legal issue..."
-        rows={1}
         aria-label="Describe your legal issue"
       />
       <div className="composer-mic-wrap">
@@ -1190,14 +1343,35 @@ function isAnswerResponse(response) {
   return (response.sources?.length > 0) || SUBSTANTIVE_ANSWER_FIELDS.some((field) => answer[field]?.length > 0);
 }
 
-function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, caseId, caseTitle }) {
+function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, caseId, caseTitle, focusSequence = null, focusKey = '' }) {
   const scrollRef = React.useRef(null);
+  const focusDoneRef = React.useRef(false);
+  const [highlightedSequence, setHighlightedSequence] = React.useState(null);
+
+  // focusKey is case + question, so jumping to question 1 of another case still jumps.
+  React.useEffect(() => {
+    focusDoneRef.current = false;
+  }, [focusKey]);
 
   React.useEffect(() => {
     const node = scrollRef.current;
-    if (!node) return;
+    if (!node) return undefined;
+    // Opened from a document's "go to case" button: show the question the document came in
+    // with, once, instead of the end of the chat. If no question followed the upload, the end
+    // of the chat is where it came in, so the normal scroll-to-bottom is right.
+    if (focusSequence && !focusDoneRef.current && messages.length) {
+      focusDoneRef.current = true;
+      const target = node.querySelector(`[data-sequence="${focusSequence}"]`);
+      if (target) {
+        target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        setHighlightedSequence(focusSequence);
+        const timer = window.setTimeout(() => setHighlightedSequence(null), 3500);
+        return () => window.clearTimeout(timer);
+      }
+    }
     node.scrollTo({ top: node.scrollHeight, behavior: 'smooth' });
-  }, [messages, isLoading]);
+    return undefined;
+  }, [messages, isLoading, focusSequence]);
 
   return (
     <section className="chat-panel" aria-label="Legal AI chat">
@@ -1227,7 +1401,7 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
           <>
             {messages.map((message, index) => (
               message.role === 'user'
-                ? <UserMessage text={message.text} key={message.id} />
+                ? <UserMessage text={message.text} sequence={message.sequence} highlighted={message.sequence && message.sequence === highlightedSequence} key={message.id} />
                 : message.role === 'assistant_loading'
                   ? <LoadingMessage key={message.id} />
                 : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} question={precedingUserText(messages, index)} key={message.id} />
@@ -1241,7 +1415,7 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
   );
 }
 
-function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFactContext }) {
+function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFactContext, caseId, chatDocuments = [], refreshKey = 0 }) {
   const selectedCategories = category.split(',').map((item) => item.trim()).filter(Boolean);
   return (
     <aside className="query-summary-panel" aria-label="Your query summary">
@@ -1297,6 +1471,8 @@ function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFa
             Detach document facts
           </button>
         )}
+
+        <CaseDocumentsSummary caseId={caseId} chatDocuments={chatDocuments} refreshKey={refreshKey} onAttach={onAttach} />
       </section>
 
       <section className="summary-card tip-card">
@@ -1311,33 +1487,174 @@ function QuerySummaryPanel({ category, onAttach, attachedFactContext, onDetachFa
   );
 }
 
-function AttachmentModal({ onClose }) {
+/** Documents panel in the Ask page's query card: "In this case" (uploaded in this chat, or
+ * whose confirmed facts were used in it) and "May also be relevant" (the user's other documents
+ * that suit this kind of case -- ID/address proof, a rent agreement for a tenancy case, ...; see
+ * backend/document_relevance.py). */
+function CaseDocumentsSummary({ caseId, chatDocuments, refreshKey, onAttach }) {
+  const { user, status: authStatus } = useAuth();
+  const [caseDocuments, setCaseDocuments] = React.useState([]);
+  const [suggestions, setSuggestions] = React.useState([]);
+  const [status, setStatus] = React.useState('idle');
+
+  React.useEffect(() => {
+    if (!user || !caseId) {
+      setCaseDocuments([]);
+      setSuggestions([]);
+      setStatus('idle');
+      return undefined;
+    }
+    let ignore = false;
+    setStatus((current) => (current === 'ready' ? current : 'loading'));
+    fetch(`/api/cases/${encodeURIComponent(caseId)}/documents`)
+      .then((response) => safeJsonResponse(response).then((payload) => {
+        if (!response.ok || !payload || !Array.isArray(payload.documents)) throw new Error('Could not load case documents.');
+        return payload;
+      }))
+      .then((payload) => {
+        if (ignore) return;
+        setCaseDocuments(payload.documents);
+        setSuggestions(payload.suggestions || []);
+        setStatus('ready');
+      })
+      .catch((error) => {
+        console.error('Could not load documents for this case', error);
+        if (!ignore) setStatus('error');
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [user, caseId, refreshKey, chatDocuments.length]);
+
+  if (authStatus === 'loading') return null;
+
+  if (!user) {
+    return (
+      <div className="summary-documents">
+        <div className="summary-item">
+          <FileText size={21} strokeWidth={1.55} />
+          <div>
+            <h4>Documents in this case</h4>
+            <p>Sign in to keep documents with your cases</p>
+          </div>
+        </div>
+        <a className="detach-facts-button summary-documents-link" href={signInHref('signin')}>
+          Sign in
+          <ChevronRight size={16} strokeWidth={1.8} />
+        </a>
+      </div>
+    );
+  }
+
+  // Uploads from this chat show straight away, before the case exists or the list reloads.
+  const inCase = [...caseDocuments];
+  chatDocuments.forEach((document) => {
+    if (!inCase.some((item) => item.id === document.id)) inCase.push(document);
+  });
+  const inCaseIds = new Set(inCase.map((document) => document.id));
+  const otherSuggestions = suggestions.filter((document) => !inCaseIds.has(document.id));
+
+  return (
+    <div className="summary-documents">
+      <div className="summary-item">
+        <FileText size={21} strokeWidth={1.55} />
+        <div>
+          <h4>Documents in this case</h4>
+          <p>
+            {status === 'loading' && inCase.length === 0 && 'Loading...'}
+            {status === 'error' && inCase.length === 0 && 'Could not load documents right now'}
+            {(status === 'ready' || status === 'idle') && inCase.length === 0 && 'None yet'}
+            {inCase.length > 0 && `${inCase.length} document${inCase.length === 1 ? '' : 's'}`}
+          </p>
+        </div>
+      </div>
+      {inCase.length > 0 ? (
+        <SummaryDocumentList documents={inCase} />
+      ) : (
+        (status === 'ready' || status === 'idle') && (
+          <button type="button" className="summary-documents-hint" onClick={onAttach}>
+            Upload a document to this chat with the paperclip.
+          </button>
+        )
+      )}
+
+      {otherSuggestions.length > 0 && (
+        <div className="summary-relevant">
+          <h4>May also be relevant</h4>
+          <p className="summary-relevant-lead">Uploaded in your other chats, and could help here too.</p>
+          <SummaryDocumentList documents={otherSuggestions} showReason />
+        </div>
+      )}
+
+      <a className="detach-facts-button summary-documents-link" href="#/documents">
+        View all documents
+        <ChevronRight size={16} strokeWidth={1.8} />
+      </a>
+    </div>
+  );
+}
+
+function SummaryDocumentList({ documents, showReason = false }) {
+  return (
+    <ul className="summary-document-list">
+      {documents.map((document) => (
+        <li key={document.id}>
+          <FileTypeIcon type={document.file_type} />
+          <div>
+            <a
+              href={`/api/documents/${encodeURIComponent(document.id)}/file`}
+              target="_blank"
+              rel="noreferrer"
+              title={`Open ${document.filename}`}
+            >
+              {document.filename}
+            </a>
+            {showReason && document.relevance_label ? (
+              <small title={document.relevance_reason}>{document.relevance_label}: {document.relevance_reason}</small>
+            ) : (
+              <small>{formatCaseDate(document.created_at)}</small>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function AttachmentModal({ caseId, onUploaded, onFactsConfirmed, onClose }) {
+  const { user } = useAuth();
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section
-        className="attachment-modal"
+        className="attachment-modal chat-upload-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="attachment-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <button type="button" className="modal-close" aria-label="Close upload information" onClick={onClose}>
+        <button type="button" className="modal-close" aria-label="Close document upload" onClick={onClose}>
           <X size={20} />
         </button>
-        <div className="modal-emblem">
-          <ReceiptText size={30} strokeWidth={1.55} />
-        </div>
-        <h3 id="attachment-title">Upload supporting document</h3>
-        <p>You’ll be able to upload notices, receipts, contracts, or screenshots here.</p>
-        <div className="format-list" aria-label="Supported future formats">
-          <span>PDF</span>
-          <span>JPG</span>
-          <span>PNG</span>
-        </div>
-        <div className="modal-note">
-          <Info size={17} strokeWidth={1.7} />
-          <span>Document analysis will be enabled in a later version.</span>
-        </div>
+        <h3 id="attachment-title">Add a document to this chat</h3>
+        <p>
+          Upload a notice, receipt, agreement or similar. Confirm the key facts from it and they will be used when
+          answering your questions in this chat.
+        </p>
+        {!user && (
+          <div className="modal-note">
+            <Info size={17} strokeWidth={1.7} />
+            <span>
+              You are not signed in, so the document will not be saved.{' '}
+              <a href={signInHref('signin')}>Sign in</a> to keep it with this case.
+            </span>
+          </div>
+        )}
+        <UploadDocumentCard
+          caseId={caseId}
+          onUploaded={onUploaded}
+          onFactsConfirmed={onFactsConfirmed}
+          onDone={onClose}
+        />
       </section>
     </div>
   );
@@ -1345,6 +1662,13 @@ function AttachmentModal({ onClose }) {
 
 function SourceExcerptModal({ source, onClose }) {
   const detail = [cleanDisplayText(source.section), source.page ? `Page ${source.page}` : null].filter(Boolean).join(' · ');
+  // full_text is the whole retrieved passage with its line structure (list items, sub-sections)
+  // kept -- so it is not run through cleanDisplayText, which would flatten it to one line.
+  // Answers saved before full_text existed fall back to the short excerpt.
+  const passage = (source.full_text || '').trim();
+  const pdfHref = source.source_file
+    ? `/api/corpus/file?source=${encodeURIComponent(source.source_file)}${source.page ? `#page=${source.page}` : ''}`
+    : null;
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -1364,26 +1688,42 @@ function SourceExcerptModal({ source, onClose }) {
         <h3 id="source-excerpt-title">{cleanDisplayText(source.document)}</h3>
         <p>{detail || 'Retrieved source'}</p>
         <div className="source-excerpt-box">
-          <strong>Retrieved excerpt</strong>
-          <p>{cleanDisplayText(source.excerpt) || 'No excerpt was returned for this source.'}</p>
+          <strong>{passage ? 'Relevant text from this source' : 'Retrieved excerpt'}</strong>
+          <div className="source-passage" tabIndex={0} aria-label="Relevant text from this source">
+            {passage
+              ? passage.split('\n').map((line, index) => <p key={index}>{line}</p>)
+              : <p>{cleanDisplayText(source.excerpt) || 'No excerpt was returned for this source.'}</p>}
+          </div>
         </div>
+        {pdfHref && (
+          <a className="ask-button source-pdf-link" href={pdfHref} target="_blank" rel="noopener noreferrer">
+            <FileText size={16} strokeWidth={1.8} />
+            <span>{source.page ? `Open full PDF at page ${source.page}` : 'Open full PDF'}</span>
+          </a>
+        )}
       </section>
     </div>
   );
 }
 
-function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach = false }) {
+// The whole question -> /api/ask -> answer conversation, shared by the Ask Question page and
+// the homepage so a question gets answered wherever it is typed, with the same clarification,
+// conversation-state, saved-case and document-fact handling on both.
+function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
   const [input, setInput] = React.useState(initialQuery);
   const [messages, setMessages] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [category, setCategory] = React.useState('');
-  const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(initialAttach);
   const [selectedSource, setSelectedSource] = React.useState(null);
   const [clarificationStateId, setClarificationStateId] = React.useState(null);
   const [conversationStateId, setConversationStateId] = React.useState(null);
   const [caseId, setCaseId] = React.useState(initialCaseId || null);
   const [caseTitle, setCaseTitle] = React.useState('');
   const [attachedFactContext, setAttachedFactContext] = React.useState(null);
+  // Documents uploaded inside this chat ({id, filename, file_type, created_at}). Their ids go with
+  // every question so the backend links them to the case -- including uploads made before the
+  // first question created the case.
+  const [chatDocuments, setChatDocuments] = React.useState([]);
   const loadingTimer = React.useRef(null);
 
   React.useEffect(() => {
@@ -1459,6 +1799,7 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     const activeClarificationStateId = clarificationStateId;
     const activeConversationStateId = conversationStateId;
     const activeCaseId = caseId;
+    const chatDocumentIds = chatDocuments.map((document) => document.id);
     const assistantMessageId = createMessageId('ai-loading');
     setMessages((current) => [
       ...current,
@@ -1473,11 +1814,13 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
           ? {
               question: text,
               clarification_state_id: activeClarificationStateId,
+              ...(chatDocumentIds.length ? { document_ids: chatDocumentIds } : {}),
               ...(activeCaseId ? { case_id: activeCaseId } : {}),
               ...(activeConversationStateId ? { conversation_state_id: activeConversationStateId } : {})
             }
           : {
               question: text,
+              ...(chatDocumentIds.length ? { document_ids: chatDocumentIds } : {}),
               ...(activeCaseId ? { case_id: activeCaseId } : {}),
               ...(activeConversationStateId ? { conversation_state_id: activeConversationStateId } : {}),
               ...(attachedFactContext?.confirmed_fact_context_id
@@ -1541,6 +1884,7 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     setCategory('');
     window.sessionStorage.removeItem('legalAidConfirmedFactContext');
     setAttachedFactContext(null);
+    setChatDocuments([]);
     if (window.location.hash.includes('case=')) {
       window.location.hash = '#/ask';
     }
@@ -1551,12 +1895,80 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     setAttachedFactContext(null);
   };
 
+  const handleDocumentUploaded = (upload) => {
+    if (!upload?.document_id) return;
+    setChatDocuments((current) => (current.some((document) => document.id === upload.document_id)
+      ? current
+      : [...current, {
+          id: upload.document_id,
+          filename: upload.filename,
+          file_type: upload.file_type,
+          created_at: new Date().toISOString()
+        }]));
+  };
+
+  const handleFactsConfirmed = (context) => {
+    window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify(context));
+    setAttachedFactContext(context);
+  };
+
+  return {
+    input,
+    setInput,
+    messages,
+    isLoading,
+    category,
+    selectedSource,
+    setSelectedSource,
+    caseId,
+    attachedFactContext,
+    chatDocuments,
+    handleSubmit,
+    handleExample,
+    handleClear,
+    handleDetachFactContext,
+    handleDocumentUploaded,
+    handleFactsConfirmed
+  };
+}
+
+function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach = false, initialFocusSequence = null }) {
+  const {
+    input,
+    setInput,
+    messages,
+    isLoading,
+    category,
+    selectedSource,
+    setSelectedSource,
+    attachedFactContext,
+    caseId,
+    chatDocuments,
+    handleSubmit,
+    handleExample,
+    handleClear,
+    handleDetachFactContext,
+    handleDocumentUploaded,
+    handleFactsConfirmed
+  } = useLegalChat({ initialQuery, initialCaseId });
+  const [isAttachmentOpen, setIsAttachmentOpen] = React.useState(initialAttach);
+  const { user, status: authStatus } = useAuth();
+
   return (
     <>
       <AskBackgroundArt />
       <HeaderControls />
       <div className="ask-content-frame">
         <AskPageHeader />
+        {authStatus === 'ready' && !user && (
+          <p className="auth-guest-note">
+            <Info size={17} strokeWidth={1.8} aria-hidden="true" />
+            <span>
+              You are not signed in, so this conversation will not be saved.{' '}
+              <a href={signInHref('signin')}>Sign in</a> or <a href={signInHref('signup')}>create an account</a> to keep it in My Cases.
+            </span>
+          </p>
+        )}
         <div className="ask-workspace">
           <ChatPanel
             input={input}
@@ -1568,6 +1980,8 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
             onClear={handleClear}
             onAttach={() => setIsAttachmentOpen(true)}
             onSourceClick={setSelectedSource}
+            focusSequence={initialFocusSequence}
+            focusKey={`${initialCaseId}:${initialFocusSequence || ''}`}
             caseId={caseId}
             caseTitle={caseTitle}
           />
@@ -1576,10 +1990,20 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
             onAttach={() => setIsAttachmentOpen(true)}
             attachedFactContext={attachedFactContext}
             onDetachFactContext={handleDetachFactContext}
+            caseId={caseId}
+            chatDocuments={chatDocuments}
+            refreshKey={messages.length}
           />
         </div>
       </div>
-      {isAttachmentOpen && <AttachmentModal onClose={() => setIsAttachmentOpen(false)} />}
+      {isAttachmentOpen && (
+        <AttachmentModal
+          caseId={caseId}
+          onUploaded={handleDocumentUploaded}
+          onFactsConfirmed={handleFactsConfirmed}
+          onClose={() => setIsAttachmentOpen(false)}
+        />
+      )}
       {selectedSource && <SourceExcerptModal source={selectedSource} onClose={() => setSelectedSource(null)} />}
     </>
   );
@@ -1804,7 +2228,7 @@ function DocumentsPanel({ activeTab, setActiveTab, search, setSearch, filteredDo
   );
 }
 
-function UploadDocumentCard({ onUploaded, externalInputRef }) {
+function UploadDocumentCard({ onUploaded, externalInputRef, caseId = null, onFactsConfirmed, onDone }) {
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [status, setStatus] = React.useState('idle');
   const [message, setMessage] = React.useState('');
@@ -1843,6 +2267,7 @@ function UploadDocumentCard({ onUploaded, externalInputRef }) {
     }
     const formData = new FormData();
     formData.append('file', selectedFile);
+    if (caseId) formData.append('case_id', String(caseId));
     setStatus('uploading');
     setMessage('');
     setExtraction(null);
@@ -1946,10 +2371,12 @@ function UploadDocumentCard({ onUploaded, externalInputRef }) {
       }
       setFactStatus('confirmed');
       if (data?.confirmed_fact_context_id) {
-        window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify({
+        const context = {
           confirmed_fact_context_id: data.confirmed_fact_context_id,
           document_type: data.confirmed_facts?.document_type || 'unknown'
-        }));
+        };
+        window.sessionStorage.setItem('legalAidConfirmedFactContext', JSON.stringify(context));
+        if (onFactsConfirmed) onFactsConfirmed(context);
       }
       setFactMessage('Facts confirmed. They remain user case facts and are not legal authority.');
     } catch (error) {
@@ -2042,8 +2469,12 @@ function UploadDocumentCard({ onUploaded, externalInputRef }) {
             {factStatus === 'confirming' ? 'Confirming...' : 'Confirm Facts'}
           </button>
           {factStatus === 'confirmed' && (
-            <button type="button" className="browse-button extract-button" onClick={() => { window.location.hash = '#/ask'; }}>
-              Ask a legal question using these facts
+            <button
+              type="button"
+              className="browse-button extract-button"
+              onClick={onDone || (() => { window.location.hash = '#/ask'; })}
+            >
+              {onDone ? 'Use these facts in this chat' : 'Ask a legal question using these facts'}
             </button>
           )}
         </div>
@@ -2074,7 +2505,7 @@ function FactCategory({ label, items, onChange, onRemove }) {
         <div className="fact-item" key={`${item.label}-${index}`}>
           <label>
             <span>{item.label || 'Fact'}</span>
-            <input value={item.value || ''} onChange={(event) => onChange(index, event.target.value)} />
+            <AutoGrowTextarea value={item.value || ''} onChange={(event) => onChange(index, event.target.value)} />
           </label>
           <small>{item.source_page ? `Document evidence: page ${item.source_page}` : 'Document evidence'}{item.confidence ? ` - ${item.confidence}` : ''}</small>
           {item.source_excerpt && <blockquote>{item.source_excerpt}</blockquote>}
@@ -2300,19 +2731,113 @@ function DocumentDeleteModal({ document, onClose, onDelete }) {
   );
 }
 
-function DocumentListCard({ document, onView, onRename, onDelete }) {
+function caseQuestionHref(link) {
+  const params = new URLSearchParams({ case: String(link.case_id) });
+  if (link.message_sequence) params.set('msg', String(link.message_sequence));
+  return `#/ask?${params.toString()}`;
+}
+
+// "Go to case": opens the case this document was uploaded or used in, scrolled to the question
+// it came in with (message_sequence). A document used in several cases gets a short menu; one
+// never used in a case says so instead of offering a button.
+function DocumentCaseLink({ document }) {
+  const links = document.cases || [];
+  const [open, setOpen] = React.useState(false);
+  const wrapperRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!open) return undefined;
+    const close = (event) => {
+      if (!wrapperRef.current?.contains(event.target)) setOpen(false);
+    };
+    const onKey = (event) => { if (event.key === 'Escape') setOpen(false); };
+    window.addEventListener('mousedown', close);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('mousedown', close);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  if (!links.length) {
+    return <span className="document-no-case">Not under any case</span>;
+  }
+
+  if (links.length === 1) {
+    const [link] = links;
+    return (
+      <button
+        type="button"
+        className="document-case-link"
+        title={`Open "${link.title || 'Legal Question'}"${link.message_sequence ? ' at the question this document was added with' : ''}`}
+        onClick={() => { window.location.hash = caseQuestionHref(link); }}
+      >
+        <BriefcaseBusiness size={16} strokeWidth={1.8} />
+        <span>Go to case</span>
+      </button>
+    );
+  }
+
   return (
-    <article className="document-list-card">
+    <div className="document-case-menu-wrap" ref={wrapperRef}>
+      <button
+        type="button"
+        className="document-case-link"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <BriefcaseBusiness size={16} strokeWidth={1.8} />
+        <span>{`In ${links.length} cases`}</span>
+      </button>
+      {open && (
+        <ul className="document-case-menu" role="menu">
+          {links.map((link) => (
+            <li key={link.case_id} role="none">
+              <button
+                type="button"
+                role="menuitem"
+                className={CASE_DOMAIN_LABELS[link.primary_domain] ? `case-domain-${link.primary_domain}` : ''}
+                onClick={() => { window.location.hash = caseQuestionHref(link); }}
+              >
+                <span className="document-case-menu-swatch" aria-hidden="true" />
+                <span>{link.title || 'Legal Question'}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// Documents are coloured by legal area exactly like My Cases (same .case-domain-* colours).
+// category_source "case": the document was used in a case and takes its area; "inferred": not
+// used in a case yet, so the area was guessed from its name and text -- the chip says so.
+function DocumentListCard({ document, onView, onRename, onDelete }) {
+  const categoryLabel = CASE_DOMAIN_LABELS[document.category];
+  const inferred = document.category_source === 'inferred';
+  return (
+    <article className={`document-list-card ${categoryLabel ? `case-domain-${document.category}` : ''}`.trim()}>
       <FileTypeIcon type={document.file_type} />
       <div className="document-list-main">
         <h3>{document.filename}</h3>
         <p>
+          {categoryLabel && (
+            <span
+              className={`case-domain-chip ${inferred ? 'is-inferred' : ''}`.trim()}
+              title={inferred ? 'Likely category, guessed from the file name and contents' : 'Category of the case this document was used in'}
+            >
+              {categoryLabel}
+            </span>
+          )}
           <Clock size={14} strokeWidth={1.7} />
           {formatCaseDate(document.updated_at || document.created_at)}
           <span className="document-list-size">{formatBytes(document.size_bytes)}</span>
         </p>
       </div>
       <div className="document-list-actions">
+        <DocumentCaseLink document={document} />
         <button
           type="button"
           className="case-rename-icon-button"
@@ -2506,6 +3031,14 @@ function DocumentsPage({ initialSearch = '' }) {
           </div>
 
           <div className="persisted-documents-bulk-actions">
+            <ul className="case-domain-legend" aria-label="Document category colours">
+              {CASE_DOMAIN_OPTIONS.map((option) => (
+                <li key={option.value}>
+                  <span className={`case-domain-swatch case-domain-${option.value}`} aria-hidden="true" />
+                  {option.label}
+                </li>
+              ))}
+            </ul>
             <button
               type="button"
               className="document-delete-all-button"
@@ -3603,7 +4136,7 @@ function HomeInfoSections() {
             question — it is never sold, shared, or used to build a profile of you.
           </p>
           <ul>
-            <li>Your questions and uploads stay tied to your session.</li>
+            <li>Your saved cases and documents are private to your account.</li>
             <li>Documents are read to help you, not kept for anyone else.</li>
             <li>You can delete a saved case any time from My Cases.</li>
           </ul>
@@ -3764,6 +4297,7 @@ function InteractiveCursor() {
 }
 
 function HomePage() {
+  const chat = useLegalChat();
   return (
     <>
       <InteractiveCursor />
@@ -3771,12 +4305,18 @@ function HomePage() {
       <HeaderControls />
       <div className="content-frame">
         <Hero />
-        <QueryBox />
+        {/* Once a conversation starts, CSS moves the question box below the answers (as a
+            follow-up box) -- by `order`, not by re-rendering it elsewhere, so it keeps focus. */}
+        <div className={`home-ask ${chat.messages.length ? 'has-conversation' : ''}`}>
+          <QueryBox chat={chat} />
+          <HomeAnswerPanel chat={chat} />
+        </div>
         <CategoryPills />
         <FeatureCards />
         <HomeInfoSections />
       </div>
       <HomeFooter />
+      {chat.selectedSource && <SourceExcerptModal source={chat.selectedSource} onClose={() => chat.setSelectedSource(null)} />}
     </>
   );
 }
@@ -3786,8 +4326,11 @@ const CASE_DOMAIN_OPTIONS = [
   { value: 'consumer', label: 'Consumer' },
   { value: 'cyber', label: 'Cyber' },
   { value: 'tenancy', label: 'Tenancy' },
-  { value: 'constitutional_public_authority', label: 'Public Authority' }
+  { value: 'constitutional_public_authority', label: 'Fundamental Rights' }
 ];
+// Each case's category (its primary_domain) is shown in its own colour -- see .case-domain-* in
+// styles.css. Cases with no category keep the plain card.
+const CASE_DOMAIN_LABELS = Object.fromEntries(CASE_DOMAIN_OPTIONS.map((option) => [option.value, option.label]));
 
 function MyCasesPage() {
   const [cases, setCases] = React.useState([]);
@@ -3983,6 +4526,14 @@ function MyCasesPage() {
         </div>
 
         <div className="cases-bulk-actions">
+          <ul className="case-domain-legend" aria-label="Case category colours">
+            {CASE_DOMAIN_OPTIONS.map((option) => (
+              <li key={option.value}>
+                <span className={`case-domain-swatch case-domain-${option.value}`} aria-hidden="true" />
+                {option.label}
+              </li>
+            ))}
+          </ul>
           <button
             type="button"
             className="case-delete-all-button"
@@ -4023,13 +4574,21 @@ function MyCasesPage() {
             </div>
           )}
           {status === 'ready' && cases.map((savedCase) => (
-            <article className="case-list-card" key={savedCase.id}>
+            <article
+              className={`case-list-card ${CASE_DOMAIN_LABELS[savedCase.primary_domain] ? `case-domain-${savedCase.primary_domain}` : ''}`.trim()}
+              key={savedCase.id}
+            >
               <div className="case-list-icon" aria-hidden="true">
                 <BriefcaseBusiness size={25} strokeWidth={1.45} />
               </div>
               <div className="case-list-main">
                 <h3>{savedCase.title || 'Legal Question'}</h3>
-                <p><Clock size={14} strokeWidth={1.7} />{formatCaseDate(savedCase.updated_at)}</p>
+                <p>
+                  {CASE_DOMAIN_LABELS[savedCase.primary_domain] && (
+                    <span className="case-domain-chip">{CASE_DOMAIN_LABELS[savedCase.primary_domain]}</span>
+                  )}
+                  <Clock size={14} strokeWidth={1.7} />{formatCaseDate(savedCase.updated_at)}
+                </p>
               </div>
               <div className="case-card-actions">
                 <button
@@ -4724,7 +5283,74 @@ function RightsLoadingState({ message }) {
   );
 }
 
+// Pieces the sample home page reuses from the live app. Passed in as props (rather than
+// imported by the sample file) so App.jsx and src/sample/ never import each other.
+const sampleHomeShared = {
+  useLegalChat,
+  HeaderControls,
+  PanelCorners,
+  UserMessage,
+  LoadingMessage,
+  LegalAIResponse,
+  SourceExcerptModal,
+  VintageScales
+};
+
+function AuthPage({ mode, next }) {
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="auth-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>⌘</i></div>
+          <h2>{mode === 'signup' ? 'Create Account' : 'Sign In'}</h2>
+          <div className="header-ornament-line"><i>⌘</i><span /></div>
+          <PageDivider />
+        </header>
+        <AuthForm mode={mode} next={next} />
+      </div>
+    </>
+  );
+}
+
+const SIGN_IN_REQUIRED_COPY = {
+  cases: ['My Cases', 'Sign in to see your saved conversations.', 'Your cases are private to your account. Sign in, or create a free account, to save conversations and pick them up again later.'],
+  documents: ['Documents', 'Sign in to see your documents.', 'Uploaded documents are stored privately in your account. Sign in, or create a free account, to keep and manage them.'],
+  summarize: ['Summarize Document', 'Sign in to summarize documents.', 'Summaries are saved with your documents, which are private to your account. Sign in, or create a free account, to continue.'],
+  ask: ['Ask Question', 'Sign in to open this case.', 'Saved cases are private to the account that created them. Sign in to continue this conversation.']
+};
+
+/** Shown in place of a page that needs an account, when nobody is signed in. */
+function SignInRequired({ page }) {
+  const [title, heading, body] = SIGN_IN_REQUIRED_COPY[page] || SIGN_IN_REQUIRED_COPY.cases;
+  return (
+    <>
+      <DocumentsBackgroundArt />
+      <HeaderControls />
+      <div className="cases-content-frame">
+        <header className="documents-page-header">
+          <div className="header-ornament-line"><span /><i>⌘</i></div>
+          <h2>{title}</h2>
+          <div className="header-ornament-line"><i>⌘</i><span /></div>
+          <PageDivider />
+        </header>
+        <section className="auth-required-card">
+          <LockKeyhole size={34} strokeWidth={1.45} />
+          <h3>{heading}</h3>
+          <p>{body}</p>
+          <div className="auth-required-actions">
+            <a className="case-open-button" href={signInHref('signin')}>Sign in</a>
+            <a className="document-outline-button" href={signInHref('signup')}>Create account</a>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
+
 export default function App() {
+  const { user, status: authStatus } = useAuth();
   const [route, setRoute] = React.useState(() => window.location.hash || '#/');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
     try {
@@ -4747,8 +5373,13 @@ export default function App() {
   const initialQuery = queryParams.get('q') || '';
   const initialCaseId = queryParams.get('case') || '';
   const initialAttach = queryParams.get('attach') === '1';
-  const initialDocumentSearch = queryParams.get('search') || '';
-  const activePage = routeSegments[0] === 'ask'
+  // #/ask?case=ID&msg=N (from a document's "go to case" button): open the case at question N.
+  const initialFocusSequence = Number.parseInt(queryParams.get('msg') || '', 10) || null;
+  const activePage = routeSegments[0] === 'signin' || routeSegments[0] === 'signup'
+    ? routeSegments[0]
+    : routeSegments[0] === 'sample-home'
+    ? 'sample-home'
+    : routeSegments[0] === 'ask'
     ? 'ask'
     : routeSegments[0] === 'complaints'
       ? 'complaints'
@@ -4771,9 +5402,23 @@ export default function App() {
                       : routeSegments[0] === 'legal-aid'
                         ? 'legal-aid'
                         : 'home';
+  // Opening a saved case (#/ask?case=...) needs its owner signed in; asking a new question does not.
+  const needsAccount = ['cases', 'documents', 'summarize'].includes(activePage) || (activePage === 'ask' && Boolean(initialCaseId));
+  const pageToRender = renderPage({
+    activePage,
+    needsAccount,
+    authStatus,
+    user,
+    routeSegments,
+    queryParams,
+    initialQuery,
+    initialCaseId,
+    initialAttach,
+    initialFocusSequence
+  });
 
   return (
-    <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+    <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''} ${activePage === 'sample-home' ? 'app-shell--sample' : ''}`.trim()}>
       <Sidebar
         activePage={activePage}
         collapsed={isSidebarCollapsed}
@@ -4790,19 +5435,33 @@ export default function App() {
         }}
       />
       <main className={`main-panel ${activePage}-page-panel`}>
-        {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} initialAttach={initialAttach} />}
-        {activePage === 'complaints' && <ComplaintDrafterPage />}
-        {activePage === 'cases' && <MyCasesPage />}
-        {activePage === 'documents' && <DocumentsPage initialSearch={initialDocumentSearch} />}
-        {activePage === 'summarize' && <SummarizeDocumentPage />}
-        {activePage === 'rights' && <LegalAwarenessPage segments={routeSegments} />}
-        {activePage === 'about' && <AboutUsPage />}
-        {activePage === 'schemes' && <SchemesPage />}
-        {activePage === 'helplines' && <Helplines />}
-        {activePage === 'scam-check' && <ScamCheck />}
-        {activePage === 'legal-aid' && <LegalAidCheck />}
-        {activePage === 'home' && <HomePage />}
+        {pageToRender}
       </main>
     </div>
+  );
+}
+
+function renderPage({ activePage, needsAccount, authStatus, user, routeSegments, queryParams, initialQuery, initialCaseId, initialAttach, initialFocusSequence }) {
+  // Pages holding saved, per-account data. Nothing renders until we know who is signed in, so a
+  // signed-in user never sees a flash of the "sign in" panel (and no request is made as a guest).
+  if (needsAccount && authStatus === 'loading') return null;
+  if (needsAccount && !user) return <SignInRequired page={activePage} />;
+  return (
+    <>
+      {(activePage === 'signin' || activePage === 'signup') && <AuthPage mode={activePage} next={queryParams.get('next') || ''} />}
+      {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} initialAttach={initialAttach} initialFocusSequence={initialFocusSequence} />}
+      {activePage === 'complaints' && <ComplaintDrafterPage />}
+      {activePage === 'cases' && <MyCasesPage />}
+      {activePage === 'documents' && <DocumentsPage initialSearch={queryParams.get('search') || ''} />}
+      {activePage === 'summarize' && <SummarizeDocumentPage />}
+      {activePage === 'rights' && <LegalAwarenessPage segments={routeSegments} />}
+      {activePage === 'about' && <AboutUsPage />}
+      {activePage === 'schemes' && <SchemesPage />}
+      {activePage === 'helplines' && <Helplines />}
+      {activePage === 'scam-check' && <ScamCheck />}
+      {activePage === 'legal-aid' && <LegalAidCheck />}
+      {activePage === 'home' && <HomePage />}
+      {activePage === 'sample-home' && <SampleHomePage shared={sampleHomeShared} />}
+    </>
   );
 }

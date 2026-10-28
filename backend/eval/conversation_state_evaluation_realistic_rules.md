@@ -1,0 +1,115 @@
+# Conversation State Evaluation
+
+## Overall Results
+- Mode: rules
+- Cases: 90
+- Overall accuracy: 98.9%
+- Turn-type accuracy: 98.9%
+- Response-action accuracy (right kind of response): 98.9%
+- Swallowed (needed an answer, got an acknowledgement): 0.0%
+- Wrongly reset (context wiped on a same-case message): 1.1%
+- Missed reset (new issue kept old context): 0.0%
+- Decided by Gemini: 0.0%
+- Follow-up classification accuracy: 100.0%
+- New-issue detection accuracy: 100.0%
+- Additional-fact preservation accuracy: 100.0%
+- Correction accuracy: 100.0%
+- Small-talk bypass rate: 100.0%
+- Previous-fact preservation rate: 100.0%
+- Unrelated-fact contamination rate: 0.0%
+- Document-context preservation rate: 100.0%
+
+## Case Results
+- `real_001`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_002`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_003`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_004`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_005`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_006`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_007`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_008`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_009`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_010`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_011`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_012`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_013`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_014`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_015`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_016`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_017`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_018`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_019`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_020`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_021`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_022`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_023`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_024`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_025`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_026`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_027`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_028`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_029`: PASS; expected `follow_up_question`, predicted `additional_fact`
+- `real_030`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_031`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_032`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_033`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_034`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_035`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_036`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_037`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_038`: PASS; expected `follow_up_question`, predicted `additional_fact`
+- `real_039`: PASS; expected `follow_up_question`, predicted `additional_fact`
+- `real_040`: PASS; expected `follow_up_question`, predicted `additional_fact`
+- `real_041`: PASS; expected `follow_up_question`, predicted `additional_fact`
+- `real_042`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_043`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_044`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_045`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_046`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_047`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_048`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_049`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_050`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_051`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_052`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_053`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_054`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_055`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_056`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_057`: REVIEW; expected `additional_fact`, predicted `new_issue`
+- `real_058`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_059`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_060`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_061`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_062`: PASS; expected `correction`, predicted `correction`
+- `real_063`: PASS; expected `correction`, predicted `correction`
+- `real_064`: PASS; expected `correction`, predicted `correction`
+- `real_065`: PASS; expected `correction`, predicted `correction`
+- `real_066`: PASS; expected `correction`, predicted `correction`
+- `real_067`: PASS; expected `new_issue`, predicted `new_issue`
+- `real_068`: PASS; expected `new_issue`, predicted `new_issue`
+- `real_069`: PASS; expected `new_issue`, predicted `new_issue`
+- `real_070`: PASS; expected `new_issue`, predicted `new_issue`
+- `real_071`: PASS; expected `new_issue`, predicted `new_issue`
+- `real_072`: PASS; expected `acknowledgement`, predicted `acknowledgement`
+- `real_073`: PASS; expected `acknowledgement`, predicted `acknowledgement`
+- `real_074`: PASS; expected `acknowledgement`, predicted `acknowledgement`
+- `real_075`: PASS; expected `acknowledgement`, predicted `acknowledgement`
+- `real_076`: PASS; expected `small_talk`, predicted `small_talk`
+- `real_077`: PASS; expected `acknowledgement`, predicted `acknowledgement`
+- `real_078`: PASS; expected `acknowledgement`, predicted `acknowledgement`
+- `real_079`: PASS; expected `acknowledgement`, predicted `acknowledgement`
+- `real_080`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_081`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_082`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_083`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_084`: PASS; expected `correction`, predicted `correction`
+- `real_085`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_086`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_087`: PASS; expected `follow_up_question`, predicted `follow_up_question`
+- `real_088`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_089`: PASS; expected `additional_fact`, predicted `additional_fact`
+- `real_090`: PASS; expected `additional_fact`, predicted `additional_fact`
+
+## Recommendation
+- Review targeted follow-up handling for failed cases.

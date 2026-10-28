@@ -7,10 +7,12 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Any
 
+import httpx
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types
 
+from gemini_http import gemini_http_options
 from config import DISCLAIMER, GEMINI_API_KEY, GEMINI_MODEL
 import grounded_answer
 
@@ -70,7 +72,7 @@ CORPUS_GAP_SCHEMA = {
 CORPUS_SCOPE = """Current Legal Aid AI corpus scope:
 - consumer: Consumer Protection Act, consumer rules/regulations, e-commerce, direct selling, misleading ads, dark patterns.
 - cyber: Information Technology Act, Intermediary Rules, DPDP Rules 2025, cybercrime portal user guide, and limited supporting criminal-law material. Standalone DPDP Act 2023 and CERT-In Directions 2022 are not currently in the corpus.
-- tenancy: Delhi-focused tenancy pilot with Delhi rent-control material and supporting property/registration statutes. Non-Delhi tenancy disputes are not reliably covered.
+- tenancy: Delhi-focused tenancy pilot with Delhi rent-control material and supporting property/registration statutes. A tenancy question that does not name a place is treated as a Delhi question and IS covered; do not mark it limited or insufficient for jurisdiction. Only a tenancy the user explicitly places outside Delhi is not reliably covered.
 - constitutional_public_authority: Constitution, RTI, Legal Services Authorities, Human Rights, and Contempt sources. Comprehensive case law is not included.
 """
 
@@ -275,7 +277,7 @@ def gemini_gap_assessment(issue_summary: str, domains: list[str], chunks: list[A
         return None
     started = time.perf_counter()
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=build_gap_prompt(issue_summary, domains, chunks),
@@ -287,7 +289,7 @@ def gemini_gap_assessment(issue_summary: str, domains: list[str], chunks: list[A
         )
         parsed = json.loads(response.text or "{}")
         return normalize_gap_result(parsed, source="gemini", latency_ms=int((time.perf_counter() - started) * 1000))
-    except (genai_errors.APIError, TimeoutError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
+    except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini corpus-gap assessment failed: %s: %s", exc.__class__.__name__, str(exc))
         return None
 
@@ -368,11 +370,74 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "").lower()).strip()
 
 
+# Places that put a tenancy outside Delhi's rent-control law. Matched as whole words only: the
+# old plain-substring check listed "up " for Uttar Pradesh and so fired on ordinary phrases like
+# "not up to the mark", refusing an ordinary Delhi-answerable tenancy question. Bare "UP" is
+# therefore only recognised when it reads as a place ("in UP", "U.P.").
+NON_DELHI_PLACES = (
+    # states / union territories
+    "maharashtra", "haryana", "uttar pradesh", "karnataka", "tamil nadu", "kerala", "telangana",
+    "andhra pradesh", "west bengal", "gujarat", "rajasthan", "punjab", "bihar", "madhya pradesh",
+    "odisha", "orissa", "jharkhand", "chhattisgarh", "uttarakhand", "himachal pradesh", "assam",
+    "goa", "chandigarh", "jammu and kashmir", "puducherry", "pondicherry",
+    # major cities, including the NCR satellites that fall under other states' law
+    "mumbai", "bombay", "pune", "nagpur", "thane", "navi mumbai", "gurgaon", "gurugram",
+    "faridabad", "noida", "greater noida", "ghaziabad", "lucknow", "kanpur", "agra", "varanasi",
+    "bangalore", "bengaluru", "mysore", "mysuru", "chennai", "madras", "hyderabad", "secunderabad",
+    "kolkata", "calcutta", "ahmedabad", "surat", "vadodara", "jaipur", "udaipur", "ludhiana",
+    "amritsar", "mohali", "patna", "bhopal", "indore", "bhubaneswar", "dehradun", "kochi", "cochin",
+    "thiruvananthapuram", "trivandrum", "coimbatore", "visakhapatnam", "vizag", "guwahati", "ranchi",
+    "raipur", "shimla",
+)
+NON_DELHI_PLACE_RE = re.compile(r"\b(?:" + "|".join(re.escape(place) for place in NON_DELHI_PLACES) + r")\b")
+UP_AS_PLACE_RE = re.compile(r"\bu\.\s?p\.?(?=\s|$|,)|\b(?:in|from|at|of)\s+up\b(?!\s+to\b)")
+DELHI_RE = re.compile(r"\b(?:new\s+)?delhi\b")
+
+
+def mentions_delhi(text: str) -> bool:
+    return bool(DELHI_RE.search(normalize(text)))
+
+
 def explicit_non_delhi_tenancy(text: str, domains: list[str]) -> bool:
+    """True only when the user has explicitly placed the tenancy outside Delhi. A question that
+    names no place is treated as Delhi (see delhi_tenancy_note), and one that names Delhi is Delhi
+    even if another place also appears ("moved from Pune to Delhi")."""
     if "tenancy" not in domains:
         return False
-    non_delhi_places = ("mumbai", "maharashtra", "haryana", "gurgaon", "gurugram", "noida", "uttar pradesh", "up ", "bangalore", "bengaluru", "karnataka")
-    return any(place in f"{text} " for place in non_delhi_places)
+    text = normalize(text)
+    if mentions_delhi(text):
+        return False
+    return bool(NON_DELHI_PLACE_RE.search(text) or UP_AS_PLACE_RE.search(text))
+
+
+DELHI_ASSUMED_NOTE = (
+    "This answer assumes the property is in Delhi, because the tenancy material currently covers "
+    "Delhi law. Tenancy rules differ from state to state, so if the property is outside Delhi, "
+    "the position may be different."
+)
+DELHI_STATED_NOTE = (
+    "This answer is based on Delhi tenancy law, which is what the tenancy material currently covers."
+)
+
+
+def delhi_tenancy_note(response: dict[str, Any], domains: list[str], raw_text: str) -> dict[str, Any]:
+    """Close every answered tenancy question with a note that the tenancy material is Delhi law --
+    saying the property was assumed to be in Delhi when the user did not name a place. Added last
+    in limitations (which the UI renders at the end of the answer) and never dropped by the
+    five-item cap, so it survives however many limitations the answer already carries."""
+    if "tenancy" not in domains or response.get("insufficient_context") is True:
+        return response
+    # Only when the answer actually relies on tenancy law: the router can tag tenancy alongside
+    # another domain on thin grounds (a cyber "login lockout" once did), and a Delhi tenancy note
+    # on an answer citing only cyber material is plainly wrong.
+    cited = [str(source.get("source_file") or "") for source in response.get("sources") or []]
+    if cited and not any(path.startswith("tenancy/") for path in cited):
+        return response
+    answer = response.setdefault("answer", {})
+    note = DELHI_STATED_NOTE if mentions_delhi(raw_text) else DELHI_ASSUMED_NOTE
+    limitations = [item for item in grounded_answer.clean_list(answer.get("limitations") or [], 5) if item != note]
+    answer["limitations"] = limitations[:4] + [note]
+    return response
 
 
 def case_law_query(text: str) -> bool:

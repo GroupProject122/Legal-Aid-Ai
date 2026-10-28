@@ -1,0 +1,1273 @@
+{
+  "description": "Realistic follow-up turns, typed the way users actually type: no question marks, Hinglish, confusion, fact+question mixes, and keyword-rule traps. Complements the tidy conversation_state_cases.json. acceptable_turn_types lists every label that is genuinely defensible for an ambiguous message.",
+  "cases": [
+    {
+      "case_id": "real_001",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "but i dont know how civil courts work",
+      "expected_turn_type": "follow_up_question",
+      "note": "reported bug: no '?' and no listed cue"
+    },
+    {
+      "case_id": "real_002",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "i dont know what to do now",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_003",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "tell me the process",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_004",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "explain the next steps",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_005",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "what next",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_006",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "please explain what i should do",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_007",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "help me with the complaint",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_008",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "how do i file it",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_009",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "how long will it take to get my money back",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_010",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "where do i report this",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_011",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "when can i file the appeal",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_012",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "who do i send the appeal to",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_013",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "which court should i go to",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_014",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "why is he allowed to do this",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_015",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "is there a time limit",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_016",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "do i need a lawyer for this",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_017",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "how much does the appeal cost",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_018",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "i want to know if i can get my deposit back",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_019",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "i need to know my options",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_020",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "tell me what the law says about this",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_021",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "i dont understand the cyber portal",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_022",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "i dont understand any of this",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_023",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "not sure what a first appeal is",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_024",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "what documents will i need",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_025",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "can you explain section 45 simply",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_026",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "and the deposit",
+      "expected_turn_type": "follow_up_question",
+      "note": "elliptical"
+    },
+    {
+      "case_id": "real_027",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "and if they still refuse",
+      "expected_turn_type": "follow_up_question",
+      "note": "elliptical"
+    },
+    {
+      "case_id": "real_028",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "what about the bank",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_029",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "same thing happened with water",
+      "expected_turn_type": "follow_up_question",
+      "acceptable_turn_types": [
+        "follow_up_question",
+        "additional_fact"
+      ],
+      "note": "elliptical fact that implies a question"
+    },
+    {
+      "case_id": "real_030",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "ab kya karu",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_031",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "court kaise jaate hai",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_032",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "mujhe samajh nahi aaya",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_033",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "refund kab tak milega",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_034",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "paisa wapas kaise milega",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_035",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "appeal kahan karni hai",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_036",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "bijli wapas kab aayegi",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_037",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "deposit wapas milega ya nahi",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_038",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "im scared he will throw me out",
+      "expected_turn_type": "follow_up_question",
+      "acceptable_turn_types": [
+        "follow_up_question",
+        "additional_fact"
+      ],
+      "note": "worry; needs guidance"
+    },
+    {
+      "case_id": "real_039",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "i cant afford a lawyer",
+      "expected_turn_type": "follow_up_question",
+      "acceptable_turn_types": [
+        "follow_up_question",
+        "additional_fact"
+      ]
+    },
+    {
+      "case_id": "real_040",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "i feel so stupid for sharing the code",
+      "expected_turn_type": "follow_up_question",
+      "acceptable_turn_types": [
+        "follow_up_question",
+        "additional_fact",
+        "small_talk"
+      ]
+    },
+    {
+      "case_id": "real_041",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "this is so frustrating i just want my money",
+      "expected_turn_type": "follow_up_question",
+      "acceptable_turn_types": [
+        "follow_up_question",
+        "additional_fact"
+      ]
+    },
+    {
+      "case_id": "real_042",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "the landlord also took my furniture, can i complain about that too",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_043",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "i have the invoice and the chat screenshots what should i attach",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_044",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "i already called the bank they said wait 7 days is that right",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_045",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "its been 3 days without power what can i do",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_046",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "they replied today but refused, now what",
+      "expected_turn_type": "follow_up_question"
+    },
+    {
+      "case_id": "real_047",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "the landlord also took my furniture",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_048",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "the rent is 15000 a month",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_049",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "i have photos of the damp walls",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_050",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "he did the same thing last year",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_051",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "my neighbour saw him cut the wire",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_052",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "i paid by credit card",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_053",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "the warranty is still valid",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_054",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "the seller blocked my number",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_055",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "i filed a complaint on the cyber portal yesterday",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_056",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "the caller used a number starting with 140",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_057",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "i paid the 10 rupee fee by postal order",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_058",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "the department is the municipal corporation",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_059",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "the agreement is not registered",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_060",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "i have paid rent on time every month",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_061",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "he also refused to give a replacement",
+      "expected_turn_type": "additional_fact"
+    },
+    {
+      "case_id": "real_062",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "sorry the rent is 18000 not 15000",
+      "expected_turn_type": "correction"
+    },
+    {
+      "case_id": "real_063",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "actually it was 25000 not 20000",
+      "expected_turn_type": "correction"
+    },
+    {
+      "case_id": "real_064",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "no wait i bought it offline from a shop",
+      "expected_turn_type": "correction"
+    },
+    {
+      "case_id": "real_065",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "correction it was filed 60 days ago",
+      "expected_turn_type": "correction"
+    },
+    {
+      "case_id": "real_066",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "i meant water not electricity",
+      "expected_turn_type": "correction"
+    },
+    {
+      "case_id": "real_067",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "separately my instagram account got hacked",
+      "expected_turn_type": "new_issue"
+    },
+    {
+      "case_id": "real_068",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "different problem, my landlord is not returning my deposit",
+      "expected_turn_type": "new_issue"
+    },
+    {
+      "case_id": "real_069",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "my employer has not paid my salary for 3 months",
+      "expected_turn_type": "new_issue",
+      "note": "outside corpus but clearly new"
+    },
+    {
+      "case_id": "real_070",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "unrelated but my online order never arrived",
+      "expected_turn_type": "new_issue"
+    },
+    {
+      "case_id": "real_071",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "my husband is filing for divorce",
+      "expected_turn_type": "new_issue"
+    },
+    {
+      "case_id": "real_072",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "thanks",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_073",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "ok thank you so much",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_074",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "got it",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_075",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "understood thanks",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_076",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "hello",
+      "expected_turn_type": "small_talk",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_077",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "ok",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_078",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "thank you this helps",
+      "expected_turn_type": "acknowledgement",
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_079",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "great",
+      "expected_turn_type": "acknowledgement",
+      "acceptable_turn_types": [
+        "acknowledgement",
+        "small_talk"
+      ],
+      "should_bypass_pipeline": true
+    },
+    {
+      "case_id": "real_080",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "ok but what about the deposit",
+      "expected_turn_type": "follow_up_question",
+      "note": "starts like an acknowledgement"
+    },
+    {
+      "case_id": "real_081",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "thanks, and what if they ignore the notice",
+      "expected_turn_type": "follow_up_question",
+      "note": "thanks + question"
+    },
+    {
+      "case_id": "real_082",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "the flat is not up to the mark",
+      "expected_turn_type": "additional_fact",
+      "note": "'up' is not Uttar Pradesh"
+    },
+    {
+      "case_id": "real_083",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "it is still not fixed",
+      "expected_turn_type": "additional_fact",
+      "acceptable_turn_types": [
+        "additional_fact",
+        "follow_up_question"
+      ],
+      "note": "'it is' reads as a correction cue"
+    },
+    {
+      "case_id": "real_084",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "it was a video call not a phone call",
+      "expected_turn_type": "correction",
+      "note": "true correction"
+    },
+    {
+      "case_id": "real_085",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "they said it is my fault",
+      "expected_turn_type": "additional_fact",
+      "note": "'it is' but a new fact"
+    },
+    {
+      "case_id": "real_086",
+      "initial_summary": "Delhi tenancy: tenant wants to leave early; lease has 6-month lock-in and landlord will keep the security deposit; flat is not as promised.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "Tenant signed a lease with a 6-month lock-in.",
+        "Landlord will keep the security deposit if tenant leaves early.",
+        "Flat is not as promised."
+      ],
+      "message": "actually can i just stop paying rent",
+      "expected_turn_type": "follow_up_question",
+      "note": "'actually' but a question"
+    },
+    {
+      "case_id": "real_087",
+      "initial_summary": "Delhi tenancy: landlord disconnected electricity to pressure tenant.",
+      "domains": [
+        "tenancy"
+      ],
+      "known_facts": [
+        "User rents a flat in Delhi.",
+        "Landlord disconnected electricity."
+      ],
+      "message": "sorry to bother but what if he changes the locks",
+      "expected_turn_type": "follow_up_question",
+      "note": "'sorry' but a question"
+    },
+    {
+      "case_id": "real_088",
+      "initial_summary": "Public authority: RTI application filed 45 days ago with no reply.",
+      "domains": [
+        "constitutional_public_authority"
+      ],
+      "known_facts": [
+        "RTI application filed 45 days ago.",
+        "No reply received."
+      ],
+      "message": "the government office said it is under process",
+      "expected_turn_type": "additional_fact",
+      "note": "'government' cue but same case"
+    },
+    {
+      "case_id": "real_089",
+      "initial_summary": "Consumer: online seller refuses refund for a defective phone.",
+      "domains": [
+        "consumer"
+      ],
+      "known_facts": [
+        "Bought a phone online.",
+        "Phone is defective.",
+        "Seller refused refund."
+      ],
+      "message": "the product was an order from amazon",
+      "expected_turn_type": "additional_fact",
+      "note": "'order'/'product' cues, same case"
+    },
+    {
+      "case_id": "real_090",
+      "initial_summary": "Cyber: user lost money to a UPI fraud after sharing a code with a caller posing as bank staff.",
+      "domains": [
+        "cyber"
+      ],
+      "known_facts": [
+        "Caller posed as bank staff.",
+        "User lost Rs. 20,000 through UPI."
+      ],
+      "message": "they also hacked my email after that",
+      "expected_turn_type": "additional_fact",
+      "note": "'hacked' cue within cyber case"
+    }
+  ]
+}

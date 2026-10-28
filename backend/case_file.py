@@ -71,14 +71,16 @@ class CaseFileError(Exception):
 # --- Loading (the only part that touches the database) ---
 
 
-def load_case_for_export(case_id: int, db_path=None) -> dict[str, Any] | None:
-    """Case row + messages + documents linked to it. Read-only: nothing is written."""
-    case = case_store.get_case(case_id, db_path)
+def load_case_for_export(case_id: int, db_path=None, user_id: int | None = None) -> dict[str, Any] | None:
+    """Case row + messages + documents linked to it. Read-only: nothing is written. With
+    `user_id`, only that user's case (None -> the caller answers 404, same as GET /api/cases/{id})
+    and only that user's documents."""
+    case = case_store.get_case(case_id, db_path, user_id=user_id)
     if case is None:
         return None
     messages = case_store.get_messages(case_id, db_path)
     context_ids = _referenced_context_ids(case, messages)
-    return {**case, "messages": messages, "documents": _documents_for_case(case_id, context_ids, db_path)}
+    return {**case, "messages": messages, "documents": _documents_for_case(case_id, context_ids, db_path, user_id)}
 
 
 def _referenced_context_ids(case: dict[str, Any], messages: list[dict[str, Any]]) -> list[str]:
@@ -95,7 +97,7 @@ def _referenced_context_ids(case: dict[str, Any], messages: list[dict[str, Any]]
     return ids
 
 
-def _documents_for_case(case_id: int, context_ids: list[str], db_path=None) -> list[dict[str, Any]]:
+def _documents_for_case(case_id: int, context_ids: list[str], db_path=None, user_id: int | None = None) -> list[dict[str, Any]]:
     """documents.case_id has never actually been populated by the upload flow, so a document is
     linked to a case by the confirmed-fact context id it produced: confirm-facts stores that id
     on the document row, and every answer that used those facts stores the same id on the
@@ -109,10 +111,11 @@ def _documents_for_case(case_id: int, context_ids: list[str], db_path=None) -> l
         for context_id in context_ids:
             clauses.append("confirmed_fact_context_json LIKE ?")
             params.append(f'%"{context_id}"%')
+        owner_sql, owner_params = case_store.owner_clause(user_id)
         rows = conn.execute(
             f"SELECT id, display_filename, created_at, case_id, confirmed_fact_context_json FROM documents "  # noqa: S608
-            f"WHERE {' OR '.join(clauses)} ORDER BY created_at ASC, id ASC",
-            params,
+            f"WHERE ({' OR '.join(clauses)}){owner_sql} ORDER BY created_at ASC, id ASC",
+            [*params, *owner_params],
         ).fetchall()
     documents = []
     for row in rows:

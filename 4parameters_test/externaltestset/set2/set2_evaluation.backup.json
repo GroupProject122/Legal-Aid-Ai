@@ -1,0 +1,365 @@
+{
+  "description": "Evaluation file for Legal Aid AI Test Set 2. Each case contains the original test question plus fields to be filled with the actual retrieved context, human-verified reference answer, and generated answer before running evaluation metrics.",
+  "cases": [
+    {
+      "id": "consumer_01",
+      "domain": "consumer",
+      "question": "my earbuds broke within warranty, company says test report shows no fault and now saying only 3 replacements allowed in 120 days which was never written anywhere when i bought it. can they just make up a new rule like this",
+      "source_url": "https://sudhirrao.com/defective-product-and-warranty-issues-what-are-your-legal-options-in-india/",
+      "retrieved_context": "",
+      "reference_answer": "A company cannot normally rely on an undisclosed warranty restriction simply because it introduces it after the purchase. The written warranty/terms and the actual defect are important. Keep the invoice, warranty terms, test report and complaint records. If the defect is established, consumer law can provide remedies such as repair, replacement, refund or compensation depending on the facts.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_02",
+      "domain": "consumer",
+      "question": "bought an iphone from an authorised store in india, camera stopped working within a day, they refused to replace it and only swapped the camera part instead of the whole phone. is that allowed under warranty",
+      "source_url": "https://www.buzzfeednews.com/article/pranavdixit/apple-india-service-repair-complaints",
+      "retrieved_context": "",
+      "reference_answer": "A warranty does not automatically give a consumer a right to a completely new phone in every case. Whether repair or replacement is appropriate depends on the warranty terms, the defect and the facts. If the product has a defect or the service is deficient, a consumer can seek an appropriate remedy and may approach the Consumer Commission if the dispute is not resolved.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_03",
+      "domain": "consumer",
+      "question": "ordered earphones online, they came damaged, company is saying it passed their quality check before dispatch and closed my complaint without any refund or replacement",
+      "source_url": "https://ca.trustpilot.com/review/gonoise.com",
+      "retrieved_context": "",
+      "reference_answer": "Keep photographs or video of the damaged earphones, the packaging, delivery record, invoice and the company's complaint response. Ask the seller/platform for a written reason for rejecting the claim and request the applicable remedy. If the product was defective or damaged and the matter is not resolved, a consumer complaint can be considered.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_04",
+      "domain": "consumer",
+      "question": "seller refund nahi de raha, product wapis bhi le liya but paisa 3 hafte se nahi aaya",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "If the seller has taken the product back and a refund is due under the purchase terms or applicable consumer protections, ask for the refund in writing and keep proof of the return and all communications. If the seller does not resolve the matter, the consumer can consider approaching the appropriate Consumer Commission.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_05",
+      "domain": "consumer",
+      "question": "online shopping site delivered a used/opened product instead of new, saying no return possible since 7 din nikal gaye",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Receiving a used or opened product when a new product was purchased can raise issues of defect, misrepresentation or unfair trade practice depending on the facts. Preserve the listing, photographs, packaging, invoice and communications. A seller's return-window policy does not necessarily remove statutory consumer remedies, so the facts and applicable terms should be examined before deciding the remedy.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_06",
+      "domain": "consumer",
+      "question": "gym membership cancel karne ke baad bhi auto debit ho raha hai mera account se, unhone bola cancellation request unko mili hi nahi",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Give the gym a written cancellation notice and ask it to stop the recurring debit. Keep proof that the cancellation was submitted. If further debits occur, notify the bank/payment provider and dispute transactions where appropriate. If the gym does not resolve the matter, a consumer complaint may be considered, particularly if the charges were contrary to the agreed cancellation terms.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_07",
+      "domain": "consumer",
+      "question": "washing machine bought 1.5 years ago under 2 year warranty, defect aa gaya but no cash memo/warranty card kept - can company refuse to fix it just because of that",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Not having the original cash memo or warranty card can make proof harder, but it does not by itself establish that there is no remedy. Other evidence such as bank/card records, online invoices, emails, serial-number records and service history may help establish the purchase and warranty. Ask the company to inspect the defect and give its refusal in writing if it declines service.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_08",
+      "domain": "consumer",
+      "question": "advertisement bola tha ki product mein X feature hoga, actual product mein wo feature hai hi nahi, company bol rahi 'marketing material was indicative only'",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "If an advertisement represents that a product has a particular feature and the product does not have it, that representation may raise an issue of misleading advertisement or unfair trade practice. Preserve the advertisement, product listing, invoice and product details. You can ask the seller for an appropriate remedy and, if unresolved, consider a consumer complaint.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_09",
+      "domain": "consumer",
+      "question": "food delivery app charged extra packaging and platform fee that wasn't shown at checkout, is that legal",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "A platform should clearly disclose applicable charges and pricing information rather than unexpectedly adding undisclosed charges at checkout. Preserve screenshots showing the price before and at checkout, the invoice and the terms shown to you. If a charge was not properly disclosed, you can complain to the platform and, if unresolved, consider the appropriate consumer redress mechanism.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "consumer_10",
+      "domain": "consumer",
+      "question": "car service center ne bola gaadi ka issue fix ho gaya but 2 din baad wapis wahi problem aa gayi, teesri baar bhi wahi issue, ab kya karu",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Document each repair visit, invoices, job cards and the repeated defect. Ask the service centre in writing to correct the problem and provide a clear explanation. If the service remains deficient, consumer law can provide remedies such as correction of the deficiency, refund or compensation depending on the facts, and a Consumer Commission can grant appropriate relief when the claim is proved.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_01",
+      "domain": "cyber",
+      "question": "got a call saying my account will be blocked, gave otp and money gone from upi. bank not helping",
+      "source_url": "own user testing",
+      "retrieved_context": "",
+      "reference_answer": "Report the unauthorised UPI transaction to the bank immediately and report the financial cyber fraud through the National Cyber Crime Reporting Portal or 1930. Preserve transaction IDs, screenshots, messages and call details. Because the OTP was shared, customer negligence may affect liability under RBI rules, so the exact timing of the report and the circumstances matter.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_02",
+      "domain": "cyber",
+      "question": "someone called claiming to be from my bank saying they're issuing a new debit card after a merger and needed an otp to 'process' it, i shared it and money got deducted in several transactions before i realised. bank is saying it was a valid two-factor transaction so not their fault",
+      "source_url": "https://www.tribuneindia.com/news/chandigarh/upi-fraud-chandigarh-consumer-commission-directs-bank-to-refund-rs-97000/",
+      "retrieved_context": "",
+      "reference_answer": "Report the unauthorised transactions to the bank immediately and report the cyber fraud through 1930 or the National Cyber Crime Reporting Portal. Preserve the call details, messages, transaction records and any evidence showing how the OTP was obtained. Whether the bank must bear the loss depends on the facts, including customer negligence and how quickly the transaction was reported.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_03",
+      "domain": "cyber",
+      "question": "unknown number called and asked for the otp on my phone saying it was needed to complete some verification, i gave it and money got debited immediately",
+      "source_url": "https://www.tribuneindia.com/news/j-k/cyber-police-recover-money-lost-in-fraud-bank-transaction-50070",
+      "retrieved_context": "",
+      "reference_answer": "Immediately notify the bank and report the incident through 1930 or the National Cyber Crime Reporting Portal. Preserve the phone number, messages, transaction details and other evidence. Since an OTP was shared, the RBI customer-liability rules concerning customer negligence may apply, so prompt reporting and the exact facts are important.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_04",
+      "domain": "cyber",
+      "question": "was trying to recharge fastag, someone called saying they're from the bank's customer care, sent me a QR code to scan to 'fix' it, money got deducted the moment i scanned and entered my upi pin, then more amounts got deducted after that",
+      "source_url": "https://www.deccanherald.com/india/karnataka/bengaluru/fastag-user-loses-rs-50k-after-sharing-upi-pin-796584.html",
+      "retrieved_context": "",
+      "reference_answer": "Do not share a UPI PIN to receive money or to complete a refund. Immediately notify the bank/payment provider, block or secure the affected account or payment instrument as appropriate, and report the financial fraud through 1930 or the National Cyber Crime Reporting Portal. Preserve the QR code, phone number, transaction IDs and messages.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_05",
+      "domain": "cyber",
+      "question": "tried withdrawing cash from an atm using the cardless option in my bank app, instead the money went out through upi to some unknown account, then i searched online for the bank/npci helpline number and called what i thought was the official number, ended up losing a lot more after that call",
+      "source_url": "https://www.deccanherald.com/amp/story/india%2Fmaharashtra%2Ftrying-to-save-rs-5000-mumbai-woman-loses-rs-6-lakh-to-cyber-fraudsters-3219529",
+      "retrieved_context": "",
+      "reference_answer": "Treat the transactions and the later fake-helpline contact as possible cyber fraud. Immediately inform the bank/payment provider and report the matter through 1930 or the National Cyber Crime Reporting Portal. Preserve transaction records, the number used, search results, call details and messages. Do not provide further credentials or remote access.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_06",
+      "domain": "cyber",
+      "question": "caller said they're from my bank and a new passbook/debit card is being issued after our bank merged with another one, asked for otp 'as procedure', i shared multiple otps that day before realising it was fraud, police took 3 days to even register my complaint",
+      "source_url": "https://www.deccanherald.com/india/karnataka/bengaluru/online-fraudsters-target-customers-of-merged-banks-912791.html",
+      "retrieved_context": "",
+      "reference_answer": "Report the unauthorised transactions to the bank immediately and report the cyber fraud through 1930 or the National Cyber Crime Reporting Portal. Preserve the OTP messages, call details, transaction records and the police complaint information. The delay in registering a complaint should be documented, but the bank's liability will depend on the facts and applicable RBI rules.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_07",
+      "domain": "cyber",
+      "question": "someone offered a job, said i'd be posted to another city, asked me to scan a QR code to pay a small 'advance' fee, money got deducted, then they asked for otp saying it was for a refund, i shared it and lost a lot more from my credit card",
+      "source_url": "https://www.tribuneindia.com/news/chandigarh/2-city-residents-fall-prey-to-cyber-fraud-371127/amp",
+      "retrieved_context": "",
+      "reference_answer": "The job offer and QR/OTP request are warning signs of fraud. Immediately notify the bank or card issuer, block or secure the affected payment instrument, and report the incident through 1930 or the National Cyber Crime Reporting Portal. Preserve the job messages, QR code, phone numbers, transaction records and other evidence.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_08",
+      "domain": "cyber",
+      "question": "woke up to messages that a large amount was withdrawn from my account in two transactions, i never got any call or otp request at all, reported to bank and police immediately, can the bank still refuse to refund since i didn't share anything",
+      "source_url": "https://www.tribuneindia.com/news/himachal/bank-account-hacked-mandi-resident-loses-rs-7-44-lakh-642164/amp",
+      "retrieved_context": "",
+      "reference_answer": "If transactions occurred without your authorisation and you did not share credentials, notify the bank immediately and report the incident through 1930 or the National Cyber Crime Reporting Portal. Preserve account statements, alerts and complaint records. Under RBI rules, liability for an unauthorised electronic transaction depends on the facts, including whether the loss resulted from customer negligence and how quickly the bank was notified.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_09",
+      "domain": "cyber",
+      "question": "instagram account hack ho gaya, hacker use kar ke mere contacts se paise maang raha hai, kaise complaint karu aur account wapis kaise le",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Secure the Instagram account immediately by using the platform's account-recovery and security options, change passwords and enable stronger authentication where available. Warn contacts that messages asking for money are fraudulent. Preserve screenshots, profile links and messages, and report the account through the platform and, if there is cybercrime or financial fraud, through the National Cyber Crime Reporting Portal or 1930 where applicable.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "cyber_10",
+      "domain": "cyber",
+      "question": "someone made a fake profile using my photos and is messaging my friends and family, what can i legally do about this",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Preserve screenshots, the fake-profile URL, messages and any evidence showing use of your photographs. Report the impersonating account to the platform and consider reporting the conduct to the police or National Cyber Crime Reporting Portal where it involves cybercrime, fraud, threats or other unlawful conduct. Depending on the facts, provisions of cyber and criminal law concerning impersonation, cheating, privacy or other offences may be relevant.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_01",
+      "domain": "tenancy",
+      "question": "landlord not giving back my deposit after i left the flat, says paint damage but it was already like that. what can i do",
+      "source_url": "https://www.reddit.com/r/LegalAdviceIndia/...",
+      "retrieved_context": "",
+      "reference_answer": "Check the tenancy agreement for the deposit and deductions clause and keep photographs or videos showing the condition of the premises at move-out. Ask the landlord in writing for an itemised explanation and evidence for the painting deduction. If the landlord is withholding money contrary to the agreement or applicable law, you can consider a legal notice or the appropriate dispute-resolution/legal forum.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_02",
+      "domain": "tenancy",
+      "question": "landlord in delhi filed an eviction case against me for a commercial shop, my lawyer missed the deadline to file our reply due to some paperwork delays, can i still get a chance to contest the eviction now",
+      "source_url": "https://advocategandhi.com/delhi-high-court-rejects-belated-leave-to-defend-application-where-tenant-failed-to-prove-circumstances-beyond-his-control/",
+      "retrieved_context": "",
+      "reference_answer": "Missing a procedural deadline does not automatically mean that every possible remedy is lost, but the available remedy depends on the type of eviction proceeding, the statutory procedure and the reason for the delay. Obtain the case papers and have a Delhi tenancy lawyer check the applicable deadline and whether an application for extension or another procedural remedy is available. The court/Controller will decide the issue on the facts and applicable law.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_03",
+      "domain": "tenancy",
+      "question": "my landlord in delhi filed eviction papers claiming the signatures on the petition were mine, i believe they were forged - can the rent controller's decision be challenged on that basis",
+      "source_url": "https://advocategandhi.com/delhi-high-court-sets-aside-eviction-order-after-rent-controller-failed-to-examine-alleged-forged-signatures-and-bona-fide-requirement-for-commercial-premises/",
+      "retrieved_context": "",
+      "reference_answer": "If signatures on an eviction petition are alleged to be forged, the allegation should be raised before the appropriate court or Rent Controller with supporting material. Whether an eviction order can be challenged depends on the procedural stage, evidence of forgery and the applicable appeal/revision/remedy. Obtain copies of the disputed documents and seek legal advice on the appropriate challenge.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_04",
+      "domain": "tenancy",
+      "question": "landlord bol raha hai flat unhe khud use karna hai isliye eviction case daal diya, but hume laga unki financial situation dekh kar case weak hoga - kya court landlord ki financial condition dekhti hai eviction case mein",
+      "source_url": "https://www.scconline.com/blog/post/2025/07/11/del-hc-landlord-tenant-financial-status-eviction-petition/",
+      "retrieved_context": "",
+      "reference_answer": "For a bona fide-requirement eviction under Section 14(1)(e) of the Delhi Rent Control Act, the court examines the statutory requirements, including the landlord's genuine requirement and the availability of reasonably suitable alternative accommodation. A landlord's financial condition is not by itself the sole test of bona fide requirement. The precise facts and evidence in the case matter.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_05",
+      "domain": "tenancy",
+      "question": "landlord electricity cut kar raha hai kyunki rent thoda late ho gaya, ye legal hai kya",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "A landlord generally cannot cut off or withhold an essential service such as electricity without just and sufficient cause under Section 45 of the Delhi Rent Control Act, where that Act applies. A tenant can complain to the Rent Controller, and the Controller can order restoration when the statutory conditions are met. Keep evidence of the disconnection and the rent/payment communications.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_06",
+      "domain": "tenancy",
+      "question": "delhi mein rent agreement 11 months ka tha, landlord ab bol raha hai turant khali karo warna police bula lenge, without any notice period diye",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "An 11-month agreement does not by itself answer every question about eviction or notice. The tenancy agreement, applicable rent law, type of premises and grounds for termination all matter. A landlord should use the legally applicable procedure rather than simply threatening the tenant with police action. Keep the agreement and any notice and seek advice on the applicable Delhi tenancy regime.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_07",
+      "domain": "tenancy",
+      "question": "broker demanded a large 'token' amount before showing the rent agreement, now saying it's non-refundable even though we didn't go ahead with the flat",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Ask the broker in writing what the token payment represented and whether any written term made it non-refundable. Keep the receipt, messages, advertisement and any agreement. If the broker retained money despite the agreed terms or made a misleading representation, you may consider a civil or consumer remedy depending on the nature of the transaction and the broker's role.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_08",
+      "domain": "tenancy",
+      "question": "landlord entering the flat without informing us whenever he wants, even when we're not home, kya ye allowed hai delhi mein",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "A landlord's right to inspect or enter rented premises depends on the tenancy agreement, applicable law and the circumstances. Repeated entry without notice can create a dispute even where the landlord has legitimate reasons to inspect. Keep a record of the incidents and ask the landlord in writing to provide reasonable notice except in genuine emergencies; obtain local legal advice if the conduct continues.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "tenancy_09",
+      "domain": "tenancy",
+      "question": "rent agreement mein likha tha deposit 2 months ka hoga but landlord ne 4 months maang liya move-in ke time, kya ye challenge kiya ja sakta hai",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "The written tenancy agreement is important. If it clearly provides for a two-month deposit, the landlord generally cannot simply demand a different amount without a contractual or legal basis. Keep the agreement and proof of the demand/payment. If the parties cannot resolve the issue, the tenant can seek advice on the appropriate civil, rent or other forum based on the premises and applicable law.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "public_01",
+      "domain": "constitutional_public_authority",
+      "question": "filed an rti almost 2 months ago asking for some government files, no response at all, department says they have very few staff currently. what can i actually do now",
+      "source_url": "https://etvbharat.com/en/state/maharashtra-state-information-dept-mired-in-delays-as-80-percent-posts-remain-vacant-delaying-over-63000-rti-appeals-filed-by-citizens-enn26092501079",
+      "retrieved_context": "",
+      "reference_answer": "Under the RTI Act, a CPIO/SPIO generally has to decide an information request within 30 days, subject to statutory exceptions. If there is no response within the prescribed period, the applicant can treat it as a deemed refusal and file a first appeal with the designated First Appellate Authority. Staff shortages do not by themselves remove the statutory appeal mechanism.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "public_02",
+      "domain": "constitutional_public_authority",
+      "question": "rti daali thi ek sarkari scheme ke fund allocation ke baare mein, office bol raha ye file dusre department mein hai, phir wahan bhejte hain phir wapis, mahino se ho raha hai ye",
+      "source_url": "https://www.legalserviceindia.com/Legal-Articles/rti-act-2005-deoghar-jharkhand-delays-rural-challenges/",
+      "retrieved_context": "",
+      "reference_answer": "If an RTI application concerns information held by another public authority or more closely connected with another public authority, Section 6(3) provides for transfer to that authority, generally within five days, with intimation to the applicant. Repeated informal transfers should not leave the applicant without a remedy. If the statutory response period has expired, the applicant can use the first-appeal process.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "public_03",
+      "domain": "constitutional_public_authority",
+      "question": "RTI ka reply nahi mila",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "If no RTI reply is received within the applicable statutory period, the applicant can generally file a first appeal before the designated First Appellate Authority of the public authority. Keep a copy of the RTI application, proof of submission and any tracking details. If the first appeal does not resolve the matter, the applicable second-appeal or complaint route before the Information Commission can be considered.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "public_04",
+      "domain": "constitutional_public_authority",
+      "question": "mujhe free legal aid chahiye, court case ladne ke liye paisa nahi hai",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "Free legal services are available through Legal Services Authorities for people who fall within the eligibility categories under the Legal Services Authorities Act, 1987 and applicable state rules. In Delhi, a person can approach the Delhi State Legal Services Authority or the relevant District Legal Services Authority. Legal services provided through these institutions are free for eligible beneficiaries.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "public_05",
+      "domain": "constitutional_public_authority",
+      "question": "how do i actually find out which district legal services authority covers my area in delhi, and is there really no fee for it",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "In Delhi, District Legal Services Authorities operate through the district court system. You can contact the Delhi State Legal Services Authority or the relevant District Legal Services Authority and provide your area/case details so that the appropriate authority can be identified. Eligible beneficiaries can receive free legal services, and NALSA/DSLSA provides application and contact information online.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "public_06",
+      "domain": "constitutional_public_authority",
+      "question": "govt office ne mera rti application receive karne se hi mana kar diya, bina koi reason bataye, ye legal hai kya",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "An RTI application should ordinarily be submitted to the appropriate CPIO/SPIO or designated assistant authority. If the application concerns information held by another public authority, Section 6(3) provides for transfer in appropriate cases. If an office refuses to receive or process the application, keep proof of the attempted submission and use an available submission route and, where appropriate, the RTI appeal mechanism.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    },
+    {
+      "id": "public_07",
+      "domain": "constitutional_public_authority",
+      "question": "rti mein jo information mangi thi wo mili but galat/incomplete thi, ab kya first appeal file karna padega ya seedha commission ja sakte hain",
+      "source_url": "synthetic",
+      "retrieved_context": "",
+      "reference_answer": "If the information supplied is incomplete or incorrect, the applicant can use the RTI first-appeal mechanism and explain specifically what information is missing or incorrect. If the matter remains unresolved after the first appeal, the applicable second appeal or complaint route before the Information Commission can be considered. Keep the original RTI request, reply and supporting correspondence.",
+      "generated_answer": "",
+      "notes": "Human-written reference answer for evaluation; verify against the project's legal corpus before using as a gold standard."
+    }
+  ]
+}

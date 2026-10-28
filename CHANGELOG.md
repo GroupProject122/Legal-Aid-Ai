@@ -52,6 +52,34 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — merge of `origin/main` into `local-work-2026-10-28` (2026-10-28)
+
+This working copy and GitHub `main` had diverged since `c77b6b2` (2026-09-25): `main` gained user
+accounts, `case_documents`, dark mode, turn memory, the source viewer, windowed embeddings and
+the evaluation sets; this copy gained voice input, the Case File export, the Hinglish retrieval
+normaliser, Helplines, the scam checker, the legal-aid eligibility checker, the RTI and other
+drafter scenarios, and Summarize Document fixes. Merged (not rebased) so both histories stay
+intact. Conflict resolutions:
+- `backend/main.py` — imports: union. `POST /api/documents/{id}/summarize`: keeps **both** this
+  copy's `force` (regenerate) flag and `main`'s `require_user`. Endpoint groups: both kept
+  (scam-check, legal-aid eligibility, and `main`'s `/api/corpus/file`).
+- **Case File endpoints now require sign-in and are owner-scoped** (resolved inside the merge
+  commit, so no commit on the branch exposes them): `require_user` (guest -> 401) and
+  `case_store.get_case(..., user_id=...)` (another user's case -> 404, exactly like
+  `GET /api/cases/{id}`); the documents listed in the file are restricted to the owner's.
+- `frontend/src/App.jsx` — `main`'s theme toggle and `AccountMenu` live in `HeaderControls`, which
+  this copy had moved to `frontend/src/shared/PageChrome.jsx`; they were ported there instead of
+  re-adding `HeaderControls` to `App.jsx`. Helplines, Check a Message and Free Legal Aid Check
+  were added to `main`'s `pageToRender` routing.
+- `CHANGELOG.md`, `frontend/src/styles.css` — both sides kept (append-only on both).
+
+> **Known gap — no rate limiting on public Gemini-backed endpoints.** `POST /api/transcribe`
+> (voice input), `POST /api/scam-check` and `POST /api/legal-aid/eligibility` are deliberately
+> public (guests can use them; they read or write no saved user data), and `/api/ask` accepts
+> guests too. None of them is rate-limited, and the Gemini-backed ones (transcribe, scam-check
+> with Gemini enabled, ask) spend API quota per request, so a single client can run up cost or
+> exhaust quota. Not addressed in this merge.
+
 ## Unreleased — Free Legal Aid Eligibility Checker: `legal_aid_eligibility.py` + `POST /api/legal-aid/eligibility` + `#/legal-aid` (2026-10-28)
 
 A short wizard that tells a user whether they are likely entitled to free legal services, why
@@ -672,6 +700,76 @@ test, failing before this change too) — no regressions.
 deterministic Gemini client) is solid and fixes the confirmed bug exactly when its rewrite
 succeeds. The end-to-end, live-Gemini picture is a genuine mixed result, not a verified uniform
 improvement — worth knowing before presenting this as "fixed" without qualification.
+## Unreleased — accounts, document links to cases, Gemini timeout, dark mode (2026-09-27)
+
+- **User accounts.** Sign up / sign in with email or phone and a password (`auth.py`, scrypt
+  hashes, session cookie). Cases and documents belong to their account; anything saved before
+  accounts existed is given to an admin account on first start (nothing deleted). Set its
+  password with `python set_admin_password.py` (hidden prompt). See README → User Accounts.
+- **Documents ↔ cases.** New `case_documents` table: a document can belong to several cases,
+  linked when uploaded inside a chat or when its confirmed facts are used. Each link records the
+  question it came in with (`message_sequence`; older links are estimated from the link time).
+  The Documents page shows **Go to case** (or **In N cases**, or *Not under any case*), which
+  opens the case scrolled to that question and briefly highlights it (`#/ask?case=ID&msg=N`).
+- **Documents colour-coded like My Cases.** A document takes its case's legal area; one not yet
+  used in a case gets a guess from its name and text (`document_relevance.document_category`),
+  shown with a dashed chip. Card buttons (Open Case / View, edit, delete, Go to case) follow the
+  category colour; consumer, cyber and fundamental-rights colours are at 80% opacity.
+- **Gemini calls time out.** No call had a time limit, so a request on a connection that went
+  stale (e.g. after the computer slept) waited forever and the question never got an answer.
+  Every Gemini client now uses `gemini_http.gemini_http_options()` (default 45 s,
+  `GEMINI_TIMEOUT_SECONDS`), and every call site treats `httpx` network errors like other
+  Gemini failures. A test fails if a client is created without the timeout.
+- **Dark mode button works.** It was a placeholder with no handler. Dark mode inverts the page
+  with a 180° hue rotation (the palette is hard-coded, not in variables), is remembered, and is
+  applied before first paint.
+- **Sample documents** (`sample-documents/`, fictional data with a generator script) and a
+  sample-home template sandbox at `#/sample-home` (`frontend/src/sample/`).
+- **Tests:** 510 passing. Conversation tests no longer make live Gemini calls with a real key
+  (they were flaky and slow).
+
+## Unreleased — follow-up handling, answer focus, routing fix, source viewer (2026-09-26)
+
+- **Follow-up questions are answered, not swallowed.** Keyword rules used to file any message
+  without a "?" as a case fact — with high confidence, so Gemini was never consulted — and reply
+  only "Got it — I've added that to the current case." On a new set of 90 realistic follow-ups
+  (`eval/conversation_state_cases_realistic.json`: no question marks, Hinglish, confusion,
+  keyword traps) 39 of 50 real questions (78%) got no answer; turn-type accuracy was 51%.
+  Now the rules give Gemini a *hint* marked as fallible and Gemini decides (rules alone decide
+  only pure "thanks/ok/hi", and everything if Gemini is down); safety overrides stop a question
+  being swallowed as an acknowledgement or a same-dispute message wiping the conversation; added
+  facts and corrections get a fresh answer on the updated case. After: 99–100% turn-type
+  accuracy, 0 swallowed. Caveat: the rules were tuned on that same set, so treat it as "known
+  failures fixed", not a real-world figure.
+- **Correction memory (`turn_memory.py`).** Each rules-vs-Gemini disagreement is stored
+  (redacted, pending review, own table in `legal_aid.db`, never in the legal vectorstore) and
+  reused as a prompt example; once a person approves it (`python review_turn_corrections.py`),
+  near-identical messages skip the Gemini call. Pending/rejected records expire after 90 days.
+  Names are not redacted — see the module docstring.
+- **Answers reply to the latest message.** Follow-ups were answered as the whole case ("here is
+  how to report the hack") in the third person ("The user is concerned..."). The prompt now
+  separates the latest message from case background, requires a second-person direct reply, fits
+  the reply to the kind of question, and requires every part of a multi-part question to be
+  answered or explicitly marked as not covered. The first paragraph shows under "In short".
+- **Router bug: "rent" matched inside "Current".** Every follow-up is routed as
+  "Current user question: ...", so tenancy was added to *every* follow-up (a WhatsApp lockout came
+  back cyber + tenancy with a Delhi tenancy note). Keyword cues now match at word starts only.
+  Router eval 94% → 98%. Follow-ups also now route on the question with the case in the router's
+  context slot, and domain definitions in the router prompt were tightened.
+- **Tenancy without a location is answered as Delhi.** The non-Delhi check matched "up " for
+  Uttar Pradesh, so "not up to the mark" refused a tenancy question. Now whole-word place names
+  only; no place named means Delhi is assumed, with a closing note — shown only when the answer
+  cites tenancy law.
+- **Source viewer shows the whole cited passage**, laid out for reading (`source_text.py`:
+  repeated search heading dropped, wrapped lines re-joined, list items and sub-sections on their
+  own lines, page headers removed), plus **"Open full PDF at page N"** via
+  `GET /api/corpus/file` — which serves only active manifest documents.
+- **Frontend:** homepage answers in place (shared `useLegalChat` hook) with the follow-up box
+  pinned below the answers; question boxes grow with the text (`AutoGrowTextarea`); Limitations
+  in maroon; "thanks" replies shown as a plain line.
+- **Tests:** 467 passing. New `tests/conftest.py` isolates the turn classifier from the real
+  Gemini key and database. Other test files that do not stub Gemini may still make live calls
+  now that a `backend/.env` key exists — not addressed here.
 
 ## Unreleased — case law ingestion, judgment parser, corpus currency (2026-09-24)
 

@@ -3,7 +3,9 @@
 // header/background/divider without creating a circular import between App.jsx and that file
 // (App.jsx also imports from here, never the other way around).
 import React from 'react';
-import { Bell, CircleUserRound, Moon, Scale } from 'lucide-react';
+import { Bell, Moon, Scale, Sun } from 'lucide-react';
+
+import { AccountMenu } from '../auth.jsx';
 
 export function VintageScales({ className = '' }) {
   return (
@@ -93,19 +95,50 @@ export function VintageLawBook({ className = '' }) {
   );
 }
 
+const THEME_STORAGE_KEY = 'legalAidTheme';
+
+// Dark mode is a whole-page colour inversion (see html[data-theme="dark"] in styles.css): the
+// stylesheet hard-codes its parchment palette in thousands of rules rather than in variables, so
+// inverting -- with a hue rotation that keeps the browns warm -- themes every page at once.
+// The attribute is set on <html> before first paint by the inline script in index.html; every
+// HeaderControls (one per page) reads it from there, so all pages agree.
+function useTheme() {
+  const [theme, setTheme] = React.useState(() => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'));
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch (error) {
+      // Storage can be unavailable (private window, blocked site data); the toggle still works
+      // for this visit, it just is not remembered.
+    }
+    setTheme(next);
+  };
+
+  return [theme, toggleTheme];
+}
+
 export function HeaderControls() {
+  const [theme, toggleTheme] = useTheme();
+  const isDark = theme === 'dark';
   return (
     <header className="top-controls" aria-label="Page controls">
-      <button aria-label="Toggle theme">
-        <Moon size={18} />
+      <button
+        type="button"
+        onClick={toggleTheme}
+        aria-pressed={isDark}
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={isDark ? 'Light mode' : 'Dark mode'}
+      >
+        {isDark ? <Sun size={18} /> : <Moon size={18} />}
       </button>
       <button aria-label="Notifications">
         <Bell size={18} />
         <span className="notify-dot" />
       </button>
-      <div className="avatar" aria-label="Profile" role="img">
-        <CircleUserRound size={20} strokeWidth={1.6} />
-      </div>
+      <AccountMenu />
     </header>
   );
 }

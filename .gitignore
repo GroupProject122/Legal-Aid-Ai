@@ -7,7 +7,11 @@ backend/vectorstore/
 backend/.env
 backend/.venv/
 backend/legal_aid.db
+backend/legal_aid.db.*.bak
 backend/user_uploads/*
 !backend/user_uploads/.gitkeep
 dist/
 node_modules/
+
+# Evaluation metrics: downloaded models are large (~1.4 GB+); recreate with 4parameters_test/tests/README.md
+4parameters_test/tests/models/

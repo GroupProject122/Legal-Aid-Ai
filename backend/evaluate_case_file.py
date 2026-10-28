@@ -72,7 +72,7 @@ def _chunk_object(chunk_id: str) -> SimpleNamespace:
     return SimpleNamespace(**{**item, "source": item.get("source") or item.get("source_file")})
 
 
-def seed_case(spec: dict[str, Any], db_path: Path) -> int:
+def seed_case(spec: dict[str, Any], db_path: Path, user_id: int | None = None) -> int:
     """Store one fixture case exactly the way /api/ask would: create_case, save_message with
     assistant_content_for_storage() (so verification is compacted by the real code), and a
     documents row carrying the confirmed-fact context (as /api/documents/confirm-facts does)."""
@@ -94,20 +94,21 @@ def seed_case(spec: dict[str, Any], db_path: Path) -> int:
         with case_store.connect(db_path) as conn:
             conn.execute(
                 "INSERT INTO documents (original_filename, display_filename, file_type, mime_type, size_bytes, created_at, "
-                "updated_at, storage_path, extraction_status, confirmed_fact_context_json) VALUES (?, ?, 'pdf', 'application/pdf', 1, ?, ?, '', 'success', ?)",
+                "updated_at, storage_path, extraction_status, confirmed_fact_context_json, user_id) VALUES (?, ?, 'pdf', 'application/pdf', 1, ?, ?, '', 'success', ?, ?)",
                 (
                     document["filename"],
                     document["filename"],
                     now,
                     now,
                     case_store.json_dumps({"status": "confirmed", "confirmed_fact_context_id": document["context_id"], "confirmed_facts": confirmed_facts}),
+                    user_id,
                 ),
             )
 
     state = {"conversation_state_id": f"state_{spec['id']}", "primary_domain": spec["primary_domain"], **spec["conversation_state"]}
     first_context = next((contexts[turn["context_id"]] for turn in spec["turns"] if turn.get("context_id")), None)
-    case_id = case_store.create_case(spec["turns"][0]["user"], spec["primary_domain"], conversation_state=state, confirmed_document_context=first_context, db_path=db_path)
-    case_store.rename_case(case_id, spec["title"], db_path)
+    case_id = case_store.create_case(spec["turns"][0]["user"], spec["primary_domain"], conversation_state=state, confirmed_document_context=first_context, db_path=db_path, user_id=user_id)
+    case_store.rename_case(case_id, spec["title"], db_path, user_id=user_id)
     for turn in spec["turns"]:
         case_store.save_message(case_id, "user", case_store.user_content_for_storage(turn["user"]), db_path)
         case_store.save_message(case_id, "assistant", case_store.assistant_content_for_storage(_response_for(turn, state, contexts)), db_path)

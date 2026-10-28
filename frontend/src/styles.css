@@ -46,10 +46,38 @@ body {
     linear-gradient(115deg, #f0e2cc 0%, #fff7eb 48%, #eddcc2 100%);
 }
 
+/* Dark mode (toggled by the moon/sun button in HeaderControls). The palette is hard-coded across
+   thousands of rules rather than in variables, so dark mode inverts the whole page and rotates
+   hues back by 180deg: parchment becomes deep brown, dark ink becomes light, and warm browns and
+   the maroon Limitations stay warm instead of turning blue. A filter on the root element does
+   not create a containing block, so fixed and sticky elements keep working. */
+html[data-theme='dark'] {
+  filter: invert(1) hue-rotate(180deg);
+  /* The area behind the page (overscroll) is painted without the filter, so give it the
+     dark colour directly. */
+  background-color: #1b140e;
+  color-scheme: dark;
+}
+
+/* Real pictures must not be inverted: flip them back so they look normal in dark mode. */
+html[data-theme='dark'] :is(img, video, picture, iframe, canvas, embed, object) {
+  filter: invert(1) hue-rotate(180deg);
+}
+
 button,
 input,
 textarea {
   font: inherit;
+}
+
+/* AutoGrowTextarea sets its own height; these keep text wrapping instead of scrolling. */
+.auto-grow-textarea {
+  display: block;
+  resize: none;
+  overflow-y: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
 }
 
 button {
@@ -454,6 +482,9 @@ button {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  /* Same clipping of the background art as .main-panel's overflow: hidden, but `clip` does not
+     make the panel a scroll container -- which would stop the pinned follow-up box sticking. */
+  overflow: clip;
 }
 
 .home-page-panel .home-background-art {
@@ -591,7 +622,8 @@ button {
   padding: 8px 8px 8px 16px;
   display: grid;
   grid-template-columns: auto 1fr auto auto;
-  align-items: center;
+  /* Buttons stay pinned to the bottom row as the question grows to several lines. */
+  align-items: end;
   gap: 8px;
   background: #fffdf8;
   border: 1px solid rgba(120, 78, 40, 0.32);
@@ -609,16 +641,27 @@ button {
 .query-icon {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  /* Matches .query-submit's 42px height so both logos sit in the same size slot. */
+  width: 42px;
+  height: 42px;
+  padding: 4px;
+  margin-bottom: 8px;
   color: rgba(122, 71, 28, 0.6);
 }
 
-.query-box input {
+.query-icon-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.query-box textarea {
   position: relative;
   z-index: 1;
   width: 100%;
   min-width: 0;
+  max-height: 50vh;
+  padding: 9px 0;
   color: #3f2818;
   background: transparent;
   border: 0;
@@ -627,7 +670,75 @@ button {
   font-size: 1rem;
 }
 
-.query-box input::placeholder {
+/* Homepage question + its in-place answer (HomeAnswerPanel). */
+.home-ask {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Follow-up box: sits under the answers and stays pinned to the bottom of the screen while a
+   long answer is scrolled, so it never has to be scrolled back to. */
+.home-ask.has-conversation .query-box {
+  order: 2;
+  position: sticky;
+  bottom: 16px;
+  z-index: 5;
+  max-width: 860px;
+  box-shadow: 0 -6px 22px rgba(80, 46, 18, 0.1), 0 8px 24px rgba(80, 46, 18, 0.12);
+}
+
+.home-ask.has-conversation .query-box:focus-within {
+  transform: none;
+}
+
+.home-answer-panel {
+  width: 100%;
+  max-width: 860px;
+  min-height: 0;
+  grid-template-rows: auto auto;
+  animation: laFadeUp 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-answer-panel .chat-panel-toolbar {
+  flex-wrap: wrap;
+}
+
+.home-answer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-answer-panel .outline-action:disabled,
+.query-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.home-answer-messages {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 4px 8px;
+  scroll-margin-bottom: 24px;
+}
+
+.home-answer-messages > * {
+  scroll-margin-top: 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-answer-panel {
+    animation: none;
+  }
+}
+
+.query-box textarea::placeholder {
   color: rgba(88, 60, 39, 0.48);
   opacity: 1;
 }
@@ -639,6 +750,7 @@ button {
   place-items: center;
   width: 32px;
   height: 36px;
+  margin-bottom: 3px;
   color: rgba(63, 40, 22, 0.5);
   background: transparent;
   border: 0;
@@ -676,6 +788,15 @@ button {
   font-family: var(--sans);
   font-size: 0.92rem;
   font-weight: 600;
+}
+
+.query-submit-logo {
+  /* .query-submit is 42px tall; this leaves ~6px above and below before the button's own edge. */
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+  /* .ask-button is a dark brown fill (see above) with cream text -- force the black ink to match. */
+  filter: brightness(0) invert(1);
 }
 
 .ask-button:hover,
@@ -2047,6 +2168,8 @@ body.has-custom-cursor textarea {
 .user-message p {
   margin: 0;
   line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .user-message time {
@@ -2162,6 +2285,131 @@ body.has-custom-cursor textarea {
 
 .response-section ul {
   padding-left: 20px;
+}
+
+.conversational-reply-card {
+  width: auto;
+  max-width: min(620px, calc(100% - 52px));
+  padding: 12px 18px;
+}
+
+.conversational-reply-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ---- Offline mode: Gemini unreachable, showing what local retrieval alone found. Deliberately
+   grey/neutral throughout -- background, avatar, pill, notice, section text -- so it reads as
+   clearly different from both a normal answer and a technical-error panel. ---- */
+.offline-avatar {
+  color: #f4f4f2;
+  background: linear-gradient(145deg, #8a8a86, #4a4844 74%);
+  border-color: rgba(90, 90, 86, 0.5);
+}
+
+.offline-response-card {
+  background: linear-gradient(180deg, #f4f4f2 0%, #e8e8e5 100%);
+  border-color: rgba(90, 90, 86, 0.3);
+  color: #34322f;
+}
+
+.offline-response-card .response-header {
+  border-bottom-color: rgba(90, 90, 86, 0.18);
+}
+
+.offline-response-card .response-brand {
+  color: #4a4844;
+}
+
+.offline-response-card .response-emblem {
+  color: #4a4844;
+  background: #d8d8d4;
+  border-color: rgba(90, 90, 86, 0.3);
+}
+
+.offline-pill {
+  color: #f4f4f2;
+  background: #6b6a66;
+  border-color: rgba(90, 90, 86, 0.5);
+}
+
+.offline-response-card .response-section {
+  border-top-color: rgba(90, 90, 86, 0.16);
+}
+
+.offline-response-card .response-section:nth-of-type(even) {
+  background: linear-gradient(90deg, transparent, rgba(90, 90, 86, 0.07), transparent);
+}
+
+.offline-response-card .response-section h4 {
+  color: #4a4844;
+}
+
+.offline-response-card .response-disclaimer {
+  border-top-color: rgba(90, 90, 86, 0.16);
+  color: rgba(52, 50, 47, 0.75);
+}
+
+.offline-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #e2e2de;
+  border: 1px solid rgba(90, 90, 86, 0.32);
+  border-radius: 8px;
+  color: #34322f;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.offline-notice svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: #6b6a66;
+}
+
+.offline-response-card .source-card {
+  background: #eeeeec;
+  border-color: rgba(90, 90, 86, 0.28);
+  color: #34322f;
+}
+
+.offline-response-card .source-card:hover {
+  border-color: rgba(90, 90, 86, 0.5);
+}
+
+.offline-section-block {
+  margin-top: 14px;
+}
+
+.offline-section-block:first-child {
+  margin-top: 0;
+}
+
+.offline-section-meta {
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: #4a4844;
+}
+
+.offline-section-text {
+  margin: 0;
+  padding: 12px 14px;
+  background: #eeeeec;
+  border: 1px solid rgba(90, 90, 86, 0.24);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-size: 0.92rem;
+  color: #3c3a37;
+}
+
+/* Limitations in maroon so the caveats on an answer are easy to spot. */
+.response-limitations h4,
+.response-limitations li,
+.response-limitations li::marker {
+  color: #7a1f1f;
 }
 
 .step-list {
@@ -2305,7 +2553,8 @@ body.has-custom-cursor textarea {
   z-index: 1;
   display: grid;
   grid-template-columns: auto 1fr auto auto;
-  align-items: center;
+  /* Buttons stay on the bottom row as the question grows. */
+  align-items: end;
   gap: 12px;
   padding: 14px;
   background: linear-gradient(180deg, #ffffff 0%, #fffaf1 100%);
@@ -2322,7 +2571,8 @@ body.has-custom-cursor textarea {
 
 .chat-composer textarea {
   min-height: 56px;
-  max-height: 148px;
+  /* Grows with the question; only scrolls once it would take over the chat view. */
+  max-height: 40vh;
   width: 100%;
   min-width: 0;
   padding: 16px 18px;
@@ -4308,6 +4558,94 @@ body.has-custom-cursor textarea {
   gap: 8px;
 }
 
+/* Documents page: "Go to case" (or "In N cases" menu, or "Not under any case"), next to the
+   rename and delete buttons. */
+.document-case-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 13px;
+  color: var(--walnut);
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #fdf7ef;
+  border: 1px solid rgba(150, 101, 56, 0.22);
+  border-radius: 10px;
+  transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+.document-case-link:hover,
+.document-case-link:focus-visible {
+  outline: 0;
+  background: #fbefdf;
+  box-shadow: 0 8px 16px rgba(92, 56, 26, 0.12);
+}
+
+.document-no-case {
+  padding: 0 6px;
+  color: rgba(74, 50, 32, 0.55);
+  font-size: 0.84rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.document-case-menu-wrap {
+  position: relative;
+}
+
+.document-case-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 240px;
+  max-width: 320px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #fffdf9;
+  border: 1px solid rgba(150, 101, 56, 0.24);
+  border-radius: 12px;
+  box-shadow: 0 16px 34px rgba(92, 56, 26, 0.16);
+}
+
+.document-case-menu button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 10px;
+  color: var(--mocha);
+  font-size: 0.88rem;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+}
+
+.document-case-menu button:hover,
+.document-case-menu button:focus-visible {
+  outline: 0;
+  background: #fbefdf;
+}
+
+.document-case-menu-swatch {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  background: var(--case-color, rgba(150, 101, 56, 0.3));
+  border: 1px solid rgba(90, 55, 29, 0.24);
+  border-radius: 3px;
+}
+
+/* Ask page: the question a document came in with, when opened from "Go to case". */
+.user-message-row.is-focused .user-message {
+  box-shadow: 0 0 0 3px rgba(179, 125, 57, 0.55), 0 8px 16px rgba(66, 40, 22, 0.1);
+  transition: box-shadow 400ms ease;
+}
+
 .case-rename-icon-button,
 .case-delete-icon-button {
   display: grid;
@@ -4423,6 +4761,26 @@ body.has-custom-cursor textarea {
   transform: translateY(-1px);
   filter: brightness(1.06);
   box-shadow: 0 12px 22px rgba(92, 56, 26, 0.26);
+}
+
+/* My Cases and Documents: a card with a category colours its buttons to match. The main button
+   (Open Case / View) is filled with the category colour; the smaller buttons keep their light
+   fill and take a category-coloured border. Cards without a category keep the default brown. */
+:is(.case-list-card, .document-list-card)[class*='case-domain-'] .case-open-button {
+  color: var(--case-ink);
+  background: var(--case-color);
+  /* A hairline keeps the light tenancy colour visible against the card. */
+  border-color: rgba(90, 55, 29, 0.28);
+}
+
+:is(.case-list-card, .document-list-card)[class*='case-domain-']
+  :is(.case-rename-icon-button, .case-delete-icon-button, .document-case-link) {
+  border-color: color-mix(in srgb, var(--case-accent) 45%, transparent);
+}
+
+:is(.case-list-card, .document-list-card)[class*='case-domain-']
+  :is(.case-rename-icon-button, .document-case-link) {
+  color: var(--case-accent);
 }
 
 .cases-empty,
@@ -5108,7 +5466,8 @@ body.has-custom-cursor textarea {
   font-size: 0.74rem;
 }
 
-.fact-item input {
+.fact-item textarea {
+  width: 100%;
   min-height: 36px;
   padding: 7px 9px;
   color: var(--mocha);
@@ -5248,7 +5607,49 @@ body.has-custom-cursor textarea {
 }
 
 .source-excerpt-modal {
+  /* Wider than the other small modals: it now holds the whole cited passage. */
+  width: min(680px, 100%);
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
   text-align: left;
+}
+
+.source-excerpt-modal .source-excerpt-box {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The passage scrolls inside the modal, so the title and the PDF button stay in view. */
+.source-passage {
+  min-height: 0;
+  max-height: min(52vh, 520px);
+  overflow-y: auto;
+  padding-right: 6px;
+  overscroll-behavior: contain;
+}
+
+.source-passage p + p {
+  margin-top: 8px;
+}
+
+.source-passage:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 3px;
+}
+
+.source-pdf-link {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .source-excerpt-modal .modal-emblem,
@@ -5952,6 +6353,7 @@ body.has-custom-cursor textarea {
    .scheme-field inputs of type checkbox in the codebase, and without this exclusion they
    inherited width:100%/min-height:46px, stretching each checkbox into the size of a text input. */
 .scheme-field input:not([type='radio']):not([type='checkbox']),
+.scheme-field textarea,
 .scheme-field select {
   width: 100%;
   min-height: 46px;
@@ -5964,6 +6366,7 @@ body.has-custom-cursor textarea {
 }
 
 .scheme-field input:focus-visible,
+.scheme-field textarea:focus-visible,
 .scheme-field select:focus-visible {
   outline: 2px solid var(--caramel);
   outline-offset: 1px;
@@ -7511,4 +7914,255 @@ body.has-custom-cursor textarea {
   .legalaid-number-field {
     max-width: none;
   }
+}
+
+/* "Your documents" block in the Ask page's query panel. */
+.summary-documents {
+  margin-top: 6px;
+}
+
+.summary-document-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0 0 4px;
+  list-style: none;
+}
+
+.summary-document-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.summary-document-list .file-type-icon {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 34px;
+}
+
+.summary-document-list .file-type-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.summary-document-list li > div {
+  display: grid;
+  min-width: 0;
+}
+
+.summary-document-list a {
+  overflow: hidden;
+  color: var(--mocha);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary-document-list a:hover,
+.summary-document-list a:focus-visible {
+  text-decoration: underline;
+}
+
+.summary-document-list small {
+  color: rgba(63, 40, 22, 0.58);
+  font-size: 0.74rem;
+}
+
+.summary-documents-more {
+  margin: 2px 0 0 38px;
+  color: rgba(63, 40, 22, 0.62);
+  font-size: 0.82rem;
+}
+
+.summary-documents-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+/* The three dark colours (consumer, cyber, fundamental rights) are used at 80% opacity so they
+   sit more softly on the parchment; tenancy is already light. --case-accent stays solid so icons
+   and borders on light buttons remain easy to see.
+   My Cases: each case is coloured by its category (primary_domain). --case-color fills the icon
+   tile, the left stripe and the category chip; --case-ink is the readable colour on top of it. */
+.case-domain-consumer {
+  --case-color: rgba(51, 61, 41, 0.8); /* #333d29 at 80% */
+  --case-ink: #fdf8ef;
+  /* --case-accent: the category colour used on light backgrounds (icons, borders) -- the solid
+     colour, and for tenancy a darker brown, since its beige would be too faint there. */
+  --case-accent: #333d29;
+}
+
+.case-domain-tenancy {
+  --case-color: #ede0d4;
+  --case-ink: #5a371d;
+  --case-accent: #7a5234;
+}
+
+.case-domain-cyber {
+  --case-color: rgba(28, 31, 50, 0.8); /* #1c1f32 at 80% */
+  --case-ink: #fdf8ef;
+  --case-accent: #1c1f32;
+}
+
+.case-domain-constitutional_public_authority {
+  --case-color: rgba(111, 29, 27, 0.8); /* #6f1d1b at 80% */
+  --case-ink: #fdf8ef;
+  --case-accent: #6f1d1b;
+}
+
+.case-list-card[class*='case-domain-']::before,
+.document-list-card[class*='case-domain-']::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 0;
+  width: 5px;
+  background: var(--case-color);
+  border-radius: 0 4px 4px 0;
+  /* The tenancy colour is close to the card background; a hairline keeps its stripe visible. */
+  box-shadow: 0 0 0 1px rgba(90, 55, 29, 0.14);
+}
+
+.case-list-card[class*='case-domain-'] .case-list-icon,
+.document-list-card[class*='case-domain-'] .file-type-icon {
+  color: var(--case-ink);
+  background: var(--case-color);
+  border-color: rgba(90, 55, 29, 0.22);
+}
+
+/* Documents page: a category guessed from the file (not taken from a case) gets a dashed
+   outline, so it reads as "likely" rather than certain. */
+.case-domain-chip.is-inferred {
+  border-style: dashed;
+  border-color: rgba(90, 55, 29, 0.45);
+}
+
+.case-domain-chip {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+  padding: 2px 9px;
+  color: var(--case-ink);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--case-color);
+  border: 1px solid rgba(90, 55, 29, 0.18);
+  border-radius: 999px;
+}
+
+.case-domain-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 0 auto 0 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(74, 50, 32, 0.74);
+  font-size: 0.84rem;
+}
+
+.case-domain-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.case-domain-swatch {
+  width: 14px;
+  height: 14px;
+  background: var(--case-color);
+  border: 1px solid rgba(90, 55, 29, 0.24);
+  border-radius: 4px;
+}
+
+.cases-bulk-actions,
+.persisted-documents-bulk-actions {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Ask page: real document upload inside the chat (reuses the Documents page's upload card). */
+.chat-upload-modal {
+  width: min(560px, 100%);
+  max-height: min(88vh, 860px);
+  overflow-y: auto;
+  text-align: left;
+}
+
+.chat-upload-modal h3 {
+  margin-top: 0;
+  padding-right: 40px;
+}
+
+.chat-upload-modal > p {
+  max-width: none;
+  margin: 8px 0 14px;
+}
+
+.chat-upload-modal .modal-note {
+  margin-bottom: 14px;
+}
+
+.chat-upload-modal .upload-card {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+/* Ask page query card: "Documents in this case" and "May also be relevant". */
+.summary-documents-hint {
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
+  padding: 0 0 0 33px;
+  color: rgba(63, 40, 22, 0.66);
+  font: inherit;
+  font-size: 0.84rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.summary-documents-hint:hover {
+  color: var(--mocha);
+  text-decoration: underline;
+}
+
+.summary-relevant {
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(179, 125, 57, 0.3);
+}
+
+.summary-relevant h4 {
+  margin: 0 0 2px;
+  color: #4f2d17;
+  font-family: var(--serif);
+  font-size: 1.04rem;
+}
+
+.summary-relevant-lead {
+  margin: 0 0 10px;
+  color: rgba(63, 40, 22, 0.6);
+  font-size: 0.8rem;
+}
+
+.summary-relevant .summary-document-list small {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.3;
 }

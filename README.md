@@ -67,6 +67,25 @@ source .venv/bin/activate
 uvicorn main:app --reload --port 8000
 ```
 
+## User Accounts
+
+People sign up with an email address or a phone number and a password (Sign in, top right). Saved cases and uploaded documents belong to the account that created them, and no other account can see them. Guests can still ask questions, but their conversations are not saved.
+
+Cases and documents saved before accounts existed are given to an **admin account** (`admin@legalaid.local`) the first time the backend starts. Nothing is deleted. To choose the admin password:
+
+```bash
+cd backend
+python set_admin_password.py
+```
+
+Optional settings in `backend/.env`:
+
+```bash
+LEGAL_AID_ADMIN_EMAIL=admin@legalaid.local   # admin sign-in email (used when the admin account is first created)
+LEGAL_AID_ADMIN_PASSWORD=...                 # otherwise a random one is generated and printed once in the backend log
+AUTH_COOKIE_SECURE=true                      # set when serving over HTTPS
+```
+
 ## Run Frontend
 
 In another terminal:
@@ -154,7 +173,7 @@ clear error).
 ## Schemes & Legal Support (second backend)
 
 `schemes-legal-support/` is a self-contained service: a **Node/Express** API
-(`schemes-legal-support/backend`, port **4000**) backed by **PostgreSQL**, plus
+(`schemes-legal-support/backend`, port **4001**) backed by **PostgreSQL**, plus
 an internal-only admin tool (`schemes-legal-support/frontend`, not linked from
 the main app). The main `frontend/` **Schemes** page consumes its `POST /match`
 endpoint.
@@ -174,7 +193,7 @@ Run it (third terminal):
 
 ```bash
 cd schemes-legal-support/backend
-npm run dev                   # Express API on http://localhost:4000
+npm run dev                   # Express API on http://localhost:4001
 ```
 
 ### All services at once (3 terminals)
@@ -182,14 +201,15 @@ npm run dev                   # Express API on http://localhost:4000
 | Terminal | Command | Port | Serves |
 |----------|---------|------|--------|
 | 1 | `cd backend && source .venv/bin/activate && uvicorn main:app --reload --port 8000` | **8000** | Python RAG API (`/api/*`) |
-| 2 | `cd schemes-legal-support/backend && npm run dev` | **4000** | Node schemes API (`/match`, `/schemes`) |
-| 3 | `cd frontend && npm run dev` | **5173** | the single React app |
+| 2 | `cd schemes-legal-support/backend && npm run dev` | **4001** | Node schemes API (`/match`, `/schemes`) |
+| 3 | `cd frontend && npm run dev` | **4000** | the single React app |
 
-Ports 8000, 4000 and 5173 don't overlap, so all three run together. The Vite
-dev server proxies both backends, so the browser only ever talks to `:5173`:
+Ports 8000, 4001 and 4000 don't overlap, so all three run together. The Vite
+dev server (port set in `frontend/vite.config.js`) proxies both backends, so the
+browser only ever talks to `:4000`:
 
 - `/api/*`         → `http://localhost:8000` (Python)
-- `/schemes-api/*` → `http://localhost:4000` (Node; the `/schemes-api` prefix is
+- `/schemes-api/*` → `http://localhost:4001` (Node; the `/schemes-api` prefix is
   stripped before forwarding)
 
 To point the Schemes page at a non-default schemes backend (e.g. in

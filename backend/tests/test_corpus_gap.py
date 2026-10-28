@@ -58,6 +58,75 @@ def test_explicit_non_delhi_tenancy_is_jurisdiction_gap():
     assert gap.allow_grounded_answer is False
 
 
+def test_ordinary_up_phrase_is_not_uttar_pradesh():
+    # Regression: the old substring list contained "up ", so "not up to the mark" was read as
+    # Uttar Pradesh and an ordinary tenancy question was refused as non-Delhi.
+    question = (
+        "I signed a lease saying I will not leave for at least 6 months or they keep the security "
+        "deposit, but the place is not up to the mark as promised. What do I do?"
+    )
+    gap = corpus_gap.pre_generation_check(question, ["tenancy"], [chunk()])
+
+    assert "jurisdiction_not_covered" not in gap.reason_codes
+    assert gap.allow_grounded_answer is True
+
+
+def test_non_delhi_gate_needs_an_explicit_place():
+    assert corpus_gap.explicit_non_delhi_tenancy("my flat in up has no water", ["tenancy"])
+    assert corpus_gap.explicit_non_delhi_tenancy("landlord in Gurugram kept my deposit", ["tenancy"])
+    assert not corpus_gap.explicit_non_delhi_tenancy("i want to set up a rent agreement", ["tenancy"])
+    assert not corpus_gap.explicit_non_delhi_tenancy("he picked up the keys and kept my deposit", ["tenancy"])
+    # Naming Delhi makes it a Delhi question even when another place is mentioned.
+    assert not corpus_gap.explicit_non_delhi_tenancy("i moved from Pune to a flat in Delhi", ["tenancy"])
+
+
+def test_tenancy_answer_notes_delhi_assumption_when_no_place_named():
+    response = {"answer": {"limitations": ["a", "b", "c", "d", "e"]}}
+
+    corpus_gap.delhi_tenancy_note(response, ["tenancy"], "landlord kept my security deposit")
+
+    limitations = response["answer"]["limitations"]
+    assert limitations[-1] == corpus_gap.DELHI_ASSUMED_NOTE
+    assert len(limitations) == 5
+
+
+def test_tenancy_answer_notes_delhi_law_when_delhi_named():
+    response = {"answer": {"limitations": []}}
+
+    corpus_gap.delhi_tenancy_note(response, ["tenancy"], "my landlord in New Delhi cut electricity")
+
+    assert response["answer"]["limitations"] == [corpus_gap.DELHI_STATED_NOTE]
+
+
+def test_delhi_note_skipped_when_answer_cites_no_tenancy_source():
+    response = {
+        "answer": {"limitations": []},
+        "sources": [{"source_file": "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"}],
+    }
+
+    corpus_gap.delhi_tenancy_note(response, ["cyber", "tenancy"], "i cannot log in, my number was deactivated")
+
+    assert response["answer"]["limitations"] == []
+
+
+def test_delhi_note_added_when_answer_cites_tenancy_source():
+    response = {"answer": {"limitations": []}, "sources": [{"source_file": "tenancy/delhi_rent_control_act_1958.pdf"}]}
+
+    corpus_gap.delhi_tenancy_note(response, ["tenancy"], "landlord kept my deposit")
+
+    assert response["answer"]["limitations"] == [corpus_gap.DELHI_ASSUMED_NOTE]
+
+
+def test_delhi_note_skipped_for_other_domains_and_abstentions():
+    consumer = {"answer": {"limitations": []}}
+    corpus_gap.delhi_tenancy_note(consumer, ["consumer"], "refund not given")
+    assert consumer["answer"]["limitations"] == []
+
+    abstained = {"answer": {"limitations": ["x"]}, "insufficient_context": True}
+    corpus_gap.delhi_tenancy_note(abstained, ["tenancy"], "deposit")
+    assert abstained["answer"]["limitations"] == ["x"]
+
+
 def test_missing_case_law_is_insufficient():
     gap = corpus_gap.pre_generation_check("what did the Supreme Court hold in a specific case", ["constitutional_public_authority"], [chunk(domain="constitutional_public_authority")])
 

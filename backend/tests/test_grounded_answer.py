@@ -34,9 +34,23 @@ def test_grounded_prompt_separates_user_facts_and_legal_material():
         chunks=[chunk()],
     )
 
-    assert "USER FACTS:" in prompt
+    assert "LATEST USER MESSAGE (reply to this):\nseller refused refund" in prompt
+    assert "CASE BACKGROUND" in prompt
     assert "RETRIEVED LEGAL MATERIAL:" in prompt
     assert "Never treat user facts as law" in prompt
+
+
+def test_prompt_requires_direct_second_person_reply_to_latest_message():
+    prompt = grounded_answer.build_grounded_prompt(
+        original_message="what if it isnt a crime and my number was deactivated",
+        normalized_case_summary="WhatsApp account may have been taken over.",
+        domains=["cyber"],
+        chunks=[chunk()],
+    )
+
+    assert "Respond to the LATEST USER MESSAGE" in prompt
+    assert "Never describe the user in the third person" in prompt
+    assert "Answer every part of a multi-part message" in prompt
 
 
 def test_unknown_chunk_ids_are_removed():
