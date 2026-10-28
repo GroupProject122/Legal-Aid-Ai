@@ -5,6 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import config
 import corpus_gap
 import domain_router
 import fact_sufficiency
@@ -136,6 +137,7 @@ def test_rag_retrieve_receives_the_normalized_query(monkeypatch):
     )
 
     captured = {}
+    monkeypatch.setattr(main, "HINGLISH_RETRIEVAL_NORMALIZER", True)
     monkeypatch.setattr(query_normalizer, "english_retrieval_query", lambda text: "SENTINEL english query")
     monkeypatch.setattr(main, "query_normalizer", query_normalizer)
 
@@ -166,6 +168,7 @@ def test_corpus_gap_receives_the_original_text_not_the_normalized_one(monkeypatc
     )
 
     captured = {}
+    monkeypatch.setattr(main, "HINGLISH_RETRIEVAL_NORMALIZER", True)
     monkeypatch.setattr(query_normalizer, "english_retrieval_query", lambda text: "SENTINEL english query")
     monkeypatch.setattr(main, "query_normalizer", query_normalizer)
     monkeypatch.setattr(main.rag, "retrieve", lambda query, **_kwargs: ["fake-chunk"])
@@ -189,3 +192,31 @@ def test_corpus_gap_receives_the_original_text_not_the_normalized_one(monkeypatc
 
     assert captured["retrieval_text"] == "mera Instagram hack ho gaya"
     assert captured["retrieval_text"] != "SENTINEL english query"
+
+
+def test_normalizer_is_off_by_default_and_retrieval_gets_the_original_text(monkeypatch):
+    assert config.HINGLISH_RETRIEVAL_NORMALIZER is False  # default, with no env override
+    monkeypatch.setattr(main, "HINGLISH_RETRIEVAL_NORMALIZER", False)
+    context = _case_context("mera Instagram hack ho gaya")
+    fact_result = fact_sufficiency.FactSufficiencyResult(
+        status="sufficient",
+        missing_facts=[],
+        needs_fact_clarification=False,
+        question=None,
+        reason=None,
+        normalized_case_summary="mera Instagram hack ho gaya",
+    )
+
+    def must_not_be_called(_text):
+        raise AssertionError("normaliser called while HINGLISH_RETRIEVAL_NORMALIZER is off")
+
+    captured = {}
+    monkeypatch.setattr(query_normalizer, "english_retrieval_query", must_not_be_called)
+
+    def fake_retrieve(query, **_kwargs):
+        captured["query"] = query
+        return []
+
+    monkeypatch.setattr(main.rag, "retrieve", fake_retrieve)
+    main.answer_grounded_from_context(original_message="mera Instagram hack ho gaya", context=context, fact_result=fact_result)
+    assert "mera Instagram hack ho gaya" in captured["query"]

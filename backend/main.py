@@ -34,7 +34,7 @@ import legal_education
 import query_normalizer
 import scam_checker
 import voice_transcription
-from config import DISCLAIMER, FRONTEND_ORIGINS, GEMINI_API_KEY, LLM_PROVIDER
+from config import DISCLAIMER, FRONTEND_ORIGINS, GEMINI_API_KEY, HINGLISH_RETRIEVAL_NORMALIZER, LLM_PROVIDER
 from rag import (
     DOMAIN_SIGNAL_THRESHOLD,
     MIN_RELEVANCE_SCORE,
@@ -1185,8 +1185,9 @@ def answer_grounded_from_context(
     # English-language, so a Hinglish retrieval_text searched as-is misses relevant provisions
     # (see query_normalizer.py's module docstring for the confirmed example). retrieval_text
     # itself stays untouched below (corpus_gap, grounded_answer, the stored case) -- only the
-    # string actually sent to rag.retrieve() is affected.
-    rag_query = query_normalizer.english_retrieval_query(retrieval_text)
+    # string actually sent to rag.retrieve() is affected. Behind config.HINGLISH_RETRIEVAL_NORMALIZER
+    # (default off) -- see that setting for why.
+    rag_query = query_normalizer.english_retrieval_query(retrieval_text) if HINGLISH_RETRIEVAL_NORMALIZER else retrieval_text
     chunks = rag.retrieve(rag_query)
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
