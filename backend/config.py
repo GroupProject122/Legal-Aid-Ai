@@ -21,6 +21,10 @@ def _csv_env(name: str, default: str) -> list[str]:
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
+# Every Gemini call gives up after this many seconds. Without a limit, a call on a connection
+# that went stale (e.g. after the computer slept) waited forever, leaving the question
+# unanswered with no error. Timeouts raise httpx errors, which each call site handles safely.
+GEMINI_TIMEOUT_SECONDS = float(os.getenv("GEMINI_TIMEOUT_SECONDS", "45"))
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
 # Defaults use local embeddings and Gemini generation. CHAT_PROVIDER is accepted

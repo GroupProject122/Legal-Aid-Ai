@@ -25,6 +25,7 @@ import domain_router
 import fact_sufficiency
 import grounded_answer
 import legal_education
+import query_normalizer
 from config import DISCLAIMER, FRONTEND_ORIGINS, LLM_PROVIDER
 from rag import (
     ConfigurationError,
@@ -865,7 +866,13 @@ def answer_grounded_from_context(
     route: domain_router.RouteDecision | None = None,
 ) -> dict:
     retrieval_text = fact_sufficiency.retrieval_query(context, fact_result)
-    chunks = rag.retrieve(retrieval_text)
+    # English-only rewrite for retrieval ONLY -- the embedding model and the corpus are both
+    # English-language, so a Hinglish retrieval_text searched as-is misses relevant provisions
+    # (see query_normalizer.py's module docstring for the confirmed example). retrieval_text
+    # itself stays untouched below (corpus_gap, grounded_answer, the stored case) -- only the
+    # string actually sent to rag.retrieve() is affected.
+    rag_query = query_normalizer.english_retrieval_query(retrieval_text)
+    chunks = rag.retrieve(rag_query)
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
     # user_question (falling back to original_message) is the text the user actually typed this

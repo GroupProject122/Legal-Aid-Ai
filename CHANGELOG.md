@@ -39,6 +39,82 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Hinglish retrieval fix: `query_normalizer.py` (2026-10-28)
+
+**Bug confirmed:** `EMBEDDING_MODEL` (`sentence-transformers/all-MiniLM-L6-v2`) is English-only,
+and the legal corpus is entirely English-language documents. `main.answer_grounded_from_context()`
+previously sent `retrieval_text` to `rag.retrieve()` exactly as the user typed it, including when
+written as Hinglish (Hindi in Latin letters) or mixed Hindi/English. Direct, production-path
+confirmation: `rag.retrieve("mera Instagram hack ho gaya")` (via `main.py`'s actual `rag`
+singleton) returned a single, wrong chunk — Bharatiya Nyaya Sanhita Section 330 ("House-trespass
+and house-breaking", a low-priority supporting-only match) — while `rag.retrieve("Instagram
+account hacked")` correctly returned IT Act Section 66C ("Punishment for identity theft"). The
+difference lives in `select_relevant_chunks()`'s final selection, not just similarity ranking —
+`evaluate_retrieval.py`'s own `reranked_top10` metric (which skips that selection step) did not
+show the same severity, so it understates this failure mode; see "measured, honestly" below.
+
+**Fix:** new `backend/query_normalizer.py`. `english_retrieval_query(text)`: a cheap, deterministic
+check (`looks_like_plain_english()`, a Hinglish marker-word set) skips any Gemini call for text
+that's already plain English (the common case, free and instant); otherwise asks Gemini
+(`gemini-flash-lite-latest`, `temperature=0`, structured JSON output) to rewrite the text into
+plain English *for retrieval only*, with explicit no-add/no-translate-names/no-answer rules. Fails
+safe on any error, missing API key, empty input, or an empty/unusable rewrite — always falls back
+to the original text, never raises, never blocks the answer. Logs via
+`fact_sufficiency.sanitize_user_fact()` so OTP/password-shaped text already redacted from the
+original user input stays redacted in the log line too.
+
+**Wired into `main.answer_grounded_from_context()`:** only the string passed to `rag.retrieve()`
+changes (`rag_query = query_normalizer.english_retrieval_query(retrieval_text)` ->
+`rag.retrieve(rag_query)`). `retrieval_text` itself — what `corpus_gap`'s raw-text checks, the
+grounded-answer prompt, the claim verifier, and the stored case all see — is untouched. Ported
+two small pieces of existing infra this needed: `config.GEMINI_TIMEOUT_SECONDS` and
+`backend/gemini_http.py` (shared `HttpOptions` helper).
+
+**Tests:** `backend/tests/test_query_normalizer.py`, 11 new tests — the Hinglish-detector on its
+own, `english_retrieval_query()`'s skip/rewrite/fallback paths (Gemini error, invalid JSON, empty
+rewrite, no API key, empty input) with a mocked Gemini client, and two integration tests against
+`main.answer_grounded_from_context()` proving (a) `rag.retrieve()` receives the normalized query
+and (b) `corpus_gap.pre_generation_check()` still receives the original, un-normalized text. Both
+integration tests were confirmed to fail against the pre-fix code before being confirmed to pass
+after. Full backend suite: 518 passed, 1 pre-existing unrelated failure (a date-sensitive RTI
+test, failing before this change too) — no regressions.
+
+**Measured, honestly — this was not a clean win:**
+- Added 11 Hinglish cases to `backend/eval/retrieval_queries.json` (10 paraphrases of existing
+  English single-domain queries, plus `cyber_03_hinglish_severe` = the exact confirmed-bug query
+  above). Measured via `rag.retrieve()` directly (the production path), not the evaluator's
+  `reranked_top10` metric: on the 10 paraphrase cases, the expected document was already present
+  in production's returned chunks both before and after (100%/100%) — these phrasings turned out
+  to be easier for the embedding model than the flagship case, so they're useful as a
+  no-regression check but don't exercise the severe failure mode on their own.
+- `evaluate_retrieval.py`'s `reranked_top10`-based Document Hit@5 was unchanged (100% -> 100%)
+  across the 10 cases, but Document Hit@1 **dropped** (90% -> 80%): normalizing shifted the
+  top-ranked chunk on 2 of 10 cases even though the correct document stayed in the top 5.
+- Ran `evaluate_final_end_to_end.py` on the 8 Hinglish cases it already auto-detects
+  (`is_hinglish()`), once with the fix and once with `query_normalizer.english_retrieval_query`
+  patched to identity (old behavior). Aggregate end-to-end success rate was **unchanged** overall
+  (3/8 both runs) — but it was a different 3: `consumer_003_hinglish_refund`,
+  `consumer_009_vague_needs_fact`, and `cyber_003_instagram_hacked` (the flagship bug case) each
+  flipped from failing to passing, while `cyber_009_vague_needs_fact`,
+  `tenancy_002_hinglish_electricity`, and `public_003_rti_hinglish` flipped from passing to
+  failing. Some of this swing is genuinely the normalizer changing retrieval ranking (consistent
+  with the Hit@1 drop above); some is live Gemini API noise unrelated to this fix — one run hit a
+  transient `api/quota` failure cause on an unrelated pipeline stage. With only 8 cases and a live,
+  multi-call, non-deterministic pipeline, a single run's aggregate number is not a reliable
+  before/after signal either way.
+- **The normalizer's own rewrite is not fully deterministic even at `temperature=0`**: calling
+  `english_retrieval_query("mera Instagram hack ho gaya")` four times in a row returned the
+  Hinglish text unchanged on 3 calls and the correct rewrite ("Instagram account hacked") on 1.
+  When it does rewrite, retrieval is confirmed fixed (`rag.retrieve("Instagram account hacked")`
+  correctly returns IT Act 66C). When it doesn't, behavior is identical to pre-fix — never worse,
+  but not a guaranteed fix either. This is a real limitation of relying on a small/lite Gemini
+  model for this rewrite, not a bug in the surrounding fail-safe code.
+
+**Net assessment:** the targeted unit (`query_normalizer.py` itself, tested with a mocked,
+deterministic Gemini client) is solid and fixes the confirmed bug exactly when its rewrite
+succeeds. The end-to-end, live-Gemini picture is a genuine mixed result, not a verified uniform
+improvement — worth knowing before presenting this as "fixed" without qualification.
+
 ## Unreleased — case law ingestion, judgment parser, corpus currency (2026-09-24)
 
 **Full write-up: [`backend/docs/CASE_LAW_AND_CORPUS_CURRENCY.md`](backend/docs/CASE_LAW_AND_CORPUS_CURRENCY.md)**
