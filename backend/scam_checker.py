@@ -715,6 +715,9 @@ def decide_verdict(signs: list[Sign]) -> str:
 CYBERCRIME_PORTAL = "https://cybercrime.gov.in"
 CHAKSHU_URL = "https://sancharsaathi.gov.in/sfc/"
 RBI_SOURCE = "cyber__rbi_limiting_liability_unauthorised_transactions_2017"
+# Official sources for the two reporting steps (added 2026-10-29; see corpus_manifest.json).
+HELPLINE_1930_SOURCE = "cyber__i4c_1930_helpline_faq"
+CHAKSHU_SOURCE = "cyber__dot_sanchar_saathi_chakshu_press_release_2026-10-05"
 
 TYPE_STEPS = {
     "remote_access_scam": "If you already installed AnyDesk, TeamViewer, QuickSupport or a similar app because of this message, uninstall it, and change your banking and UPI passwords from a different device.",
@@ -734,6 +737,7 @@ def build_steps(verdict: str, scam_type: str) -> list[dict[str, Any]]:
         "text": "If you have already lost money, call the cyber fraud helpline 1930 immediately and report it on cybercrime.gov.in.",
         "tel": "1930",
         "link": {"label": "cybercrime.gov.in", "href": CYBERCRIME_PORTAL},
+        "sources": [link for link in (document_link(HELPLINE_1930_SOURCE, "I4C (MHA) FAQ on helpline 1930"),) if link],
     }
     tell_bank = {
         "text": "If money left your bank account, card or UPI, tell your bank at once. Under the RBI's 2017 circular, the longer you take to tell the bank, the higher the risk of loss; where credentials were shared, the customer bears the loss until it is reported.",
@@ -764,6 +768,7 @@ def build_steps(verdict: str, scam_type: str) -> list[dict[str, Any]]:
     steps.append({
         "text": "Report the message on the government's Sanchar Saathi portal using 'Chakshu' (Citizen Centric Services -> Report Suspected Fraud Communication). It is for suspected fraud calls, SMS and WhatsApp messages.",
         "link": {"label": "Chakshu on Sanchar Saathi", "href": CHAKSHU_URL},
+        "sources": [link for link in (document_link(CHAKSHU_SOURCE, "DoT press release on Chakshu, Oct 2026"),) if link],
     })
     steps.append({"text": "Keep a screenshot of the message and the sender's number or ID before deleting it."})
     return steps
@@ -813,6 +818,23 @@ def law_link(source_id: str, provision_id: str, label: str) -> dict[str, Any] | 
         "provision_id": provision_id,
         "api_url": f"/api/legal-awareness/sources/{source_id}/provisions/{provision_id}",
         "title": provision.get("title"),
+    }
+
+
+def document_link(source_id: str, label: str) -> dict[str, Any] | None:
+    """Whole-document citation (an official web page or press release has no provisions), shown
+    in the source viewer at #/rights/source/<id>. Like law_link: None if the document is not in
+    the local corpus, so the step is shown without a citation rather than with a broken link."""
+    try:
+        source = legal_education.get_source(source_id)
+    except (legal_education.LegalEducationError, KeyError):
+        return None
+    return {
+        "label": label,
+        "source_id": source_id,
+        "provision_id": None,
+        "api_url": f"/api/legal-awareness/sources/{source_id}",
+        "title": source.get("short_title") or source.get("document_title"),
     }
 
 

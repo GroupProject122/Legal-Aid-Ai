@@ -894,3 +894,47 @@ def test_normal_indexing_path_uses_frozen_jsonl_builder(monkeypatch):
 
     assert called["used_jsonl_builder"] is True
     assert result["built"] is True
+
+
+# --- splice_documents (python ingest.py --parse-only --only ...) ---
+
+
+def _record(source: str, n: int, text: str = "text") -> dict:
+    return {"chunk_id": f"{source}__{n}", "source_file": source, "text": f"{text} {n}", "structure_type": "section", "domain": "cyber", "document_type": "statute"}
+
+
+def _write_jsonl(path: Path, records: list[dict]) -> None:
+    path.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in records), encoding="utf-8")
+
+
+def test_splice_replaces_only_the_named_document_and_appends_new_ones(monkeypatch, tmp_path):
+    chunks_path, summary_path = tmp_path / "legal_chunks.jsonl", tmp_path / "parse_summary.json"
+    frozen = [_record("a.pdf", 1), _record("b.pdf", 1), _record("b.pdf", 2), _record("c.pdf", 1)]
+    _write_jsonl(chunks_path, frozen)
+    entries = [(tmp_path / name, {"source_file": name, "domain": "cyber", "document_type": "statute"}) for name in ("a.pdf", "b.pdf", "c.pdf", "new.pdf")]
+    monkeypatch.setattr(ingest, "discover_document_entries", lambda: (entries, []))
+    reparsed = {"b.pdf": [_record("b.pdf", 1, "fixed"), _record("b.pdf", 2, "fixed"), _record("b.pdf", 3, "fixed")], "new.pdf": [_record("new.pdf", 1)]}
+    monkeypatch.setattr(ingest, "parse_document", lambda _path, entry: reparsed[entry["source_file"]])
+
+    result = ingest.splice_documents(["b.pdf", "new.pdf"], chunks_path, summary_path)
+
+    records = [json.loads(line) for line in chunks_path.read_text(encoding="utf-8").splitlines()]
+    assert [r["chunk_id"] for r in records] == ["a.pdf__1", "b.pdf__1", "b.pdf__2", "b.pdf__3", "c.pdf__1", "new.pdf__1"]
+    assert records[0] == frozen[0] and records[4] == frozen[3]  # untouched documents byte-for-byte
+    assert all(r["text"].startswith("fixed") for r in records if r["source_file"] == "b.pdf")
+    assert result["spliced"] == {"b.pdf": 3, "new.pdf": 1}
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert summary["total_chunks"] == 6 and summary["documents_parsed"] == 4
+
+
+def test_splice_refuses_documents_not_in_the_manifest(monkeypatch, tmp_path):
+    chunks_path = tmp_path / "legal_chunks.jsonl"
+    _write_jsonl(chunks_path, [_record("a.pdf", 1)])
+    monkeypatch.setattr(ingest, "discover_document_entries", lambda: ([], []))
+    with pytest.raises(ValueError, match="Not active documents"):
+        ingest.splice_documents(["missing.pdf"], chunks_path, tmp_path / "summary.json")
+    assert chunks_path.read_text(encoding="utf-8").count("\n") == 1  # nothing written
+
+
+def test_clean_text_removes_nul_characters():
+    assert "\x00" not in ingest.clean_text("क\x00 द्र Indian Cybercrime")

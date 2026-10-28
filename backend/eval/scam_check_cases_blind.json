@@ -1,0 +1,50 @@
+{
+  "description": "Blind test set for the scam checker: real scam texts as published by official Indian sources, chosen for coverage of scam types without reference to the checker's rules or prompts. Do NOT change rules or prompts based on this set -- record misses and suggested fixes separately. See README_scam_check_blind_set.md.",
+  "status": "INCOMPLETE -- 2 of a target ~20 scam cases. On 2026-10-29 only these could be verified verbatim from official sources by automated download: most official advisories (RBI, CERT-In, TRAI, Income Tax, DoT) describe scams in prose rather than quoting messages, and the main official source that does quote them (PIB Fact Check) refuses automated download. The remaining cases need to be collected by hand -- see to_collect and the README.",
+  "masking": "Real phone numbers, account numbers and the unique parts of real links are replaced (e.g. a link's random host part becomes xxxxxxxxxxxx) while keeping the link's shape (domain, path), since that shape is part of what a reader sees.",
+  "cases": [
+    {
+      "id": "blind_certin_ngrok_kyc_sms",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "bank_kyc_fraud",
+      "source_category": "Phishing SMS: bank account suspension / re-KYC link (ngrok-hosted phishing site)",
+      "message": "Dear customer your xxx bank account will be suspended! Please Re KYC Verification Update click here link http://xxxxxxxxxxxx.ngrok.io/xxxbank",
+      "verbatim": true,
+      "source_name": "CERT-In Current Activity CICA-2021-2948, 'Phishing websites hosted on NGROK platform, targeting Indian banking customers'",
+      "source_url": "https://www.cert-in.org.in/s2cMainServlet?pageid=PUBADV01&CACODE=CICA-2021-2948",
+      "source_date": "2021-08-10",
+      "retrieved": "2026-10-29",
+      "masking_note": "Link host 446bdf227fc4 replaced with xxxxxxxxxxxx; 'xxx bank' is CERT-In's own placeholder."
+    },
+    {
+      "id": "blind_rbi_upi_request_pin_to_receive",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "upi_collect_scam",
+      "source_category": "Online sales platform fraud: fake buyer sends a UPI 'request money' and asks the seller to enter their PIN",
+      "message": "Please enter PIN to receive money!!",
+      "verbatim": true,
+      "fragment": true,
+      "source_name": "Reserve Bank of India, BE(A)WARE - A booklet on modus operandi of financial fraudsters (2022), Part A section 3 'Frauds using online sales platforms' (the fraudster's line in the illustration)",
+      "source_url": "https://www.rbi.org.in/commonman/Upload/english/Content/PDFs/English%20BEAWARE.pdf",
+      "source_date": "2022-03-07",
+      "retrieved": "2026-10-29",
+      "masking_note": "Nothing to mask. A one-line fragment rather than a full message: it is what the fraudster says in RBI's illustration, so it tests the core lure but not the surrounding text."
+    }
+  ],
+  "to_collect": [
+    {"type": "bank_kyc_fraud", "look_for": "fake KYC / PAN / account-blocked SMS", "official_places": ["PIB Fact Check (factcheck posts on pib.gov.in and @PIBFactCheck)", "bank fraud-awareness pages (SBI, HDFC, ICICI, PNB)", "CERT-In advisories"]},
+    {"type": "electricity_bill_scam", "look_for": "'your electricity will be disconnected tonight, call this officer' SMS", "official_places": ["DoT / Sanchar Saathi press releases (the 'Electricity KYC update scam' release)", "state electricity board advisories (BSES, MSEDCL, TANGEDCO)", "PIB Fact Check"]},
+    {"type": "courier_or_parcel_scam", "look_for": "parcel held / customs / drugs-in-parcel messages", "official_places": ["I4C advisories (@Cyberdost)", "PIB Fact Check", "India Post advisories"]},
+    {"type": "digital_arrest_or_authority_threat", "look_for": "police / CBI / customs / 'digital arrest' scripts and messages", "official_places": ["I4C 'digital arrest' advisories", "PIB Fact Check", "MHA releases"]},
+    {"type": "job_or_task_scam", "look_for": "part-time job, 'like videos and earn', task-based investment messages", "official_places": ["I4C / @Cyberdost", "PIB Fact Check", "CERT-In advisory CIAD-2024-0050 (describes; check for quoted samples)"]},
+    {"type": "prize_or_refund_scam", "look_for": "lottery / KBC / income-tax refund / reward-points messages", "official_places": ["Income Tax Department anti-phishing pages", "RBI cautions on fictitious offers", "PIB Fact Check"]},
+    {"type": "loan_app_or_extortion", "look_for": "instant loan app offers and recovery-threat messages", "official_places": ["RBI cautions on unauthorised digital lending", "I4C advisories"]},
+    {"type": "malicious_app_link", "look_for": "messages with .apk links (e-challan, wedding invite, bank app)", "official_places": ["CERT-In advisories", "state police cyber cells", "PIB Fact Check"]},
+    {"type": "remote_access_scam", "look_for": "'install AnyDesk/TeamViewer to fix your issue' messages", "official_places": ["RBI BE(A)WARE (screen-sharing section)", "bank advisories"]},
+    {"type": "otp_or_credential_theft", "look_for": "'share the OTP to cancel/verify' messages", "official_places": ["bank advisories", "NPCI safety pages", "PIB Fact Check"]},
+    {"type": "phishing_link", "look_for": "fake government-scheme / free-recharge / subsidy links", "official_places": ["PIB Fact Check (most of its posts are this type)"]},
+    {"type": "unknown", "look_for": "SIM-upgrade / 5G / Sanchar Saathi impersonation, TRAI disconnection threats", "official_places": ["TRAI press releases (e.g. No. 71/2025)", "DoT / Sanchar Saathi"]}
+  ]
+}

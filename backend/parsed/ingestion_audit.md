@@ -2,8 +2,8 @@
 
 ## Overall Results
 - Status: PASS WITH WARNINGS
-- Total chunks checked: 6697
-- Unique chunk IDs: 6697
+- Total chunks checked: 6709
+- Unique chunk IDs: 6709
 - HIGH findings: 0
 - MEDIUM findings: 96
 - LOW findings: 3
@@ -24,20 +24,22 @@
 
 ## Documents Requiring Attention
 - `cyber/sanchar_saathi_ceir_user_manual.pdf`: 6 fallback chunks (100.0%)
+- `cyber/i4c_1930_helpline_faq.pdf`: 7 fallback chunks (100.0%)
+- `cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf`: 5 fallback chunks (100.0%)
 - `consumer/ecommerce_amendment_rules_2021.pdf`: 1 fallback chunks (50.0%)
 - `cyber/cert_in_directions_2022.pdf`: 5 fallback chunks (50.0%)
 - `consumer/consumer_commission_procedure_regulations_2020.pdf`: 13 fallback chunks (33.33%)
 
 ## Fallback Analysis
-- Total fallback chunks: 95
+- Total fallback chunks: 107
 - `cyber/sanchar_saathi_ceir_user_manual.pdf`: 6/6 fallback (100.0%)
+- `cyber/i4c_1930_helpline_faq.pdf`: 7/7 fallback (100.0%)
+- `cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf`: 5/5 fallback (100.0%)
 - `consumer/ecommerce_amendment_rules_2021.pdf`: 1/2 fallback (50.0%)
 - `cyber/cert_in_directions_2022.pdf`: 5/10 fallback (50.0%)
 - `consumer/consumer_commission_procedure_regulations_2020.pdf`: 13/39 fallback (33.33%)
 - `consumer/jurisdiction_rules_2021.pdf`: 1/6 fallback (16.67%)
 - `cyber/it_intermediary_amendment_rules_2022.pdf`: 1/6 fallback (16.67%)
-- `consumer/mediation_rules_2020.pdf`: 1/8 fallback (12.5%)
-- `consumer/greenwashing_guidelines_2024_summary.pdf`: 1/9 fallback (11.11%)
 
 ## Largest Chunks
 - `constitutional_public_authority_constitution_of_india__chunk_0270` in `constitutional_public_authority/constitution_of_india.pdf`: 2495 chars, article 4

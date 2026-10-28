@@ -48,6 +48,82 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Scam checker: corrected manifest notes, official 1930 / Chakshu sources, blind test set (2026-10-29)
+
+**Manifest corrections** (`backend/documents/corpus_manifest.json`). Checked against the indexed text:
+- `cyber/sanchar_saathi_ceir_user_manual.pdf` is C-DOT's CEIR user manual -- blocking/unblocking a
+  lost or stolen phone and request status only. Its note *and title* claimed SIM verification
+  (TAFCOP) and fraud reporting (Chakshu); neither word appears in it. Note and title corrected.
+- `cyber/cybercrime_portal_citizen_manual_latest.pdf`'s note claimed it covers the 1930 helpline.
+  "1930" does not appear as a helpline anywhere in the indexed corpus (every hit was the year in
+  "Sale of Goods Act, 1930"). Note corrected.
+
+**Two official sources added** (`backend/documents/cyber/`), recorded like the other procedural
+guides (`authority_level: procedural_guide`, `document_type: procedural_user_guide`,
+`status: reference_only`, so PR #2's down-weighting applies), with new provenance fields
+`source_url` and `retrieved` and the details in `notes`:
+- `i4c_1930_helpline_faq.pdf` -- **official website**: the I4C (MHA) FAQ page
+  https://i4c.mha.gov.in/FAQ.aspx, retrieved 2026-10-29, collapsed answers expanded before printing
+  to PDF. "Complaints related to financial cyber frauds can be reported by calling the National
+  Helpline number 1930..."
+- `dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf` -- **press release**: Ministry of
+  Communications (DoT), posted 05 Oct 2026 by PIB Delhi, the PDF as published on dot.gov.in.
+  Describes Chakshu (report suspicious calls, SMS, WhatsApp) and repeats 1930 for money already lost.
+- Not obtainable: the 2024 DoT Chakshu launch release and two other Sanchar Saathi PDFs (404), PIB
+  release PRID 1814120 (PIB refuses automated download; not worked around), the cybercrime.gov.in
+  instructions PDF (now serves an HTML page), MHA parliament-answer PDFs (404).
+
+**Ingestion -- full re-parse is NOT safe; new `ingest.py --parse-only --only <files>`.** Re-parsing
+every PDF with today's parser does not reproduce the frozen `parsed/legal_chunks.jsonl`: 1,441
+chunks changed and 94 disappeared across 12 documents (1,278 in the Constitution). That run was
+discarded and the frozen file restored byte-for-byte. The new `--only` option re-parses just the
+named documents and splices them in (replaced in place / appended), leaving every other record
+unchanged. Result: 6,697 -> 6,709 records (+7 I4C, +5 DoT; the 6 Sanchar Saathi chunks pick up the
+corrected title); every other document's records identical and in the same order. Also:
+`clean_text()` now strips NUL characters (pypdf emitted them for the I4C page's Devanagari header;
+none existed in the corpus before). `audit_ingestion.py`: PASS WITH WARNINGS, HIGH 0; the only new
+warnings are the two new documents being 100% fallback chunks (no section structure, like the
+other manuals). Re-embedded: 6,709 chunks, 83 documents. Tests in `tests/test_ingest.py`.
+
+**Retrieval before/after** (local, no Gemini; `eval/retrieval_evaluation_before_official_sources.*`
+vs `eval/retrieval_evaluation_official_sources.*`, 47 single-domain queries):
+
+| Metric | Before | After |
+|---|---:|---:|
+| Document Hit@1 / @3 / @5 | 83.0% / 93.6% / 95.7% | 83.0% / 93.6% / 95.7% |
+| Provision Hit@5 (14 labelled) | 85.7% | **78.6%** |
+| MRR | 0.892 | 0.892 |
+| Off-domain in top 5 | 0.021 | 0.021 |
+| Production `rag.retrieve()` has expected document | 47/47 | 47/47 |
+
+- Both new documents are down-weighted on substantive questions (gate score 0.600 -> 0.400) and not
+  on procedural ones ("how do I report ... 1930"); `is_down_weighted_manual()` applies to them.
+- IT Act ranks first for "identity theft using my password", "cheating by personation online",
+  "phishing link stole my money", "cyber fraud online payment"; for "someone hacked my social media
+  account" the portal manual stays first (as before), with IT Act s.42 and s.66C next.
+- **Regression, one query:** `cyber_03_hinglish_severe` ("mera Instagram hack ho gaya") lost s.66C
+  from the top 5. Cause: two DoT chunks (raw 0.283 and 0.220) entered the fixed 100-candidate pool,
+  whose cut-off is 0.216, displacing s.66C; they are then down-weighted to ranks 79 and 98 but still
+  took the slots. Not fixed: the principled fix is the candidate-pool counterpart of PR #2's anchor
+  fix (down-weighted manuals shouldn't take pool slots), a retrieval change for a separate decision.
+
+**Citations.** The checker's 1930 step now cites the I4C FAQ and its Chakshu step the DoT release,
+as whole-document links to the source viewer (`#/rights/source/<id>`); like provision citations,
+the citation is dropped if the document is missing and the step is still shown. Tests in
+`tests/test_scam_checker.py` (both links resolve, PDFs served, dropped when missing).
+
+**Blind test set -- incomplete, 2 of ~20 scam cases.** `eval/scam_check_cases_blind.json` holds only
+messages an official source shows verbatim: CERT-In CICA-2021-2948's KYC SMS (link host masked) and
+the RBI BE(A)WARE booklet's "Please enter PIN to receive money!!" (marked as a fragment). Most
+official pages (RBI, CERT-In, TRAI, Income Tax, DoT) describe scams instead of quoting them, and
+PIB Fact Check -- the main source that does -- refuses automated download; nothing was invented to
+fill the gap. The file lists, per scam type, where to collect the rest by hand;
+`eval/scam_check_genuine_submissions_template.json` and `eval/README_scam_check_blind_set.md` explain
+how teammates add ~15 real genuine messages. The cases were picked from what official sources
+published, without reading the rules (the rule *names* had been seen while wiring citations).
+Ran both modes on the 2 cases (2/2 flagged, types correct, rules-only and with Gemini -- 2 Gemini
+requests); with 2 cases this checks the pipeline, not recall. Per-type recall is pending.
+
 ## Unreleased — Read answers aloud on the Ask page (2026-10-29)
 
 Frontend only: the browser's own `speechSynthesis`, no backend change, no Gemini request.

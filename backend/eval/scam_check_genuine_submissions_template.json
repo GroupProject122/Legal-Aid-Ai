@@ -1,0 +1,24 @@
+{
+  "description": "Genuine (non-scam) messages for the scam checker's blind test set: real messages team members actually received, with personal details replaced. Copy the example entry once per message. See README_scam_check_blind_set.md.",
+  "target": "about 15 messages, mixing banks, delivery, utilities, telecom, government and personal messages, in English and Hinglish",
+  "replace_before_adding": [
+    "names -> [NAME]",
+    "phone numbers -> [PHONE] (keep a short code like 1909 or a sender ID like AD-HDFCBK as it is: those are part of what the checker sees)",
+    "account, card, policy, order and tracking numbers -> keep only the last 4 digits, e.g. XXXX1234",
+    "OTPs and PINs -> [OTP]",
+    "addresses -> [ADDRESS]",
+    "links -> keep the domain (e.g. hdfcbank.com), replace anything after it that identifies you with /[path]"
+  ],
+  "cases": [
+    {
+      "id": "genuine_example_replace_me",
+      "label": "genuine",
+      "language": "en",
+      "category": "bank transaction alert",
+      "sender": "AD-XXXXXX (the sender ID as shown on your phone)",
+      "message": "Paste the message here, with personal details replaced as listed above.",
+      "received": "YYYY-MM",
+      "added_by": "your name or initials"
+    }
+  ]
+}

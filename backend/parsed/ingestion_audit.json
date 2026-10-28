@@ -7,8 +7,8 @@
       "MEDIUM": 96
     },
     "status": "PASS WITH WARNINGS",
-    "total_chunks_checked": 6697,
-    "unique_chunk_ids": 6697
+    "total_chunks_checked": 6709,
+    "unique_chunk_ids": 6709
   },
   "child_chunk_issues": [],
   "duplicate_findings": {
@@ -230,6 +230,26 @@
         "structure_aware_chunks": 0,
         "structure_aware_percentage": 0.0,
         "total_chunks": 6
+      },
+      {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 7,
+        "fallback_percentage": 100.0,
+        "source_file": "cyber/i4c_1930_helpline_faq.pdf",
+        "structure_aware_chunks": 0,
+        "structure_aware_percentage": 0.0,
+        "total_chunks": 7
+      },
+      {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 5,
+        "fallback_percentage": 100.0,
+        "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+        "structure_aware_chunks": 0,
+        "structure_aware_percentage": 0.0,
+        "total_chunks": 5
       },
       {
         "document_type": "amendment_rules",
@@ -1032,7 +1052,7 @@
         "total_chunks": 12
       }
     ],
-    "total_fallback_chunks": 95
+    "total_fallback_chunks": 107
   },
   "header_footer_noise": {
     "patterns": [
@@ -1921,6 +1941,30 @@
       "structure_aware_chunks": 90,
       "structure_aware_percentage": 98.9,
       "total_chunks": 91
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 5
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 5,
+      "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+      "structure_aware_chunks": 0,
+      "structure_aware_percentage": 0.0,
+      "total_chunks": 5
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 7
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 7,
+      "source_file": "cyber/i4c_1930_helpline_faq.pdf",
+      "structure_aware_chunks": 0,
+      "structure_aware_percentage": 0.0,
+      "total_chunks": 7
     },
     {
       "counts_by_structure_type": {

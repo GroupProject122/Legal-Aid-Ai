@@ -511,11 +511,11 @@
       "year": null,
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
-      "notes": "MHA / I4C portal manual covering financial fraud, SIM-swap, e-wallet, ransomware reporting and the 1930 helpline. Supplements the 2019 women and children manual."
+      "notes": "MHA / I4C portal manual covering how to report financial fraud, SIM-swap, e-wallet and ransomware complaints on cybercrime.gov.in. Supplements the 2019 women and children manual. Corrected 2026-10-29: the 1930 helpline is not mentioned in this document (or anywhere else in the indexed corpus before cyber/i4c_1930_helpline_*); an earlier note said it was."
     },
     {
       "source_file": "cyber/sanchar_saathi_ceir_user_manual.pdf",
-      "document_title": "Sanchar Saathi / CEIR - Citizen User Manual (blocking a lost or stolen mobile, SIM verification, fraud reporting)",
+      "document_title": "Sanchar Saathi / CEIR - Citizen User Manual (blocking a lost or stolen mobile)",
       "short_title": "Sanchar Saathi / CEIR User Manual",
       "domain": "cyber",
       "document_type": "procedural_user_guide",
@@ -525,7 +525,39 @@
       "year": null,
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
-      "notes": "Department of Telecommunications portal guide: block a lost or stolen phone (CEIR), check SIMs registered in your name (TAFCOP), report fraud communications (Chakshu)."
+      "notes": "C-DOT CEIR user manual (Sanchar Saathi): blocking and unblocking a lost or stolen mobile phone and checking request status, via SMS, the app or the web portal. Corrected 2026-10-29: it does not cover TAFCOP or Chakshu (reporting fraud calls/messages), which an earlier note and title claimed; Chakshu is sourced from cyber/dot_sanchar_saathi_chakshu_*."
+    },
+    {
+      "source_file": "cyber/i4c_1930_helpline_faq.pdf",
+      "document_title": "Indian Cybercrime Coordination Centre (I4C), Ministry of Home Affairs - FAQ: National Helpline 1930 and the National Cybercrime Reporting Portal (official website)",
+      "short_title": "I4C FAQ - Helpline 1930 (official website)",
+      "domain": "cyber",
+      "document_type": "procedural_user_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": 2026,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "source_url": "https://i4c.mha.gov.in/FAQ.aspx",
+      "retrieved": "2026-10-29",
+      "notes": "Official website, not law: a PDF capture of the I4C (MHA) FAQ page, retrieved 2026-10-29 from https://i4c.mha.gov.in/FAQ.aspx (page 'Last Updated: 11/03/2026'), with the collapsed answers expanded before printing; page navigation text is included in the capture. Corpus source for the 1930 helpline: 'Complaints related to financial cyber frauds can be reported by calling the National Helpline number 1930, and the complaints must be later completed on the above website', and calls are received by State/UT police with I4C as platform provider. Recorded like the other procedural guides (procedural_guide / procedural_user_guide), so the substantive-question down-weighting applies."
+    },
+    {
+      "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+      "document_title": "Ministry of Communications (DoT) press release, 05 Oct 2026 - Sanchar Saathi portal crosses 30 crore visits; Chakshu for reporting suspected fraud communication",
+      "short_title": "DoT press release on Sanchar Saathi and Chakshu (Oct 2026)",
+      "domain": "cyber",
+      "document_type": "procedural_user_guide",
+      "jurisdiction": "India",
+      "status": "reference_only",
+      "authority_level": "procedural_guide",
+      "year": 2026,
+      "cross_domain_relevance": [],
+      "retrieval_priority": "low",
+      "source_url": "https://www.dot.gov.in/static/uploads/2026/10/2f797eacc2f86670ba980b887dd2183c.pdf",
+      "retrieved": "2026-10-29",
+      "notes": "Press release, not law: Ministry of Communications release 'Posted On: 05 OCT 2026 by PIB Delhi', the PDF as published on dot.gov.in, retrieved 2026-10-29. Corpus source for Chakshu (report suspicious calls, SMS or WhatsApp messages such as fake KYC or bill-payment alerts, impersonation of Government, police or bank officials, fraudulent investment, job or loan offers) and repeats that people who have already lost money should report on helpline 1930 or cybercrime.gov.in. An older DoT Chakshu launch release (04.03.2024) and the PIB release PRID 1814120 on 1930 were not retrievable (404 / access denied to automated download). Recorded like the other procedural guides so the substantive-question down-weighting applies."
     },
     {
       "source_file": "cyber/it_intermediary_amendment_rules_2022.pdf",

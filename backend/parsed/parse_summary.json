@@ -4,7 +4,7 @@
     "case_law": 2186,
     "constitution": 1442,
     "guidelines": 105,
-    "procedural_user_guide": 279,
+    "procedural_user_guide": 291,
     "regulations": 114,
     "rules": 574,
     "statute": 1487,
@@ -15,13 +15,13 @@
   "chunks_by_domain": {
     "constitutional_public_authority": 3195,
     "consumer": 857,
-    "cyber": 1613,
+    "cyber": 1625,
     "tenancy": 1032
   },
   "chunks_by_structure_type": {
     "annexure": 49,
     "article": 1395,
-    "fallback": 95,
+    "fallback": 107,
     "guideline": 92,
     "judgment_paragraph": 618,
     "judgment_segment": 1568,
@@ -680,17 +680,33 @@
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
       "structure_aware_chunks": 184,
       "total_chunks": 185
+    },
+    {
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 7,
+      "source_file": "cyber/i4c_1930_helpline_faq.pdf",
+      "structure_aware_chunks": 0,
+      "total_chunks": 7
+    },
+    {
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 5,
+      "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+      "structure_aware_chunks": 0,
+      "total_chunks": 5
     }
   ],
-  "documents_parsed": 81,
+  "documents_parsed": 83,
   "documents_skipped": [
     {
       "reason": "manual_verification_required",
       "source_file": "tenancy/delhi_rent_act_1995.pdf"
     }
   ],
-  "fallback_chunks": 95,
+  "fallback_chunks": 107,
   "structure_aware_chunks": 6602,
-  "structure_aware_percentage": 98.58,
-  "total_chunks": 6697
+  "structure_aware_percentage": 98.41,
+  "total_chunks": 6709
 }
