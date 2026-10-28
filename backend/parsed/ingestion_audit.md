@@ -5,14 +5,14 @@
 - Total chunks checked: 6709
 - Unique chunk IDs: 6709
 - HIGH findings: 0
-- MEDIUM findings: 96
+- MEDIUM findings: 94
 - LOW findings: 3
 
 ## High-Priority Issues
 - None found.
 
 ## Medium-Priority Issues
-- 96 medium-priority finding(s), mainly review-scale quality signals.
+- 94 medium-priority finding(s), mainly review-scale quality signals.
 - Large chunks over 8,000 characters: 0
 - Exact duplicate text groups: 1
 - Near-duplicate text groups: 14

@@ -938,3 +938,36 @@ def test_splice_refuses_documents_not_in_the_manifest(monkeypatch, tmp_path):
 
 def test_clean_text_removes_nul_characters():
     assert "\x00" not in ingest.clean_text("क\x00 द्र Indian Cybercrime")
+
+
+# --- footnote markers merged into provision numbers (NALSA Regulations 2010: 7 -> "147") ---
+
+
+def test_footnote_marker_is_split_from_a_provision_number_when_both_signals_agree():
+    assert ingest.split_footnote_marker("147", {"14"}, previous=6) == "7"
+    assert ingest.split_footnote_marker("115", {"11", "10"}, previous=4) == "5"
+    assert ingest.split_footnote_marker("199", {"19"}, previous=8) == "9"
+
+
+def test_genuine_large_numbers_are_never_split():
+    assert ingest.split_footnote_marker("115", {"11"}, previous=114) is None  # Section 115 after 114
+    assert ingest.split_footnote_marker("147", set(), previous=6) is None  # no footnote on the page
+    assert ingest.split_footnote_marker("147", {"14"}, previous=40) is None  # remainder doesn't fit
+    assert ingest.split_footnote_marker("147", {"14"}, previous=None) is None
+    assert ingest.split_footnote_marker("12A", {"1"}, previous=1) is None
+
+
+def test_regulation_numbers_parse_correctly_with_merged_footnote_markers(tmp_path):
+    page_three = "\n".join([
+        "4. Legal Services Institution to process the application.- The application shall be processed.",
+        "115. Proof of entitlement of free legal services. - A self-certificate of income shall suffice.",
+        "6. Consequences of false or untrue information.- Legal services may be withdrawn.",
+        "147. Scrutiny and evaluation of the application for free legal services.- The Member Secretary shall scrutinise.",
+        "11 Substituted vide notification dated 22/10/2018, published in the Gazette of India on 25/10/2018",
+        "14 Substituted vide notification dated 22/10/2018, published in the Gazette of India on 25/10/2018",
+    ])
+    units = ingest.legal_units_from_pages(tmp_path / "regs.pdf", [(3, page_three)], "regulations")
+    numbers = [unit["metadata"].get("regulation_number") for unit in units if unit["metadata"].get("structure_type") == "regulation"]
+    assert numbers == ["4", "5", "6", "7"]
+    seven = next(unit for unit in units if unit["metadata"].get("regulation_number") == "7")
+    assert seven["lines"][0].startswith("7. Scrutiny")

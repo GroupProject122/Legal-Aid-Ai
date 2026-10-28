@@ -4,7 +4,7 @@
     "severity_counts": {
       "HIGH": 0,
       "LOW": 3,
-      "MEDIUM": 96
+      "MEDIUM": 94
     },
     "status": "PASS WITH WARNINGS",
     "total_chunks_checked": 6709,
@@ -2824,26 +2824,6 @@
       "severity": "MEDIUM",
       "source_file": "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
       "structure_type": "section",
-      "type": "sequence_reverse_jump"
-    },
-    {
-      "current_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0008",
-      "current_number": "6",
-      "previous_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0007",
-      "previous_number": "115",
-      "severity": "MEDIUM",
-      "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
-      "structure_type": "regulation",
-      "type": "sequence_reverse_jump"
-    },
-    {
-      "current_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0018",
-      "current_number": "12",
-      "previous_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0014",
-      "previous_number": "199",
-      "severity": "MEDIUM",
-      "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
-      "structure_type": "regulation",
       "type": "sequence_reverse_jump"
     },
     {

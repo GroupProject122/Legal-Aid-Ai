@@ -48,6 +48,33 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Parser: amendment footnote markers merged into provision numbers (2026-10-29)
+
+**Bug.** In the NALSA (Free and Competent Legal Services) Regulations, 2010, regulations **5, 7, 8 and
+9** were indexed as **115, 147, 158 and 199** (the report named 7 and 8; checking the document found 5
+and 9 too). Cause, confirmed in the raw PDF text: each was amended, and pypdf extracts the
+superscript amendment footnote marker (11, 14, 15, 19) as part of the number -- the matching
+footnotes ("11 Substituted vide notification dated 22/10/2018 ...") are on the same pages.
+
+**Fix (general, `ingest.py`).** `legal_units_from_pages()` now collects the amendment footnote markers
+on each page and tracks the previous provision number; `split_footnote_marker()` splits a number into
+marker + real number only when **both** signals agree -- the prefix is a footnote marker on that
+page, and the remainder (not the merged number) continues the provision sequence (within 3). So a
+genuine Section 115 after Section 114 is never touched. The marker is also removed from the chunk's
+heading line.
+
+**Effect on every document** (all 83 parsed in memory with the parser before and after the fix,
+nothing written): **only this document changed, and only these four numbers**
+(115->5, 147->7, 158->8, 199->9); chunk counts unchanged; the other 82 documents' provision lists
+identical. Re-ingested with `--only` for that document: same 30 chunk IDs, 10 chunks changed (number
+and heading line), every other document's records unchanged. Audit MEDIUM warnings 96 -> 94; retrieval
+metrics identical. The source viewer now lists regulations 1-9 and 12-16 (10 and 11 were omitted by
+amendment). The eligibility checker cites only Regulation 3 of this document, so no citation changed.
+
+**Tests:** `tests/test_ingest.py` -- the split happens when both signals agree, never otherwise
+(Section 115 after 114, no footnote, remainder out of sequence), and an end-to-end page parse yields
+regulations 4, 5, 6, 7.
+
 ## Unreleased — Scam checker: corrected manifest notes, official 1930 / Chakshu sources, blind test set (2026-10-29)
 
 **Manifest corrections** (`backend/documents/corpus_manifest.json`). Checked against the indexed text:

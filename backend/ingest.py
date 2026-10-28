@@ -536,8 +536,8 @@ def schedule_or_annexure_metadata(line: str) -> dict | None:
     return None
 
 
-def provision_metadata_from_match(structure_type: str, match: re.Match) -> dict:
-    number = match.group("number")
+def provision_metadata_from_match(structure_type: str, match: re.Match, number: str | None = None) -> dict:
+    number = number or match.group("number")
     title = normalize_heading_title(match.groupdict().get("title"))
     metadata = {
         "structure_type": structure_type,
@@ -601,11 +601,44 @@ def fresh_structure_metadata(structure_type: str = "fallback") -> dict:
     }
 
 
+# An amendment footnote at the foot of a page: "11 Substituted vide notification dated ...".
+AMENDMENT_FOOTNOTE_RE = re.compile(
+    r"^\s*(?P<marker>\d{1,3})\s+(?:Substituted|Inserted|Omitted|Added|Amended|Renumbered|Deleted|Subs\.|Ins\.)\b",
+    re.I,
+)
+# How far past the previous provision a number may jump and still count as "next in sequence"
+# (omitted provisions leave small gaps).
+SEQUENCE_SLACK = 3
+
+
+def page_footnote_markers(text: str) -> set[str]:
+    return {match.group("marker") for line in text.splitlines() if (match := AMENDMENT_FOOTNOTE_RE.match(line))}
+
+
+def split_footnote_marker(number: str, markers: set[str], previous: int | None) -> str | None:
+    """A superscript footnote marker printed just before a provision number is extracted by pypdf
+    as part of it: NALSA (Free and Competent Legal Services) Regulations, 2010 gave regulations 5,
+    7, 8 and 9 as "115", "147", "158" and "199" (markers 11, 14, 15, 19). Returns the real number
+    only when BOTH signals agree -- the prefix is an amendment footnote marker on the same page,
+    and the remainder (not the merged number) continues the provision sequence -- so a genuine
+    Section 115 or 147 is never split."""
+    if previous is None or not number.isdigit():
+        return None
+    if previous < int(number) <= previous + SEQUENCE_SLACK:
+        return None  # the merged-looking number is itself the plausible next provision
+    for marker in sorted(markers, key=len, reverse=True):
+        rest = number[len(marker):]
+        if number.startswith(marker) and rest and not rest.startswith("0") and previous < int(rest) <= previous + SEQUENCE_SLACK:
+            return rest
+    return None
+
+
 def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_family: str) -> list[dict]:
     structure_type, boundary_pattern = parser_boundary_pattern(parser_family)
     context = {"part": None, "chapter": None}
     units: list[dict] = []
     current: dict | None = None
+    previous_number: int | None = None
 
     def start_unit(page_number: int, metadata: dict, first_line: str) -> None:
         nonlocal current
@@ -625,6 +658,7 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
         if is_arrangement_page(text, pdf_path, page_number):
             logger.info("Skipping arrangement/contents page %s in %s", page_number, pdf_path.name)
             continue
+        footnote_markers = page_footnote_markers(text)
         for raw_line in text.splitlines():
             line = raw_line.strip()
             if not line:
@@ -642,7 +676,15 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
 
             boundary_match = boundary_pattern.match(line) if boundary_pattern else None
             if boundary_match and not is_probable_false_boundary(boundary_match):
-                start_unit(page_number, provision_metadata_from_match(structure_type, boundary_match), line)
+                number = boundary_match.group("number")
+                real_number = split_footnote_marker(number, footnote_markers, previous_number)
+                if real_number:
+                    # Drop the marker from the displayed line too ("147. Scrutiny" -> "7. Scrutiny").
+                    line = line[: boundary_match.start("number")] + real_number + line[boundary_match.end("number"):]
+                    number = real_number
+                if number.isdigit():
+                    previous_number = int(number)
+                start_unit(page_number, provision_metadata_from_match(structure_type, boundary_match, number), line)
                 continue
 
             if current is None:
