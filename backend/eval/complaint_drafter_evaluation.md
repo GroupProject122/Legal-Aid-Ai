@@ -1,14 +1,14 @@
 # Complaint Drafter Evaluation (Tenancy Eviction / Delhi Rent Control Act, 1958)
 
 ## Overall Results
-- Total cases: 16
+- Total cases: 18
 - Grounds covered: arrears, bona_fide_requirement, damage, subletting
 - Overall accuracy: 100.0%
 - Pass-case accuracy: 100.0% (8 cases)
 - Clause-selection accuracy: 100.0%
 - Citation accuracy: 100.0%
 - Citation corpus-resolution rate: 100.0%
-- Fail-case (hard validator) accuracy: 100.0% (8 cases)
+- Fail-case (hard validator) accuracy: 100.0% (10 cases)
 - Hard-fail message match rate: 100.0%
 
 ## Valid Drafts Per Ground
@@ -33,9 +33,11 @@
 - `incomplete_damage_missing_description` expected `fail` -> got `fail`; message matched=True
 - `incomplete_bona_fide_missing_reason` expected `fail` -> got `fail`; message matched=True
 - `future_tenancy_start_date` expected `fail` -> got `fail`; message matched=True
+- `non_positive_monthly_rent` expected `fail` -> got `fail`; message matched=True
+- `non_positive_arrears_amount` expected `fail` -> got `fail`; message matched=True
 
 ## Group Breakdown
-- `hard_validators`: overall accuracy 100.0% (7 cases)
+- `hard_validators`: overall accuracy 100.0% (9 cases)
 - `multi_ground`: overall accuracy 100.0% (3 cases)
 - `rent_cap_boundary`: overall accuracy 100.0% (2 cases)
 - `valid_per_ground`: overall accuracy 100.0% (4 cases)
@@ -44,10 +46,10 @@
 - No failures under the current case labels.
 
 ## Cost And Latency
-- Cases run: 16
+- Cases run: 18
 - LLM calls: 0 (no LLM is part of the drafting path)
-- Average latency: 18.81 ms
-- Max latency: 104 ms
+- Average latency: 16.61 ms
+- Max latency: 106 ms
 
 ## Remaining Limitations
 - This scenario covers 4 grounds only (arrears, subletting, damage, bona_fide_requirement); unauthorized_construction was dropped pending manual legal review of its citation.

@@ -1,0 +1,29 @@
+{
+  "description": "HELD-OUT Scam Message Checker set: written after the rule fixes made against scam_check_cases.json and NOT used to tune any rule. Same rules as the main set: fictional messages, example-style domains, dummy numbers.",
+  "cases": [
+    {"id": "ho_scam_kyc", "label": "scam", "language": "en", "expected_type": "bank_kyc_fraud",
+     "message": "ALERT: Your HDFC NetBanking access is restricted. Re-verify your PAN card details at hdfc-secure-login.example.net to restore access."},
+    {"id": "ho_scam_otp_hinglish", "label": "scam", "language": "hinglish", "expected_type": "otp_or_credential_theft",
+     "message": "Main bank se bol raha hoon, aapka card upgrade ho raha hai. Abhi jo message aaya usme 6 number ka code hai, woh mujhe forward kar dijiye."},
+    {"id": "ho_scam_arrest", "label": "scam", "language": "en", "expected_type": "digital_arrest_or_authority_threat",
+     "message": "Notice from Customs Department: a package booked with your Aadhaar contains illegal items. Join the video call with the investigating officer within 1 hour or a warrant will be issued."},
+    {"id": "ho_scam_job", "label": "scam", "language": "en", "expected_type": "job_or_task_scam",
+     "message": "Hi! We are hiring for online review tasks. Give 5-star reviews to restaurants on Maps and get paid Rs 150 per review. Reply YES to join."},
+    {"id": "ho_scam_prize_hinglish", "label": "scam", "language": "hinglish", "expected_type": "prize_or_refund_scam",
+     "message": "Aapka mobile number Rs 10 lakh ke lucky draw me chuna gaya hai. Processing fee Rs 4,500 jama karke prize ka daawa karein."},
+    {"id": "ho_scam_electricity", "label": "scam", "language": "en", "expected_type": "electricity_bill_scam",
+     "message": "Electricity Department: Dear consumer your power supply will be cut off at 10 pm tonight as last month bill is not updated. Call officer at 90000 00009."},
+    {"id": "ho_scam_screen", "label": "scam", "language": "en", "expected_type": "remote_access_scam",
+     "message": "To fix the problem with your UPI app, please download the TeamViewer QuickSupport app and tell me the ID shown on screen."},
+    {"id": "ho_scam_wrong_transfer", "label": "scam", "language": "en", "expected_type": "unknown",
+     "message": "Sorry, I sent Rs 3,000 to your GPay by mistake, it was for my mother's hospital bill. Please return it to this number urgently, I am in a lot of trouble."},
+    {"id": "ho_genuine_otp", "label": "genuine", "language": "en",
+     "message": "Use 905112 as your one-time password to log in. It expires in 5 minutes. We will never call you to ask for it. -ExampleWallet"},
+    {"id": "ho_genuine_delivery", "label": "genuine", "language": "en",
+     "message": "Your package from ShopEasy was delivered and handed to resident. Rate your delivery experience in the app."},
+    {"id": "ho_genuine_job", "label": "genuine", "language": "en",
+     "message": "Hi Rohan, following our call, please find attached the offer letter for the Sales Associate role. Joining date is 1 December. Let us know if you have questions."},
+    {"id": "ho_genuine_hinglish", "label": "genuine", "language": "hinglish",
+     "message": "Bhaiya, aaj gas cylinder ki delivery 4 baje tak ho jayegi, ghar par koi rehna chahiye."}
+  ]
+}

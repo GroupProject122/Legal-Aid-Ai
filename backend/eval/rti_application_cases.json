@@ -1,0 +1,118 @@
+{
+  "notes": "Curated cases for the RTI-application (Right to Information Act, 2005) complaint-drafter scenario. Each case runs the actual Pydantic validator + citation-resolution + template-assembly pipeline in complaint_drafter.py -- nothing here is mocked. This scenario has no 'grounds' selection (there is exactly one kind of request it drafts) and no LLM call anywhere in the path.",
+  "cases": [
+    {
+      "id": "valid_certified_copies_non_bpl",
+      "group": "valid_cases",
+      "description": "Baseline valid application: certified copies, not a BPL applicant, so no fee-exemption clause or additional citation.",
+      "intake": {
+        "applicant_name": "Anita Verma",
+        "applicant_address": "14 Green Park, New Delhi",
+        "public_authority_name": "Delhi Jal Board",
+        "public_authority_address": "Varunalaya Phase II, Karol Bagh, New Delhi",
+        "information_sought": "Certified copies of all water quality test reports for the Karol Bagh zone from January 2026 to June 2026.",
+        "preferred_mode": "certified_copies",
+        "is_bpl_applicant": false
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 6(1)",
+        "act_short_title": "Right to Information Act, 2005"
+      },
+      "expected_additional_section_cites": [],
+      "expected_citation_review_required": false
+    },
+    {
+      "id": "valid_inspection_bpl_applicant",
+      "group": "valid_cases",
+      "description": "BPL applicant requesting inspection of records -- must carry the fee-exemption clause and the additional Section 7(5) citation.",
+      "intake": {
+        "applicant_name": "Ramesh Yadav",
+        "applicant_address": "B-2, Trilokpuri, New Delhi",
+        "public_authority_name": "Municipal Corporation of Delhi",
+        "public_authority_address": "Town Hall, Chandni Chowk, New Delhi",
+        "information_sought": "A copy of the sanctioned building plan for the community hall in Trilokpuri Block 12.",
+        "preferred_mode": "inspection_of_records",
+        "is_bpl_applicant": true
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 6(1)",
+        "act_short_title": "Right to Information Act, 2005"
+      },
+      "expected_additional_section_cites": ["Section 7(5), proviso"],
+      "expected_citation_review_required": false
+    },
+    {
+      "id": "valid_electronic_format",
+      "group": "valid_cases",
+      "description": "Preferred mode = electronic format, to cover the third PreferredMode option.",
+      "intake": {
+        "applicant_name": "Farhan Ahmed",
+        "applicant_address": "22 Nizamuddin East, New Delhi",
+        "public_authority_name": "Central Board of Secondary Education",
+        "public_authority_address": "Shiksha Kendra, 2 Community Centre, Preet Vihar, Delhi",
+        "information_sought": "The marking scheme used for evaluating Class XII Mathematics answer scripts in the 2026 board examination.",
+        "preferred_mode": "electronic_format",
+        "is_bpl_applicant": false
+      },
+      "expected_outcome": "pass",
+      "expected_citation": {
+        "section_cite": "Section 6(1)",
+        "act_short_title": "Right to Information Act, 2005"
+      },
+      "expected_additional_section_cites": [],
+      "expected_citation_review_required": false
+    },
+    {
+      "id": "hard_fail_short_information_sought",
+      "group": "hard_validators",
+      "description": "information_sought under 20 characters must fail as too vague, not proceed with an unfileable request.",
+      "intake": {
+        "applicant_name": "Anita Verma",
+        "applicant_address": "14 Green Park, New Delhi",
+        "public_authority_name": "Delhi Jal Board",
+        "public_authority_address": "Varunalaya Phase II, Karol Bagh, New Delhi",
+        "information_sought": "Water report",
+        "preferred_mode": "certified_copies",
+        "is_bpl_applicant": false
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_information_sought_specific",
+      "expected_failure_message_contains": "at least 20 characters"
+    },
+    {
+      "id": "hard_fail_empty_information_sought",
+      "group": "hard_validators",
+      "description": "Empty information_sought must fail validation (garbage input).",
+      "intake": {
+        "applicant_name": "Anita Verma",
+        "applicant_address": "14 Green Park, New Delhi",
+        "public_authority_name": "Delhi Jal Board",
+        "public_authority_address": "Varunalaya Phase II, Karol Bagh, New Delhi",
+        "information_sought": "",
+        "preferred_mode": "certified_copies",
+        "is_bpl_applicant": false
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "check_information_sought_specific",
+      "expected_failure_message_contains": "at least 20 characters"
+    },
+    {
+      "id": "hard_fail_missing_public_authority_name",
+      "group": "hard_validators",
+      "description": "Missing public_authority_name (a required field) must fail -- there is no one to address the request to.",
+      "intake": {
+        "applicant_name": "Anita Verma",
+        "applicant_address": "14 Green Park, New Delhi",
+        "public_authority_address": "Varunalaya Phase II, Karol Bagh, New Delhi",
+        "information_sought": "Certified copies of all water quality test reports for the Karol Bagh zone from January 2026 to June 2026.",
+        "preferred_mode": "certified_copies",
+        "is_bpl_applicant": false
+      },
+      "expected_outcome": "fail",
+      "expected_failure_validator": "field_required",
+      "expected_failure_message_contains": "Field required"
+    }
+  ]
+}

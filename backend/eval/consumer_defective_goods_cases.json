@@ -16,12 +16,18 @@
         "defect_or_deficiency_type": "defective_goods",
         "defect_description": "Screen cracked on first use, well beyond fair wear and tear.",
         "prior_complaint_made": false,
-        "relief_sought": ["refund"]
+        "relief_sought": [
+          "refund"
+        ]
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "district",
       "expected_clause_file": "consumer_defective_goods_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(10)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(10)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "valid_deficient_service",
@@ -39,13 +45,20 @@
         "defect_description": "Laptop still would not power on after the paid repair.",
         "prior_complaint_made": true,
         "prior_complaint_response": "Technician said the issue was unrelated to the repair.",
-        "relief_sought": ["refund", "compensation"],
+        "relief_sought": [
+          "refund",
+          "compensation"
+        ],
         "compensation_amount": 1000
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "district",
       "expected_clause_file": "consumer_deficient_service_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "valid_short_delivery",
@@ -62,12 +75,18 @@
         "defect_or_deficiency_type": "short_delivery",
         "defect_description": "Bag weighed only 21 kg when checked on a verified scale.",
         "prior_complaint_made": false,
-        "relief_sought": ["refund"]
+        "relief_sought": [
+          "refund"
+        ]
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "district",
       "expected_clause_file": "consumer_short_delivery_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(10) (the 'quantity' prong)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(10) (the 'quantity' prong)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "valid_spurious_goods",
@@ -84,12 +103,19 @@
         "defect_or_deficiency_type": "spurious_goods",
         "defect_description": "Batch code does not match the manufacturer's genuine batch codes; manufacturer confirmed it is counterfeit.",
         "prior_complaint_made": false,
-        "relief_sought": ["refund", "removal_of_defect"]
+        "relief_sought": [
+          "refund",
+          "removal_of_defect"
+        ]
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "district",
       "expected_clause_file": "consumer_spurious_goods_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(43)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(43)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "valid_unfair_trade_practice",
@@ -106,18 +132,25 @@
         "defect_or_deficiency_type": "unfair_trade_practice_in_sale",
         "defect_description": "Seller represented a refurbished television as new; service tag confirms prior repair history.",
         "prior_complaint_made": false,
-        "relief_sought": ["refund", "compensation"],
+        "relief_sought": [
+          "refund",
+          "compensation"
+        ],
         "compensation_amount": 3000
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "district",
       "expected_clause_file": "consumer_unfair_trade_practice_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(47)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(47)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "hard_fail_negative_amount_paid",
       "group": "hard_validators",
-      "description": "amount_paid <= 0 must fail validation (garbage input).",
+      "description": "amount_paid <= 0 must fail validation with a custom message, not pydantic's generic constraint message (garbage input).",
       "intake": {
         "complainant_name": "Priya Nair",
         "complainant_address": "12 MG Road, Bengaluru",
@@ -129,10 +162,12 @@
         "defect_or_deficiency_type": "defective_goods",
         "defect_description": "Screen cracked on first use.",
         "prior_complaint_made": false,
-        "relief_sought": ["refund"]
+        "relief_sought": [
+          "refund"
+        ]
       },
       "expected_outcome": "fail",
-      "expected_failure_message_contains": "greater than 0"
+      "expected_failure_message_contains": "positive amount"
     },
     {
       "id": "hard_fail_future_transaction_date",
@@ -149,7 +184,9 @@
         "defect_or_deficiency_type": "defective_goods",
         "defect_description": "Screen cracked on first use.",
         "prior_complaint_made": false,
-        "relief_sought": ["refund"]
+        "relief_sought": [
+          "refund"
+        ]
       },
       "expected_outcome": "fail",
       "expected_failure_message_contains": "cannot be in the future"
@@ -169,7 +206,9 @@
         "defect_or_deficiency_type": "defective_goods",
         "defect_description": "Screen cracked on first use.",
         "prior_complaint_made": true,
-        "relief_sought": ["refund"]
+        "relief_sought": [
+          "refund"
+        ]
       },
       "expected_outcome": "fail",
       "expected_failure_message_contains": "incomplete"
@@ -189,7 +228,9 @@
         "defect_or_deficiency_type": "defective_goods",
         "defect_description": "Screen cracked on first use.",
         "prior_complaint_made": false,
-        "relief_sought": ["compensation"]
+        "relief_sought": [
+          "compensation"
+        ]
       },
       "expected_outcome": "fail",
       "expected_failure_message_contains": "incomplete"
@@ -209,13 +250,19 @@
         "defect_or_deficiency_type": "deficient_service",
         "defect_description": "Possession delayed by two years beyond the promised date.",
         "prior_complaint_made": false,
-        "relief_sought": ["compensation"],
+        "relief_sought": [
+          "compensation"
+        ],
         "compensation_amount": 100000
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "district",
       "expected_clause_file": "consumer_deficient_service_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "forum_tier_state_just_above_district_cap",
@@ -232,13 +279,19 @@
         "defect_or_deficiency_type": "deficient_service",
         "defect_description": "Possession delayed by two years beyond the promised date.",
         "prior_complaint_made": false,
-        "relief_sought": ["compensation"],
+        "relief_sought": [
+          "compensation"
+        ],
         "compensation_amount": 100000
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "state",
       "expected_clause_file": "consumer_deficient_service_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "forum_tier_state_boundary_at_cap",
@@ -255,13 +308,19 @@
         "defect_or_deficiency_type": "deficient_service",
         "defect_description": "Possession delayed by two years beyond the promised date.",
         "prior_complaint_made": false,
-        "relief_sought": ["compensation"],
+        "relief_sought": [
+          "compensation"
+        ],
         "compensation_amount": 100000
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "state",
       "expected_clause_file": "consumer_deficient_service_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
     },
     {
       "id": "forum_tier_national_just_above_state_cap",
@@ -278,13 +337,42 @@
         "defect_or_deficiency_type": "deficient_service",
         "defect_description": "Possession delayed by two years beyond the promised date.",
         "prior_complaint_made": false,
-        "relief_sought": ["compensation"],
+        "relief_sought": [
+          "compensation"
+        ],
         "compensation_amount": 100000
       },
       "expected_outcome": "pass",
       "expected_forum_tier": "national",
       "expected_clause_file": "consumer_deficient_service_ground.txt",
-      "expected_citation": {"section_cite": "Section 2(11)", "source_file": "consumer/consumer_protection_act_2019.pdf", "section_number": "2"}
+      "expected_citation": {
+        "section_cite": "Section 2(11)",
+        "source_file": "consumer/consumer_protection_act_2019.pdf",
+        "section_number": "2"
+      }
+    },
+    {
+      "id": "hard_fail_compensation_amount_supplied_as_zero",
+      "group": "hard_validators",
+      "description": "compensation_amount supplied as 0 (not missing) must still fail as incomplete -- a Field(gt=0) constraint used to intercept this before check_compensation_amount_present ever ran.",
+      "intake": {
+        "complainant_name": "Priya Nair",
+        "complainant_address": "12 MG Road, Bengaluru",
+        "opposite_party_name": "ABC Mobiles Pvt Ltd",
+        "opposite_party_address": "45 Commercial St, Bengaluru",
+        "goods_or_service_description": "Smartphone Model X",
+        "transaction_date": "2025-06-01",
+        "amount_paid": 25000,
+        "defect_or_deficiency_type": "defective_goods",
+        "defect_description": "Screen cracked on first use.",
+        "prior_complaint_made": false,
+        "relief_sought": [
+          "compensation"
+        ],
+        "compensation_amount": 0
+      },
+      "expected_outcome": "fail",
+      "expected_failure_message_contains": "incomplete"
     }
   ]
 }

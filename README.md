@@ -98,6 +98,74 @@ npm run dev
 
 Open the Vite URL, then use the Ask Question page. The frontend calls `POST /api/ask` through the Vite dev proxy.
 
+## Case File export
+
+From **My Cases** (download icon on each case) or inside an open case on the **Ask** page
+("Download case file"), a user can download a saved case as a PDF or Word file to take to a
+lawyer or the District Legal Services Authority. It is **assembled, not generated**: no LLM call
+is made; every line comes from the saved conversation, user-confirmed document facts, or corpus
+sources that passed claim verification. See `backend/case_file.py` and the 2026-10-28 entry in
+`CHANGELOG.md`.
+
+| Endpoint | Returns |
+| --- | --- |
+| `GET /api/cases/{case_id}/case-file.pdf` | PDF (`application/pdf`) |
+| `GET /api/cases/{case_id}/case-file.docx` | Word document |
+
+Both need a signed-in user and use the same check as `GET /api/cases/{case_id}`: `401` for a
+guest, `404` for an unknown case or one that belongs to someone else, and `409` if the case has no
+answers yet. Files are generated per request and streamed back; nothing is
+stored. The filename is `case-file-<short-title>-<YYYY-MM-DD>.<ext>`.
+
+**PDF needs LibreOffice** (`soffice` on `PATH`), the same requirement as the Complaint Drafter's
+PDF download. On macOS: `brew install --cask libreoffice`; on Debian/Ubuntu:
+`sudo apt install libreoffice-writer`. Without it, the `.pdf` endpoint returns `503` with a
+message telling the user to download the Word version instead, and the UI offers that option.
+DOCX export has no extra requirement.
+
+The template lives at `backend/templates/case_file_base.docx`; regenerate it with
+`python -c "import build_templates as b; b.build_case_file_base_template()"` from `backend/`.
+Evaluation: `python evaluate_case_file.py` (5 fixture cases, writes
+`eval/case_file_evaluation.{json,md}`).
+
+## Check a Message (scam checker)
+
+The **Check a Message** page (`#/scam-check`) lets a user paste a suspicious SMS, WhatsApp or
+email message and see the warning signs found in it, what to do next, and corpus provisions that
+may apply. Backend: `backend/scam_checker.py`.
+
+| Endpoint | Body | Returns |
+| --- | --- | --- |
+| `POST /api/scam-check` | `{"message": "<up to 2,000 characters>"}` | `verdict` (`high_risk` / `warning_signs` / `no_common_signs`), `headline`, `signs_found[]` (`rule_id`, `explanation`, masked `snippet`, `highlight`, `source` = `rule`/`ai`, `strength`), `scam_type`, `ai_explanation`, `what_to_do[]`, `laws_that_may_apply[]` (each with a source-viewer `api_url`), `ai_check`, `note`, `disclaimer` |
+
+Empty, non-text or oversized input returns `422`. Fixed rules decide the verdict; one Gemini
+call can only *add* weak warning signs. If Gemini fails, the rules-only result comes back with a
+note. There is no "safe" verdict. The message is never stored or logged, and links in it are
+never opened. Evaluation: `python evaluate_scam_checker.py` (rules only) and
+`python evaluate_scam_checker.py --with-gemini --delay 5`. Add
+`--cases eval/scam_check_cases_heldout.json --tag heldout` for the held-out set. Results are in
+`eval/scam_check_evaluation_*.{json,md}`.
+
+## Free Legal Aid Check
+
+The **Free Legal Aid Check** page (`#/legal-aid`) is a short wizard that tells a user whether
+they are likely entitled to free legal services, why (with the legal source), and where to apply.
+Backend: `backend/legal_aid_eligibility.py`. Fixed rules only, with no Gemini call and no login.
+
+| Endpoint | Body | Returns |
+| --- | --- | --- |
+| `POST /api/legal-aid/eligibility` | `{"state": "Delhi", "court": "other" \| "supreme_court", "categories": [...], "age": 0-120, "annual_income": >= 0 (optional)}` | `result` (`likely_eligible` / `likely_not_eligible` / `cannot_determine`), `headline`, `reason`, `matched_rules[]` (`rule_id`, `jurisdiction`, `reason`, `source`), `where_to_apply[]`, `documents_to_bring[]`, `alternatives[]` (only when not eligible), `needs[]` (`["annual_income"]` when income is required), `notes[]`, `disclaimer`, `last_verified` |
+
+`categories` values: `sc_st`, `trafficking_or_begar`, `woman`, `disability`, `disaster_victim`,
+`industrial_workman`, `in_custody`, `transgender`, `acid_attack_victim`, `hiv_aids`,
+`defence_family`. "Child" is worked out from `age` (under 18). Invalid input returns `422` with
+`{"detail", "errors": [{"field", "message"}]}`. Section 12 sources link to the source viewer;
+Delhi-only rules link to the DSLSA website. Income limits are in one place: `LIMITS` in the
+module. Delhi only: other states and Supreme Court cases return `cannot_determine`, pointing to
+the right authority. The answers are never stored or logged. Evaluation:
+`python evaluate_legal_aid_eligibility.py` (writes
+`eval/legal_aid_eligibility_evaluation.{json,md}`).
+
 The **Schemes** page (`#/schemes`) is served by the same frontend but talks to a
 **separate** backend — see the next section. If the schemes backend isn't
 running, every other page still works; only the Schemes search fails (with a

@@ -108,7 +108,7 @@ export const GOV_EMPLOYEE_GRADES = [
   { value: "group_d_mts", label: "Group D / MTS" },
 ];
 
-/** For the boolean field `paid_income_tax_last_year`. */
+/** For boolean fields, e.g. `paid_income_tax_last_year`, `is_pregnant_or_new_mother`. */
 export const YES_NO = [
   { value: "true", label: "Yes" },
   { value: "false", label: "No" },

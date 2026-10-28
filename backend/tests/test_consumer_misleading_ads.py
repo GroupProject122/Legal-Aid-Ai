@@ -84,6 +84,33 @@ def test_amount_paid_is_optional():
     assert intake.amount_paid is None
 
 
+def test_non_positive_amount_paid_gets_a_custom_message_not_pydantics_generic_one():
+    # Regression test, fixed 2026-09-26: amount_paid used to be Field(gt=0), so a *supplied*
+    # value of 0 surfaced pydantic's own generic "Input should be greater than 0" instead of a
+    # message a non-lawyer filling in this form can act on. None (not supplied) must still pass,
+    # per test_amount_paid_is_optional above -- only a supplied non-positive value is rejected.
+    with pytest.raises(ValidationError) as exc_info:
+        drafter.MisleadingAdvertisementIntake(
+            **{**base_intake_kwargs(), "amount_paid": 0}, claim_type="dark_pattern_deceptive_design"
+        )
+    error = exc_info.value.errors()[0]
+    assert error["loc"] == ("amount_paid",)
+    assert "greater than 0" not in error["msg"]
+    assert "positive amount" in error["msg"]
+
+
+def test_non_positive_compensation_amount_gets_a_custom_message_not_pydantics_generic_one():
+    with pytest.raises(ValidationError) as exc_info:
+        drafter.MisleadingAdvertisementIntake(
+            **{**base_intake_kwargs(), "relief_sought": ["compensation"], "compensation_amount": 0},
+            claim_type="false_claim_about_goods",
+        )
+    error = exc_info.value.errors()[0]
+    assert error["loc"] == ("compensation_amount",)
+    assert "greater than 0" not in error["msg"]
+    assert "incomplete" in error["msg"]
+
+
 def _rendered_paragraphs(docx_bytes: bytes) -> list[str]:
     return [p.text for p in Document(io.BytesIO(docx_bytes)).paragraphs if p.text.strip()]
 

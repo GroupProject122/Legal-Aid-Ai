@@ -27,6 +27,11 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 TENANCY_EVICTION_TEMPLATE_PATH = TEMPLATES_DIR / "tenancy_eviction_base.docx"
 CONSUMER_GOODS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_defective_goods_base.docx"
 CONSUMER_ADS_TEMPLATE_PATH = TEMPLATES_DIR / "consumer_misleading_ads_base.docx"
+RTI_APPLICATION_TEMPLATE_PATH = TEMPLATES_DIR / "rti_application_base.docx"
+RTI_FIRST_APPEAL_TEMPLATE_PATH = TEMPLATES_DIR / "rti_first_appeal_base.docx"
+SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH = TEMPLATES_DIR / "senior_citizen_maintenance_base.docx"
+TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH = TEMPLATES_DIR / "tenant_essential_supply_base.docx"
+BANK_FRAUD_COMPLAINT_TEMPLATE_PATH = TEMPLATES_DIR / "bank_fraud_complaint_base.docx"
 
 RENT_CAP_INR = 3500
 RENT_CAP_MESSAGE = (
@@ -113,7 +118,11 @@ class TenancyEvictionIntake(BaseModel):
     # statute resolves in the abstract -- and not something this schema attempts to answer. Enter
     # whatever the tenancy agreement characterizes as rent; if a separate maintenance/service
     # charge exists, get advice on whether it should be included before relying on this field.
-    monthly_rent: float = Field(gt=0)
+    # No Field(gt=0) here -- a bare pydantic constraint fires before any model_validator runs
+    # and reports its own generic "Input should be greater than 0", bypassing the custom message
+    # check_monthly_rent_is_positive below would otherwise give. Same reasoning applies to every
+    # other amount/count field in this file (see the fixed-2026-09-26 note on that validator).
+    monthly_rent: float
     tenancy_start_date: datetime.date
     # Multi-ground petitions (e.g. arrears + subletting pleaded together, or arrears + bona fide
     # requirement in the alternative) are legally common in practice -- as of 2026-09-15 this is
@@ -124,11 +133,22 @@ class TenancyEvictionIntake(BaseModel):
     relief_sought: list[ReliefSought] = Field(min_length=1)
 
     # Conditionally required based on grounds_for_eviction.
-    arrears_amount: float | None = Field(default=None, gt=0)
-    arrears_period_months: int | None = Field(default=None, gt=0)
+    arrears_amount: float | None = None
+    arrears_period_months: int | None = None
     subletting_details: str | None = None
     damage_description: str | None = None
     bona_fide_reason: str | None = None
+
+    @model_validator(mode="after")
+    def check_monthly_rent_is_positive(self) -> "TenancyEvictionIntake":
+        # Fixed 2026-09-26: this used to be a bare Field(gt=0), which reported pydantic's own
+        # generic "Input should be greater than 0" instead of a message a non-lawyer filling in
+        # this form can act on -- every other business-rule check in this file (the rent cap
+        # right below, the future-date checks, etc.) already gets a hand-written message; this
+        # is the one that didn't.
+        if self.monthly_rent <= 0:
+            _raise_field_validation_error(self, "monthly_rent", "Monthly rent must be a positive amount.")
+        return self
 
     @model_validator(mode="after")
     def check_rent_cap(self) -> "TenancyEvictionIntake":
@@ -157,12 +177,24 @@ class TenancyEvictionIntake(BaseModel):
     def check_conditional_fields_for_grounds(self) -> "TenancyEvictionIntake":
         grounds = self.grounds_for_eviction
         if EvictionGround.arrears in grounds:
-            if self.arrears_amount is None or self.arrears_period_months is None:
+            # Fixed 2026-09-26: arrears_amount/arrears_period_months used to be Field(gt=0), so
+            # a supplied-but-non-positive value (e.g. 0) never reached this check at all --
+            # pydantic's own generic "Input should be greater than 0" fired first. Checking
+            # positivity here too means every "this complaint is incomplete" case for arrears
+            # goes through the one message, regardless of whether the field was missing or just
+            # not a positive value.
+            if (
+                self.arrears_amount is None
+                or self.arrears_amount <= 0
+                or self.arrears_period_months is None
+                or self.arrears_period_months <= 0
+            ):
                 _raise_field_validation_error(
                     self,
                     "arrears_amount",
                     "grounds_for_eviction includes 'arrears' but arrears_amount and "
-                    "arrears_period_months were not both supplied. This complaint is incomplete.",
+                    "arrears_period_months were not both supplied as positive values. This "
+                    "complaint is incomplete.",
                 )
         if EvictionGround.subletting in grounds:
             if not self.subletting_details or not self.subletting_details.strip():
@@ -450,9 +482,9 @@ def _clause_render_fields(intake: TenancyEvictionIntake) -> dict[str, Any]:
         "property_address": intake.property_address,
         "arrears_amount": _format_inr(intake.arrears_amount) if intake.arrears_amount is not None else None,
         "arrears_period_months": intake.arrears_period_months,
-        "subletting_details": intake.subletting_details,
-        "damage_description": intake.damage_description,
-        "bona_fide_reason": intake.bona_fide_reason,
+        "subletting_details": _drop_trailing_period(intake.subletting_details) if intake.subletting_details else intake.subletting_details,
+        "damage_description": _drop_trailing_period(intake.damage_description) if intake.damage_description else intake.damage_description,
+        "bona_fide_reason": _drop_trailing_period(intake.bona_fide_reason) if intake.bona_fide_reason else intake.bona_fide_reason,
     }
 
 
@@ -480,6 +512,16 @@ def _render_clause_text(ground: EvictionGround, intake: TenancyEvictionIntake) -
 
 def _format_inr(amount: float) -> str:
     return f"Rs. {amount:,.2f}".rstrip("0").rstrip(".") if amount == int(amount) else f"Rs. {amount:,.2f}"
+
+
+def _drop_trailing_period(text: str) -> str:
+    """For a free-text field a clause file slots in immediately before its own literal '.'
+    (e.g. "...in that: {{ description }}."): strip any trailing whitespace/period(s) the user
+    already typed, so the rendered sentence never ends in ".." or ". .". Found via live dry-run
+    testing 2026-09-26 -- every clause file with this "description sentence + bare period"
+    pattern had the same latent double-punctuation risk, since a user describing something in a
+    full sentence naturally ends it with a period already."""
+    return text.rstrip().rstrip(".")
 
 
 def _build_render_context(
@@ -688,7 +730,7 @@ class ConsumerDefectiveGoodsIntake(BaseModel):
     opposite_party_address: str = Field(min_length=1)
     goods_or_service_description: str = Field(min_length=1)
     transaction_date: datetime.date
-    amount_paid: float = Field(gt=0)
+    amount_paid: float
     defect_or_deficiency_type: DefectOrDeficiencyType
     defect_description: str = Field(min_length=1)
     prior_complaint_made: bool
@@ -696,7 +738,16 @@ class ConsumerDefectiveGoodsIntake(BaseModel):
 
     # Conditionally required.
     prior_complaint_response: str | None = None
-    compensation_amount: float | None = Field(default=None, gt=0)
+    compensation_amount: float | None = None
+
+    @model_validator(mode="after")
+    def check_amount_paid_is_positive(self) -> "ConsumerDefectiveGoodsIntake":
+        # Fixed 2026-09-26: no Field(gt=0) here -- see TenancyEvictionIntake's
+        # check_monthly_rent_is_positive for why a bare pydantic constraint on this field would
+        # bypass this custom message.
+        if self.amount_paid <= 0:
+            _raise_field_validation_error(self, "amount_paid", "Amount paid must be a positive amount.")
+        return self
 
     @model_validator(mode="after")
     def check_transaction_date_not_future(self) -> "ConsumerDefectiveGoodsIntake":
@@ -734,12 +785,17 @@ class ConsumerDefectiveGoodsIntake(BaseModel):
 
     @model_validator(mode="after")
     def check_compensation_amount_present(self) -> "ConsumerDefectiveGoodsIntake":
-        if GoodsReliefSought.compensation in self.relief_sought and self.compensation_amount is None:
+        # Fixed 2026-09-26: compensation_amount used to be Field(gt=0), so a supplied-but-zero
+        # value never reached this check -- pydantic's own generic message fired first, even
+        # though the parenthetical below already (accurately, as of now) describes that case.
+        if GoodsReliefSought.compensation in self.relief_sought and (
+            self.compensation_amount is None or self.compensation_amount <= 0
+        ):
             _raise_field_validation_error(
                 self,
                 "compensation_amount",
                 "relief_sought includes 'compensation' but compensation_amount was not supplied "
-                "(or was not a positive amount). This complaint is incomplete.",
+                "as a positive amount. This complaint is incomplete.",
             )
         return self
 
@@ -855,10 +911,10 @@ GOODS_FIELD_PROVENANCE: dict[str, str] = {
 
 def _goods_clause_render_fields(intake: ConsumerDefectiveGoodsIntake) -> dict[str, Any]:
     return {
-        "goods_or_service_description": intake.goods_or_service_description,
+        "goods_or_service_description": _drop_trailing_period(intake.goods_or_service_description),
         "transaction_date_display": intake.transaction_date.strftime("%d %B %Y"),
         "amount_paid_display": _format_inr(intake.amount_paid),
-        "defect_description": intake.defect_description,
+        "defect_description": _drop_trailing_period(intake.defect_description),
     }
 
 
@@ -875,7 +931,7 @@ def _build_goods_render_context(intake: ConsumerDefectiveGoodsIntake) -> dict[st
         "complainant_address": intake.complainant_address,
         "opposite_party_name": intake.opposite_party_name,
         "opposite_party_address": intake.opposite_party_address,
-        "goods_or_service_description": intake.goods_or_service_description,
+        "goods_or_service_description": _drop_trailing_period(intake.goods_or_service_description),
         "transaction_date_display": intake.transaction_date.strftime("%d %B %Y"),
         "amount_paid_display": _format_inr(intake.amount_paid),
         "defect_type_label": GOODS_TYPE_LABEL[defect_type],
@@ -883,7 +939,7 @@ def _build_goods_render_context(intake: ConsumerDefectiveGoodsIntake) -> dict[st
         "citation_line": f"(See {citation['section_cite']} of the {citation['act_short_title']}.)",
         "forum_citation_line": f"(See {forum_citation['section_cite']}.)",
         "prior_complaint_made": intake.prior_complaint_made,
-        "prior_complaint_response": intake.prior_complaint_response or "",
+        "prior_complaint_response": _drop_trailing_period(intake.prior_complaint_response) if intake.prior_complaint_response else "",
         "relief_sought_lines": [GOODS_RELIEF_LABEL[item] for item in intake.relief_sought],
         "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
     }
@@ -983,8 +1039,23 @@ class MisleadingAdvertisementIntake(BaseModel):
     relief_sought: list[AdsReliefSought] = Field(min_length=1)
 
     # Not every dark-pattern claim involves a completed purchase.
-    amount_paid: float | None = Field(default=None, gt=0)
-    compensation_amount: float | None = Field(default=None, gt=0)
+    amount_paid: float | None = None
+    compensation_amount: float | None = None
+
+    @model_validator(mode="after")
+    def check_amount_paid_is_positive(self) -> "MisleadingAdvertisementIntake":
+        # Fixed 2026-09-26: no Field(gt=0) here -- see TenancyEvictionIntake's
+        # check_monthly_rent_is_positive for why. amount_paid is optional in this scenario, so
+        # only a *supplied* non-positive value is rejected -- None (no completed purchase) is
+        # still valid and untouched by this check.
+        if self.amount_paid is not None and self.amount_paid <= 0:
+            _raise_field_validation_error(
+                self,
+                "amount_paid",
+                "Amount paid must be a positive amount when supplied. Leave it blank if this did "
+                "not involve a completed purchase.",
+            )
+        return self
 
     @model_validator(mode="after")
     def check_loss_description_specific(self) -> "MisleadingAdvertisementIntake":
@@ -1008,12 +1079,17 @@ class MisleadingAdvertisementIntake(BaseModel):
 
     @model_validator(mode="after")
     def check_compensation_amount_present(self) -> "MisleadingAdvertisementIntake":
-        if AdsReliefSought.compensation in self.relief_sought and self.compensation_amount is None:
+        # Fixed 2026-09-26: same fix as ConsumerDefectiveGoodsIntake's copy of this check -- a
+        # supplied-but-non-positive compensation_amount now reaches this message instead of
+        # pydantic's own generic one.
+        if AdsReliefSought.compensation in self.relief_sought and (
+            self.compensation_amount is None or self.compensation_amount <= 0
+        ):
             _raise_field_validation_error(
                 self,
                 "compensation_amount",
                 "relief_sought includes 'compensation' but compensation_amount was not supplied "
-                "(or was not a positive amount). This complaint is incomplete.",
+                "as a positive amount. This complaint is incomplete.",
             )
         return self
 
@@ -1137,9 +1213,9 @@ ADS_FIELD_PROVENANCE: dict[str, str] = {
 
 def _ads_clause_render_fields(intake: MisleadingAdvertisementIntake) -> dict[str, Any]:
     return {
-        "advertisement_or_practice_description": intake.advertisement_or_practice_description,
+        "advertisement_or_practice_description": _drop_trailing_period(intake.advertisement_or_practice_description),
         "platform_label": PLATFORM_LABEL[intake.platform_or_medium],
-        "how_it_caused_loss": intake.how_it_caused_loss,
+        "how_it_caused_loss": _drop_trailing_period(intake.how_it_caused_loss),
     }
 
 
@@ -1155,7 +1231,7 @@ def _build_ads_render_context(intake: MisleadingAdvertisementIntake) -> dict[str
         "complainant_address": intake.complainant_address,
         "opposite_party_name": intake.opposite_party_name,
         "opposite_party_address": intake.opposite_party_address,
-        "advertisement_or_practice_description": intake.advertisement_or_practice_description,
+        "advertisement_or_practice_description": _drop_trailing_period(intake.advertisement_or_practice_description),
         "platform_label": PLATFORM_LABEL[intake.platform_or_medium],
         "date_encountered_display": intake.date_encountered.strftime("%d %B %Y"),
         "amount_paid_display": _format_inr(intake.amount_paid) if intake.amount_paid is not None else None,
@@ -1209,6 +1285,1142 @@ def assemble_misleading_advertisement_draft(intake: MisleadingAdvertisementIntak
         citation_used=citation,
         citation_review_required=citation_review_required,
         warnings=warnings,
+    )
+
+
+# --- Scenario 4: Right to Information (RTI) application under the Right to Information Act, 2005 ---
+# Deliberately the simplest scenario in this file: one fixed request, addressed to the Public
+# Information Officer of a named public authority. No "grounds" selection exists (there is only
+# one kind of RTI request this drafts), and there is no "reason for seeking this information"
+# field -- Section 6(2) of the Act entitles an applicant to withhold that reason entirely, and
+# the clause text says so explicitly rather than silently omitting a field that could otherwise
+# look like an oversight.
+
+
+class PreferredMode(str, Enum):
+    certified_copies = "certified_copies"
+    inspection_of_records = "inspection_of_records"
+    electronic_format = "electronic_format"
+
+
+PREFERRED_MODE_LABEL: dict[PreferredMode, str] = {
+    PreferredMode.certified_copies: "Certified copies of the relevant documents/records",
+    PreferredMode.inspection_of_records: "Inspection of the relevant documents/records",
+    PreferredMode.electronic_format: "The information in electronic format (e.g. email, diskette)",
+}
+
+MIN_INFORMATION_SOUGHT_CHARS = 20
+
+
+class RTIApplicationIntake(BaseModel):
+    applicant_name: str = Field(min_length=1)
+    applicant_address: str = Field(min_length=1)
+    public_authority_name: str = Field(min_length=1)
+    public_authority_address: str = Field(min_length=1)
+    # No Field(min_length=1) here -- check_information_sought_specific below already covers
+    # both "empty" and "too short" with one message; a separate min_length constraint would
+    # fire first on an empty string and report pydantic's own generic "String should have at
+    # least 1 character" instead.
+    information_sought: str
+    preferred_mode: PreferredMode
+    is_bpl_applicant: bool
+
+    @model_validator(mode="after")
+    def check_information_sought_specific(self) -> "RTIApplicationIntake":
+        # A vague or overly broad request is a real practical problem for RTI applications, not
+        # just a drafting nicety -- it risks rejection or delay under Section 7(9) of the Act
+        # (information need only be provided "in the form in which it is sought" where that does
+        # not disproportionately divert the public authority's resources). Same
+        # length-based-specificity pattern as MisleadingAdvertisementIntake's
+        # check_loss_description_specific.
+        if len(self.information_sought.strip()) < MIN_INFORMATION_SOUGHT_CHARS:
+            _raise_field_validation_error(
+                self,
+                "information_sought",
+                "information_sought must describe the specific information requested "
+                f"(at least {MIN_INFORMATION_SOUGHT_CHARS} characters). A vague or overly broad "
+                "request risks rejection or delay under Section 7(9) of the Act.",
+            )
+        return self
+
+
+# Pre-verified citation for the request itself. Must resolve against the corpus chunks rag.py
+# loads (source_file + section_number) before a draft using it is allowed to proceed -- same
+# mechanism as CLAUSE_CITATIONS/GOODS_CLAUSE_CITATIONS/ADS_CLAUSE_CITATIONS above. Confirmed
+# against the parsed corpus at authoring time: Section 6(1) ("Request for obtaining
+# information") is a verbatim provision, not a practitioner-convention mapping.
+RTI_REQUEST_CITATION: dict[str, Any] = {
+    "act_short_title": "Right to Information Act, 2005",
+    "section_cite": "Section 6(1)",
+    "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+    "section_number": "6",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+# Only cited when is_bpl_applicant is true (see DraftAssemblyResult.additional_citations) -- the
+# same "additional citation alongside the main one" pattern the consumer scenarios already use
+# for their forum-tier citation. Confirmed against the parsed corpus: the proviso to sub-section
+# (5) of Section 7 ("no such fee shall be charged from the persons who are of below poverty
+# line") is verbatim.
+RTI_BPL_FEE_EXEMPTION_CITATION: dict[str, Any] = {
+    "act_short_title": "Right to Information Act, 2005",
+    "section_cite": "Section 7(5), proviso",
+    "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+    "section_number": "7",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+RTI_CLAUSE_FILE = "rti_information_request_ground.txt"
+
+RTI_FIELD_PROVENANCE: dict[str, str] = {
+    "application_title": "deterministic_rule:fixed title text for RTI Act applications",
+    "applicant_name": "user_supplied",
+    "applicant_address": "user_supplied",
+    "public_authority_name": "user_supplied",
+    "public_authority_address": "user_supplied",
+    "request_clause": "deterministic_rule:rendered from user_supplied information_sought/preferred_mode/is_bpl_applicant",
+    "citation_line": "deterministic_rule:fixed RTI_REQUEST_CITATION",
+    "generated_date_display": "deterministic_rule:today's date, formatted",
+}
+
+
+def _rti_clause_render_fields(intake: RTIApplicationIntake) -> dict[str, Any]:
+    return {
+        "information_sought": _drop_trailing_period(intake.information_sought),
+        "preferred_mode_label": PREFERRED_MODE_LABEL[intake.preferred_mode],
+        "is_bpl_applicant": intake.is_bpl_applicant,
+        "bpl_citation_line": (
+            f"(See {RTI_BPL_FEE_EXEMPTION_CITATION['section_cite']} of the "
+            f"{RTI_BPL_FEE_EXEMPTION_CITATION['act_short_title']}.)"
+        ),
+    }
+
+
+def _build_rti_render_context(intake: RTIApplicationIntake) -> dict[str, Any]:
+    request_clause = _render_clause_file(RTI_CLAUSE_FILE, _rti_clause_render_fields(intake))
+    return {
+        "application_title": "APPLICATION UNDER THE RIGHT TO INFORMATION ACT, 2005",
+        "applicant_name": intake.applicant_name,
+        "applicant_address": intake.applicant_address,
+        "public_authority_name": intake.public_authority_name,
+        "public_authority_address": intake.public_authority_address,
+        "request_clause": request_clause,
+        "citation_line": f"(See {RTI_REQUEST_CITATION['section_cite']} of the {RTI_REQUEST_CITATION['act_short_title']}.)",
+        "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
+    }
+
+
+def assemble_rti_application_draft(intake: RTIApplicationIntake) -> DraftAssemblyResult:
+    """Slot-fill the fixed base template for the RTI application scenario.
+
+    No LLM call is made anywhere in this path. Hard-fails (raises) rather than emitting a
+    partial document if a citation doesn't resolve or an unregistered field would render.
+    """
+    _require_citation_resolved(RTI_REQUEST_CITATION, "RTI information request")
+    if intake.is_bpl_applicant:
+        _require_citation_resolved(RTI_BPL_FEE_EXEMPTION_CITATION, "BPL fee exemption")
+
+    context = _build_rti_render_context(intake)
+    _verify_field_provenance(context, RTI_FIELD_PROVENANCE)
+
+    if not RTI_APPLICATION_TEMPLATE_PATH.exists():
+        raise ComplaintDraftError(
+            f"Base template not found: {RTI_APPLICATION_TEMPLATE_PATH}. Run "
+            "build_templates.build_rti_application_base_template() to generate it."
+        )
+
+    doc = DocxTemplate(str(RTI_APPLICATION_TEMPLATE_PATH))
+    doc.render(context, jinja_env=_STRICT_JINJA_ENV)
+    buffer = io.BytesIO()
+    doc.save(buffer)
+
+    warnings: list[str] = []
+    review_warning = _citation_review_warning(RTI_REQUEST_CITATION, "RTI information request")
+    citation_review_required = review_warning is not None
+    if review_warning:
+        warnings.append(review_warning)
+
+    additional_citations = [RTI_BPL_FEE_EXEMPTION_CITATION] if intake.is_bpl_applicant else []
+
+    logger.info(
+        "RTI application draft assembled preferred_mode=%s is_bpl_applicant=%s citation_review_required=%s",
+        intake.preferred_mode.value,
+        intake.is_bpl_applicant,
+        citation_review_required,
+    )
+
+    return DraftAssemblyResult(
+        docx_bytes=buffer.getvalue(),
+        citation_used=RTI_REQUEST_CITATION,
+        citation_review_required=citation_review_required,
+        warnings=warnings,
+        additional_citations=additional_citations,
+    )
+
+
+# --- Scenario 5: RTI first appeal under Section 19(1) of the Right to Information Act, 2005 ---
+#
+# Companion to Scenario 4 above -- same Act, same corpus document, addressed to the First
+# Appellate Authority rather than the PIO. Scope is deliberately limited to the standard 30-day
+# response period under Section 7(1); the shorter periods that apply to life-or-liberty requests
+# (Section 7(1) proviso, 48 hours) and third-party information (Section 11) are NOT modeled here
+# -- an appeal arising from one of those would need its own deadline math, not this one.
+
+
+class PIOResponseType(str, Enum):
+    no_response_received = "no_response_received"
+    request_rejected = "request_rejected"
+    incomplete_information_provided = "incomplete_information_provided"
+
+
+PIO_RESPONSE_TYPE_LABEL: dict[PIOResponseType, str] = {
+    PIOResponseType.no_response_received: "No response was received within the prescribed period",
+    PIOResponseType.request_rejected: "The request was rejected",
+    PIOResponseType.incomplete_information_provided: "Incomplete information was provided",
+}
+
+# Standard RTI response period (Section 7(1)): 30 days from receipt of the request. Not the
+# shorter 48-hour period for requests concerning life or liberty -- see the scope note above.
+RTI_STANDARD_RESPONSE_DAYS = 30
+# Section 19(1)'s own appeal window: 30 days from the expiry of that period, or from receipt of
+# the PIO's decision.
+RTI_FIRST_APPEAL_WINDOW_DAYS = 30
+
+MIN_GROUNDS_FOR_APPEAL_CHARS = 20
+
+
+class RTIFirstAppealIntake(BaseModel):
+    appellant_name: str = Field(min_length=1)
+    appellant_address: str = Field(min_length=1)
+    public_authority_name: str = Field(min_length=1)
+    public_authority_address: str = Field(min_length=1)
+    information_originally_sought: str = Field(min_length=1)
+    original_application_date: datetime.date
+    pio_response_type: PIOResponseType
+    # No Field(min_length=1) here -- see check_grounds_for_appeal_specific below for why (same
+    # reasoning as RTIApplicationIntake.information_sought).
+    grounds_for_appeal: str
+
+    # Conditionally required: only meaningful when the PIO actually responded.
+    pio_response_date: datetime.date | None = None
+
+    @model_validator(mode="after")
+    def check_original_application_date_not_future(self) -> "RTIFirstAppealIntake":
+        if self.original_application_date > datetime.date.today():
+            _raise_field_validation_error(
+                self, "original_application_date", "original_application_date cannot be in the future."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_no_response_received_period_has_expired(self) -> "RTIFirstAppealIntake":
+        # Caught via live dry-run testing 2026-09-26: a "no response received" appeal filed
+        # before the standard 30-day Section 7(1) response period has even expired got NO
+        # warning at all -- is_within_30_days's day-count (today minus the deadline date) was
+        # still <= 30 on the wrong side of zero (a negative count), so a genuinely premature
+        # appeal read as "on time". There is no deemed refusal yet if the period hasn't expired,
+        # so this must hard-fail, not just warn -- unlike a late appeal (which is still valid,
+        # just needs delay condoned), a premature one asserts a legal fact that isn't true yet.
+        if self.pio_response_type == PIOResponseType.no_response_received:
+            deemed_refusal_date = self.original_application_date + datetime.timedelta(
+                days=RTI_STANDARD_RESPONSE_DAYS
+            )
+            if datetime.date.today() < deemed_refusal_date:
+                _raise_field_validation_error(
+                    self,
+                    "original_application_date",
+                    "The standard 30-day response period under Section 7(1) of the Act has not "
+                    f"yet expired (it expires on {deemed_refusal_date.strftime('%d %B %Y')}). "
+                    "There is no deemed refusal to appeal yet -- if the PIO has since responded, "
+                    "select the response type that matches what actually happened instead.",
+                )
+        return self
+
+    @model_validator(mode="after")
+    def check_grounds_for_appeal_specific(self) -> "RTIFirstAppealIntake":
+        if len(self.grounds_for_appeal.strip()) < MIN_GROUNDS_FOR_APPEAL_CHARS:
+            _raise_field_validation_error(
+                self,
+                "grounds_for_appeal",
+                "grounds_for_appeal must describe why the PIO's response (or non-response) is "
+                f"being challenged (at least {MIN_GROUNDS_FOR_APPEAL_CHARS} characters). A vague "
+                "appeal is more likely to be rejected by the Appellate Authority.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_pio_response_date_present_when_expected(self) -> "RTIFirstAppealIntake":
+        if self.pio_response_type != PIOResponseType.no_response_received and self.pio_response_date is None:
+            _raise_field_validation_error(
+                self,
+                "pio_response_date",
+                "pio_response_type indicates the PIO responded, but pio_response_date was not "
+                "supplied. This appeal is incomplete.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_pio_response_date_not_stray(self) -> "RTIFirstAppealIntake":
+        # Mirror of ConsumerDefectiveGoodsIntake.check_prior_complaint_response_not_stray: a date
+        # supplied alongside "no response received" is a contradiction, not silently ignorable --
+        # the base template's conditional branch means it would never actually be rendered.
+        if self.pio_response_type == PIOResponseType.no_response_received and self.pio_response_date is not None:
+            _raise_field_validation_error(
+                self,
+                "pio_response_date",
+                "pio_response_type is 'no_response_received' but pio_response_date was supplied. "
+                "Set pio_response_type to reflect the actual response received, or remove the "
+                "date if none was received.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_pio_response_date_not_before_application(self) -> "RTIFirstAppealIntake":
+        if self.pio_response_date is not None and self.pio_response_date < self.original_application_date:
+            _raise_field_validation_error(
+                self,
+                "pio_response_date",
+                "pio_response_date cannot be before original_application_date.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_pio_response_date_not_future(self) -> "RTIFirstAppealIntake":
+        if self.pio_response_date is not None and self.pio_response_date > datetime.date.today():
+            _raise_field_validation_error(self, "pio_response_date", "pio_response_date cannot be in the future.")
+        return self
+
+
+# Pre-verified citation: Section 19(1) ("Appeal") is a verbatim provision in the corpus, same
+# source_file as RTI_REQUEST_CITATION above.
+RTI_FIRST_APPEAL_CITATION: dict[str, Any] = {
+    "act_short_title": "Right to Information Act, 2005",
+    "section_cite": "Section 19(1)",
+    "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf",
+    "section_number": "19",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+RTI_FIRST_APPEAL_CLAUSE_FILE = "rti_first_appeal_ground.txt"
+
+RTI_FIRST_APPEAL_FIELD_PROVENANCE: dict[str, str] = {
+    "application_title": "deterministic_rule:fixed title text for RTI first appeals",
+    "appellant_name": "user_supplied",
+    "appellant_address": "user_supplied",
+    "public_authority_name": "user_supplied",
+    "public_authority_address": "user_supplied",
+    "appeal_clause": (
+        "deterministic_rule:rendered from user_supplied information_originally_sought/"
+        "original_application_date/pio_response_type/pio_response_date/grounds_for_appeal, plus "
+        "the deterministically computed appeal-deadline reference date and lateness flag"
+    ),
+    "citation_line": "deterministic_rule:fixed RTI_FIRST_APPEAL_CITATION",
+    "generated_date_display": "deterministic_rule:today's date, formatted",
+}
+
+
+def _rti_appeal_deadline_reference_date(intake: RTIFirstAppealIntake) -> datetime.date:
+    """The date Section 19(1)'s own 30-day appeal clock starts running: the PIO's actual
+    decision date if one exists, otherwise the day the standard 30-day response period (Section
+    7(1)) expired."""
+    if intake.pio_response_date is not None:
+        return intake.pio_response_date
+    return intake.original_application_date + datetime.timedelta(days=RTI_STANDARD_RESPONSE_DAYS)
+
+
+def _rti_appeal_render_fields(intake: RTIFirstAppealIntake) -> dict[str, Any]:
+    deadline_reference_date = _rti_appeal_deadline_reference_date(intake)
+    # Filed "today", i.e. at the moment this draft is generated -- same assumption
+    # complaint_drafter.py already makes everywhere else a document's own generation date matters
+    # (see generated_date_display). Section 19(1) allows late admission for sufficient cause, so
+    # this only ever adds an extra sentence to the clause -- it never blocks drafting.
+    is_within_30_days = (datetime.date.today() - deadline_reference_date).days <= RTI_FIRST_APPEAL_WINDOW_DAYS
+    return {
+        "information_originally_sought": _drop_trailing_period(intake.information_originally_sought),
+        "original_application_date_display": intake.original_application_date.strftime("%d %B %Y"),
+        "pio_response_type": intake.pio_response_type.value,
+        "pio_response_date_display": (
+            intake.pio_response_date.strftime("%d %B %Y") if intake.pio_response_date else None
+        ),
+        "deadline_reference_date_display": deadline_reference_date.strftime("%d %B %Y"),
+        "grounds_for_appeal": _drop_trailing_period(intake.grounds_for_appeal),
+        "is_within_30_days": is_within_30_days,
+    }
+
+
+def _build_rti_first_appeal_render_context(intake: RTIFirstAppealIntake) -> dict[str, Any]:
+    appeal_clause = _render_clause_file(RTI_FIRST_APPEAL_CLAUSE_FILE, _rti_appeal_render_fields(intake))
+    return {
+        "application_title": "FIRST APPEAL UNDER SECTION 19(1) OF THE RIGHT TO INFORMATION ACT, 2005",
+        "appellant_name": intake.appellant_name,
+        "appellant_address": intake.appellant_address,
+        "public_authority_name": intake.public_authority_name,
+        "public_authority_address": intake.public_authority_address,
+        "appeal_clause": appeal_clause,
+        "citation_line": f"(See {RTI_FIRST_APPEAL_CITATION['section_cite']} of the {RTI_FIRST_APPEAL_CITATION['act_short_title']}.)",
+        "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
+    }
+
+
+def assemble_rti_first_appeal_draft(intake: RTIFirstAppealIntake) -> DraftAssemblyResult:
+    """Slot-fill the fixed base template for the RTI first-appeal scenario.
+
+    No LLM call is made anywhere in this path. Hard-fails (raises) rather than emitting a
+    partial document if the citation doesn't resolve or an unregistered field would render.
+    """
+    _require_citation_resolved(RTI_FIRST_APPEAL_CITATION, "RTI first appeal")
+
+    context = _build_rti_first_appeal_render_context(intake)
+    _verify_field_provenance(context, RTI_FIRST_APPEAL_FIELD_PROVENANCE)
+
+    if not RTI_FIRST_APPEAL_TEMPLATE_PATH.exists():
+        raise ComplaintDraftError(
+            f"Base template not found: {RTI_FIRST_APPEAL_TEMPLATE_PATH}. Run "
+            "build_templates.build_rti_first_appeal_base_template() to generate it."
+        )
+
+    doc = DocxTemplate(str(RTI_FIRST_APPEAL_TEMPLATE_PATH))
+    doc.render(context, jinja_env=_STRICT_JINJA_ENV)
+    buffer = io.BytesIO()
+    doc.save(buffer)
+
+    warnings: list[str] = []
+    review_warning = _citation_review_warning(RTI_FIRST_APPEAL_CITATION, "RTI first appeal")
+    citation_review_required = review_warning is not None
+    if review_warning:
+        warnings.append(review_warning)
+
+    deadline_reference_date = _rti_appeal_deadline_reference_date(intake)
+    if (datetime.date.today() - deadline_reference_date).days > RTI_FIRST_APPEAL_WINDOW_DAYS:
+        warnings.append(
+            "This appeal is being filed more than 30 days after the appeal window opened "
+            f"({deadline_reference_date.isoformat()}). Section 19(1)'s proviso lets the Appellate "
+            "Authority admit a late appeal only for reasons recorded as sufficient cause -- be "
+            "prepared to explain the delay."
+        )
+
+    logger.info(
+        "RTI first appeal draft assembled pio_response_type=%s citation_review_required=%s",
+        intake.pio_response_type.value,
+        citation_review_required,
+    )
+
+    return DraftAssemblyResult(
+        docx_bytes=buffer.getvalue(),
+        citation_used=RTI_FIRST_APPEAL_CITATION,
+        citation_review_required=citation_review_required,
+        warnings=warnings,
+        additional_citations=[],
+    )
+
+
+# --- Scenario 6: Senior citizen maintenance application under the Maintenance and Welfare of
+# Parents and Senior Citizens Act, 2007 ---
+
+
+class RespondentRelationship(str, Enum):
+    child = "child"
+    relative_of_childless_senior_citizen = "relative_of_childless_senior_citizen"
+
+
+RESPONDENT_RELATIONSHIP_LABEL: dict[RespondentRelationship, str] = {
+    RespondentRelationship.child: "Child / grandchild of the Applicant",
+    RespondentRelationship.relative_of_childless_senior_citizen: (
+        "Relative in possession of, or who would inherit, the Applicant's property "
+        "(Applicant is childless)"
+    ),
+}
+
+# Per-respondent-type citation into Section 4(1), which names the two categories of respondent
+# this Act allows an application against, each in its own numbered clause -- checked individually
+# against the corpus, both resolve under the same section_number ("4").
+RESPONDENT_RELATIONSHIP_CITATIONS: dict[RespondentRelationship, dict[str, Any]] = {
+    RespondentRelationship.child: {
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+        "section_cite": "Section 4(1)(i)",
+        "source_file": "constitutional_public_authority/maintenance_and_welfare_of_parents_and_senior_citizens_act_2007.pdf",
+        "section_number": "4",
+        "confidence": "high",
+        "authority_level": "primary",
+    },
+    RespondentRelationship.relative_of_childless_senior_citizen: {
+        "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+        "section_cite": "Section 4(1)(ii)",
+        "source_file": "constitutional_public_authority/maintenance_and_welfare_of_parents_and_senior_citizens_act_2007.pdf",
+        "section_number": "4",
+        "confidence": "high",
+        "authority_level": "primary",
+    },
+}
+
+# Always-present additional citation: Section 9(2) fixes a nationwide statutory ceiling on the
+# monthly maintenance a Tribunal may order -- "shall not exceed ten thousand rupees per month" --
+# the State Government may only prescribe a lower figure than this, never a higher one. Checked
+# verbatim against the corpus.
+MAINTENANCE_AMOUNT_CAP_INR = 10_000
+MAINTENANCE_AMOUNT_CAP_CITATION: dict[str, Any] = {
+    "act_short_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+    "section_cite": "Section 9(2)",
+    "source_file": "constitutional_public_authority/maintenance_and_welfare_of_parents_and_senior_citizens_act_2007.pdf",
+    "section_number": "9",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+MIN_NEGLECT_DESCRIPTION_CHARS = 20
+# Section 2(h): "senior citizen" means a citizen of India who has attained the age of sixty
+# years or above -- and Section 4(1) restricts this application to a senior citizen (a childless
+# one, or a parent/grandparent who is also a senior citizen). "Parent" alone (Section 2(d)) does
+# not require being 60+, but Section 4(1)'s opening words ("A senior citizen including parent")
+# make the applicant's own senior-citizen status the actual gate for this specific application.
+MINIMUM_APPLICANT_AGE = 60
+
+
+class SeniorCitizenMaintenanceIntake(BaseModel):
+    applicant_name: str = Field(min_length=1)
+    applicant_address: str = Field(min_length=1)
+    # No Field(gt=0)/Field(ge=60) here -- see check_applicant_age_meets_senior_citizen_threshold.
+    applicant_age: int
+    respondent_relationship: RespondentRelationship
+    respondent_name: str = Field(min_length=1)
+    respondent_address: str = Field(min_length=1)
+    neglect_description: str
+    # No Field(gt=0) here -- see check_requested_amount_is_positive_and_within_cap.
+    requested_monthly_maintenance_amount: float
+
+    # Conditionally required.
+    relative_property_connection: str | None = None
+
+    @model_validator(mode="after")
+    def check_applicant_age_meets_senior_citizen_threshold(self) -> "SeniorCitizenMaintenanceIntake":
+        if self.applicant_age < MINIMUM_APPLICANT_AGE:
+            _raise_field_validation_error(
+                self,
+                "applicant_age",
+                f"applicant_age must be at least {MINIMUM_APPLICANT_AGE}. Section 4(1) of the Act "
+                "limits this application to a \"senior citizen\" as defined in Section 2(h) -- a "
+                "citizen of India who has attained the age of sixty years or above.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_neglect_description_specific(self) -> "SeniorCitizenMaintenanceIntake":
+        if len(self.neglect_description.strip()) < MIN_NEGLECT_DESCRIPTION_CHARS:
+            _raise_field_validation_error(
+                self,
+                "neglect_description",
+                "neglect_description must describe the specific neglect or refusal to maintain "
+                f"(at least {MIN_NEGLECT_DESCRIPTION_CHARS} characters). The Tribunal must be "
+                "satisfied of actual neglect or refusal under Section 9(1) before it can order "
+                "maintenance.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_requested_amount_is_positive_and_within_cap(self) -> "SeniorCitizenMaintenanceIntake":
+        if self.requested_monthly_maintenance_amount <= 0:
+            _raise_field_validation_error(
+                self,
+                "requested_monthly_maintenance_amount",
+                "requested_monthly_maintenance_amount must be a positive amount.",
+            )
+        if self.requested_monthly_maintenance_amount > MAINTENANCE_AMOUNT_CAP_INR:
+            _raise_field_validation_error(
+                self,
+                "requested_monthly_maintenance_amount",
+                f"requested_monthly_maintenance_amount exceeds Rs. {MAINTENANCE_AMOUNT_CAP_INR:,}. "
+                "Section 9(2) of the Act fixes this as the maximum monthly maintenance allowance a "
+                "Tribunal may order, nationwide -- a State Government may prescribe a lower figure "
+                "but never a higher one. This application cannot request more than the statutory "
+                "ceiling.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_relative_property_connection_present(self) -> "SeniorCitizenMaintenanceIntake":
+        if (
+            self.respondent_relationship == RespondentRelationship.relative_of_childless_senior_citizen
+            and (not self.relative_property_connection or not self.relative_property_connection.strip())
+        ):
+            _raise_field_validation_error(
+                self,
+                "relative_property_connection",
+                "respondent_relationship is 'relative_of_childless_senior_citizen' but "
+                "relative_property_connection was not supplied. Section 4(4) of the Act requires "
+                "the respondent to be in possession of, or due to inherit, the Applicant's "
+                "property -- describe that connection. This application is incomplete.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_relative_property_connection_not_stray(self) -> "SeniorCitizenMaintenanceIntake":
+        if (
+            self.respondent_relationship == RespondentRelationship.child
+            and self.relative_property_connection
+            and self.relative_property_connection.strip()
+        ):
+            _raise_field_validation_error(
+                self,
+                "relative_property_connection",
+                "respondent_relationship is 'child' but relative_property_connection was "
+                "supplied. Set respondent_relationship to "
+                "'relative_of_childless_senior_citizen' if that is the actual relationship, or "
+                "remove this text if the Respondent is the Applicant's child/grandchild.",
+            )
+        return self
+
+
+MAINTENANCE_CLAUSE_FILE = "senior_citizen_maintenance_ground.txt"
+
+MAINTENANCE_FIELD_PROVENANCE: dict[str, str] = {
+    "application_title": "deterministic_rule:fixed title text for senior citizen maintenance applications",
+    "forum_name": "deterministic_rule:fixed Maintenance Tribunal forum name",
+    "applicant_name": "user_supplied",
+    "applicant_address": "user_supplied",
+    "respondent_name": "user_supplied",
+    "respondent_address": "user_supplied",
+    "applicant_age": "user_supplied",
+    "maintenance_clause": (
+        "deterministic_rule:rendered from user_supplied respondent_relationship/"
+        "relative_property_connection/neglect_description/requested_monthly_maintenance_amount"
+    ),
+    "citation_line": "deterministic_rule:fixed RESPONDENT_RELATIONSHIP_CITATIONS entry",
+    "cap_citation_line": "deterministic_rule:fixed MAINTENANCE_AMOUNT_CAP_CITATION",
+    "generated_date_display": "deterministic_rule:today's date, formatted",
+}
+
+
+def _maintenance_clause_render_fields(intake: SeniorCitizenMaintenanceIntake) -> dict[str, Any]:
+    return {
+        "respondent_relationship": intake.respondent_relationship.value,
+        "relative_property_connection": intake.relative_property_connection,
+        "neglect_description": _drop_trailing_period(intake.neglect_description),
+        "requested_amount_display": _format_inr(intake.requested_monthly_maintenance_amount),
+        "cap_citation_line": f"(See {MAINTENANCE_AMOUNT_CAP_CITATION['section_cite']} of the {MAINTENANCE_AMOUNT_CAP_CITATION['act_short_title']}.)",
+    }
+
+
+def _build_maintenance_render_context(intake: SeniorCitizenMaintenanceIntake) -> dict[str, Any]:
+    maintenance_clause = _render_clause_file(MAINTENANCE_CLAUSE_FILE, _maintenance_clause_render_fields(intake))
+    citation = RESPONDENT_RELATIONSHIP_CITATIONS[intake.respondent_relationship]
+    return {
+        "application_title": "APPLICATION FOR MAINTENANCE UNDER THE MAINTENANCE AND WELFARE OF "
+        "PARENTS AND SENIOR CITIZENS ACT, 2007",
+        "forum_name": "BEFORE THE MAINTENANCE TRIBUNAL",
+        "applicant_name": intake.applicant_name,
+        "applicant_address": intake.applicant_address,
+        "applicant_age": intake.applicant_age,
+        "respondent_name": intake.respondent_name,
+        "respondent_address": intake.respondent_address,
+        "maintenance_clause": maintenance_clause,
+        "citation_line": f"(See {citation['section_cite']} of the {citation['act_short_title']}.)",
+        "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
+    }
+
+
+def assemble_senior_citizen_maintenance_draft(intake: SeniorCitizenMaintenanceIntake) -> DraftAssemblyResult:
+    """Slot-fill the fixed base template for the senior citizen maintenance scenario.
+
+    No LLM call is made anywhere in this path. Hard-fails (raises) rather than emitting a
+    partial document if a citation doesn't resolve or an unregistered field would render.
+    """
+    citation = RESPONDENT_RELATIONSHIP_CITATIONS[intake.respondent_relationship]
+    _require_citation_resolved(citation, f"respondent relationship '{intake.respondent_relationship.value}'")
+    _require_citation_resolved(MAINTENANCE_AMOUNT_CAP_CITATION, "maintenance amount cap")
+
+    context = _build_maintenance_render_context(intake)
+    _verify_field_provenance(context, MAINTENANCE_FIELD_PROVENANCE)
+
+    if not SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH.exists():
+        raise ComplaintDraftError(
+            f"Base template not found: {SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH}. Run "
+            "build_templates.build_senior_citizen_maintenance_base_template() to generate it."
+        )
+
+    doc = DocxTemplate(str(SENIOR_CITIZEN_MAINTENANCE_TEMPLATE_PATH))
+    doc.render(context, jinja_env=_STRICT_JINJA_ENV)
+    buffer = io.BytesIO()
+    doc.save(buffer)
+
+    warnings: list[str] = []
+    citation_review_required = False
+    for label, item in [
+        (f"respondent relationship '{intake.respondent_relationship.value}'", citation),
+        ("maintenance amount cap", MAINTENANCE_AMOUNT_CAP_CITATION),
+    ]:
+        review_warning = _citation_review_warning(item, label)
+        if review_warning:
+            warnings.append(review_warning)
+            citation_review_required = True
+
+    logger.info(
+        "Senior citizen maintenance draft assembled respondent_relationship=%s citation_review_required=%s",
+        intake.respondent_relationship.value,
+        citation_review_required,
+    )
+
+    return DraftAssemblyResult(
+        docx_bytes=buffer.getvalue(),
+        citation_used=citation,
+        citation_review_required=citation_review_required,
+        warnings=warnings,
+        additional_citations=[MAINTENANCE_AMOUNT_CAP_CITATION],
+    )
+
+
+# --- Scenario 7: tenant complaint over cutting off/withholding essential supply or service,
+# under Section 45 of the Delhi Rent Control Act, 1958 ---
+#
+# Complements Scenario 1 (tenancy eviction) above rather than overlapping it: Scenario 1 is a
+# landlord's petition to evict a tenant; this is a tenant's application against a landlord who is
+# using essential-supply cutoff as an (illegal) means of pressuring the tenant. Same Act, same
+# forum (the Rent Controller), opposite party alignment.
+
+
+class EssentialSupplyType(str, Enum):
+    water = "water"
+    electricity = "electricity"
+    lights_in_passages_and_staircases = "lights_in_passages_and_staircases"
+    conservancy_and_sanitary_services = "conservancy_and_sanitary_services"
+
+
+# Matches Explanation I to Section 45 verbatim: "essential supply or service" includes supply of
+# water, electricity, lights in passages and on staircases, conservancy and sanitary services.
+ESSENTIAL_SUPPLY_TYPE_LABEL: dict[EssentialSupplyType, str] = {
+    EssentialSupplyType.water: "Water",
+    EssentialSupplyType.electricity: "Electricity",
+    EssentialSupplyType.lights_in_passages_and_staircases: "Lights in passages and on staircases",
+    EssentialSupplyType.conservancy_and_sanitary_services: "Conservancy and sanitary services",
+}
+
+# Pre-verified citation: Section 45 ("Cutting off or withholding essential supply or service") is
+# a verbatim provision in the corpus.
+ESSENTIAL_SUPPLY_CITATION: dict[str, Any] = {
+    "act_short_title": "Delhi Rent Control Act, 1958",
+    "section_cite": "Section 45",
+    "source_file": "tenancy/delhi_rent_control_act_1958.pdf",
+    "section_number": "45",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+MIN_HOW_SUPPLY_WAS_CUT_OFF_CHARS = 20
+
+
+class TenantEssentialSupplyIntake(BaseModel):
+    tenant_name: str = Field(min_length=1)
+    tenant_address: str = Field(min_length=1)
+    landlord_name: str = Field(min_length=1)
+    landlord_address: str = Field(min_length=1)
+    property_address: str = Field(min_length=1)
+    essential_supply_type: EssentialSupplyType
+    date_supply_cut_off: datetime.date
+    # No Field(min_length=1) here -- see check_how_supply_was_cut_off_specific.
+    how_supply_was_cut_off: str
+
+    # Optional: what reason (if any) the landlord gave, for the Controller's own assessment of
+    # whether it amounts to "just and sufficient cause" under Section 45(1).
+    landlord_stated_reason: str | None = None
+
+    @model_validator(mode="after")
+    def check_date_supply_cut_off_not_future(self) -> "TenantEssentialSupplyIntake":
+        if self.date_supply_cut_off > datetime.date.today():
+            _raise_field_validation_error(
+                self, "date_supply_cut_off", "date_supply_cut_off cannot be in the future."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_how_supply_was_cut_off_specific(self) -> "TenantEssentialSupplyIntake":
+        if len(self.how_supply_was_cut_off.strip()) < MIN_HOW_SUPPLY_WAS_CUT_OFF_CHARS:
+            _raise_field_validation_error(
+                self,
+                "how_supply_was_cut_off",
+                "how_supply_was_cut_off must describe specifically what the landlord did (at "
+                f"least {MIN_HOW_SUPPLY_WAS_CUT_OFF_CHARS} characters). The Controller must be "
+                "satisfied the supply or service was actually cut off or withheld before making "
+                "any order under Section 45.",
+            )
+        return self
+
+
+ESSENTIAL_SUPPLY_CLAUSE_FILE = "tenant_essential_supply_ground.txt"
+
+ESSENTIAL_SUPPLY_FIELD_PROVENANCE: dict[str, str] = {
+    "forum_name": "deterministic_rule:fixed Rent Controller forum name",
+    "application_title": "deterministic_rule:fixed title text for Section 45 applications",
+    "tenant_name": "user_supplied",
+    "tenant_address": "user_supplied",
+    "landlord_name": "user_supplied",
+    "landlord_address": "user_supplied",
+    "property_address": "user_supplied",
+    "essential_supply_clause": (
+        "deterministic_rule:rendered from user_supplied essential_supply_type/"
+        "date_supply_cut_off/how_supply_was_cut_off/landlord_stated_reason"
+    ),
+    "citation_line": "deterministic_rule:fixed ESSENTIAL_SUPPLY_CITATION",
+    "generated_date_display": "deterministic_rule:today's date, formatted",
+}
+
+
+def _essential_supply_clause_render_fields(intake: TenantEssentialSupplyIntake) -> dict[str, Any]:
+    return {
+        "essential_supply_label": ESSENTIAL_SUPPLY_TYPE_LABEL[intake.essential_supply_type],
+        "property_address": intake.property_address,
+        "date_cut_off_display": intake.date_supply_cut_off.strftime("%d %B %Y"),
+        "how_supply_was_cut_off": _drop_trailing_period(intake.how_supply_was_cut_off),
+        "landlord_stated_reason": (
+            _drop_trailing_period(intake.landlord_stated_reason) if intake.landlord_stated_reason else None
+        ),
+    }
+
+
+def _build_essential_supply_render_context(intake: TenantEssentialSupplyIntake) -> dict[str, Any]:
+    essential_supply_clause = _render_clause_file(
+        ESSENTIAL_SUPPLY_CLAUSE_FILE, _essential_supply_clause_render_fields(intake)
+    )
+    return {
+        "forum_name": "IN THE COURT OF THE RENT CONTROLLER, DELHI",
+        "application_title": "APPLICATION UNDER SECTION 45 OF THE DELHI RENT CONTROL ACT, 1958 "
+        "COMPLAINING OF CUTTING OFF/WITHHOLDING OF ESSENTIAL SUPPLY OR SERVICE",
+        "tenant_name": intake.tenant_name,
+        "tenant_address": intake.tenant_address,
+        "landlord_name": intake.landlord_name,
+        "landlord_address": intake.landlord_address,
+        "property_address": intake.property_address,
+        "essential_supply_clause": essential_supply_clause,
+        "citation_line": f"(See {ESSENTIAL_SUPPLY_CITATION['section_cite']} of the {ESSENTIAL_SUPPLY_CITATION['act_short_title']}.)",
+        "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
+    }
+
+
+def assemble_tenant_essential_supply_draft(intake: TenantEssentialSupplyIntake) -> DraftAssemblyResult:
+    """Slot-fill the fixed base template for the tenant essential-supply scenario.
+
+    No LLM call is made anywhere in this path. Hard-fails (raises) rather than emitting a
+    partial document if the citation doesn't resolve or an unregistered field would render.
+    """
+    _require_citation_resolved(ESSENTIAL_SUPPLY_CITATION, "essential supply cutoff")
+
+    context = _build_essential_supply_render_context(intake)
+    _verify_field_provenance(context, ESSENTIAL_SUPPLY_FIELD_PROVENANCE)
+
+    if not TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH.exists():
+        raise ComplaintDraftError(
+            f"Base template not found: {TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH}. Run "
+            "build_templates.build_tenant_essential_supply_base_template() to generate it."
+        )
+
+    doc = DocxTemplate(str(TENANT_ESSENTIAL_SUPPLY_TEMPLATE_PATH))
+    doc.render(context, jinja_env=_STRICT_JINJA_ENV)
+    buffer = io.BytesIO()
+    doc.save(buffer)
+
+    warnings: list[str] = []
+    review_warning = _citation_review_warning(ESSENTIAL_SUPPLY_CITATION, "essential supply cutoff")
+    citation_review_required = review_warning is not None
+    if review_warning:
+        warnings.append(review_warning)
+
+    logger.info(
+        "Tenant essential-supply draft assembled essential_supply_type=%s citation_review_required=%s",
+        intake.essential_supply_type.value,
+        citation_review_required,
+    )
+
+    return DraftAssemblyResult(
+        docx_bytes=buffer.getvalue(),
+        citation_used=ESSENTIAL_SUPPLY_CITATION,
+        citation_review_required=citation_review_required,
+        warnings=warnings,
+        additional_citations=[],
+    )
+
+
+# --- Scenario 8: unauthorized electronic banking transaction (bank fraud) complaint, under the
+# RBI's 2017 "Limiting Liability of Customers in Unauthorised Electronic Banking Transactions"
+# directions and Section 66D of the Information Technology Act, 2000 ---
+#
+# Addressed to the bank (not a court/commission) -- a written complaint to the bank is itself
+# what starts/stops the RBI liability clock (Guideline 9 of the circular: "on being notified by
+# the customer, the bank shall..."), so getting this in the customer's hands fast matters more
+# here than in any other scenario in this file. The National Cybercrime Reporting Portal /
+# police cyber cell angle (IT Act, Section 66D) is mentioned as a separate, always-true citation
+# in the same document -- this tool does not draft a separate FIR/cybercrime-portal complaint.
+
+
+class AccountCategory(str, Enum):
+    bsbd_account = "bsbd_account"
+    standard_account = "standard_account"
+    high_value_account = "high_value_account"
+
+
+ACCOUNT_CATEGORY_LABEL: dict[AccountCategory, str] = {
+    AccountCategory.bsbd_account: "Basic Savings Bank Deposit (BSBD) account",
+    AccountCategory.standard_account: (
+        "Other savings account, prepaid payment instrument, MSME current/cash-credit/overdraft "
+        "account, or an individual's current/cash-credit/overdraft account with balance/limit up "
+        "to Rs. 25 lakh, or a credit card with limit up to Rs. 5 lakh"
+    ),
+    AccountCategory.high_value_account: (
+        "Any other current/cash-credit/overdraft account, or a credit card with limit above "
+        "Rs. 5 lakh"
+    ),
+}
+
+# Table 1 of the circular ("Maximum Liability of a Customer under paragraph 7(ii)"), verified
+# verbatim against the corpus chunk for guideline_number "7".
+ACCOUNT_CATEGORY_LIABILITY_CAP_INR: dict[AccountCategory, int] = {
+    AccountCategory.bsbd_account: 5_000,
+    AccountCategory.standard_account: 10_000,
+    AccountCategory.high_value_account: 25_000,
+}
+
+# Table 2 of the circular ("Summary of Customer's Liability", guideline_number "8"): the tiers
+# themselves, keyed by elapsed calendar days (see the working-days caveat on elapsed_days_to_report
+# below).
+LIABILITY_TIER_ZERO_MAX_DAYS = 3
+LIABILITY_TIER_LIMITED_MAX_DAYS = 7
+
+
+def determine_liability_tier(elapsed_days: int) -> str:
+    if elapsed_days <= LIABILITY_TIER_ZERO_MAX_DAYS:
+        return "zero"
+    if elapsed_days <= LIABILITY_TIER_LIMITED_MAX_DAYS:
+        return "limited"
+    return "bank_policy"
+
+
+# Pre-verified citations, checked verbatim against the corpus chunks rag.py loads.
+# rbi_limiting_liability_unauthorised_transactions_2017.pdf chunks under guideline_number, not
+# section_number (same non-statute chunking convention as the consumer jurisdiction rules --
+# see PROVISION_NUMBER_FIELDS above).
+BANK_FRAUD_LIABILITY_TIER_CITATION: dict[str, Any] = {
+    "act_short_title": "RBI Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (2017)",
+    "section_cite": "Guideline 8 (Table 2)",
+    "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
+    "provision_field": "guideline_number",
+    "guideline_number": "8",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+BANK_FRAUD_LIABILITY_CAP_CITATION: dict[str, Any] = {
+    "act_short_title": "RBI Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (2017)",
+    "section_cite": "Guideline 7 (Table 1)",
+    "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
+    "provision_field": "guideline_number",
+    "guideline_number": "7",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+BANK_FRAUD_IT_ACT_CITATION: dict[str, Any] = {
+    "act_short_title": "Information Technology Act, 2000",
+    "section_cite": "Section 66D",
+    "source_file": "cyber/information_technology_act_2000.pdf",
+    "section_number": "66D",
+    "confidence": "high",
+    "authority_level": "primary",
+}
+
+MIN_UNAUTHORIZED_TRANSACTION_DESCRIPTION_CHARS = 20
+
+
+class BankFraudComplaintIntake(BaseModel):
+    complainant_name: str = Field(min_length=1)
+    complainant_address: str = Field(min_length=1)
+    bank_name: str = Field(min_length=1)
+    bank_branch_address: str = Field(min_length=1)
+    account_category: AccountCategory
+    transaction_date: datetime.date
+    # No Field(gt=0) here -- see check_transaction_amount_is_positive.
+    transaction_amount: float
+    bank_communication_date: datetime.date
+    date_first_reported_to_bank: datetime.date
+    # No Field(min_length=1) here -- see check_description_specific.
+    unauthorized_transaction_description: str
+
+    @model_validator(mode="after")
+    def check_transaction_amount_is_positive(self) -> "BankFraudComplaintIntake":
+        if self.transaction_amount <= 0:
+            _raise_field_validation_error(
+                self, "transaction_amount", "Transaction amount must be a positive amount."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_transaction_date_not_future(self) -> "BankFraudComplaintIntake":
+        if self.transaction_date > datetime.date.today():
+            _raise_field_validation_error(self, "transaction_date", "transaction_date cannot be in the future.")
+        return self
+
+    @model_validator(mode="after")
+    def check_bank_communication_date_not_future(self) -> "BankFraudComplaintIntake":
+        if self.bank_communication_date > datetime.date.today():
+            _raise_field_validation_error(
+                self, "bank_communication_date", "bank_communication_date cannot be in the future."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_bank_communication_date_not_before_transaction(self) -> "BankFraudComplaintIntake":
+        if self.bank_communication_date < self.transaction_date:
+            _raise_field_validation_error(
+                self,
+                "bank_communication_date",
+                "bank_communication_date cannot be before transaction_date -- the Bank's "
+                "communication about a transaction cannot predate the transaction itself.",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_date_first_reported_to_bank_not_future(self) -> "BankFraudComplaintIntake":
+        if self.date_first_reported_to_bank > datetime.date.today():
+            _raise_field_validation_error(
+                self, "date_first_reported_to_bank", "date_first_reported_to_bank cannot be in the future."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_description_specific(self) -> "BankFraudComplaintIntake":
+        if len(self.unauthorized_transaction_description.strip()) < MIN_UNAUTHORIZED_TRANSACTION_DESCRIPTION_CHARS:
+            _raise_field_validation_error(
+                self,
+                "unauthorized_transaction_description",
+                "unauthorized_transaction_description must describe the specific transaction and "
+                "why it was unauthorized (at least "
+                f"{MIN_UNAUTHORIZED_TRANSACTION_DESCRIPTION_CHARS} characters).",
+            )
+        return self
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def elapsed_days_to_report(self) -> int:
+        """Calendar days between the Bank's communication and the customer's report to the Bank.
+        NOTE: the circular's own tiers are in "working days", not calendar days -- modeling actual
+        bank holidays is out of scope, so this is a documented approximation (see the caveat
+        rendered into the clause text itself, not just this comment). Clamped at 0 rather than
+        going negative for the edge case of a report recorded before the Bank's communication
+        (e.g. the customer noticed and called before receiving the Bank's own alert) -- that
+        case is, if anything, more favorable to the customer than day 0, not less."""
+        return max(0, (self.date_first_reported_to_bank - self.bank_communication_date).days)
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def liability_tier(self) -> str:
+        """"zero" | "limited" | "bank_policy" -- always computed, never silently omitted, same
+        as ConsumerDefectiveGoodsIntake.forum_tier above."""
+        return determine_liability_tier(self.elapsed_days_to_report)
+
+
+BANK_FRAUD_CLAUSE_FILE = "bank_fraud_complaint_ground.txt"
+
+BANK_FRAUD_FIELD_PROVENANCE: dict[str, str] = {
+    "complaint_title": "deterministic_rule:fixed title text for bank fraud complaints",
+    "complainant_name": "user_supplied",
+    "complainant_address": "user_supplied",
+    "bank_name": "user_supplied",
+    "bank_branch_address": "user_supplied",
+    "complaint_clause": (
+        "deterministic_rule:rendered from user_supplied account_category/transaction_date/"
+        "transaction_amount/bank_communication_date/date_first_reported_to_bank/"
+        "unauthorized_transaction_description, plus the deterministically computed "
+        "elapsed_days_to_report/liability_tier -- the clause text itself embeds all three "
+        "citation lines (tier/cap/IT Act), so there is no separate top-level citation_line here"
+    ),
+    "generated_date_display": "deterministic_rule:today's date, formatted",
+}
+
+
+def _bank_fraud_clause_render_fields(intake: BankFraudComplaintIntake) -> dict[str, Any]:
+    return {
+        "transaction_date_display": intake.transaction_date.strftime("%d %B %Y"),
+        "transaction_amount_display": _format_inr(intake.transaction_amount),
+        "unauthorized_transaction_description": _drop_trailing_period(intake.unauthorized_transaction_description),
+        "bank_communication_date_display": intake.bank_communication_date.strftime("%d %B %Y"),
+        "date_first_reported_to_bank_display": intake.date_first_reported_to_bank.strftime("%d %B %Y"),
+        "elapsed_days_to_report": intake.elapsed_days_to_report,
+        "liability_tier": intake.liability_tier,
+        "liability_cap_display": _format_inr(ACCOUNT_CATEGORY_LIABILITY_CAP_INR[intake.account_category]),
+        "rbi_tier_citation_line": (
+            f"(See {BANK_FRAUD_LIABILITY_TIER_CITATION['section_cite']} of the RBI's "
+            f"{BANK_FRAUD_LIABILITY_TIER_CITATION['act_short_title']}.)"
+        ),
+        "rbi_cap_citation_line": (
+            f"(See {BANK_FRAUD_LIABILITY_CAP_CITATION['section_cite']} of the RBI's "
+            f"{BANK_FRAUD_LIABILITY_CAP_CITATION['act_short_title']}.)"
+        ),
+        "it_act_citation_line": (
+            f"(See {BANK_FRAUD_IT_ACT_CITATION['section_cite']} of the "
+            f"{BANK_FRAUD_IT_ACT_CITATION['act_short_title']}.)"
+        ),
+    }
+
+
+def _build_bank_fraud_render_context(intake: BankFraudComplaintIntake) -> dict[str, Any]:
+    complaint_clause = _render_clause_file(BANK_FRAUD_CLAUSE_FILE, _bank_fraud_clause_render_fields(intake))
+    return {
+        "complaint_title": "COMPLAINT REGARDING UNAUTHORIZED ELECTRONIC BANKING TRANSACTION",
+        "complainant_name": intake.complainant_name,
+        "complainant_address": intake.complainant_address,
+        "bank_name": intake.bank_name,
+        "bank_branch_address": intake.bank_branch_address,
+        "complaint_clause": complaint_clause,
+        "generated_date_display": datetime.date.today().strftime("%d %B %Y"),
+    }
+
+
+def assemble_bank_fraud_complaint_draft(intake: BankFraudComplaintIntake) -> DraftAssemblyResult:
+    """Slot-fill the fixed base template for the bank fraud complaint scenario.
+
+    No LLM call is made anywhere in this path. Hard-fails (raises) rather than emitting a
+    partial document if any citation doesn't resolve or an unregistered field would render.
+    """
+    _require_citation_resolved(BANK_FRAUD_LIABILITY_TIER_CITATION, "liability tier")
+    _require_citation_resolved(BANK_FRAUD_LIABILITY_CAP_CITATION, "liability cap")
+    _require_citation_resolved(BANK_FRAUD_IT_ACT_CITATION, "IT Act cybercrime reference")
+
+    context = _build_bank_fraud_render_context(intake)
+    _verify_field_provenance(context, BANK_FRAUD_FIELD_PROVENANCE)
+
+    if not BANK_FRAUD_COMPLAINT_TEMPLATE_PATH.exists():
+        raise ComplaintDraftError(
+            f"Base template not found: {BANK_FRAUD_COMPLAINT_TEMPLATE_PATH}. Run "
+            "build_templates.build_bank_fraud_complaint_base_template() to generate it."
+        )
+
+    doc = DocxTemplate(str(BANK_FRAUD_COMPLAINT_TEMPLATE_PATH))
+    doc.render(context, jinja_env=_STRICT_JINJA_ENV)
+    buffer = io.BytesIO()
+    doc.save(buffer)
+
+    warnings: list[str] = []
+    citation_review_required = False
+    for label, item in [
+        ("liability tier", BANK_FRAUD_LIABILITY_TIER_CITATION),
+        ("liability cap", BANK_FRAUD_LIABILITY_CAP_CITATION),
+        ("IT Act cybercrime reference", BANK_FRAUD_IT_ACT_CITATION),
+    ]:
+        review_warning = _citation_review_warning(item, label)
+        if review_warning:
+            warnings.append(review_warning)
+            citation_review_required = True
+
+    logger.info(
+        "Bank fraud complaint draft assembled account_category=%s liability_tier=%s citation_review_required=%s",
+        intake.account_category.value,
+        intake.liability_tier,
+        citation_review_required,
+    )
+
+    return DraftAssemblyResult(
+        docx_bytes=buffer.getvalue(),
+        citation_used=BANK_FRAUD_LIABILITY_TIER_CITATION,
+        citation_review_required=citation_review_required,
+        warnings=warnings,
+        additional_citations=[BANK_FRAUD_LIABILITY_CAP_CITATION, BANK_FRAUD_IT_ACT_CITATION],
     )
 
 

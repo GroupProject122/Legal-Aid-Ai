@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import datetime
+import json
 import logging
 import re
 from contextlib import asynccontextmanager
@@ -7,12 +9,13 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Request, Response, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel
+from fastapi.responses import FileResponse, JSONResponse, Response
+from pydantic import BaseModel, ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import auth
 import clarification
+import case_file
 import case_store
 import claim_verifier
 import complaint_drafter_router
@@ -26,7 +29,11 @@ import document_summarizer
 import domain_router
 import fact_sufficiency
 import grounded_answer
+import legal_aid_eligibility
 import legal_education
+import query_normalizer
+import scam_checker
+import voice_transcription
 from config import DISCLAIMER, FRONTEND_ORIGINS, GEMINI_API_KEY, LLM_PROVIDER
 from rag import (
     ConfigurationError,
@@ -278,6 +285,54 @@ def open_saved_case(case_id: int, user: dict = Depends(require_user)) -> dict:
     }
 
 
+CASE_FILE_MEDIA_TYPES = {
+    "pdf": "application/pdf",
+    "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
+
+
+def build_case_file_response(case_id: int, file_format: str, user: dict) -> Response:
+    """Shared by the .pdf/.docx endpoints. Same access check as GET /api/cases/{case_id}:
+    require_user (guest -> 401) and an owner-scoped lookup (someone else's case -> 404, so a
+    case's existence isn't revealed). Generated in memory per request and streamed back -- never
+    saved to disk or the database. Logs ids/counts only, never case content."""
+    case = case_file.load_case_for_export(case_id, user_id=user["id"])
+    if case is None:
+        raise HTTPException(status_code=404, detail="Case not found.")
+    generated_on = datetime.date.today()
+    try:
+        context = case_file.build_case_file_context(case, generated_on=generated_on)
+        if file_format == "pdf":
+            content = case_file.render_case_file_pdf(context)
+        else:
+            content = case_file.render_case_file_docx(context)
+    except case_file.CaseFileError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except case_file.PdfConversionError as exc:
+        logger.warning("Case file PDF conversion unavailable case_id=%s", case_id)
+        raise HTTPException(
+            status_code=503,
+            detail="PDF export isn't available on this server right now (LibreOffice is not installed). Download the Word (.docx) version instead.",
+        ) from exc
+    logger.info("Case file exported case_id=%s format=%s sections=%s", case_id, file_format, ",".join(context["sections"]))
+    filename = case_file.case_file_filename(context["title"], generated_on, file_format)
+    return Response(
+        content=content,
+        media_type=CASE_FILE_MEDIA_TYPES[file_format],
+        headers={"Content-Disposition": f'attachment; filename="{filename}"', "Cache-Control": "no-store"},
+    )
+
+
+@app.get("/api/cases/{case_id}/case-file.pdf")
+def download_case_file_pdf(case_id: int, user: dict = Depends(require_user)) -> Response:
+    return build_case_file_response(case_id, "pdf", user)
+
+
+@app.get("/api/cases/{case_id}/case-file.docx")
+def download_case_file_docx(case_id: int, user: dict = Depends(require_user)) -> Response:
+    return build_case_file_response(case_id, "docx", user)
+
+
 @app.delete("/api/cases/{case_id}")
 def delete_saved_case(case_id: int, user: dict = Depends(require_user)) -> dict:
     if not case_store.delete_case(case_id, user_id=user["id"]):
@@ -374,13 +429,21 @@ def get_document_summary(document_id: int, user: dict = Depends(require_user)) -
 
 
 @app.post("/api/documents/{document_id}/summarize")
-def summarize_uploaded_document(document_id: int, user: dict = Depends(require_user)) -> dict:
+def summarize_uploaded_document(
+    document_id: int,
+    force: bool = Query(default=False),
+    user: dict = Depends(require_user),
+) -> dict:
     try:
         document = document_store.require_document(document_id, user_id=user["id"])
     except document_store.DocumentStoreError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-    if document.get("summary_text"):
+    # `force=true` lets the frontend offer a "Regenerate summary" action instead of the cached
+    # summary being permanent for a document's lifetime -- update_summary() already overwrites
+    # unconditionally, so regeneration only needed a way to skip this cache check, not a new
+    # storage path.
+    if document.get("summary_text") and not force:
         return {
             "document_id": document_id,
             "status": "success",
@@ -412,7 +475,6 @@ def summarize_uploaded_document(document_id: int, user: dict = Depends(require_u
             "summary_generated_at": document.get("summary_generated_at"),
         }
 
-    document_store.update_summary(document_id, summary_text=None, summary_status=status, summary_model=result.get("model"))
     logger.info(
         "Document summary unavailable document_id=%s status=%s calls=%s latency_ms=%s",
         document_id,
@@ -420,6 +482,24 @@ def summarize_uploaded_document(document_id: int, user: dict = Depends(require_u
         result.get("gemini_calls"),
         result.get("latency_ms"),
     )
+    # A failed *regenerate* attempt (force=true) must not destroy a summary that was already
+    # there -- found live-testing this feature: a transient Gemini 503 during a regenerate wiped
+    # summary_text back to None unconditionally, discarding a perfectly good existing summary
+    # over nothing but a retryable network hiccup. Leave the DB untouched and hand the caller
+    # their still-valid old summary back, flagged so the frontend can say the refresh failed
+    # without hiding the summary the user already had.
+    if force and document.get("summary_text"):
+        return {
+            "document_id": document_id,
+            "status": "success",
+            "summary": document["summary_text"],
+            "cached": True,
+            "summary_generated_at": document.get("summary_generated_at"),
+            "regenerate_failed": True,
+            "message": result.get("message") or "A new summary could not be generated right now -- showing your previous summary.",
+        }
+
+    document_store.update_summary(document_id, summary_text=None, summary_status=status, summary_model=result.get("model"))
     return {
         "document_id": document_id,
         "status": status,
@@ -495,6 +575,46 @@ def legal_awareness_source_file(source_id: str) -> FileResponse:
         return FileResponse(source_path, media_type="application/pdf", filename=source["source_file"].split("/")[-1])
     except legal_education.LegalEducationError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.post("/api/scam-check")
+async def scam_check(request: Request) -> dict:
+    # The body is parsed here rather than declared as a pydantic model on purpose: the global
+    # RequestValidationError handler above logs the validation error, and pydantic's error text
+    # includes the submitted input -- which for this endpoint is a private message that may hold
+    # OTPs, account numbers and phone numbers. Nothing from the body is logged or stored here;
+    # scam_checker logs only rule IDs and the verdict.
+    try:
+        payload = json.loads(await request.body() or b"null")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        raise HTTPException(status_code=422, detail="The request format is invalid.") from None
+    message = payload.get("message") if isinstance(payload, dict) else None
+    try:
+        return scam_checker.check_message(message).to_dict()
+    except scam_checker.ScamCheckInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from None
+
+
+@app.post("/api/legal-aid/eligibility")
+async def legal_aid_eligibility_endpoint(request: Request) -> JSONResponse:
+    # Parsed by hand, like /api/scam-check, for the same reason: the answers include caste,
+    # disability, HIV status and income, and the global RequestValidationError handler would log
+    # pydantic's error text (which carries the input). Nothing here is logged or stored, on the
+    # success path or the error path.
+    try:
+        payload = json.loads(await request.body() or b"null")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    if not isinstance(payload, dict):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    try:
+        answers = legal_aid_eligibility.EligibilityRequest.model_validate(payload)
+    except ValidationError as exc:
+        return JSONResponse(
+            status_code=422,
+            content={"detail": "Some answers need fixing.", "errors": legal_aid_eligibility.validation_errors(exc)},
+        )
+    return JSONResponse(content=legal_aid_eligibility.check_eligibility(answers).to_dict())
 
 
 @app.get("/api/corpus/file")
@@ -644,6 +764,25 @@ async def extract_uploaded_document(
     except Exception as exc:
         logger.exception("Unexpected document extraction error")
         raise HTTPException(status_code=500, detail="Legal Aid AI could not extract text from this document right now.") from exc
+
+
+@app.post("/api/transcribe")
+async def transcribe_voice_question(file: UploadFile = File(...)) -> dict:
+    # Audio is read into memory only and never written to disk or any store -- see
+    # voice_transcription.py's module docstring.
+    try:
+        content = await file.read(voice_transcription.max_audio_bytes() + 1)
+        transcript = voice_transcription.transcribe_audio(content, file.content_type or "")
+        return {"transcript": transcript}
+    except voice_transcription.VoiceTranscriptionError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except voice_transcription.VoiceServiceUnavailableError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Unexpected voice transcription error")
+        raise HTTPException(status_code=500, detail="Legal Aid AI could not transcribe that recording right now.") from exc
 
 
 @app.post("/api/documents/extract-facts")
@@ -1038,7 +1177,13 @@ def answer_grounded_from_context(
     route: domain_router.RouteDecision | None = None,
 ) -> dict:
     retrieval_text = fact_sufficiency.retrieval_query(context, fact_result)
-    chunks = rag.retrieve(retrieval_text)
+    # English-only rewrite for retrieval ONLY -- the embedding model and the corpus are both
+    # English-language, so a Hinglish retrieval_text searched as-is misses relevant provisions
+    # (see query_normalizer.py's module docstring for the confirmed example). retrieval_text
+    # itself stays untouched below (corpus_gap, grounded_answer, the stored case) -- only the
+    # string actually sent to rag.retrieve() is affected.
+    rag_query = query_normalizer.english_retrieval_query(retrieval_text)
+    chunks = rag.retrieve(rag_query)
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
     # user_question (falling back to original_message) is the text the user actually typed this

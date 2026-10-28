@@ -575,15 +575,46 @@ def has_fact_content(lowered: str) -> bool:
 def apply_correction(facts: list[str], correction: str) -> list[str]:
     correction_amounts = normalized_amounts(correction)
     correction_dates = normalized_dates(correction)
+    replaced_counts = negated_count_phrases(correction)
     updated = []
     for fact in facts:
         if correction_amounts and normalized_amounts(fact):
             continue
         if correction_dates and normalized_dates(fact):
             continue
+        if any(pattern.search(fact) for pattern in replaced_counts):
+            continue
         updated.append(fact)
     updated.append(correction)
     return dedupe_facts(updated)
+
+
+NUMBER_WORDS = {
+    "one": "1", "two": "2", "three": "3", "four": "4", "five": "5",
+    "six": "6", "seven": "7", "eight": "8", "nine": "9", "ten": "10",
+}
+_COUNT = r"(\d{1,2}|" + "|".join(NUMBER_WORDS) + r")"
+
+
+def negated_count_phrases(correction: str) -> list[re.Pattern[str]]:
+    """Small counts ("3 transactions, not 2") never reach normalized_amounts() (3+ digits only),
+    so apply_correction() used to keep the stale "2 transactions" fact alongside the
+    correction. Narrow on purpose: only fires when the user names BOTH the new and the old
+    count for the same noun ("it was 3 transactions, not 2" / "not 2 but 3 transactions"), and
+    only removes earlier facts containing "<old count> [up to two words] <that noun>" -- the user stated the old
+    value themselves, so nothing is inferred."""
+    lowered = correction.lower()
+    pairs = re.findall(rf"\b{_COUNT}\s+([a-z]+?)s?\b\s*,?\s*not\s+{_COUNT}\b", lowered)
+    pairs += [(new, noun, old) for old, new, noun in re.findall(rf"\bnot\s+{_COUNT}\s*,?\s*(?:but\s+)?{_COUNT}\s+([a-z]+?)s?\b", lowered)]
+    patterns = []
+    for new, noun, old in pairs:
+        old_digit = NUMBER_WORDS.get(old, old)
+        if old_digit == NUMBER_WORDS.get(new, new) or len(noun) < 3:
+            continue
+        old_forms = [old_digit, *(word for word, digit in NUMBER_WORDS.items() if digit == old_digit)]
+        # Up to two words between count and noun: "2 unauthorised transactions".
+        patterns.append(re.compile(rf"\b(?:{'|'.join(old_forms)})\s+(?:[a-z-]+\s+){{0,2}}{re.escape(noun)}s?\b", re.I))
+    return patterns
 
 
 def build_updated_case_summary(state: ActiveCaseState, latest_message: str, turn_type: str) -> str:

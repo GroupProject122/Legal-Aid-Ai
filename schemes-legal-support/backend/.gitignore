@@ -2,6 +2,7 @@ node_modules/
 dist/
 .env
 *.log
+*.tsbuildinfo
 
 # Real data pasted in for the one-off bulk-load script (scripts/bulk-load.ts).
 # The committed reference is scripts/schemes-batch.example.json.

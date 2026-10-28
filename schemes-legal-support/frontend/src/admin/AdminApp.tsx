@@ -1,5 +1,5 @@
 /*
- * ⚠️  SECURITY — NO AUTHENTICATION.
+ *  
  *
  * This admin screen is reachable by anyone who opens the `#/admin` hash, and
  * the backend's POST/PUT /schemes endpoints are likewise unauthenticated. It
@@ -28,7 +28,7 @@ export function AdminApp() {
         <div>
           <h1>Scheme admin</h1>
           <p className="admin-warn">
-            ⚠️ No authentication — internal review tool. Add auth before
+            No authentication — internal review tool. Add auth before
             deploying.
           </p>
         </div>

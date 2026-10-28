@@ -1,0 +1,524 @@
+{
+  "notes": "Curated cases for the Free Legal Aid Eligibility Checker (legal_aid_eligibility.py). Each case runs the real EligibilityRequest validation + check_eligibility() -- nothing is mocked, and there is no LLM call anywhere in the path. Every income limit is LESS THAN (DSLSA: 'annual income less than Rs. 3 Lac'), so an income exactly at the limit is NOT eligible (boundary_general_300000, boundary_transgender_400000). Senior citizen = 60+ is an assumption (DSLSA states no age); see legal_aid_eligibility.ASSUMPTIONS. All answers are fictional.",
+  "cases": [
+    {
+      "id": "example_1_delhi_woman_no_income",
+      "group": "worked_examples",
+      "description": "Delhi, woman, 34, no income given -> eligible via Section 12(c); income never asked.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "woman"
+        ],
+        "age": 34
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ]
+    },
+    {
+      "id": "example_2_delhi_income_240000",
+      "group": "worked_examples",
+      "description": "Delhi, no category, 41, income 2,40,000 -> eligible via the Rs. 3 lakh limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 41,
+        "annual_income": 240000
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_general"
+      ]
+    },
+    {
+      "id": "example_3_delhi_income_300000",
+      "group": "worked_examples",
+      "description": "Delhi, no category, 45, income exactly 3,00,000 -> NOT eligible: the limit is LESS THAN Rs. 3 lakh.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 45,
+        "annual_income": 300000
+      },
+      "expected_result": "likely_not_eligible",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "example_4_delhi_senior_350000",
+      "group": "worked_examples",
+      "description": "Delhi, 67, income 3,50,000 -> eligible via the senior-citizen Rs. 4 lakh limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 67,
+        "annual_income": 350000
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_senior_citizen"
+      ]
+    },
+    {
+      "id": "example_5_maharashtra",
+      "group": "worked_examples",
+      "description": "Maharashtra -> cannot_determine: income limits differ by state.",
+      "answers": {
+        "state": "Maharashtra",
+        "court": "other",
+        "categories": [],
+        "age": 30,
+        "annual_income": 100000
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "example_6_delhi_supreme_court",
+      "group": "worked_examples",
+      "description": "Delhi, Supreme Court, income 2,00,000 -> cannot_determine: Supreme Court Legal Services Committee has a separate limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "supreme_court",
+        "categories": [],
+        "age": 40,
+        "annual_income": 200000
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "boundary_general_299999",
+      "group": "income_boundary",
+      "description": "One rupee under the general limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 41,
+        "annual_income": 299999
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_general"
+      ]
+    },
+    {
+      "id": "boundary_general_300000",
+      "group": "income_boundary",
+      "description": "Exactly at the general limit -- not below it.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 41,
+        "annual_income": 300000
+      },
+      "expected_result": "likely_not_eligible",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "boundary_general_300001",
+      "group": "income_boundary",
+      "description": "One rupee over the general limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 41,
+        "annual_income": 300001
+      },
+      "expected_result": "likely_not_eligible",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "boundary_transgender_399999",
+      "group": "income_boundary",
+      "description": "Transgender person one rupee under the Rs. 4 lakh limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "transgender"
+        ],
+        "age": 30,
+        "annual_income": 399999
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_transgender"
+      ]
+    },
+    {
+      "id": "boundary_transgender_400000",
+      "group": "income_boundary",
+      "description": "Transgender person exactly at the Rs. 4 lakh limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "transgender"
+        ],
+        "age": 30,
+        "annual_income": 400000
+      },
+      "expected_result": "likely_not_eligible",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "boundary_senior_age_59",
+      "group": "age_boundary",
+      "description": "Age 59 is not a senior citizen: Rs. 3,50,000 is over the general limit.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 59,
+        "annual_income": 350000
+      },
+      "expected_result": "likely_not_eligible",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "boundary_senior_age_60",
+      "group": "age_boundary",
+      "description": "Age 60 is a senior citizen (assumption: Senior Citizens Act s. 2(h)).",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 60,
+        "annual_income": 350000
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_income_senior_citizen"
+      ]
+    },
+    {
+      "id": "child_age_17",
+      "group": "age_boundary",
+      "description": "Age 17 is a child under Section 12(c), worked out from age alone.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 17
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_child"
+      ]
+    },
+    {
+      "id": "adult_age_18_no_income",
+      "group": "age_boundary",
+      "description": "Age 18 is not a child; no category and no income -> ask for income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 18
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": [],
+      "expected_needs": [
+        "annual_income"
+      ]
+    },
+    {
+      "id": "category_sc_st",
+      "group": "each_category",
+      "description": "Only 'sc_st' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "sc_st"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_a_sc_st"
+      ]
+    },
+    {
+      "id": "category_trafficking_or_begar",
+      "group": "each_category",
+      "description": "Only 'trafficking_or_begar' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "trafficking_or_begar"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_b_trafficking_or_begar"
+      ]
+    },
+    {
+      "id": "category_woman",
+      "group": "each_category",
+      "description": "Only 'woman' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "woman"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ]
+    },
+    {
+      "id": "category_disability",
+      "group": "each_category",
+      "description": "Only 'disability' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "disability"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_d_disability"
+      ]
+    },
+    {
+      "id": "category_disaster_victim",
+      "group": "each_category",
+      "description": "Only 'disaster_victim' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "disaster_victim"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_e_disaster_victim"
+      ]
+    },
+    {
+      "id": "category_industrial_workman",
+      "group": "each_category",
+      "description": "Only 'industrial_workman' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "industrial_workman"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_f_industrial_workman"
+      ]
+    },
+    {
+      "id": "category_in_custody",
+      "group": "each_category",
+      "description": "Only 'in_custody' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "in_custody"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_g_in_custody"
+      ]
+    },
+    {
+      "id": "category_acid_attack_victim",
+      "group": "each_category",
+      "description": "Only 'acid_attack_victim' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "acid_attack_victim"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_acid_attack_victim"
+      ]
+    },
+    {
+      "id": "category_hiv_aids",
+      "group": "each_category",
+      "description": "Only 'hiv_aids' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "hiv_aids"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_hiv_aids"
+      ]
+    },
+    {
+      "id": "category_defence_family",
+      "group": "each_category",
+      "description": "Only 'defence_family' ticked, adult, no income -> eligible without income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "defence_family"
+        ],
+        "age": 35
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_defence_family"
+      ]
+    },
+    {
+      "id": "category_transgender_alone",
+      "group": "each_category",
+      "description": "Transgender alone is a higher income limit, not eligibility by itself -> ask for income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "transgender"
+        ],
+        "age": 35
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": [],
+      "expected_needs": [
+        "annual_income"
+      ]
+    },
+    {
+      "id": "category_plus_high_income",
+      "group": "category_beats_income",
+      "description": "Woman with income Rs. 50 lakh is still eligible: categories win before income.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "woman"
+        ],
+        "age": 35,
+        "annual_income": 5000000
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ]
+    },
+    {
+      "id": "hiv_plus_high_income",
+      "group": "category_beats_income",
+      "description": "Delhi-only category with high income is still eligible.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [
+          "hiv_aids"
+        ],
+        "age": 35,
+        "annual_income": 2000000
+      },
+      "expected_result": "likely_eligible",
+      "expected_rule_ids": [
+        "delhi_hiv_aids"
+      ]
+    },
+    {
+      "id": "no_category_no_income",
+      "group": "missing_income",
+      "description": "No category and no income -> cannot_determine and asks for income; never guesses.",
+      "answers": {
+        "state": "Delhi",
+        "court": "other",
+        "categories": [],
+        "age": 41
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": [],
+      "expected_needs": [
+        "annual_income"
+      ]
+    },
+    {
+      "id": "other_state_woman",
+      "group": "out_of_scope",
+      "description": "Outside Delhi, a Section 12 match is shown but the result stays cannot_determine.",
+      "answers": {
+        "state": "Maharashtra",
+        "court": "other",
+        "categories": [
+          "woman"
+        ],
+        "age": 30
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": [
+        "s12_c_woman"
+      ]
+    },
+    {
+      "id": "other_state_delhi_only_category",
+      "group": "out_of_scope",
+      "description": "Delhi-only categories do not carry over to other states.",
+      "answers": {
+        "state": "Kerala",
+        "court": "other",
+        "categories": [
+          "acid_attack_victim"
+        ],
+        "age": 30
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": []
+    },
+    {
+      "id": "supreme_court_sc_st",
+      "group": "out_of_scope",
+      "description": "Supreme Court case with Section 12(a) match -> cannot_determine, Section 12(a) shown.",
+      "answers": {
+        "state": "Delhi",
+        "court": "supreme_court",
+        "categories": [
+          "sc_st"
+        ],
+        "age": 30
+      },
+      "expected_result": "cannot_determine",
+      "expected_rule_ids": [
+        "s12_a_sc_st"
+      ]
+    }
+  ]
+}

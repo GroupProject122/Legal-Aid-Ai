@@ -1,0 +1,196 @@
+{
+  "dataset_summary": {
+    "preferred_modes_covered": [
+      "certified_copies",
+      "electronic_format",
+      "inspection_of_records"
+    ],
+    "total_cases": 6
+  },
+  "evaluation_config": {
+    "act": "Right to Information Act, 2005",
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/rti_application_cases.json",
+    "llm_calls": 0,
+    "note": "Slot-fill drafting pipeline only -- no LLM call is part of this path.",
+    "scenario": "rti_application"
+  },
+  "failures": [],
+  "group_breakdown": {
+    "hard_validators": {
+      "additional_citation_accuracy": 0.0,
+      "case_count": 3,
+      "citation_accuracy": 0.0,
+      "citation_corpus_resolution_rate": 0.0,
+      "citation_review_flag_accuracy": 0.0,
+      "fail_case_accuracy": 1.0,
+      "fail_case_count": 3,
+      "hard_fail_message_match_rate": 1.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 0.0,
+      "pass_case_count": 0
+    },
+    "valid_cases": {
+      "additional_citation_accuracy": 1.0,
+      "case_count": 3,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "citation_review_flag_accuracy": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 3
+    }
+  },
+  "latency": {
+    "average_latency_ms": 24.33,
+    "cases": 6,
+    "max_latency_ms": 99
+  },
+  "overall_metrics": {
+    "additional_citation_accuracy": 1.0,
+    "case_count": 6,
+    "citation_accuracy": 1.0,
+    "citation_corpus_resolution_rate": 1.0,
+    "citation_review_flag_accuracy": 1.0,
+    "fail_case_accuracy": 1.0,
+    "fail_case_count": 3,
+    "hard_fail_message_match_rate": 1.0,
+    "overall_accuracy": 1.0,
+    "pass_case_accuracy": 1.0,
+    "pass_case_count": 3
+  },
+  "results": [
+    {
+      "actual_additional_section_cites": [],
+      "actual_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 6(1)",
+        "section_number": "6",
+        "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf"
+      },
+      "actual_citation_review_required": false,
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "correct": true,
+      "description": "Baseline valid application: certified copies, not a BPL applicant, so no fee-exemption clause or additional citation.",
+      "docx_bytes_generated": 37209,
+      "expected_additional_section_cites": [],
+      "expected_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "section_cite": "Section 6(1)"
+      },
+      "expected_citation_review_required": false,
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_certified_copies_non_bpl",
+      "latency_ms": 99
+    },
+    {
+      "actual_additional_section_cites": [
+        "Section 7(5), proviso"
+      ],
+      "actual_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 6(1)",
+        "section_number": "6",
+        "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf"
+      },
+      "actual_citation_review_required": false,
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "correct": true,
+      "description": "BPL applicant requesting inspection of records -- must carry the fee-exemption clause and the additional Section 7(5) citation.",
+      "docx_bytes_generated": 37291,
+      "expected_additional_section_cites": [
+        "Section 7(5), proviso"
+      ],
+      "expected_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "section_cite": "Section 6(1)"
+      },
+      "expected_citation_review_required": false,
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_inspection_bpl_applicant",
+      "latency_ms": 25
+    },
+    {
+      "actual_additional_section_cites": [],
+      "actual_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 6(1)",
+        "section_number": "6",
+        "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf"
+      },
+      "actual_citation_review_required": false,
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "citation_review_flag_correct": true,
+      "correct": true,
+      "description": "Preferred mode = electronic format, to cover the third PreferredMode option.",
+      "docx_bytes_generated": 37249,
+      "expected_additional_section_cites": [],
+      "expected_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "section_cite": "Section 6(1)"
+      },
+      "expected_citation_review_required": false,
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_electronic_format",
+      "latency_ms": 22
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "information_sought under 20 characters must fail as too vague, not proceed with an unfileable request.",
+      "expected_outcome": "fail",
+      "failure_message": "information_sought must describe the specific information requested (at least 20 characters). A vague or overly broad request risks rejection or delay under Section 7(9) of the Act.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_short_information_sought",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "Empty information_sought must fail validation (garbage input).",
+      "expected_outcome": "fail",
+      "failure_message": "information_sought must describe the specific information requested (at least 20 characters). A vague or overly broad request risks rejection or delay under Section 7(9) of the Act.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_empty_information_sought",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "Missing public_authority_name (a required field) must fail -- there is no one to address the request to.",
+      "expected_outcome": "fail",
+      "failure_message": "Field required",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_missing_public_authority_name",
+      "latency_ms": 0
+    }
+  ]
+}

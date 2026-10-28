@@ -1,0 +1,191 @@
+{
+  "dataset_summary": {
+    "pio_response_types_covered": [
+      "incomplete_information_provided",
+      "no_response_received",
+      "request_rejected"
+    ],
+    "total_cases": 7
+  },
+  "evaluation_config": {
+    "act": "Right to Information Act, 2005",
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/rti_first_appeal_cases.json",
+    "llm_calls": 0,
+    "note": "Slot-fill drafting pipeline only -- no LLM call is part of this path.",
+    "scenario": "rti_first_appeal"
+  },
+  "failures": [],
+  "group_breakdown": {
+    "hard_validators": {
+      "case_count": 4,
+      "citation_accuracy": 0.0,
+      "citation_corpus_resolution_rate": 0.0,
+      "fail_case_accuracy": 1.0,
+      "fail_case_count": 4,
+      "hard_fail_message_match_rate": 1.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 0.0,
+      "pass_case_count": 0
+    },
+    "valid_cases": {
+      "case_count": 3,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 3
+    }
+  },
+  "latency": {
+    "average_latency_ms": 21.29,
+    "cases": 7,
+    "max_latency_ms": 101
+  },
+  "overall_metrics": {
+    "case_count": 7,
+    "citation_accuracy": 1.0,
+    "citation_corpus_resolution_rate": 1.0,
+    "fail_case_accuracy": 1.0,
+    "fail_case_count": 4,
+    "hard_fail_message_match_rate": 1.0,
+    "overall_accuracy": 1.0,
+    "pass_case_accuracy": 1.0,
+    "pass_case_count": 3
+  },
+  "results": [
+    {
+      "actual_additional_section_cites": [],
+      "actual_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 19(1)",
+        "section_number": "19",
+        "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf"
+      },
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Standard deemed-refusal appeal: no response within 30 days of the original request.",
+      "docx_bytes_generated": 37397,
+      "expected_additional_section_cites": [],
+      "expected_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "section_cite": "Section 19(1)"
+      },
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_no_response_received",
+      "latency_ms": 101,
+      "lateness_check_correct": true
+    },
+    {
+      "actual_additional_section_cites": [],
+      "actual_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 19(1)",
+        "section_number": "19",
+        "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf"
+      },
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "PIO actively rejected the request -- pio_response_date must be present and appear in the draft.",
+      "docx_bytes_generated": 37416,
+      "expected_additional_section_cites": [],
+      "expected_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "section_cite": "Section 19(1)"
+      },
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_request_rejected",
+      "latency_ms": 25,
+      "lateness_check_correct": true
+    },
+    {
+      "actual_additional_section_cites": [],
+      "actual_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "authority_level": "primary",
+        "confidence": "high",
+        "section_cite": "Section 19(1)",
+        "section_number": "19",
+        "source_file": "constitutional_public_authority/right_to_information_act_2005.pdf"
+      },
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Incomplete information provided, appeal filed well within the 30-day window -- no lateness warning expected.",
+      "docx_bytes_generated": 37391,
+      "expected_additional_section_cites": [],
+      "expected_citation": {
+        "act_short_title": "Right to Information Act, 2005",
+        "section_cite": "Section 19(1)"
+      },
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_incomplete_information_within_window",
+      "latency_ms": 23,
+      "lateness_check_correct": true
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "grounds_for_appeal under 20 characters must fail as too vague.",
+      "expected_outcome": "fail",
+      "failure_message": "grounds_for_appeal must describe why the PIO's response (or non-response) is being challenged (at least 20 characters). A vague appeal is more likely to be rejected by the Appellate Authority.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_short_grounds_for_appeal",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "pio_response_type indicates an actual decision but pio_response_date is missing.",
+      "expected_outcome": "fail",
+      "failure_message": "pio_response_type indicates the PIO responded, but pio_response_date was not supplied. This appeal is incomplete.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_missing_pio_response_date_when_rejected",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "pio_response_type is no_response_received but a pio_response_date was supplied anyway -- contradiction.",
+      "expected_outcome": "fail",
+      "failure_message": "pio_response_type is 'no_response_received' but pio_response_date was supplied. Set pio_response_type to reflect the actual response received, or remove the date if none was received.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_stray_pio_response_date_with_no_response",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "pio_response_date cannot be before original_application_date.",
+      "expected_outcome": "fail",
+      "failure_message": "pio_response_date cannot be before original_application_date.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_response_date_before_application_date",
+      "latency_ms": 0
+    }
+  ]
+}

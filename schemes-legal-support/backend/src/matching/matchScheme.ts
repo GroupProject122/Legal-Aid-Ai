@@ -156,6 +156,7 @@ const FIELD_LABELS: Record<UserProfileFieldKey, string> = {
   paid_income_tax_last_year: "income-tax status",
   monthly_pension: "monthly pension",
   government_employee_grade: "government employee grade",
+  is_pregnant_or_new_mother: "pregnancy / new-motherhood status",
 };
 
 function labelFor(field: UserProfileFieldKey): string {

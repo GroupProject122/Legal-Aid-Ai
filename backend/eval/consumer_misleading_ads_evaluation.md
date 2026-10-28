@@ -1,7 +1,7 @@
 # Complaint Drafter Evaluation (Misleading Advertisement / Dark Patterns, Consumer Protection Act, 2019)
 
 ## Overall Results
-- Total cases: 10
+- Total cases: 12
 - Claim types covered: dark_pattern_deceptive_design, false_claim_about_goods, false_guarantee_or_warranty, misleading_price_representation, surrogate_advertisement
 - Overall accuracy: 100.0%
 - Pass-case accuracy: 100.0% (6 cases)
@@ -9,7 +9,7 @@
 - Citation accuracy: 100.0%
 - Citation review-flag accuracy: 100.0%
 - Citation corpus-resolution rate: 100.0%
-- Fail-case (hard validator) accuracy: 100.0% (4 cases)
+- Fail-case (hard validator) accuracy: 100.0% (6 cases)
 - Hard-fail message match rate: 100.0%
 
 ## Valid Drafts Per Claim Type
@@ -28,9 +28,11 @@
 - `hard_fail_loss_description_empty` expected `fail` -> got `fail`; message matched=True
 - `hard_fail_future_date_encountered` expected `fail` -> got `fail`; message matched=True
 - `hard_fail_compensation_relief_missing_amount` expected `fail` -> got `fail`; message matched=True
+- `hard_fail_amount_paid_supplied_as_zero` expected `fail` -> got `fail`; message matched=True
+- `hard_fail_compensation_amount_supplied_as_zero` expected `fail` -> got `fail`; message matched=True
 
 ## Group Breakdown
-- `hard_validators`: overall accuracy 100.0% (4 cases)
+- `hard_validators`: overall accuracy 100.0% (6 cases)
 - `no_transaction_case`: overall accuracy 100.0% (1 cases)
 - `valid_per_ground`: overall accuracy 100.0% (5 cases)
 
@@ -38,10 +40,10 @@
 - No failures under the current case labels.
 
 ## Cost And Latency
-- Cases run: 10
+- Cases run: 12
 - LLM calls: 0 (no LLM is part of the drafting path)
-- Average latency: 23.3 ms
-- Max latency: 101 ms
+- Average latency: 19.67 ms
+- Max latency: 107 ms
 
 ## Remaining Limitations
 - Citation resolution checks source_file + section_number/guideline_number presence in the corpus rag.py loads, not clause-letter-level textual entailment (same limitation as the other two scenarios; see complaint_drafter.py's ADS_CLAUSE_CITATIONS comments).

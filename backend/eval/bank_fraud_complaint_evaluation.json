@@ -1,0 +1,275 @@
+{
+  "dataset_summary": {
+    "account_categories_covered": [
+      "bsbd_account",
+      "high_value_account",
+      "standard_account"
+    ],
+    "liability_tiers_covered": [
+      "bank_policy",
+      "limited",
+      "zero"
+    ],
+    "total_cases": 8
+  },
+  "evaluation_config": {
+    "act": "RBI Limiting Liability Directions, 2017 + IT Act, 2000 Section 66D",
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/bank_fraud_complaint_cases.json",
+    "llm_calls": 0,
+    "note": "Slot-fill drafting pipeline only -- no LLM call is part of this path.",
+    "scenario": "bank_fraud_complaint"
+  },
+  "failures": [],
+  "group_breakdown": {
+    "hard_validators": {
+      "additional_citation_accuracy": 0.0,
+      "case_count": 4,
+      "citation_accuracy": 0.0,
+      "citation_corpus_resolution_rate": 0.0,
+      "fail_case_accuracy": 1.0,
+      "fail_case_count": 4,
+      "hard_fail_message_match_rate": 1.0,
+      "liability_tier_accuracy": 0.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 0.0,
+      "pass_case_count": 0
+    },
+    "valid_cases": {
+      "additional_citation_accuracy": 1.0,
+      "case_count": 4,
+      "citation_accuracy": 1.0,
+      "citation_corpus_resolution_rate": 1.0,
+      "fail_case_accuracy": 0.0,
+      "fail_case_count": 0,
+      "hard_fail_message_match_rate": 0.0,
+      "liability_tier_accuracy": 1.0,
+      "overall_accuracy": 1.0,
+      "pass_case_accuracy": 1.0,
+      "pass_case_count": 4
+    }
+  },
+  "latency": {
+    "average_latency_ms": 21.62,
+    "cases": 8,
+    "max_latency_ms": 101
+  },
+  "overall_metrics": {
+    "additional_citation_accuracy": 1.0,
+    "case_count": 8,
+    "citation_accuracy": 1.0,
+    "citation_corpus_resolution_rate": 1.0,
+    "fail_case_accuracy": 1.0,
+    "fail_case_count": 4,
+    "hard_fail_message_match_rate": 1.0,
+    "liability_tier_accuracy": 1.0,
+    "overall_accuracy": 1.0,
+    "pass_case_accuracy": 1.0,
+    "pass_case_count": 4
+  },
+  "results": [
+    {
+      "actual_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "actual_citation": {
+        "act_short_title": "RBI Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (2017)",
+        "authority_level": "primary",
+        "confidence": "high",
+        "guideline_number": "8",
+        "provision_field": "guideline_number",
+        "section_cite": "Guideline 8 (Table 2)",
+        "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf"
+      },
+      "actual_elapsed_days": 0,
+      "actual_liability_tier": "zero",
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Reported same day as bank communication -- zero liability tier (day_gap=0).",
+      "docx_bytes_generated": 37659,
+      "elapsed_correct": true,
+      "expected_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_elapsed_days": 0,
+      "expected_liability_tier": "zero",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_zero_liability_reported_same_day",
+      "latency_ms": 101,
+      "tier_correct": true
+    },
+    {
+      "actual_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "actual_citation": {
+        "act_short_title": "RBI Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (2017)",
+        "authority_level": "primary",
+        "confidence": "high",
+        "guideline_number": "8",
+        "provision_field": "guideline_number",
+        "section_cite": "Guideline 8 (Table 2)",
+        "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf"
+      },
+      "actual_elapsed_days": 3,
+      "actual_liability_tier": "zero",
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Reported exactly 3 days after communication -- still zero liability (boundary).",
+      "docx_bytes_generated": 37646,
+      "elapsed_correct": true,
+      "expected_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_elapsed_days": 3,
+      "expected_liability_tier": "zero",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_zero_liability_boundary_day_3",
+      "latency_ms": 26,
+      "tier_correct": true
+    },
+    {
+      "actual_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "actual_citation": {
+        "act_short_title": "RBI Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (2017)",
+        "authority_level": "primary",
+        "confidence": "high",
+        "guideline_number": "8",
+        "provision_field": "guideline_number",
+        "section_cite": "Guideline 8 (Table 2)",
+        "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf"
+      },
+      "actual_elapsed_days": 4,
+      "actual_liability_tier": "limited",
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Reported 4 days after communication -- limited liability tier (boundary).",
+      "docx_bytes_generated": 37683,
+      "elapsed_correct": true,
+      "expected_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_elapsed_days": 4,
+      "expected_liability_tier": "limited",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_limited_liability_boundary_day_4",
+      "latency_ms": 23,
+      "tier_correct": true
+    },
+    {
+      "actual_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "actual_citation": {
+        "act_short_title": "RBI Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (2017)",
+        "authority_level": "primary",
+        "confidence": "high",
+        "guideline_number": "8",
+        "provision_field": "guideline_number",
+        "section_cite": "Guideline 8 (Table 2)",
+        "source_file": "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf"
+      },
+      "actual_elapsed_days": 10,
+      "actual_liability_tier": "bank_policy",
+      "actual_outcome": "pass",
+      "additional_citations_correct": true,
+      "citation_correct": true,
+      "citation_resolved_against_corpus": true,
+      "correct": true,
+      "description": "Reported 10 days after communication -- bank's own policy tier applies.",
+      "docx_bytes_generated": 37691,
+      "elapsed_correct": true,
+      "expected_additional_section_cites": [
+        "Guideline 7 (Table 1)",
+        "Section 66D"
+      ],
+      "expected_citation": {
+        "section_cite": "Guideline 8 (Table 2)"
+      },
+      "expected_elapsed_days": 10,
+      "expected_liability_tier": "bank_policy",
+      "expected_outcome": "pass",
+      "failure_message": null,
+      "group": "valid_cases",
+      "id": "valid_bank_policy_tier_beyond_7_days",
+      "latency_ms": 23,
+      "tier_correct": true
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "transaction_amount of zero must fail with a custom message, not pydantic's generic one.",
+      "expected_outcome": "fail",
+      "failure_message": "Transaction amount must be a positive amount.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_non_positive_transaction_amount",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "bank_communication_date before transaction_date is a data inconsistency.",
+      "expected_outcome": "fail",
+      "failure_message": "bank_communication_date cannot be before transaction_date -- the Bank's communication about a transaction cannot predate the transaction itself.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_communication_before_transaction",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "transaction_date in the future must fail.",
+      "expected_outcome": "fail",
+      "failure_message": "transaction_date cannot be in the future.",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_future_transaction_date",
+      "latency_ms": 0
+    },
+    {
+      "actual_outcome": "fail",
+      "correct": true,
+      "description": "unauthorized_transaction_description under 20 characters must fail as too vague.",
+      "expected_outcome": "fail",
+      "failure_message": "unauthorized_transaction_description must describe the specific transaction and why it was unauthorized (at least 20 characters).",
+      "failure_message_matches_expected": true,
+      "group": "hard_validators",
+      "id": "hard_fail_short_description",
+      "latency_ms": 0
+    }
+  ]
+}

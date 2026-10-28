@@ -31,6 +31,7 @@ export const PROFILE_FIELDS: UserProfileField[] = [
   "paid_income_tax_last_year",
   "monthly_pension",
   "government_employee_grade",
+  "is_pregnant_or_new_mother",
 ];
 
 export const FIELD_LABELS: Record<UserProfileField, string> = {
@@ -46,6 +47,7 @@ export const FIELD_LABELS: Record<UserProfileField, string> = {
   paid_income_tax_last_year: "Paid income tax last year",
   monthly_pension: "Monthly pension",
   government_employee_grade: "Government employee grade",
+  is_pregnant_or_new_mother: "Pregnant or new mother",
 };
 
 const NUMERIC_FIELDS: UserProfileField[] = [
@@ -53,7 +55,10 @@ const NUMERIC_FIELDS: UserProfileField[] = [
   "annual_family_income",
   "monthly_pension",
 ];
-const BOOLEAN_FIELDS: UserProfileField[] = ["paid_income_tax_last_year"];
+const BOOLEAN_FIELDS: UserProfileField[] = [
+  "paid_income_tax_last_year",
+  "is_pregnant_or_new_mother",
+];
 
 export function fieldKind(field: UserProfileField): FieldKind {
   if (NUMERIC_FIELDS.includes(field)) return "numeric";

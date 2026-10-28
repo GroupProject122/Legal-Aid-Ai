@@ -1,15 +1,15 @@
 import React from 'react';
 import {
   ArrowUpRight,
-  Bell,
   Bot,
   BriefcaseBusiness,
   Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
-  CircleUserRound,
   Clock,
+  Copy,
   Download,
   Ellipsis,
   Eye,
@@ -20,27 +20,32 @@ import {
   Gavel,
   Gift,
   Globe2,
+  HandHelping,
   HardDrive,
   Home,
   Info,
   Landmark,
   Lightbulb,
+  ListChecks,
+  LoaderCircle,
   LockKeyhole,
   MessageCircle,
   Mic,
-  Moon,
-  Sun,
   MoreHorizontal,
   MoreVertical,
   Paperclip,
   Pencil,
+  Phone,
   ReceiptText,
+  RefreshCw,
   Scale,
+  ScanSearch,
   Search,
   Send,
   ShieldCheck,
   ShoppingCart,
   Sparkles,
+  Square,
   Star,
   Tags,
   Trash2,
@@ -50,15 +55,30 @@ import {
   X
 } from 'lucide-react';
 
+import {
+  VintageScales,
+  VintageCourthouse,
+  VintageGavel,
+  VintageDocuments,
+  VintageLawBook,
+  HeaderControls,
+  PageDivider,
+  DocumentsBackgroundArt
+} from './shared/PageChrome.jsx';
+
 import { AutoGrowTextarea } from './AutoGrowTextarea.jsx';
 import { IntakeForm } from './schemes/IntakeForm.jsx';
 import { ResultsList } from './schemes/ResultsList.jsx';
 import { ApiError, postMatch } from './schemes/api.js';
 
 import { ScenarioPicker, SCENARIOS } from './complaints/ScenarioPicker.jsx';
+import Helplines from './helplines/Helplines.jsx';
+import ScamCheck from './scamcheck/ScamCheck.jsx';
+import LegalAidCheck from './legalaid/LegalAidCheck.jsx';
 import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
+import { CaseFileButton } from './caseFile/CaseFileButton.jsx';
 
 import { AccountMenu, AuthForm, signInHref, useAuth } from './auth.jsx';
 
@@ -74,6 +94,9 @@ const navItems = [
   { label: 'Summarize Document', icon: Sparkles, page: 'summarize', href: '#/summarize-document' },
   { label: 'Know Your Rights', icon: ShieldCheck, page: 'rights', href: '#/rights' },
   { label: 'Schemes', icon: Gift, page: 'schemes', href: '#/schemes' },
+  { label: 'Check a Message', icon: ScanSearch, page: 'scam-check', href: '#/scam-check' },
+  { label: 'Free Legal Aid Check', icon: HandHelping, page: 'legal-aid', href: '#/legal-aid' },
+  { label: 'Helplines', icon: Phone, page: 'helplines', href: '#/helplines' },
   { label: 'About Us', icon: CircleHelp, page: 'about', href: '#/about' }
 ];
 
@@ -118,6 +141,27 @@ const features = [
     button: 'View Schemes',
     icon: Gift,
     href: '#/schemes'
+  },
+  {
+    title: 'Check a Message',
+    description: 'Paste a suspicious SMS or WhatsApp message to spot common scam signs.',
+    button: 'Check Now',
+    icon: ScanSearch,
+    href: '#/scam-check'
+  },
+  {
+    title: 'Free Legal Aid Check',
+    description: 'See if you qualify for a free lawyer, and where to apply.',
+    button: 'Check Now',
+    icon: HandHelping,
+    href: '#/legal-aid'
+  },
+  {
+    title: 'Helplines',
+    description: 'Official numbers and portals for urgent help, right now.',
+    button: 'View Helplines',
+    icon: Phone,
+    href: '#/helplines'
   }
 ];
 
@@ -305,94 +349,6 @@ function LegalMark({ className = '' }) {
   );
 }
 
-function VintageScales({ className = '' }) {
-  return (
-    <svg className={className} viewBox="0 0 320 270" fill="none" aria-hidden="true">
-      <path d="M160 27v198" />
-      <path d="M132 225h56M113 245h94M96 259h128M119 236h82M105 252h110" />
-      <path d="M138 40c8-21 36-21 44 0M126 49h68M160 40v-15M151 23h18M148 31h24" />
-      <path d="M57 67h206M69 61h182M73 73h174M160 67c-17 12-39 18-66 18s-45-6-58-18M160 67c17 12 39 18 66 18s45-6 58-18" />
-      <path d="M84 76l-33 72M84 76l33 72M236 76l-33 72M236 76l33 72" />
-      <path d="M43 148c8 19 74 19 82 0H43ZM195 148c8 19 74 19 82 0h-82Z" />
-      <path d="M54 154c14 9 52 10 62 0M58 148c7 12 46 12 53 0M210 148c7 12 46 12 53 0M206 154c14 9 52 10 62 0" opacity=".72" />
-      <path d="M160 83c13 0 23-7 23-16M160 83c-13 0-23-7-23-16" />
-      <path d="M145 117h30M145 137h30M145 157h30M145 177h30M145 197h30M153 96h14M151 216h18" opacity=".5" />
-      <path d="M57 132h54M61 124h46M66 116h36M209 132h54M213 124h46M218 116h36" opacity=".34" />
-      <path d="M48 151l69 8M199 151l69 8M51 159l59-8M202 159l59-8" opacity=".28" />
-      <path d="M151 54c4 12 4 149 0 164M169 54c-4 12-4 149 0 164" opacity=".22" />
-    </svg>
-  );
-}
-
-function VintageCourthouse({ className = '' }) {
-  return (
-    <svg className={className} viewBox="0 0 360 250" fill="none" aria-hidden="true">
-      <path d="M26 88h308L180 18 26 88Z" />
-      <path d="M47 80h266M72 70h216M99 58h162M64 88h232M80 103h200M65 206h230M48 224h264M30 240h300" />
-      <path d="M88 109v92M122 109v92M156 109v92M190 109v92M224 109v92M258 109v92" />
-      <path d="M80 109h16M114 109h16M148 109h16M182 109h16M216 109h16M250 109h16" />
-      <path d="M80 201h16M114 201h16M148 201h16M182 201h16M216 201h16M250 201h16" />
-      <path d="M95 118v73M129 118v73M163 118v73M197 118v73M231 118v73M265 118v73" opacity=".55" />
-      <path d="M158 63c12-17 32-17 44 0M151 68h58M180 42v27M170 51h20M166 58h28" />
-      <path d="M55 226h250M72 216h216" opacity=".45" />
-      <path d="M180 28 45 83M180 28l135 55" opacity=".48" />
-      <path d="M76 94h208M86 97h188M43 232h274M58 235h244" opacity=".34" />
-      <path d="M92 118h26M126 118h26M160 118h26M194 118h26M228 118h26M88 128h34M122 128h34M156 128h34M190 128h34M224 128h34" opacity=".28" />
-      <path d="M103 122v68M137 122v68M171 122v68M205 122v68M239 122v68" opacity=".24" />
-      <path d="M120 35 56 78M140 31 77 72M220 35l64 43M201 31l62 41" opacity=".24" />
-      <path d="M151 207v-31c0-16 12-27 29-27s29 11 29 27v31M164 207v-30c0-8 6-15 16-15s16 7 16 15v30" opacity=".38" />
-    </svg>
-  );
-}
-
-function VintageGavel({ className = '' }) {
-  return (
-    <svg className={className} viewBox="0 0 330 230" fill="none" aria-hidden="true">
-      <path d="M85 58 142 19l44 63-57 40-44-64Z" />
-      <path d="M128 17 194 110M69 70l72-50M121 133l73-51M78 58l43-30M132 127l51-35" />
-      <path d="M173 91 286 203M153 111l110 99M161 99l113 114M180 87l111 110" />
-      <path d="M253 188c20-4 38 8 43 24M231 204c27-6 54 6 67 25" />
-      <path d="M36 176h124c18 0 32 9 32 20v6H4v-6c0-11 14-20 32-20Z" />
-      <path d="M42 160h111c13 0 24 7 24 16H18c0-9 11-16 24-16Z" />
-      <path d="M103 71 157 34M116 90l55-38M129 109l54-38M97 61l45 65M111 51l45 65M124 42l45 65" opacity=".5" />
-      <path d="M96 72c14-16 42-34 66-41M108 89c15-14 43-32 66-39M120 106c14-13 42-31 57-34" opacity=".27" />
-      <path d="M33 169h128M24 184h162M33 194h147M53 160c9 7 9 42 0 42M142 160c-9 7-9 42 0 42" opacity=".28" />
-      <path d="M205 122l-19 19M220 137l-19 19M235 152l-19 19M250 167l-19 19M265 182l-19 19" opacity=".24" />
-    </svg>
-  );
-}
-
-function VintageDocuments({ className = '' }) {
-  return (
-    <svg className={className} viewBox="0 0 310 250" fill="none" aria-hidden="true">
-      <path d="M82 17h129l54 54v162H82V17Z" />
-      <path d="M211 17v55h54M103 70h78M103 94h124M103 118h124M103 142h92M103 166h58M104 82h116M104 106h102M104 130h119M104 154h75" />
-      <path d="M58 47h-22v169h31M238 87h24M50 59h22M50 82h22M50 105h22M50 128h22M50 151h22M50 174h22" opacity=".62" />
-      <path d="M176 193c15-20 34-22 44-5 12 20-10 36-25 21-10-10 3-25 17-17" />
-      <path d="M126 207h43M102 207h13" />
-      <path d="M37 218c27 17 81 15 108-4" opacity=".42" />
-      <path d="M223 70h30M91 28h106M92 40h103M92 52h78" opacity=".45" />
-      <path d="M224 29c4 16 15 28 31 33M218 40c7 12 17 20 30 24M88 223h170M88 31v190M258 77v145" opacity=".27" />
-      <path d="M181 181c11-8 28-10 40-1M187 216c9 7 26 8 38 1M183 188l36 24M220 187l-38 23" opacity=".28" />
-      <path d="M117 70v97M191 94v74M228 94v48" opacity=".18" />
-    </svg>
-  );
-}
-
-function VintageLawBook({ className = '' }) {
-  return (
-    <svg className={className} viewBox="0 0 280 220" fill="none" aria-hidden="true">
-      <path d="M54 42c24-13 57-15 88-2 30-13 64-11 88 2v139c-24-11-56-13-88 1-32-14-64-12-88-1V42Z" />
-      <path d="M142 40v142M68 55c18-7 43-8 62 0M154 55c20-8 45-7 62 0M68 78h58M68 101h58M68 124h50M68 147h56M156 78h58M156 101h58M156 124h45M156 147h55" />
-      <path d="M43 55c-11 6-17 16-17 29v122c26-13 69-17 116-2 47-15 90-11 116 2V84c0-13-6-23-17-29" />
-      <path d="M34 198c31-10 68-9 108 4 40-13 77-14 108-4" opacity=".5" />
-      <path d="M90 63c8 20 8 39 0 59M104 63c-8 20-8 39 0 59M84 93h27M178 66c8 20 8 39 0 59M192 66c-8 20-8 39 0 59M172 96h27" opacity=".36" />
-      <path d="M59 43c25 3 52 10 83 22M225 43c-25 3-52 10-83 22M142 182c-25-12-54-16-88-8M142 182c25-12 54-16 88-8" opacity=".25" />
-      <path d="M78 171c14-3 31-2 48 3M157 174c18-5 36-6 55-3M43 68v124M238 68v124" opacity=".24" />
-    </svg>
-  );
-}
-
 function Sidebar({ activePage = 'home', collapsed = false, onToggle }) {
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
@@ -454,54 +410,6 @@ function Sidebar({ activePage = 'home', collapsed = false, onToggle }) {
         </section>
       </div>
     </aside>
-  );
-}
-
-const THEME_STORAGE_KEY = 'legalAidTheme';
-
-// Dark mode is a whole-page colour inversion (see html[data-theme="dark"] in styles.css): the
-// stylesheet hard-codes its parchment palette in thousands of rules rather than in variables, so
-// inverting -- with a hue rotation that keeps the browns warm -- themes every page at once.
-// The attribute is set on <html> before first paint by the inline script in index.html; every
-// HeaderControls (one per page) reads it from there, so all pages agree.
-function useTheme() {
-  const [theme, setTheme] = React.useState(() => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'));
-
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch (error) {
-      // Storage can be unavailable (private window, blocked site data); the toggle still works
-      // for this visit, it just is not remembered.
-    }
-    setTheme(next);
-  };
-
-  return [theme, toggleTheme];
-}
-
-function HeaderControls() {
-  const [theme, toggleTheme] = useTheme();
-  const isDark = theme === 'dark';
-  return (
-    <header className="top-controls" aria-label="Page controls">
-      <button
-        type="button"
-        onClick={toggleTheme}
-        aria-pressed={isDark}
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        title={isDark ? 'Light mode' : 'Dark mode'}
-      >
-        {isDark ? <Sun size={18} /> : <Moon size={18} />}
-      </button>
-      <button aria-label="Notifications">
-        <Bell size={18} />
-        <span className="notify-dot" />
-      </button>
-      <AccountMenu />
-    </header>
   );
 }
 
@@ -712,16 +620,6 @@ function BackgroundArt() {
   );
 }
 
-function PageDivider() {
-  return (
-    <div className="page-divider" aria-hidden="true">
-      <span />
-      <Scale size={24} strokeWidth={1.45} />
-      <span />
-    </div>
-  );
-}
-
 function AskPageHeader() {
   return (
     <section className="ask-page-header">
@@ -882,6 +780,13 @@ async function parseAskResponse(response) {
   return payload;
 }
 
+function precedingUserText(messages, index) {
+  for (let i = index - 1; i >= 0; i -= 1) {
+    if (messages[i].role === 'user') return messages[i].text || '';
+  }
+  return '';
+}
+
 function SourceCard({ source, onClick }) {
   const detail = [cleanDisplayText(source.section), source.page ? `Page ${source.page}` : null].filter(Boolean).join(' · ');
   const documentTitle = cleanDisplayText(source.document);
@@ -898,7 +803,11 @@ function SourceCard({ source, onClick }) {
   );
 }
 
-function LegalAIResponse({ response, onSourceClick }) {
+// Matches a question that asks about free legal aid or a free lawyer. Only the user's own
+// question text (already on screen) is read; nothing new is sent to or asked of the backend.
+const LEGAL_AID_QUESTION_PATTERN = /legal[\s-]*aid|free\s+(lawyer|advocate|legal\s+(help|services?|advice|representation))|legal\s+services\s+authority|\b(nalsa|dlsa|dslsa)\b/i;
+
+function LegalAIResponse({ response, onSourceClick, question = '' }) {
   const answer = response?.answer || {};
   const sources = response?.sources || [];
   const documentEvidence = response?.document_evidence_used || [];
@@ -909,6 +818,11 @@ function LegalAIResponse({ response, onSourceClick }) {
   const whereToApproach = (answer.where_to_approach || []).map(cleanDisplayText).filter(Boolean);
   const limitations = (answer.limitations || []).map(cleanDisplayText).filter(Boolean);
   const clarificationQuestion = cleanDisplayText(response?.clarification?.question);
+  // Purely a read of the routing field the backend already returns with every answer -- no
+  // change to the answer pipeline itself. Only shown on a real answer, not mid-clarification.
+  const isCyberRouted = (response?.routing?.domains || []).includes('cyber');
+  const isLegalAidQuestion = (response?.routing?.domains || []).includes('constitutional_public_authority')
+    && LEGAL_AID_QUESTION_PATTERN.test(question);
 
   // No internet / Gemini unreachable: the backend already fell back to what it found locally
   // (embeddings + FAISS, no network involved) instead of a Gemini-written answer. Shown as its
@@ -1141,6 +1055,20 @@ function LegalAIResponse({ response, onSourceClick }) {
           </div>
         )}
 
+        {!clarificationQuestion && isCyberRouted ? (
+          <a className="response-cyber-hint" href="#/helplines">
+            <Phone size={14} strokeWidth={2} />
+            Lost money to online fraud? Call 1930 as soon as possible.
+          </a>
+        ) : null}
+
+        {!clarificationQuestion && isLegalAidQuestion ? (
+          <a className="response-cyber-hint" href="#/legal-aid">
+            <HandHelping size={14} strokeWidth={2} />
+            Check if you qualify for free legal aid
+          </a>
+        ) : null}
+
         <div className="response-disclaimer">
           <ShieldCheck size={16} strokeWidth={1.7} />
           <span>{response?.disclaimer || 'This is legal information, not professional legal advice.'}</span>
@@ -1171,7 +1099,194 @@ function LoadingMessage() {
   );
 }
 
-function ChatComposer({ value, onChange, onSubmit, onAttach }) {
+const MIC_MIME_CANDIDATES = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+const MIC_MAX_RECORDING_MS = 60000;
+const VOICE_PRIVACY_NOTE_KEY = 'legalAidVoicePrivacyNoteShown';
+
+function pickMicRecordingMimeType() {
+  if (typeof MediaRecorder === 'undefined' || !MediaRecorder.isTypeSupported) return '';
+  return MIC_MIME_CANDIDATES.find((type) => MediaRecorder.isTypeSupported(type)) || '';
+}
+
+function getSpeechRecognitionConstructor() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function hasSeenVoicePrivacyNote() {
+  try {
+    return window.localStorage.getItem(VOICE_PRIVACY_NOTE_KEY) === '1';
+  } catch (error) {
+    return true; // storage unavailable -- don't nag every click, just skip the note
+  }
+}
+
+function markVoicePrivacyNoteSeen() {
+  try {
+    window.localStorage.setItem(VOICE_PRIVACY_NOTE_KEY, '1');
+  } catch (error) {
+    // storage unavailable -- nothing to persist, the note will just show again next time
+  }
+}
+
+function ChatComposer({ value, onChange, onSubmit, onAttach, onVoiceStart }) {
+  // idle -> recording -> transcribing -> idle (or back to idle with an error shown).
+  // "recording" covers both our own MediaRecorder capture and the browser-speech-recognition
+  // fallback (see runBrowserSpeechFallback) -- the button looks and behaves the same either way.
+  const [micState, setMicState] = React.useState('idle');
+  const [micError, setMicError] = React.useState('');
+  const [micNotice, setMicNotice] = React.useState('');
+  const mediaRecorderRef = React.useRef(null);
+  const audioChunksRef = React.useRef([]);
+  const streamRef = React.useRef(null);
+  const speechRecognitionRef = React.useRef(null);
+  const micErrorTimerRef = React.useRef(null);
+  const micNoticeTimerRef = React.useRef(null);
+  const recordingTimeoutRef = React.useRef(null);
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  React.useEffect(() => () => {
+    window.clearTimeout(micErrorTimerRef.current);
+    window.clearTimeout(micNoticeTimerRef.current);
+    window.clearTimeout(recordingTimeoutRef.current);
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    speechRecognitionRef.current?.stop();
+  }, []);
+
+  const showMicError = (message) => {
+    setMicError(message);
+    setMicNotice('');
+    setMicState('idle');
+    window.clearTimeout(micErrorTimerRef.current);
+    micErrorTimerRef.current = window.setTimeout(() => setMicError(''), 6000);
+  };
+
+  const showMicNotice = (message, durationMs = 8000) => {
+    setMicNotice(message);
+    window.clearTimeout(micNoticeTimerRef.current);
+    micNoticeTimerRef.current = window.setTimeout(() => setMicNotice(''), durationMs);
+  };
+
+  const appendTranscript = (transcript) => {
+    const trimmed = (transcript || '').trim();
+    if (!trimmed) return;
+    const current = valueRef.current;
+    onChange(current ? `${current} ${trimmed}` : trimmed);
+  };
+
+  const runBrowserSpeechFallback = () => {
+    const SpeechRecognitionCtor = getSpeechRecognitionConstructor();
+    if (!SpeechRecognitionCtor) {
+      showMicError('Voice transcription is temporarily unavailable. Please try again or type your question.');
+      return;
+    }
+    try {
+      const recognition = new SpeechRecognitionCtor();
+      recognition.lang = 'en-IN';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = (event) => {
+        appendTranscript(event.results?.[0]?.[0]?.transcript);
+      };
+      recognition.onerror = () => {
+        showMicError("Could not use your browser's voice recognition either. Please type your question.");
+      };
+      recognition.onend = () => {
+        speechRecognitionRef.current = null;
+        setMicState((current) => (current === 'recording' ? 'idle' : current));
+      };
+      speechRecognitionRef.current = recognition;
+      recognition.start();
+      setMicState('recording');
+      showMicNotice("Gemini voice service is busy, so this is using your browser's built-in recognition instead. Please speak again.", 10000);
+    } catch (error) {
+      showMicError("Could not start your browser's voice recognition. Please type your question.");
+    }
+  };
+
+  const sendForTranscription = async (blob) => {
+    setMicState('transcribing');
+    try {
+      const formData = new FormData();
+      formData.append('file', blob, 'question.webm');
+      const response = await fetch('/api/transcribe', { method: 'POST', body: formData });
+      if (response.status === 503) {
+        runBrowserSpeechFallback();
+        return;
+      }
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.detail || 'Could not transcribe that recording.');
+      }
+      appendTranscript(payload?.transcript);
+      setMicState('idle');
+    } catch (error) {
+      showMicError(error.message || 'Could not transcribe that recording.');
+    }
+  };
+
+  const startRecording = async () => {
+    setMicError('');
+    if (typeof MediaRecorder === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+      showMicError('Voice input is not supported in this browser.');
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      onVoiceStart?.();
+      streamRef.current = stream;
+      const mimeType = pickMicRecordingMimeType();
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) audioChunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => {
+        window.clearTimeout(recordingTimeoutRef.current);
+        streamRef.current?.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+        const recordedBlob = new Blob(audioChunksRef.current, { type: recorder.mimeType || mimeType || 'audio/webm' });
+        audioChunksRef.current = [];
+        sendForTranscription(recordedBlob);
+      };
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setMicState('recording');
+      if (!hasSeenVoicePrivacyNote()) {
+        markVoicePrivacyNoteSeen();
+        showMicNotice("Your voice is sent to Google's Gemini AI to turn it into text. It isn't saved or stored.");
+      }
+      // Browsers (and this app's own backend limit) don't expect a long voice question --
+      // auto-stop so a forgotten-open mic doesn't record indefinitely.
+      recordingTimeoutRef.current = window.setTimeout(() => {
+        if (mediaRecorderRef.current?.state === 'recording') {
+          mediaRecorderRef.current.stop();
+        }
+      }, MIC_MAX_RECORDING_MS);
+    } catch (error) {
+      showMicError('Microphone access was denied. Please type your question instead.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (speechRecognitionRef.current) {
+      speechRecognitionRef.current.stop();
+      return;
+    }
+    mediaRecorderRef.current?.stop();
+  };
+
+  const handleMicClick = () => {
+    if (micState === 'recording') {
+      stopRecording();
+    } else if (micState === 'idle') {
+      startRecording();
+    }
+  };
+
+  const micLabel =
+    micState === 'recording' ? 'Stop recording' : micState === 'transcribing' ? 'Transcribing your question' : 'Use microphone';
+
   return (
     <form className="chat-composer" onSubmit={onSubmit}>
       <button type="button" className="composer-icon-button" aria-label="Attach document" onClick={onAttach}>
@@ -1186,9 +1301,29 @@ function ChatComposer({ value, onChange, onSubmit, onAttach }) {
         placeholder="Describe your legal issue..."
         aria-label="Describe your legal issue"
       />
-      <button type="button" className="composer-icon-button" aria-label="Use microphone">
-        <Mic size={24} strokeWidth={1.7} />
-      </button>
+      <div className="composer-mic-wrap">
+        {micError ? (
+          <span className="composer-mic-error" role="status">{micError}</span>
+        ) : micNotice ? (
+          <span className="composer-mic-notice" role="status">{micNotice}</span>
+        ) : null}
+        <button
+          type="button"
+          className={`composer-icon-button ${micState === 'recording' ? 'composer-mic-recording' : ''}`}
+          aria-label={micLabel}
+          title={micLabel}
+          onClick={handleMicClick}
+          disabled={micState === 'transcribing'}
+        >
+          {micState === 'transcribing' ? (
+            <LoaderCircle size={24} strokeWidth={1.7} className="composer-mic-spin" />
+          ) : micState === 'recording' ? (
+            <Square size={20} strokeWidth={1.7} />
+          ) : (
+            <Mic size={24} strokeWidth={1.7} />
+          )}
+        </button>
+      </div>
       <button type="submit" className="ask-button composer-submit">
         <Send size={18} strokeWidth={1.8} />
         <span>Ask AI</span>
@@ -1197,7 +1332,18 @@ function ChatComposer({ value, onChange, onSubmit, onAttach }) {
   );
 }
 
-function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, focusSequence = null, focusKey = '' }) {
+/** Same rule as backend case_store.is_answer_content(): an actual answer, not an
+ * acknowledgement, clarification question or technical error (all of which also carry an
+ * issue_summary). Drives whether the case file button is enabled. */
+const SUBSTANTIVE_ANSWER_FIELDS = ['what_this_may_involve', 'possible_legal_position', 'suggested_next_steps', 'evidence_to_preserve', 'where_to_approach'];
+function isAnswerResponse(response) {
+  if (!response || response.technical_error || response.clarification?.needed) return false;
+  const answer = response.answer;
+  if (!answer || !String(answer.issue_summary || '').trim()) return false;
+  return (response.sources?.length > 0) || SUBSTANTIVE_ANSWER_FIELDS.some((field) => answer[field]?.length > 0);
+}
+
+function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, caseId, caseTitle, canExportCaseFile = false, focusSequence = null, focusKey = '' }) {
   const scrollRef = React.useRef(null);
   const focusDoneRef = React.useRef(false);
   const [highlightedSequence, setHighlightedSequence] = React.useState(null);
@@ -1235,7 +1381,18 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
           <span>◇</span>
           <p>Legal consultation workspace</p>
         </div>
-        <button type="button" className="outline-action" onClick={onClear}>New Question</button>
+        <div className="chat-panel-toolbar-actions">
+          {/* Only a saved case can be exported, and only by its signed-in owner: guests' conversations
+              are never saved (no case id), and the export endpoints answer 401 to guests anyway. */}
+          {caseId && canExportCaseFile ? (
+            <CaseFileButton
+              caseId={caseId}
+              caseTitle={caseTitle}
+              hasAnswers={messages.some((message) => message.role === 'ai' && isAnswerResponse(message.response))}
+            />
+          ) : null}
+          <button type="button" className="outline-action" onClick={onClear}>New Question</button>
+        </div>
       </div>
 
       <div className="chat-scroll" ref={scrollRef}>
@@ -1243,12 +1400,12 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
           <WelcomeState onSelectExample={onExample} />
         ) : (
           <>
-            {messages.map((message) => (
+            {messages.map((message, index) => (
               message.role === 'user'
                 ? <UserMessage text={message.text} sequence={message.sequence} highlighted={message.sequence && message.sequence === highlightedSequence} key={message.id} />
                 : message.role === 'assistant_loading'
                   ? <LoadingMessage key={message.id} />
-                : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} key={message.id} />
+                : <LegalAIResponse response={message.response} onSourceClick={onSourceClick} question={precedingUserText(messages, index)} key={message.id} />
             ))}
           </>
         )}
@@ -1562,6 +1719,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
   const [clarificationStateId, setClarificationStateId] = React.useState(null);
   const [conversationStateId, setConversationStateId] = React.useState(null);
   const [caseId, setCaseId] = React.useState(initialCaseId || null);
+  const [caseTitle, setCaseTitle] = React.useState('');
   const [attachedFactContext, setAttachedFactContext] = React.useState(null);
   // Documents uploaded inside this chat ({id, filename, file_type, created_at}). Their ids go with
   // every question so the backend links them to the case -- including uploads made before the
@@ -1587,6 +1745,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
         }
         if (ignore) return;
         setCaseId(payload.case?.id || initialCaseId);
+        setCaseTitle(payload.case?.title || '');
         setMessages(messagesFromSavedCase(payload.messages || []));
         const stateId = payload.conversation_state?.conversation_state_id || null;
         setConversationStateId(stateId);
@@ -1722,6 +1881,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
     setClarificationStateId(null);
     setConversationStateId(null);
     setCaseId(null);
+    setCaseTitle('');
     setCategory('');
     window.sessionStorage.removeItem('legalAidConfirmedFactContext');
     setAttachedFactContext(null);
@@ -1762,6 +1922,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
     selectedSource,
     setSelectedSource,
     caseId,
+    caseTitle,
     attachedFactContext,
     chatDocuments,
     handleSubmit,
@@ -1784,6 +1945,7 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
     setSelectedSource,
     attachedFactContext,
     caseId,
+    caseTitle,
     chatDocuments,
     handleSubmit,
     handleExample,
@@ -1823,6 +1985,9 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
             onSourceClick={setSelectedSource}
             focusSequence={initialFocusSequence}
             focusKey={`${initialCaseId}:${initialFocusSequence || ''}`}
+            caseId={caseId}
+            caseTitle={caseTitle}
+            canExportCaseFile={Boolean(user)}
           />
           <QuerySummaryPanel
             category={category}
@@ -1845,19 +2010,6 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
       )}
       {selectedSource && <SourceExcerptModal source={selectedSource} onClose={() => setSelectedSource(null)} />}
     </>
-  );
-}
-
-function DocumentsBackgroundArt() {
-  return (
-    <div className="background-art documents-background-art" aria-hidden="true">
-      <VintageLawBook className="watermark sketch docs-book-mark" />
-      <VintageCourthouse className="watermark sketch docs-court-mark" />
-      <VintageGavel className="watermark sketch docs-gavel-mark" />
-      <VintageDocuments className="watermark sketch docs-paper-mark" />
-      <VintageScales className="watermark sketch docs-scale-mark" />
-      <span className="docs-section-symbol">§</span>
-    </div>
   );
 }
 
@@ -2717,7 +2869,7 @@ function DocumentListCard({ document, onView, onRename, onDelete }) {
 
 const DOCUMENTS_PAGE_SIZE = 20;
 
-function DocumentsPage() {
+function DocumentsPage({ initialSearch = '' }) {
   const [storedDocuments, setStoredDocuments] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(false);
@@ -2726,8 +2878,11 @@ function DocumentsPage() {
   // unfiltered count, not a search-narrowed one.
   const [grandTotal, setGrandTotal] = React.useState(null);
   const [page, setPage] = React.useState(0);
-  const [searchInput, setSearchInput] = React.useState('');
-  const [search, setSearch] = React.useState('');
+  // Seeded from the URL (e.g. Summarize Document's "Identify Key Facts" link lands here already
+  // filtered to that document) -- same debounce-driven `search` still applies afterward, this
+  // just skips the debounce delay on the very first filtered load.
+  const [searchInput, setSearchInput] = React.useState(initialSearch);
+  const [search, setSearch] = React.useState(initialSearch);
   const [status, setStatus] = React.useState('loading');
   const [previewDocument, setPreviewDocument] = React.useState(null);
   const [renameDocument, setRenameDocument] = React.useState(null);
@@ -2992,7 +3147,15 @@ function SummarizeDocumentPage() {
   const [uploadMessage, setUploadMessage] = React.useState('');
   const [summaryStatus, setSummaryStatus] = React.useState('idle');
   const [summaryResult, setSummaryResult] = React.useState(null);
+  // Distinguishes "Generating your summary..." from "Regenerating your summary..." while
+  // summaryStatus is 'loading' for both -- a separate flag rather than another status value so
+  // the loading branch below doesn't have to duplicate itself.
+  const [isRegenerating, setIsRegenerating] = React.useState(false);
+  const [copyStatus, setCopyStatus] = React.useState('idle');
+  const copyTimerRef = React.useRef(null);
   const fileInputRef = React.useRef(null);
+
+  React.useEffect(() => () => window.clearTimeout(copyTimerRef.current), []);
 
   const loadDocuments = React.useCallback(async () => {
     setDocumentStatus('loading');
@@ -3066,7 +3229,7 @@ function SummarizeDocumentPage() {
     }
   };
 
-  const handleSummarize = async () => {
+  const handleSummarize = async ({ force = false } = {}) => {
     if (!selectedDocumentId) {
       setSummaryStatus('failed');
       setSummaryResult({
@@ -3076,11 +3239,12 @@ function SummarizeDocumentPage() {
       return;
     }
     setSummaryStatus('loading');
+    setIsRegenerating(force);
+    setCopyStatus('idle');
     setSummaryResult(null);
     try {
-      const response = await fetch(`/api/documents/${encodeURIComponent(selectedDocumentId)}/summarize`, {
-        method: 'POST'
-      });
+      const url = `/api/documents/${encodeURIComponent(selectedDocumentId)}/summarize${force ? '?force=true' : ''}`;
+      const response = await fetch(url, { method: 'POST' });
       const payload = await safeJsonResponse(response);
       if (!response.ok) {
         throw new Error(payload?.detail || 'The summary could not be generated right now.');
@@ -3106,6 +3270,19 @@ function SummarizeDocumentPage() {
     }
   };
 
+  const handleCopySummary = async () => {
+    if (!summaryResult?.summary) return;
+    try {
+      await navigator.clipboard.writeText(summaryResult.summary);
+      setCopyStatus('copied');
+    } catch (error) {
+      console.error('Could not copy summary to clipboard', error);
+      setCopyStatus('failed');
+    }
+    window.clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = window.setTimeout(() => setCopyStatus('idle'), 2200);
+  };
+
   const resetSelection = () => {
     setSelectedDocumentId('');
     setSelectedFile(null);
@@ -3113,6 +3290,8 @@ function SummarizeDocumentPage() {
     setUploadMessage('');
     setSummaryStatus('idle');
     setSummaryResult(null);
+    setIsRegenerating(false);
+    setCopyStatus('idle');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -3164,12 +3343,15 @@ function SummarizeDocumentPage() {
                   setSelectedDocumentId(event.target.value);
                   setSummaryResult(null);
                   setSummaryStatus('idle');
+                  setIsRegenerating(false);
+                  setCopyStatus('idle');
                 }}
               >
                 <option value="">Select an uploaded document</option>
                 {documents.map((document) => (
                   <option value={document.id} key={document.id}>
                     {document.filename}
+                    {document.summary_status === 'success' ? ' — Summarized' : ''}
                   </option>
                 ))}
               </select>
@@ -3206,7 +3388,7 @@ function SummarizeDocumentPage() {
             {summaryStatus === 'loading' ? (
               <div className="summary-loading-state">
                 <span className="summary-spinner" aria-hidden="true" />
-                <strong>Generating your summary...</strong>
+                <strong>{isRegenerating ? 'Regenerating your summary...' : 'Generating your summary...'}</strong>
                 <p>This may take a few seconds.</p>
               </div>
             ) : (
@@ -3214,7 +3396,7 @@ function SummarizeDocumentPage() {
                 type="button"
                 className="ask-button summary-primary-button"
                 disabled={!selectedDocumentId}
-                onClick={handleSummarize}
+                onClick={() => handleSummarize()}
               >
                 <Sparkles size={17} strokeWidth={1.7} />
                 Summarize Document
@@ -3232,9 +3414,25 @@ function SummarizeDocumentPage() {
                 <h3>Document Summary</h3>
                 <p>{summaryResult.filename}</p>
               </div>
+              {summaryResult.status === 'success' && !summaryResult.regenerate_failed && (
+                <span className="summary-generated-badge">
+                  {summaryResult.cached ? 'Saved summary' : 'Freshly generated'}
+                </span>
+              )}
             </div>
+            {summaryResult.regenerate_failed && (
+              <p className="summary-regenerate-warning">
+                <Info size={15} strokeWidth={1.8} />
+                {summaryResult.message || 'A new summary could not be generated right now -- showing your previous summary.'}
+              </p>
+            )}
             {summaryResult.status === 'success' && summaryResult.summary ? (
-              <div className="summary-result-text">{summaryResult.summary}</div>
+              <>
+                <div className="summary-result-text">{summaryResult.summary}</div>
+                {summaryResult.summary_generated_at && (
+                  <p className="summary-meta">Summarized {formatCaseDate(summaryResult.summary_generated_at)}</p>
+                )}
+              </>
             ) : (
               <p className="summary-error">{summaryResult.message || summaryStatusMessage(summaryResult.status)}</p>
             )}
@@ -3243,6 +3441,33 @@ function SummarizeDocumentPage() {
               <p>This summary is based only on the uploaded document and is provided for general understanding. It is not legal advice.</p>
             </div>
             <div className="summary-result-actions">
+              {summaryResult.status === 'success' && summaryResult.summary && (
+                <button type="button" className="document-outline-button" onClick={handleCopySummary}>
+                  {copyStatus === 'copied' ? <Check size={16} strokeWidth={1.9} /> : <Copy size={16} strokeWidth={1.7} />}
+                  {copyStatus === 'copied' ? 'Copied' : copyStatus === 'failed' ? 'Could not copy' : 'Copy Summary'}
+                </button>
+              )}
+              {summaryResult.status === 'success' && summaryResult.summary && (
+                <button type="button" className="document-outline-button" onClick={() => handleSummarize({ force: true })}>
+                  <RefreshCw size={16} strokeWidth={1.7} />
+                  Regenerate Summary
+                </button>
+              )}
+              {summaryResult.status !== 'success' && (
+                <button type="button" className="document-outline-button" onClick={() => handleSummarize()}>
+                  <RefreshCw size={16} strokeWidth={1.7} />
+                  Try Again
+                </button>
+              )}
+              {summaryResult.document_id && (
+                <a
+                  className="document-outline-button"
+                  href={`#/documents?search=${encodeURIComponent(summaryResult.filename || '')}`}
+                >
+                  <ListChecks size={16} strokeWidth={1.7} />
+                  Identify Key Facts
+                </a>
+              )}
               {summaryResult.document_id && (
                 <a
                   className="document-outline-button"
@@ -3279,20 +3504,93 @@ function summaryStatusMessage(status) {
 }
 
 const aboutFeatures = [
-  ['Ask a Question', 'Describe your issue in plain words and get an answer grounded in real legal sources.'],
-  ['My Cases', 'Save a conversation and pick it up again later.'],
-  ['Documents', 'Upload a notice, receipt, or contract and pull out the key facts.'],
-  ['Summarize Document', 'Get a short, plain-language summary of a legal document.'],
-  ['Know Your Rights', 'Browse common rights and the laws behind them, by topic.'],
-  ['Schemes', 'Find government schemes and services you may be able to use.']
+  ['Ask a Question', 'Describe your issue in plain words and get an answer grounded in real legal sources.', MessageCircle, '#/ask'],
+  ['Draft Complaint', 'Generate a ready-to-file complaint or application from a fixed legal template.', Gavel, '#/complaints'],
+  ['My Cases', 'Save a conversation and pick it up again later.', BriefcaseBusiness, '#/cases'],
+  ['Documents', 'Upload a notice, receipt, or contract and pull out the key facts.', FileText, '#/documents'],
+  ['Summarize Document', 'Get a short, plain-language summary of a legal document.', Sparkles, '#/summarize-document'],
+  ['Know Your Rights', 'Browse common rights and the laws behind them, by topic.', ShieldCheck, '#/rights'],
+  ['Schemes', 'Find government schemes and services you may be able to use.', Gift, '#/schemes'],
+  ['Check a Message', 'Paste a suspicious SMS or WhatsApp message to spot common scam warning signs.', ScanSearch, '#/scam-check'],
+  ['Free Legal Aid Check', 'Answer a few questions to see if you qualify for a free lawyer, and where to apply.', HandHelping, '#/legal-aid']
 ];
 
+const aboutStats = [
+  ['5 legal domains covered', Landmark],
+  ['Source-verified answers', ShieldCheck],
+  ['Always free & confidential', LockKeyhole]
+];
+
+const aboutTrustPillars = [
+  ['Acts & Legislation', 'We use applicable Indian legislation and legal documents included in our verified corpus.', Scale],
+  ['Government Sources', 'Where available, we rely on official government portals and public legal resources.', Globe2],
+  ['Source-Backed Answers', 'Answers can include the legal documents and excerpts used by the system.', FileText]
+];
+
+const aboutSourceExamples = [
+  'Consumer Protection Act, 2019',
+  'Constitution of India',
+  'Right to Information Act, 2005',
+  'Legal Services Authorities Act, 1987'
+];
+
+const aboutAudiences = [
+  ['Consumers dealing with defective goods or poor services', ShoppingCart],
+  ['Tenants facing common tenancy-related disputes', Home],
+  ['People trying to understand a legal notice', FileText],
+  ['People looking for information about their legal rights', Scale],
+  ['People looking for information about legal aid and public services', Landmark]
+];
+
+const aboutSteps = [
+  'You describe the problem in your own words.',
+  'We search official legal sources and government material.',
+  'You get a short answer, suggested next steps, and where to go.'
+];
+
+const aboutFaqs = [
+  [
+    'Is Legal Aid AI free?',
+    'Yes. Legal Aid AI is designed to provide accessible legal information without requiring you to consult a lawyer for every basic question.'
+  ],
+  [
+    'Does Legal Aid AI replace a lawyer?',
+    'No. It provides general legal information and guidance. It does not replace a qualified lawyer or represent you in court.'
+  ],
+  [
+    'Can I use it for every legal problem?',
+    'No. The system covers selected legal areas and sources. It may not contain every law, case, or recent amendment.'
+  ],
+  [
+    'Should I rely on its answer for an important legal matter?',
+    'For serious or time-sensitive matters, verify the information with an official source or qualified legal professional.'
+  ]
+];
+
+function AboutFaqItem({ question, answer, isOpen, onToggle }) {
+  return (
+    <div className={`about-faq-item${isOpen ? ' about-faq-item-open' : ''}`}>
+      <button type="button" className="about-faq-question" onClick={onToggle} aria-expanded={isOpen}>
+        <span>{question}</span>
+        <ChevronDown size={18} strokeWidth={2} className="about-faq-chevron" />
+      </button>
+      <div className="about-faq-answer">
+        <div className="about-faq-answer-inner">
+          <p>{answer}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AboutUsPage() {
+  const [openFaqIndex, setOpenFaqIndex] = React.useState(0);
+
   return (
     <>
       <DocumentsBackgroundArt />
       <HeaderControls />
-      <div className="rights-content-frame">
+      <div className="rights-content-frame about-page">
         <header className="documents-page-header">
           <div className="header-ornament-line"><span /><i>◇</i></div>
           <h2>About Us</h2>
@@ -3301,7 +3599,16 @@ function AboutUsPage() {
           <PageDivider />
         </header>
 
-        <section className="rights-panel">
+        <div className="about-stat-row">
+          {aboutStats.map(([label, Icon]) => (
+            <span className="about-stat-chip" key={label}>
+              <Icon size={16} strokeWidth={2} />
+              {label}
+            </span>
+          ))}
+        </div>
+
+        <section className="rights-panel about-lead-panel">
           <h3>What is Legal Aid AI?</h3>
           <p>
             A free tool that explains your legal rights in simple words, helps you prepare
@@ -3311,142 +3618,111 @@ function AboutUsPage() {
         </section>
 
         <section className="rights-panel">
-  <h3>Why Trust This?</h3>
+          <h3>Why Trust This?</h3>
+          <p>
+            Legal Aid AI is designed to ground its answers in a curated legal corpus rather than
+            relying only on general AI knowledge.
+          </p>
 
-  <p>
-    Legal Aid AI is designed to ground its answers in a curated legal
-    corpus rather than relying only on general AI knowledge.
-  </p>
+          <div className="about-pillar-grid">
+            {aboutTrustPillars.map(([title, detail, Icon]) => (
+              <div className="about-pillar-card" key={title}>
+                <span className="rights-mini-icon"><Icon size={22} strokeWidth={1.8} /></span>
+                <h4>{title}</h4>
+                <p>{detail}</p>
+              </div>
+            ))}
+          </div>
 
-  <ul>
-    <li>
-      <strong>Acts and legislation</strong> — We use applicable Indian
-      legislation and legal documents included in our verified corpus.
-    </li>
-
-    <li>
-      <strong>Government sources</strong> — Where available, we rely on
-      official government portals and public legal resources.
-    </li>
-
-    <li>
-      <strong>Source-backed answers</strong> — Answers can include the
-      legal documents and excerpts used by the system.
-    </li>
-  </ul>
-
-  <p>
-    Examples of sources used in the current project include the
-    Consumer Protection Act, 2019, Constitution of India,
-    Right to Information Act, 2005, and Legal Services Authorities
-    Act, 1987.
-  </p>
-</section>
-
-<section className="rights-panel">
-  <h3>Who This Helps</h3>
-
-  <p>
-    Legal Aid AI is designed for people who need to understand a
-    legal issue before deciding what to do next.
-  </p>
-
-  <ul>
-    <li>Consumers dealing with defective goods or poor services</li>
-    <li>Tenants facing common tenancy-related disputes</li>
-    <li>People trying to understand a legal notice</li>
-    <li>People looking for information about their legal rights</li>
-    <li>People looking for information about legal aid and public services</li>
-  </ul>
-</section>
-
-<section className="rights-panel">
-  <h3>Current Coverage</h3>
-
-  <p>
-    Legal Aid AI currently focuses on selected areas of legal
-    information rather than attempting to cover every area of Indian law.
-  </p>
-
-  <ul>
-    <li>Consumer rights and common consumer issues</li>
-    <li>Tenancy-related issues</li>
-    <li>Cyber-related issues</li>
-    <li>Constitutional and public-authority matters</li>
-    <li>Legal aid and access-to-justice resources</li>
-  </ul>
-
-  <p>
-    Coverage may vary by topic and jurisdiction. Additional legal areas
-    and sources may be added as the project develops.
-  </p>
-</section>
+          <p className="about-pill-row-label">Examples of sources used in the current project:</p>
+          <div className="about-pill-row">
+            {aboutSourceExamples.map((source) => (
+              <span className="about-pill" key={source}>{source}</span>
+            ))}
+          </div>
+        </section>
 
         <section className="rights-panel">
-          <h3>What you can do here</h3>
-          <ul>
-            {aboutFeatures.map(([name, detail]) => (
-              <li key={name}><strong>{name}</strong> — {detail}</li>
+          <h3>Who This Helps</h3>
+          <p>
+            Legal Aid AI is designed for people who need to understand a legal issue before
+            deciding what to do next.
+          </p>
+          <ul className="about-icon-list">
+            {aboutAudiences.map(([text, Icon]) => (
+              <li key={text}>
+                <span className="about-icon-list-icon"><Icon size={16} strokeWidth={2} /></span>
+                {text}
+              </li>
             ))}
           </ul>
         </section>
 
         <section className="rights-panel">
-          <h3>How it works</h3>
-          <ol>
-            <li>You describe the problem in your own words.</li>
-            <li>We search official legal sources and government material.</li>
-            <li>You get a short answer, suggested next steps, and where to go.</li>
+          <h3>What You Can Do Here</h3>
+          <p>Tap any of these to go straight there.</p>
+          <div className="about-feature-grid">
+            {aboutFeatures.map(([name, detail, Icon, href]) => (
+              <button
+                type="button"
+                className="about-feature-card"
+                key={name}
+                onClick={() => { window.location.hash = href; }}
+              >
+                <span className="rights-mini-icon"><Icon size={20} strokeWidth={1.8} /></span>
+                <h4>{name}</h4>
+                <p>{detail}</p>
+                <span className="about-feature-card-cta">
+                  Open <ArrowUpRight size={14} strokeWidth={2} />
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="rights-panel">
+          <h3>How It Works</h3>
+          <ol className="about-steps">
+            {aboutSteps.map((step, index) => (
+              <li key={step}>
+                <span className="about-step-number">{index + 1}</span>
+                <p>{step}</p>
+              </li>
+            ))}
           </ol>
         </section>
 
-       <section className="rights-panel">
-  <h3>Privacy & Data</h3>
-
-  <p>
-    We take privacy seriously, especially because legal questions and
-    uploaded documents may contain sensitive information.
-  </p>
-
-  <ul>
-    <li>Only provide information that is necessary for your question.</li>
-    <li>Avoid sharing passwords, financial credentials, or unnecessary personal information.</li>
-    <li>Uploaded documents should be reviewed before submission to remove information you do not want processed.</li>
-  </ul>
-
-  <p>
-    See the project's privacy policy and technical documentation for
-    details about how data is handled.
-  </p>
-</section>
+        <section className="rights-panel">
+          <h3>Privacy &amp; Data</h3>
+          <p>
+            We take privacy seriously, especially because legal questions and uploaded documents
+            may contain sensitive information.
+          </p>
+          <ul>
+            <li>Only provide information that is necessary for your question.</li>
+            <li>Avoid sharing passwords, financial credentials, or unnecessary personal information.</li>
+            <li>Uploaded documents should be reviewed before submission to remove information you do not want processed.</li>
+          </ul>
+          <p>
+            See the project's privacy policy and technical documentation for details about how
+            data is handled.
+          </p>
+        </section>
 
         <section className="rights-panel">
-  <h3>Frequently Asked Questions</h3>
-
-  <h4>Is Legal Aid AI free?</h4>
-  <p>
-    Yes. Legal Aid AI is designed to provide accessible legal information
-    without requiring you to consult a lawyer for every basic question.
-  </p>
-
-  <h4>Does Legal Aid AI replace a lawyer?</h4>
-  <p>
-    No. It provides general legal information and guidance. It does not
-    replace a qualified lawyer or represent you in court.
-  </p>
-
-  <h4>Can I use it for every legal problem?</h4>
-  <p>
-    No. The system covers selected legal areas and sources. It may not
-    contain every law, case, or recent amendment.
-  </p>
-
-  <h4>Should I rely on its answer for an important legal matter?</h4>
-  <p>
-    For serious or time-sensitive matters, verify the information with
-    an official source or qualified legal professional.
-  </p>
-</section>
+          <h3>Frequently Asked Questions</h3>
+          <div className="about-faq-list">
+            {aboutFaqs.map(([question, answer], index) => (
+              <AboutFaqItem
+                key={question}
+                question={question}
+                answer={answer}
+                isOpen={openFaqIndex === index}
+                onToggle={() => setOpenFaqIndex(openFaqIndex === index ? -1 : index)}
+              />
+            ))}
+          </div>
+        </section>
       </div>
     </>
   );
@@ -4327,6 +4603,12 @@ function MyCasesPage() {
                 >
                   <Pencil size={17} strokeWidth={1.8} />
                 </button>
+                <CaseFileButton
+                  caseId={savedCase.id}
+                  caseTitle={savedCase.title || 'Legal Question'}
+                  hasAnswers={Boolean(savedCase.has_answers)}
+                  compact
+                />
                 <button
                   type="button"
                   className="case-delete-icon-button"
@@ -5117,7 +5399,13 @@ export default function App() {
                 ? 'about'
                 : routeSegments[0] === 'schemes'
                   ? 'schemes'
-                  : 'home';
+                  : routeSegments[0] === 'helplines'
+                    ? 'helplines'
+                    : routeSegments[0] === 'scam-check'
+                      ? 'scam-check'
+                      : routeSegments[0] === 'legal-aid'
+                        ? 'legal-aid'
+                        : 'home';
   // Opening a saved case (#/ask?case=...) needs its owner signed in; asking a new question does not.
   const needsAccount = ['cases', 'documents', 'summarize'].includes(activePage) || (activePage === 'ask' && Boolean(initialCaseId));
   const pageToRender = renderPage({
@@ -5168,11 +5456,14 @@ function renderPage({ activePage, needsAccount, authStatus, user, routeSegments,
       {activePage === 'ask' && <AskQuestionPage initialQuery={initialQuery} initialCaseId={initialCaseId} initialAttach={initialAttach} initialFocusSequence={initialFocusSequence} />}
       {activePage === 'complaints' && <ComplaintDrafterPage />}
       {activePage === 'cases' && <MyCasesPage />}
-      {activePage === 'documents' && <DocumentsPage />}
+      {activePage === 'documents' && <DocumentsPage initialSearch={queryParams.get('search') || ''} />}
       {activePage === 'summarize' && <SummarizeDocumentPage />}
       {activePage === 'rights' && <LegalAwarenessPage segments={routeSegments} />}
       {activePage === 'about' && <AboutUsPage />}
       {activePage === 'schemes' && <SchemesPage />}
+      {activePage === 'helplines' && <Helplines />}
+      {activePage === 'scam-check' && <ScamCheck />}
+      {activePage === 'legal-aid' && <LegalAidCheck />}
       {activePage === 'home' && <HomePage />}
       {activePage === 'sample-home' && <SampleHomePage shared={sampleHomeShared} />}
     </>

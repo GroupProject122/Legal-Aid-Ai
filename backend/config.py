@@ -42,5 +42,6 @@ CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "160"))
 TOP_K = int(os.getenv("TOP_K", "5"))
 MAX_QUESTION_CHARS = int(os.getenv("MAX_QUESTION_CHARS", "2000"))
 MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "10"))
+MAX_AUDIO_SIZE_MB = int(os.getenv("MAX_AUDIO_SIZE_MB", "2"))
 
 DISCLAIMER = "This is legal information, not professional legal advice."

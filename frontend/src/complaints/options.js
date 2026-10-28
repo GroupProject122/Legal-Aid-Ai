@@ -78,3 +78,50 @@ export const ADS_RELIEF_OPTIONS = [
   },
   { value: 'corrective_advertisement', label: 'Corrective advertisement' }
 ];
+
+// --- Scenario 4: RTI application (Right to Information Act, 2005) ---
+// Matches complaint_drafter.PreferredMode / PREFERRED_MODE_LABEL.
+export const PREFERRED_MODE_OPTIONS = [
+  { value: 'certified_copies', label: 'Certified copies of the documents/records' },
+  { value: 'inspection_of_records', label: 'Inspection of the documents/records' },
+  { value: 'electronic_format', label: 'Electronic format (e.g. email, diskette)' }
+];
+
+// --- Scenario 5: RTI first appeal (Right to Information Act, 2005, Section 19(1)) ---
+// Matches complaint_drafter.PIOResponseType / PIO_RESPONSE_TYPE_LABEL.
+export const PIO_RESPONSE_TYPE_OPTIONS = [
+  { value: 'no_response_received', label: 'No response was received within 30 days' },
+  { value: 'request_rejected', label: 'The request was rejected' },
+  { value: 'incomplete_information_provided', label: 'Incomplete information was provided' }
+];
+
+// --- Scenario 6: senior citizen maintenance application (2007 Act) ---
+// Matches complaint_drafter.RespondentRelationship / RESPONDENT_RELATIONSHIP_LABEL.
+export const RESPONDENT_RELATIONSHIP_OPTIONS = [
+  { value: 'child', label: 'My child / grandchild' },
+  {
+    value: 'relative_of_childless_senior_citizen',
+    label: 'A relative who holds or would inherit my property (I am childless)'
+  }
+];
+
+// --- Scenario 7: tenant essential-supply complaint (Delhi Rent Control Act, 1958, Section 45) ---
+// Matches complaint_drafter.EssentialSupplyType / ESSENTIAL_SUPPLY_TYPE_LABEL.
+export const ESSENTIAL_SUPPLY_TYPE_OPTIONS = [
+  { value: 'water', label: 'Water' },
+  { value: 'electricity', label: 'Electricity' },
+  { value: 'lights_in_passages_and_staircases', label: 'Lights in passages and on staircases' },
+  { value: 'conservancy_and_sanitary_services', label: 'Conservancy and sanitary services' }
+];
+
+// --- Scenario 8: bank fraud complaint (RBI Limiting Liability Directions, 2017) ---
+// Matches complaint_drafter.AccountCategory / ACCOUNT_CATEGORY_LABEL.
+export const ACCOUNT_CATEGORY_OPTIONS = [
+  { value: 'bsbd_account', label: 'Basic Savings Bank Deposit (BSBD) account' },
+  {
+    value: 'standard_account',
+    label:
+      'Other savings account, prepaid instrument, or current/credit-card account within the standard limit'
+  },
+  { value: 'high_value_account', label: 'High-value current account or credit card (above Rs. 5 lakh limit)' }
+];

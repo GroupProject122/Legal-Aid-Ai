@@ -1,0 +1,413 @@
+{
+ "method": "rag.retrieve() on each Hinglish retrieval query, raw and normalised (query_normalizer rewrite cached once and reused on both indexes); hit = an expected primary source among the returned chunks",
+ "pre_rebuild_index": {
+  "summary": {
+   "raw": {
+    "doc_hit": 10,
+    "top1_doc_hit": 9,
+    "provision_hit": 1
+   },
+   "normalised": {
+    "doc_hit": 11,
+    "top1_doc_hit": 9,
+    "provision_hit": 3
+   },
+   "rewritten": 7,
+   "cases": 11
+  },
+  "rows": [
+   {
+    "id": "consumer_01_hinglish",
+    "query": "online seller refund nahi de raha",
+    "rewrite": "online seller refund nahi de raha",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": true,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": true,
+     "returned": 4
+    }
+   },
+   {
+    "id": "consumer_04_hinglish",
+    "query": "misleading advertisement se mera nuksan hua",
+    "rewrite": "misleading advertisement se mera nuksan hua",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "consumer_07_hinglish",
+    "query": "consumer complaint kahan file karu",
+    "rewrite": "consumer complaint kahan file karu",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_01_hinglish",
+    "query": "online payment mein cyber fraud hua",
+    "rewrite": "cyber fraud in online payment",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_03_hinglish",
+    "query": "kisi ne mera social media account hack kar diya",
+    "rewrite": "someone hacked my social media account",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_06_hinglish",
+    "query": "online cybercrime kaise report karu",
+    "rewrite": "how to report online cybercrime",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 2
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 2
+    }
+   },
+   {
+    "id": "tenancy_01_hinglish",
+    "query": "landlord ne bijli kaat di",
+    "rewrite": "landlord cut off electricity",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": true,
+     "returned": 4
+    }
+   },
+   {
+    "id": "tenancy_04_hinglish",
+    "query": "landlord security deposit wapas nahi kar raha",
+    "rewrite": "landlord security deposit wapas nahi kar raha",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "constitutional_06_hinglish",
+    "query": "RTI application mein issue hai",
+    "rewrite": "RTI application issue",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "constitutional_07_hinglish",
+    "query": "free legal aid ke liye eligibility kya hai",
+    "rewrite": "free legal aid eligibility",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_03_hinglish_severe",
+    "query": "mera Instagram hack ho gaya",
+    "rewrite": "Instagram account hacked",
+    "raw": {
+     "doc_hit": false,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 1
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": true,
+     "returned": 2
+    }
+   }
+  ]
+ },
+ "rebuilt_index": {
+  "summary": {
+   "raw": {
+    "doc_hit": 11,
+    "top1_doc_hit": 10,
+    "provision_hit": 1
+   },
+   "normalised": {
+    "doc_hit": 10,
+    "top1_doc_hit": 7,
+    "provision_hit": 3
+   },
+   "rewritten": 7,
+   "cases": 11
+  },
+  "rows": [
+   {
+    "id": "consumer_01_hinglish",
+    "query": "online seller refund nahi de raha",
+    "rewrite": "online seller refund nahi de raha",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": true,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": true,
+     "returned": 4
+    }
+   },
+   {
+    "id": "consumer_04_hinglish",
+    "query": "misleading advertisement se mera nuksan hua",
+    "rewrite": "misleading advertisement se mera nuksan hua",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "consumer_07_hinglish",
+    "query": "consumer complaint kahan file karu",
+    "rewrite": "consumer complaint kahan file karu",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_01_hinglish",
+    "query": "online payment mein cyber fraud hua",
+    "rewrite": "cyber fraud in online payment",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_03_hinglish",
+    "query": "kisi ne mera social media account hack kar diya",
+    "rewrite": "someone hacked my social media account",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": false,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_06_hinglish",
+    "query": "online cybercrime kaise report karu",
+    "rewrite": "how to report online cybercrime",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": false,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "tenancy_01_hinglish",
+    "query": "landlord ne bijli kaat di",
+    "rewrite": "landlord cut off electricity",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": true,
+     "returned": 4
+    }
+   },
+   {
+    "id": "tenancy_04_hinglish",
+    "query": "landlord security deposit wapas nahi kar raha",
+    "rewrite": "landlord security deposit wapas nahi kar raha",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "constitutional_06_hinglish",
+    "query": "RTI application mein issue hai",
+    "rewrite": "RTI application issue",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "constitutional_07_hinglish",
+    "query": "free legal aid ke liye eligibility kya hai",
+    "rewrite": "free legal aid eligibility",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    }
+   },
+   {
+    "id": "cyber_03_hinglish_severe",
+    "query": "mera Instagram hack ho gaya",
+    "rewrite": "Instagram account hacked",
+    "raw": {
+     "doc_hit": true,
+     "top1_doc_hit": true,
+     "provision_hit": false,
+     "returned": 4
+    },
+    "normalised": {
+     "doc_hit": true,
+     "top1_doc_hit": false,
+     "provision_hit": true,
+     "returned": 4
+    }
+   }
+  ]
+ }
+}

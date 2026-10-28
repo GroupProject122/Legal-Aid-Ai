@@ -156,6 +156,99 @@ def test_summary_stored_in_sqlite(monkeypatch, tmp_path):
     assert stored["summary_status"] == "success"
 
 
+def test_regenerate_with_force_bypasses_cache_and_overwrites(monkeypatch, tmp_path):
+    configure_temp_store(monkeypatch, tmp_path)
+    client, user_id = signed_in_client()
+    document = create_txt_document("Legal notice dated 1 August 2026.", user_id=user_id)
+    summaries = iter(
+        [
+            {"status": "success", "summary": "First summary.", "model": "test"},
+            {"status": "success", "summary": "Second, regenerated summary.", "model": "test"},
+        ]
+    )
+    calls = []
+
+    def fake_summarize(_extraction):
+        calls.append(1)
+        return next(summaries)
+
+    monkeypatch.setattr(main.document_summarizer, "summarize_document", fake_summarize)
+
+    first = client.post(f"/api/documents/{document['id']}/summarize")
+    assert first.json()["summary"] == "First summary."
+    assert first.json()["cached"] is False
+
+    cached = client.post(f"/api/documents/{document['id']}/summarize")
+    assert cached.json()["summary"] == "First summary."
+    assert cached.json()["cached"] is True
+    assert len(calls) == 1  # cache hit -- summarize_document not called again
+
+    regenerated = client.post(f"/api/documents/{document['id']}/summarize?force=true")
+    assert regenerated.json()["summary"] == "Second, regenerated summary."
+    assert regenerated.json()["cached"] is False
+    assert len(calls) == 2
+
+    stored = document_store.require_document(document["id"])
+    assert stored["summary_text"] == "Second, regenerated summary."
+
+
+def test_failed_regenerate_does_not_discard_the_existing_summary(monkeypatch, tmp_path):
+    # Regression test for a bug found live-testing the regenerate feature: a failed *regenerate*
+    # attempt (e.g. a transient Gemini error) must not wipe out a summary that was already there
+    # -- the old failure path unconditionally set summary_text back to None regardless of
+    # whether one already existed, discarding a perfectly good summary over a retryable hiccup.
+    configure_temp_store(monkeypatch, tmp_path)
+    client, user_id = signed_in_client()
+    document = create_txt_document("Legal notice dated 1 August 2026.", user_id=user_id)
+    responses = iter(
+        [
+            {"status": "success", "summary": "The original, good summary.", "model": "test"},
+            {"status": "summary_unavailable", "message": "The document summary could not be generated right now."},
+        ]
+    )
+    monkeypatch.setattr(main.document_summarizer, "summarize_document", lambda _extraction: next(responses))
+
+    first = client.post(f"/api/documents/{document['id']}/summarize")
+    assert first.json()["summary"] == "The original, good summary."
+
+    failed_regenerate = client.post(f"/api/documents/{document['id']}/summarize?force=true")
+    payload = failed_regenerate.json()
+
+    # The response still reports the old summary as usable, flagged so the caller can tell the
+    # refresh itself failed -- not a hard failure that hides a summary the user already had.
+    assert payload["status"] == "success"
+    assert payload["summary"] == "The original, good summary."
+    assert payload["regenerate_failed"] is True
+
+    stored = document_store.require_document(document["id"])
+    assert stored["summary_text"] == "The original, good summary."
+    assert stored["summary_status"] == "success"
+
+
+def test_failed_first_time_summarize_still_records_the_failure(monkeypatch, tmp_path):
+    # The fix above must not apply when there was never a summary to protect -- a first-time
+    # failure (no `force`, nothing cached yet) still records the failure state as before.
+    configure_temp_store(monkeypatch, tmp_path)
+    client, user_id = signed_in_client()
+    document = create_txt_document("Legal notice dated 1 August 2026.", user_id=user_id)
+    monkeypatch.setattr(
+        main.document_summarizer,
+        "summarize_document",
+        lambda _extraction: {"status": "summary_unavailable", "message": "Could not summarize."},
+    )
+
+    response = client.post(f"/api/documents/{document['id']}/summarize")
+    payload = response.json()
+
+    assert payload["status"] == "summary_unavailable"
+    assert payload["summary"] is None
+    assert "regenerate_failed" not in payload
+
+    stored = document_store.require_document(document["id"])
+    assert stored["summary_text"] is None
+    assert stored["summary_status"] == "summary_unavailable"
+
+
 def test_sensitive_credentials_are_not_leaked(monkeypatch):
     monkeypatch.setattr(document_summarizer, "GEMINI_API_KEY", "test-key")
     monkeypatch.setattr(
@@ -168,6 +261,92 @@ def test_sensitive_credentials_are_not_leaked(monkeypatch):
 
     assert "hunter2" not in result["summary"]
     assert "[sensitive information omitted]" in result["summary"]
+
+
+def test_spaced_otp_and_multiword_password_are_fully_redacted(monkeypatch):
+    # Regression test, fixed 2026-09-25: the old pattern (`\s*[:=-]?\s*\S+`) had no allowance for
+    # "is"/"hai" as a connector, so "the OTP is 123456" matched the word "is" as the captured
+    # value and left the real secret untouched right next to the placeholder -- confirmed via
+    # the module's own redact_sensitive(), not just the Gemini-facing summary text.
+    text = "the otp is 123 456 for verification and my password is hunter 2 dragon"
+    redacted = document_summarizer.redact_sensitive(text)
+
+    assert "123" not in redacted
+    assert "456" not in redacted
+    assert "hunter" not in redacted
+    assert "dragon" not in redacted
+
+
+def test_redaction_does_not_garble_two_secrets_in_one_sentence(monkeypatch):
+    # The bounded multi-token password span must stop before swallowing a second, separate
+    # secret (or an already-redacted placeholder) later in the same sentence -- otherwise the
+    # result is not just under-redacted but visibly malformed ("...omitted] omitted]...").
+    redacted = document_summarizer.redact_sensitive("password: hunter2 and OTP 123456 were shared")
+
+    assert redacted.count("[sensitive information omitted]") == 2
+    assert "hunter2" not in redacted
+    assert "123456" not in redacted
+    assert "omitted] omitted]" not in redacted
+
+
+def test_redaction_handles_a_descriptive_phrase_between_keyword_and_value(monkeypatch):
+    # Real documents don't always put the value immediately after the keyword -- found live
+    # while testing this fix: "the password for the tenant portal is welcome123" defeated the
+    # first version of the fix, because its single-optional-connector design let "for" get
+    # captured as the value instead of skipping ahead to the real value after "is".
+    text = "Our office password for the tenant portal is welcome123, and the otp for your account verification is 245 981."
+    redacted = document_summarizer.redact_sensitive(text)
+
+    assert "welcome123" not in redacted
+    assert "245" not in redacted
+    assert "981" not in redacted
+
+
+def test_ordinary_numbers_survive_redaction(monkeypatch):
+    # The fix must not turn into an over-broad filter -- an ordinary reference number or amount
+    # has nothing to do with otp/pin/cvv/password and must survive untouched.
+    text = "this invoice number is 1234567890123 for a tenancy dispute, deposit 12000 rupees"
+    assert document_summarizer.redact_sensitive(text) == text
+
+
+def test_legal_conclusion_hit_gets_one_retry_before_failing(monkeypatch):
+    # A summary that merely quotes the document's own use of a flagged word ("this clause is
+    # enforceable") must not be discarded outright -- give the model one chance to rewrite it.
+    # contains_legal_conclusion() is a plain keyword match, so the retry has to actually avoid
+    # the flagged word (not just attribute it to the document) to have any chance of passing.
+    monkeypatch.setattr(document_summarizer, "GEMINI_API_KEY", "test-key")
+    calls = []
+
+    def fake_call(prompt):
+        calls.append(prompt)
+        if len(calls) == 1:
+            return {"summary": "This clause is enforceable against both parties."}
+        return {"summary": "The document treats this clause as binding on both parties."}
+
+    monkeypatch.setattr(document_summarizer, "call_gemini_summary", fake_call)
+
+    result = document_summarizer.summarize_document({"status": "success", "text": "Readable contract text."})
+
+    assert result["status"] == "success"
+    assert "binding" in result["summary"].lower()
+    assert len(calls) == 2
+    assert result["gemini_calls"] == 2
+
+
+def test_legal_conclusion_still_fails_if_retry_also_asserts_it(monkeypatch):
+    # The safety property has to hold even after the retry -- if the model still asserts a
+    # conclusion in its own voice on the second attempt, this must fail exactly as before, not
+    # silently return the bad summary.
+    monkeypatch.setattr(document_summarizer, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(
+        document_summarizer,
+        "call_gemini_summary",
+        lambda _prompt: {"summary": "This clause is enforceable against both parties."},
+    )
+
+    result = document_summarizer.summarize_document({"status": "success", "text": "Readable contract text."})
+
+    assert result["status"] == "summary_unavailable"
 
 
 # --- Card-number redaction (shared with case_store.py via redaction.py, fixed 2026-09-16) ---

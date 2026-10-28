@@ -262,6 +262,86 @@
       "expected_domain": ["constitutional_public_authority"],
       "expected_primary_documents": ["The Right to Information Act, 2005"],
       "expected_primary_sources": ["constitutional_public_authority/right_to_information_act_2005.pdf"]
+    },
+    {
+      "id": "consumer_01_hinglish",
+      "query": "online seller refund nahi de raha",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection Act, 2019", "The Consumer Protection (E-Commerce) Rules, 2020"],
+      "expected_primary_sources": ["consumer/consumer_protection_act_2019.pdf", "consumer/ecommerce_rules_2020.pdf"],
+      "expected_provision_numbers": ["39", "83", "86"]
+    },
+    {
+      "id": "consumer_04_hinglish",
+      "query": "misleading advertisement se mera nuksan hua",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["Guidelines for Prevention of Misleading Advertisements and Endorsements for Misleading Advertisements, 2022", "The Consumer Protection Act, 2019"],
+      "expected_primary_sources": ["consumer/misleading_ads_guidelines_2022.pdf", "consumer/consumer_protection_act_2019.pdf"]
+    },
+    {
+      "id": "consumer_07_hinglish",
+      "query": "consumer complaint kahan file karu",
+      "expected_domain": ["consumer"],
+      "expected_primary_documents": ["The Consumer Protection Act, 2019", "The Consumer Protection (Consumer Disputes Redressal Commissions) Rules, 2020"],
+      "expected_primary_sources": ["consumer/consumer_protection_act_2019.pdf", "consumer/cdrc_general_rules_2020.pdf"]
+    },
+    {
+      "id": "cyber_01_hinglish",
+      "query": "online payment mein cyber fraud hua",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000", "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf", "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"]
+    },
+    {
+      "id": "cyber_03_hinglish",
+      "query": "kisi ne mera social media account hack kar diya",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000", "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf", "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"]
+    },
+    {
+      "id": "cyber_06_hinglish",
+      "query": "online cybercrime kaise report karu",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"]
+    },
+    {
+      "id": "tenancy_01_hinglish",
+      "query": "landlord ne bijli kaat di",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf"],
+      "expected_provision_numbers": ["45"]
+    },
+    {
+      "id": "tenancy_04_hinglish",
+      "query": "landlord security deposit wapas nahi kar raha",
+      "expected_domain": ["tenancy"],
+      "expected_primary_documents": ["The Delhi Rent Control Act, 1958", "The Transfer of Property Act, 1882"],
+      "expected_primary_sources": ["tenancy/delhi_rent_control_act_1958.pdf", "tenancy/transfer_of_property_act_1882.pdf"]
+    },
+    {
+      "id": "constitutional_06_hinglish",
+      "query": "RTI application mein issue hai",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Right to Information Act, 2005"],
+      "expected_primary_sources": ["constitutional_public_authority/right_to_information_act_2005.pdf"]
+    },
+    {
+      "id": "constitutional_07_hinglish",
+      "query": "free legal aid ke liye eligibility kya hai",
+      "expected_domain": ["constitutional_public_authority"],
+      "expected_primary_documents": ["The Legal Services Authorities Act, 1987"],
+      "expected_primary_sources": ["constitutional_public_authority/legal_services_authorities_act_1987.pdf"]
+    },
+    {
+      "id": "cyber_03_hinglish_severe",
+      "query": "mera Instagram hack ho gaya",
+      "expected_domain": ["cyber"],
+      "expected_primary_documents": ["The Information Technology Act, 2000", "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"],
+      "expected_primary_sources": ["cyber/information_technology_act_2000.pdf", "cyber/national_cybercrime_reporting_portal_user_manual_2019.pdf"],
+      "expected_provision_numbers": ["66C"]
     }
   ],
   "cross_domain_queries": [

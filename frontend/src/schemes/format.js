@@ -17,6 +17,7 @@ const FIELD_LABELS = {
   paid_income_tax_last_year: "Paid income tax last year",
   monthly_pension: "Monthly pension",
   government_employee_grade: "Government employee grade",
+  is_pregnant_or_new_mother: "Pregnant or new mother",
 };
 
 /** ["a"] -> "a"; ["a","b"] -> "a and b"; ["a","b","c"] -> "a, b and c". */

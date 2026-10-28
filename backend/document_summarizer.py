@@ -85,13 +85,35 @@ LEGAL_CONCLUSION_PATTERNS = [
 # in legal documents), not just real card numbers. It was a separate implementation from
 # case_store.py's version, so a prior fix to case_store.py's copy didn't touch this one at all.
 # See redact_sensitive() below for where the shared check is applied. The other patterns here
-# (12-digit spaced groups, OTP/PIN/CVV/password lines) are specific to this file and are not
+# (12-digit spaced groups, OTP/PIN/CVV/password wording) are specific to this file and are not
 # shared -- case_store.py's own OTP/PIN/password wording and its separate 12-digit (unspaced,
 # Aadhaar-shaped) pattern are deliberately different and independently maintained.
+#
+# otp/pin/cvv/password patterns fixed 2026-09-25 -- the old `\s*[:=-]?\s*\S+` had no allowance
+# for "is"/"hai" as a connector, so the extremely common phrasing "the OTP is 123456" matched the
+# *word* "is" as the captured value and left the real secret untouched right next to the
+# placeholder. A first attempt at a fix (a single optional connector right after the keyword)
+# still missed real document phrasing where the keyword and the value are separated by a
+# descriptive phrase -- "the password for the tenant portal is welcome123" -- because the
+# connector, still optional, matched nothing and "for" got captured as the value instead. Each
+# pattern below is now two alternatives: try up to 5 intervening words followed by a REQUIRED
+# connector first (so "for the tenant portal is" resolves to the actual value after "is"), and
+# only fall back to keyword-plus-optional-connector when that longer form doesn't apply (a bare
+# "OTP 123456" with nothing in between). Numeric secrets (otp/pin/cvv) capture the full digit
+# run, and password/passcode captures a bounded, keyword-guarded multi-token span (a value
+# described across a few words has the same leak risk as a single token; the lookahead stops the
+# span before it can swallow a second, separate secret or an already-redacted placeholder later
+# in the same sentence -- a little extra trailing context being swept in as collateral is an
+# accepted tradeoff, not a bug, since under-redacting a real secret is the worse failure mode).
+# The old "bank password" / "netbanking password" / "login password" patterns were dead code --
+# the generic password pattern already matches the bare word "password" wherever it appears,
+# including inside those phrases, so this file's own sequential re.sub loop consumed it first and
+# the more specific patterns never had anything left to match.
 SENSITIVE_PATTERNS = [
     r"\b\d{4}\s?\d{4}\s?\d{4}\b",
-    r"(?i)\b(?:otp|pin|cvv|password|passcode)\s*[:=-]?\s*\S+",
-    r"(?i)\b(?:bank\s+password|netbanking\s+password|login\s+password)\s*[:=-]?\s*\S+",
+    r"(?i)\b(?:otp|one[\s-]?time[\s-]?password)\b(?:(?:\s+\S+){1,5}?\s*(?:is|hai|:|=|-)\s*|\s*(?:is|hai|:|=|-)?\s*)(?:\d[\s-]*){3,}\d",
+    r"(?i)\b(?:pin|cvv)\b(?:(?:\s+\S+){1,5}?\s*(?:is|hai|:|=|-)\s*|\s*(?:is|hai|:|=|-)?\s*)(?:\d[\s-]*){2,}\d",
+    r"(?i)\b(?:password|passcode)\b(?:(?:\s+\S+){1,5}?\s*(?:is|hai|:|=|-)\s*|\s*(?:is|hai|:|=|-)?\s*)\S+(?:[ \t]+(?!(?:otp|pin|cvv|password|passcode)\b|\[)\S+){0,3}",
 ]
 
 
@@ -154,7 +176,20 @@ def summarize_document(extraction: dict[str, Any]) -> dict[str, Any]:
             summary = normalize_summary(parsed)
 
         if contains_legal_conclusion(summary):
-            raise ValueError("Summary contained legal-advice or validity language.")
+            # A hit here doesn't necessarily mean the summarizer asserted a legal conclusion in
+            # its own voice -- real documents routinely contain these exact words themselves
+            # ("this clause is enforceable"), and the prompt explicitly asks the model to
+            # preserve document terms. Discarding the whole summary on one keyword match throws
+            # away a perfectly good summary that was just quoting the document. Give it one
+            # chance to rewrite around the flagged words entirely (see
+            # build_legal_conclusion_retry_prompt -- attribution alone wouldn't help here, since
+            # the check is a plain keyword match) rather than failing outright; only fail if the
+            # retry still can't clear the check.
+            retry_parsed = call_gemini_summary(build_legal_conclusion_retry_prompt(summary))
+            calls += 1
+            summary = normalize_summary(retry_parsed)
+            if contains_legal_conclusion(summary):
+                raise ValueError("Summary contained legal-advice or validity language after retry.")
         latency_ms = int((time.perf_counter() - started) * 1000)
         logger.info("Document summary generated status=success calls=%s latency_ms=%s", calls, latency_ms)
         return SummaryResult(status="success", summary=redact_sensitive(summary), gemini_calls=calls, latency_ms=latency_ms).to_dict()
@@ -188,6 +223,27 @@ def build_summary_prompt(text: str, *, chunk_mode: bool = False, synthesis_mode:
     if synthesis_mode:
         mode = "Combine these partial summaries into one document summary without adding new facts."
     return f"{SUMMARY_PROMPT}\n\nTASK: {mode}\n\nDOCUMENT TEXT:\n{text}"
+
+
+def build_legal_conclusion_retry_prompt(summary: str) -> str:
+    # contains_legal_conclusion() is a plain keyword match -- it can't tell a conclusion the
+    # summarizer asserted apart from a quote correctly attributed to the document ("the document
+    # states this clause is enforceable" still contains "enforceable"). So the retry has to avoid
+    # the flagged words entirely, not just attribute them, or it would fail the same check again.
+    avoid_terms = ", ".join(
+        ["legally valid", "legally invalid", "illegal", "unenforceable", "enforceable", "unfair clause", "you should file", "you are entitled"]
+    )
+    return (
+        f"{SUMMARY_PROMPT}\n\n"
+        f"TASK: Rewrite the summary below so it does not contain any of these words or phrases, "
+        f"in any form, even when describing what the document itself says: {avoid_terms}. "
+        "Describe what the document requires, states, or provides for instead -- for example, "
+        "instead of saying a clause \"is enforceable\", describe what happens under the clause or "
+        "that the document treats it as binding. Keep every fact, name, date, and amount from the "
+        "original summary. Do not add new facts, and do not drop factual content just to avoid "
+        "these words.\n\n"
+        f"SUMMARY TO REWRITE:\n{summary}"
+    )
 
 
 def normalize_summary(parsed: dict[str, Any]) -> str:

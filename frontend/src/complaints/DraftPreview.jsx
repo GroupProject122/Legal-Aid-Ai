@@ -19,7 +19,13 @@ function formatFieldValue(field, value) {
   if (value === undefined || value === null || value === '') return null;
   if (field.type === 'yesno') return value ? 'Yes' : 'No';
   if (field.type === 'date') return formatDate(value);
-  if (field.type === 'number') return `₹${Number(value).toLocaleString('en-IN')}`;
+  if (field.type === 'number') {
+    // Fixed 2026-09-26: this used to prefix every numeric field with "₹", including
+    // non-currency ones (e.g. arrears_period_months in months, applicant_age in years) --
+    // only prefix it for fields the schema actually marks `currency: true`.
+    const formatted = Number(value).toLocaleString('en-IN');
+    return field.currency ? `₹${formatted}` : formatted;
+  }
   if (field.type === 'select') {
     return field.options.find((option) => option.value === value)?.label || value;
   }
@@ -112,6 +118,19 @@ export function DraftPreview({ scenario, intake, draft, onBack }) {
           <AlertTriangle size={22} strokeWidth={1.8} />
           <div>
             <strong>This ground needs manual legal review before filing.</strong>
+            {(draft.warnings || []).map((warning) => (
+              <p key={warning}>{warning}</p>
+            ))}
+          </div>
+        </div>
+      ) : (draft.warnings || []).length > 0 ? (
+        // Not a citation-confidence issue (that's the banner above) -- a separate kind of
+        // warning, e.g. an RTI first appeal being filed outside its 30-day window. Still worth
+        // surfacing: previously, any non-empty `warnings` was silently dropped whenever
+        // citation_review_required was false, since this block didn't render at all.
+        <div className="complaint-review-banner complaint-review-banner-notice" role="status">
+          <AlertTriangle size={22} strokeWidth={1.8} />
+          <div>
             {(draft.warnings || []).map((warning) => (
               <p key={warning}>{warning}</p>
             ))}
