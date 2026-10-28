@@ -43,5 +43,10 @@ TOP_K = int(os.getenv("TOP_K", "5"))
 MAX_QUESTION_CHARS = int(os.getenv("MAX_QUESTION_CHARS", "2000"))
 MAX_UPLOAD_SIZE_MB = int(os.getenv("MAX_UPLOAD_SIZE_MB", "10"))
 MAX_AUDIO_SIZE_MB = int(os.getenv("MAX_AUDIO_SIZE_MB", "2"))
+# Hinglish -> English rewrite of the retrieval query (query_normalizer.py). Off by default since
+# 2026-10-28: on merged code with the rebuilt index it made no measurable end-to-end difference
+# (Hinglish cases 7/8 with it and 7/8 without), and each rewrite is an extra Gemini request
+# against the same daily quota the rest of the app uses. Set to true to turn it back on.
+HINGLISH_RETRIEVAL_NORMALIZER = os.getenv("HINGLISH_RETRIEVAL_NORMALIZER", "false").strip().lower() in {"1", "true", "yes", "on"}
 
 DISCLAIMER = "This is legal information, not professional legal advice."

@@ -1347,13 +1347,7 @@ def relevance_gate_score(question: str, chunk: RetrievedChunk) -> float:
     authority_level_boost so the down-weighting is consistent between ranking and admission,
     without building separate classification logic for the two."""
     score = chunk.score
-    authority = (chunk.authority_level or "").lower()
-    is_procedural_manual = authority == "procedural_guide" and chunk.document_type == "procedural_user_guide"
-    if (
-        is_procedural_manual
-        and (chunk.retrieval_priority or "").lower() in ("low", "medium")
-        and not is_procedural_query(question)
-    ):
+    if is_down_weighted_manual(question, chunk):
         score -= PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
     # Applied at the admission gate as well as in ranking, for the reason in this docstring: a
     # rerank-only penalty cannot rescue a statutory chunk that the raw-score window already
@@ -1365,10 +1359,33 @@ def relevance_gate_score(question: str, chunk: RetrievedChunk) -> float:
     return score
 
 
+def is_down_weighted_manual(question: str, chunk: RetrievedChunk) -> bool:
+    """A low/medium-priority procedural manual (manifest metadata: authority_level=procedural_guide,
+    document_type=procedural_user_guide) on a substantive -- not "how do I report" -- question.
+    Shared by the admission-gate penalty and the gate's anchor rule so the two can't drift."""
+    authority = (chunk.authority_level or "").lower()
+    return (
+        authority == "procedural_guide"
+        and chunk.document_type == "procedural_user_guide"
+        and (chunk.retrieval_priority or "").lower() in ("low", "medium")
+        and not is_procedural_query(question)
+    )
+
+
 def select_relevant_chunks(candidates: list[RetrievedChunk], question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
     if not candidates:
         return []
-    max_score = max(relevance_gate_score(question, chunk) for chunk in candidates)
+    # The admission window is anchored on the best candidate that is NOT a down-weighted manual
+    # (added 2026-10-28). With windowed embeddings (0652d05) a manual's best window can match a
+    # citizen's phrasing almost verbatim -- "someone hacked my social media account" scores 0.667
+    # against the cybercrime portal manual -- so even after PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY
+    # (0.20, sized before windowing) it set the window high enough to cut IT Act s.66C/s.42
+    # (0.319/0.308) before ranking, although their rerank scores beat the manual's second chunk.
+    # Excluding such manuals from the anchor fixes this for any score gap, not just this one; the
+    # manuals still have to clear the threshold themselves, and they still anchor when nothing
+    # else was retrieved.
+    anchors = [chunk for chunk in candidates if not is_down_weighted_manual(question, chunk)] or candidates
+    max_score = max(relevance_gate_score(question, chunk) for chunk in anchors)
     threshold = max(MIN_RELEVANCE_SCORE, max_score - RELEVANCE_WINDOW)
     if max_score < MIN_RELEVANCE_SCORE:
         threshold = max(LOW_CONFIDENCE_RELEVANCE_SCORE, max_score - 0.08)

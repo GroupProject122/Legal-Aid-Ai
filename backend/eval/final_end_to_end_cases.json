@@ -471,12 +471,25 @@
       "case_id": "public_008_specific_case_gap",
       "category": "corpus_gap",
       "query": "What did the Supreme Court hold in Kesavananda Bharati case?",
+      "expected_status": "answered",
+      "expected_domains": ["constitutional_public_authority"],
+      "expected_primary_documents": ["Kesavananda Bharati"],
+      "expected_corpus_status": "sufficient",
+      "expected_reason_codes": [],
+      "document_context_expected": false,
+      "note": "Updated 2026-10-28. Written 2026-09-01, when the corpus held no judgments; the Kesavananda Bharati judgment was ingested 2026-09-24, and corpus_gap deliberately abstains only when no case-law source is retrieved, so answering from it is correct. The case-not-in-corpus check moved to public_011."
+    },
+    {
+      "case_id": "public_011_case_not_in_corpus",
+      "category": "corpus_gap",
+      "query": "What did the Supreme Court hold in the Indra Sawhney case?",
       "expected_status": "abstained",
       "expected_domains": ["constitutional_public_authority"],
       "expected_primary_documents": [],
       "expected_corpus_status": "insufficient",
-      "expected_reason_codes": ["missing_current_law"],
-      "document_context_expected": false
+      "expected_reason_codes": ["case_law_not_in_corpus"],
+      "document_context_expected": false,
+      "note": "Added 2026-10-28 to keep public_008's original intent: a specific judgment the corpus does not hold (Indra Sawhney is not in corpus_manifest.json) must abstain."
     },
     {
       "case_id": "public_009_notice_document",

@@ -48,6 +48,92 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — end-to-end investigation: offline scope gate, retrieval anchor fix, normaliser flag (2026-10-28)
+
+Follow-up to the 42/54 end-to-end result in the post-merge entry below.
+
+**Baseline status: not measured yet (Gemini quota), and the earlier 42/54 is less solid than it looked.**
+A baseline at `origin/main` `e3b9b82` was run with its own freshly built index -- byte-identical to
+the merged branch's (same 6,697 chunks, same 10,652 vectors, max vector difference 0.0), since the
+parsed corpus, manifest, ingest code and eval cases are identical between the two. A second run of
+the merged code was made alongside it to measure noise. **Both runs are invalid**: the Gemini free
+tier's 500 requests/day/model limit (`gemini-3.5-flash-lite`) was exhausted mid-run, the router hit
+429 RESOURCE_EXHAUSTED on 51-52 of 54 cases, and nearly every case fell into the offline fallback
+(both scored 50.0%). A healthy 54-case run costs ~160 requests, so one day's quota fits about
+three, minus whatever the app itself uses -- the app shares the key, so eval runs can push it
+offline for real users. The 42/54 run itself had 5 router failures from Gemini 503s. Comparing
+baseline and branch fairly needs both runs on the same quota day (about 320 requests), or a
+paid key; recorded as pending in the PR rather than reported from invalid runs.
+
+**The 12 failures of the 42/54 run, by stage** (from each case's recorded checks):
+- *Offline fallback during Gemini outages* (2): `gap_002_out_of_scope_python`,
+  `gap_004_weather_out_scope` -- router failed (503), and the offline path returned Constitution
+  articles. Fixed below.
+- *Stale eval expectation* (1): `public_008_specific_case_gap` (Kesavananda Bharati) -- expected
+  abstention when written (2026-09-01, no judgments in the corpus); the judgment has been indexed
+  since 2026-09-24 and `corpus_gap` deliberately answers when the case-law source is retrieved.
+  Case updated; new `public_011_case_not_in_corpus` (Indra Sawhney, not in the corpus) keeps the
+  "abstain on a judgment we don't hold" check.
+- *Clarification asked where an answer was expected* (2): `consumer_006_complaint_forum`,
+  `cyber_001_payment_fraud`.
+- *Retrieval missed the expected source* (4): `cyber_006_intermediary` (IT Act only),
+  `cyber_010_receipt_document_blocked` and `multi_006_vague_fraud_clarify` (portal manual only),
+  `public_004_free_legal_aid` (NALSA regulations instead of the Legal Services Authorities Act).
+- *Corpus gap judged sufficient where "limited" was expected* (3): `cyber_008_data_breach_limited`,
+  `multi_004_public_data_leak`, `multi_005_delivery_app_refund_data`. `multi_006` also had a routing
+  miss (cyber only, expected consumer + cyber). Not addressed in this branch.
+
+**Fix: offline fallback answered non-legal questions.** `main.offline_route_response()` returned
+local retrieval for any question whenever the router could not reach Gemini. Offline answers now
+need a legal domain signal (`rag.detect_domain_signals`) or a clearly relevant best chunk
+(`>= MIN_RELEVANCE_SCORE + RELEVANCE_WINDOW = 0.44`, derived from rag.py's constants, not tuned on
+the failures); otherwise the app replies that it is offline and asks for the legal problem in more
+detail (`router_minimal_response` shape, no sources). Checked on every labelled query in the repo's
+evals: in-scope queries that still get sections offline 142/142 -> 135/142 (the 7 are one-line
+openers like "mera matter hai" that get a clarification question online), out-of-scope/unsupported
+declined 0/9 -> 8/9 (miss: "mujhe kuch puchna hai"). Not caused by newly indexed documents.
+Tests: `backend/tests/test_e2e_regressions.py` (the three decline tests fail without the fix).
+
+**Fix: cyber retrieval -- manuals no longer anchor the admission window.** The procedural-manual
+down-weighting already covers every new manual via manifest metadata (`procedural_guide` /
+`procedural_user_guide`, low/medium priority); coverage was not the gap. With windowed embeddings
+a manual's best window can match a question almost verbatim (0.667 for "someone hacked my social
+media account"), so even after the 0.20 penalty it set the admission window
+(`max_score - RELEVANCE_WINDOW`) above IT Act s.66C/s.42 (0.319/0.308), which were cut before
+ranking although they out-rank the manual's second chunk. `select_relevant_chunks` now anchors the
+window on the best candidate that is not a down-weighted manual (`rag.is_down_weighted_manual()`,
+shared with the penalty); manuals still have to clear the threshold. Tests:
+`backend/tests/test_retrieval_selection.py`.
+
+| Retrieval, 47 single-domain queries | Pre-rebuild index | Rebuilt index | Rebuilt + anchor fix |
+|---|---:|---:|---:|
+| Production path: expected doc in `rag.retrieve()` output | 46/47 | 46/47 | **47/47** |
+| Eval `reranked_top10` Document Hit@5 | 97.9% | 95.7% | 95.7% |
+| Eval Document Hit@1 | 83.0% | 83.0% | 83.0% |
+| Eval MRR | 0.884 | 0.892 | 0.892 |
+
+**Target not met on the eval metric (Hit@5 >= 97.9%).** `evaluate_retrieval.py`'s Hit@5/MRR rank
+candidates *before* admission and the per-document cap, so the anchor fix is invisible to it. The
+one query keeping Hit@5 at 95.7% is `cyber_05` ("intermediary failed to remove unlawful content"):
+three chunks of the newly indexed judgment *Mrs X v. Union of India* (2023, intermediary takedown
+of intimate images) take ranks 3-5 ahead of the expected Intermediary Rules at #6 -- relevant
+material, and production's 2-chunks-per-document cap already returns the Rules. `cyber_03`'s eval
+expectation also lists the 2019 portal manual but not its newer edition. Left for a decision
+rather than tuned to the number.
+
+**Hinglish normaliser is now off by default** (`HINGLISH_RETRIEVAL_NORMALIZER`, `config.py`,
+`.env.example`). On merged code with the rebuilt index the 8 Hinglish end-to-end cases passed
+**7/8 with it (two runs) and 7/8 without it** -- no measurable difference on the current test set
+-- and each rewrite costs a Gemini request from the shared daily quota. When off, no rewrite is
+requested and retrieval receives the original text (tested). Set it to `true` to restore.
+
+**Test isolation gap (found, not fixed):** before the merge, this copy saved every `/api/ask` call
+as a case, and some tests (e.g. `tests/test_clarification.py`) call `/api/ask` without pointing
+`case_store.DB_PATH` at a temp file, so each full test run wrote 11 cases into the developer's real
+`backend/legal_aid.db` (330 such cases on 2026-10-28, later claimed by the admin account via
+`auth.ensure_admin()`). It stopped with the merge because guest conversations are no longer saved,
+but those tests still use the real database path and would write again if a test signed in.
+
 ## Unreleased — post-merge verification: index rebuild, evals, smoke test (2026-10-28)
 
 **Vector store rebuilt — it was stale on both sides, not just missing windowing.** The live index

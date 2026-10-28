@@ -34,13 +34,17 @@ import legal_education
 import query_normalizer
 import scam_checker
 import voice_transcription
-from config import DISCLAIMER, FRONTEND_ORIGINS, GEMINI_API_KEY, LLM_PROVIDER
+from config import DISCLAIMER, FRONTEND_ORIGINS, GEMINI_API_KEY, HINGLISH_RETRIEVAL_NORMALIZER, LLM_PROVIDER
 from rag import (
+    DOMAIN_SIGNAL_THRESHOLD,
+    MIN_RELEVANCE_SCORE,
+    RELEVANCE_WINDOW,
     ConfigurationError,
     LLMError,
     RAGError,
     VectorStoreIncompatibleError,
     VectorStoreMissingError,
+    detect_domain_signals,
     offline_retrieval_response,
     rag,
     validate_question,
@@ -1181,8 +1185,9 @@ def answer_grounded_from_context(
     # English-language, so a Hinglish retrieval_text searched as-is misses relevant provisions
     # (see query_normalizer.py's module docstring for the confirmed example). retrieval_text
     # itself stays untouched below (corpus_gap, grounded_answer, the stored case) -- only the
-    # string actually sent to rag.retrieve() is affected.
-    rag_query = query_normalizer.english_retrieval_query(retrieval_text)
+    # string actually sent to rag.retrieve() is affected. Behind config.HINGLISH_RETRIEVAL_NORMALIZER
+    # (default off) -- see that setting for why.
+    rag_query = query_normalizer.english_retrieval_query(retrieval_text) if HINGLISH_RETRIEVAL_NORMALIZER else retrieval_text
     chunks = rag.retrieve(rag_query)
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
@@ -1443,7 +1448,46 @@ def offline_route_response(route: domain_router.RouteDecision, retrieval_text: s
     if LLM_PROVIDER != "gemini" or (GEMINI_API_KEY and not route.routing_error):
         return None
     chunks = rag.retrieve(retrieval_text)
+    if not offline_question_in_scope(retrieval_text, chunks):
+        return offline_scope_decline_response(route)
     return with_routing(offline_retrieval_response(chunks), route)
+
+
+# Clearly relevant = at least one full relevance window above the minimum retrieval relevance --
+# derived from rag.py's own constants rather than tuned on the failing cases.
+OFFLINE_CLEAR_RELEVANCE_SCORE = MIN_RELEVANCE_SCORE + RELEVANCE_WINDOW
+OFFLINE_SCOPE_MESSAGE = (
+    "Legal Aid AI is working offline right now and could not match this to a legal issue it covers "
+    "(consumer, cyber, tenancy, or public-authority matters)."
+)
+
+
+def offline_question_in_scope(retrieval_text: str, chunks: list) -> bool:
+    """Offline, the router could not reach Gemini (its fallback is always status=unclear with no
+    domains), so nothing upstream has decided whether this is a legal question at all -- and
+    local retrieval always returns *something*. Found in the 2026-10-28 end-to-end run: "weather
+    tomorrow" and "Python code likho" got Constitution articles back as an offline "answer".
+    Only hand back legal sections when the deterministic domain signals find a legal domain, or
+    the best retrieved chunk is clearly relevant. Checked against every labelled query in the
+    repo's evals: 135/142 in-scope queries still get sections (the 7 that don't are one-line
+    openers like "mera matter hai", which online get a clarification question instead), and
+    8/9 out-of-scope/unsupported queries are declined (previously 0/9)."""
+    scores = detect_domain_signals(retrieval_text)["scores"]
+    if any(score >= DOMAIN_SIGNAL_THRESHOLD for score in scores.values()):
+        return True
+    return any(chunk.score >= OFFLINE_CLEAR_RELEVANCE_SCORE for chunk in chunks)
+
+
+def offline_scope_decline_response(route: domain_router.RouteDecision) -> dict:
+    """Same shape as the router's own 'unclear' reply (no sources, insufficient_context), with a
+    message that says why: offline, so the app cannot tell what kind of issue this is."""
+    response = router_minimal_response(route)
+    response["answer"]["issue_summary"] = OFFLINE_SCOPE_MESSAGE
+    response["answer"]["next_steps"] = [
+        "If this is a legal problem, describe what happened, who was involved, and what outcome you need.",
+        "Or try again in a moment, when the full assistant is back online.",
+    ]
+    return response
 
 
 def attach_active_case_state(
