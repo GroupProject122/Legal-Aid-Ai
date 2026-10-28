@@ -741,7 +741,7 @@ button {
 .features {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 16px;
 }
 
@@ -940,6 +940,10 @@ button {
 
 .features .feature-card:nth-child(4) {
   animation-delay: 565ms;
+}
+
+.features .feature-card:nth-child(5) {
+  animation-delay: 640ms;
 }
 
 .brand,
@@ -2243,6 +2247,27 @@ body.has-custom-cursor textarea {
 .response-disclaimer time {
   margin-left: auto;
   font-size: 0.74rem;
+}
+
+.response-cyber-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 9px 14px;
+  color: #7a1f14;
+  background: rgba(214, 101, 79, 0.12);
+  border: 1px solid rgba(168, 58, 37, 0.3);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 140ms ease;
+}
+
+.response-cyber-hint:hover {
+  background: rgba(214, 101, 79, 0.2);
 }
 
 .loading-state {
@@ -3677,6 +3702,197 @@ body.has-custom-cursor textarea {
 @media (max-width: 640px) {
   .about-icon-list {
     grid-template-columns: 1fr;
+  }
+}
+
+/* --- Helplines page --- */
+
+.helpline-emergency-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin: 0 0 18px;
+  padding: 14px 20px;
+  color: #7a1f14;
+  background: rgba(214, 101, 79, 0.14);
+  border: 1px solid rgba(168, 58, 37, 0.38);
+  border-left: 4px solid #a83a25;
+  border-radius: 10px;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.helpline-emergency-banner a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.helpline-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.helpline-filter-chip {
+  padding: 8px 18px;
+  color: var(--mocha);
+  background: rgba(255, 249, 239, 0.7);
+  border: 1px solid rgba(168, 104, 43, 0.3);
+  border-radius: 999px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.helpline-filter-chip:hover {
+  border-color: rgba(168, 104, 43, 0.55);
+}
+
+.helpline-filter-chip-active {
+  color: var(--cream);
+  background: var(--mocha);
+  border-color: var(--mocha);
+}
+
+.helpline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.helpline-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  background: rgba(255, 249, 239, 0.55);
+  border: 1px solid rgba(179, 125, 57, 0.22);
+  border-radius: 10px;
+}
+
+.helpline-card h4 {
+  margin: 0;
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.helpline-handles,
+.helpline-when {
+  margin: 0;
+  color: rgba(63, 40, 22, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.helpline-when strong {
+  color: var(--mocha-soft);
+}
+
+.helpline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.helpline-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  color: var(--cream);
+  background: var(--caramel);
+  border: 0;
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.helpline-action:hover,
+.helpline-action:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(70, 42, 19, 0.16);
+}
+
+.helpline-action-visit {
+  color: var(--mocha);
+  background: rgba(255, 249, 239, 0.9);
+  border: 1px solid rgba(168, 104, 43, 0.4);
+}
+
+.helpline-verified {
+  margin: 4px 0 0;
+  color: var(--taupe);
+  font-size: 0.78rem;
+}
+
+.helpline-verified a {
+  color: inherit;
+}
+
+.helpline-tenancy-panel p {
+  margin: 0 0 4px;
+}
+
+.helpline-tenancy-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.helpline-tenancy-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(255, 249, 239, 0.55);
+  border: 1px solid rgba(179, 125, 57, 0.2);
+  border-radius: 10px;
+}
+
+.helpline-tenancy-link-name {
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.helpline-disclaimer {
+  margin: 24px 0 8px;
+  padding: 13px 16px;
+  color: rgba(63, 40, 22, 0.72);
+  background: rgba(245, 229, 199, 0.5);
+  border: 1px solid rgba(168, 104, 43, 0.2);
+  border-radius: 10px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .helpline-emergency-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .helpline-action {
+    flex: 1;
+    justify-content: center;
   }
 }
 
