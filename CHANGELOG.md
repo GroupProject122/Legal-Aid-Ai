@@ -48,6 +48,81 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — post-merge verification: index rebuild, evals, smoke test (2026-10-28)
+
+**Vector store rebuilt — it was stale on both sides, not just missing windowing.** The live index
+(`backend/vectorstore/`, git-ignored) dated from 2026-09-07: 48 documents / 4,315 chunks, while
+`parsed/legal_chunks.jsonl` has 6,697 chunks from 81 documents. Every corpus addition since then
+(case law, cyber/consumer expansions) had never been searchable. Rebuilt with `python ingest.py`:
+6,697 chunks embedded as 10,652 vectors (3,140 long chunks windowed, `main`'s 0652d05), build
+validation passed, 116 s. **Anyone with a local copy must run `python ingest.py` once** -- the old
+index still loads (no error), it is just stale.
+
+**Retrieval** (`eval/retrieval_evaluation_pre_rebuild_index.*` vs `eval/retrieval_evaluation_merged.*`,
+47 single-domain queries) -- a mixed result, not a clean win:
+
+| Metric | Pre-rebuild index | Rebuilt index |
+|---|---:|---:|
+| Document Hit@1 | 83.0% | 83.0% |
+| Document Hit@3 | 95.7% | 93.6% |
+| Document Hit@5 | 97.9% | 95.7% |
+| Provision Hit@5 | 85.7% | 85.7% |
+| MRR | 0.884 | 0.892 |
+| Avg off-domain in top 5 | 0.064 | 0.021 |
+
+All five changed queries are cyber: `cyber_01` and `cyber_06` improved; `cyber_03`, `cyber_05` and
+`cyber_03_hinglish` regressed. For the hacked-account queries the newly indexed procedural manual
+`cyber/cybercrime_portal_citizen_manual_latest.pdf` now ranks first, while the eval's expected
+sources list the 2019 portal manual and the IT Act -- partly stale expectations, partly the known
+procedural-manual crowding (see the 2026-09 entry on it). Not tuned here.
+
+**Hinglish** (`eval/hinglish_retrieval_production_path_merged.*`, `rag.retrieve()` on the 11 Hinglish
+queries, identical cached normaliser rewrites on both indexes): raw queries improved (expected doc
+found 10 -> 11, at #1 9 -> 10 -- the original bug query "mera Instagram hack ho gaya" now works
+*without* the normaliser); normalised queries got worse (11 -> 10, at #1 9 -> 7) because English
+rewrites like "someone hacked my social media account" now pull the procedural manual first.
+End-to-end on the 8 Hinglish cases (merged code, rebuilt index): **7/8 with the normaliser (two
+runs), 7/8 with it disabled** -- the remaining failure (`multi_006_vague_fraud_clarify`) is routing
+in all runs. Pre-merge this set was 3/8; the gain comes from `main`'s routing/turn-handling work
+and the rebuilt index, not from the normaliser, which currently makes no measurable end-to-end
+difference. Its unit behaviour is unchanged; whether to keep it is a judgement call worth revisiting.
+
+**End-to-end** (`eval/final_end_to_end_evaluation_merged.*`, all 54 cases, live Gemini): **42/54
+(77.8%)**. The previously committed report covered only 15 cases, so it is not a comparable
+baseline. Failures: retrieval misses (`consumer_006`, `cyber_001`, `cyber_006`, `cyber_010`,
+`public_004`), corpus-gap misjudgements (`cyber_008`, `multi_004`, `multi_005`), routing
+(`multi_006`), and **three questions the app should have declined but answered**
+(`gap_002_out_of_scope_python`, `gap_004_weather_out_scope`, `public_008_specific_case_gap`).
+Not fixed here.
+
+**Conversation state — correction-rule check** (`eval/conversation_state_correction_rule_before_after_*.json`;
+"before" = `main`'s rule with `negated_count_phrases` disabled, "after" = with it, same code
+otherwise): rules mode identical on both sets (16 basic: 100%; 90 realistic: 98.9%, wrongly-reset
+1.1%, matching `main`'s committed baseline) with **no case ending in different facts** -- none of the
+106 cases uses the "N noun, not M" form, so this proves no harm but does not exercise the rule
+(its unit tests do). Live mode: accuracy identical too (100% / 98.9%), no pass/fail changes; the 11
+cases whose facts differed are all follow-ups/additional facts where the rule does not fire --
+that is Gemini run-to-run variation. Gemini was degraded during the live run (30% -> 0% of
+realistic turns decided by Gemini vs 77.8% in `main`'s committed run), so the live numbers say
+little either way.
+
+**Browser smoke test** (headless Chrome against the merged app with a scratch database; every page
+as guest and signed in, light and dark; phone width for the new pages): every page renders in all
+four combinations with no uncaught errors. Checked working: Ask (guest answer, source viewer and
+"Open full PDF", signed-in answer saved as a case), voice input (fake microphone: records, then
+"No speech was detected" for a tone), My Cases with case-file DOCX + PDF downloads in light and
+dark, Documents upload ("Extract Text"), Summarize (correct summary), all 8 complaint scenarios
+(forms open; DOCX + PDF generated from each scenario's eval fixture), Know Your Rights -> source
+-> provision, Schemes search (schemes API on 4001), Helplines, Check a Message, Free Legal Aid
+Check (to a result), About, sign-up and sign-in; guests get the sign-in panel on My Cases /
+Documents / Summarize and never see the case-file button. **One real bug found and fixed:** the
+Ask page crashed after the merge (`caseTitle is not defined`, see the commit). Not present on
+either side, so not tested: read-aloud.
+
+**Config note:** an untracked `schemes-legal-support/backend/.env` with `PORT=4000` now collides
+with the React dev server, which `main` moved to 4000 (schemes API -> 4001, `.env.example` already
+says so). Update local `.env` files.
+
 ## Unreleased — merge of `origin/main` into `local-work-2026-10-28` (2026-10-28)
 
 This working copy and GitHub `main` had diverged since `c77b6b2` (2026-09-25): `main` gained user
