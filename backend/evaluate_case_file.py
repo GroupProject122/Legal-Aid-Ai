@@ -78,6 +78,7 @@ def seed_case(spec: dict[str, Any], db_path: Path, user_id: int | None = None) -
     documents row carrying the confirmed-fact context (as /api/documents/confirm-facts does)."""
     document_store.init_db(db_path)
     contexts = {}
+    document_ids: dict[str, int] = {}
     for document in spec.get("documents") or []:
         confirmed_facts = {"document_type": document["document_type"], "document_summary": "User-confirmed facts from document."}
         for category, items in document["facts"].items():
@@ -92,7 +93,7 @@ def seed_case(spec: dict[str, Any], db_path: Path, user_id: int | None = None) -
         contexts[document["context_id"]] = context
         now = case_store.utc_timestamp()
         with case_store.connect(db_path) as conn:
-            conn.execute(
+            cursor = conn.execute(
                 "INSERT INTO documents (original_filename, display_filename, file_type, mime_type, size_bytes, created_at, "
                 "updated_at, storage_path, extraction_status, confirmed_fact_context_json, user_id) VALUES (?, ?, 'pdf', 'application/pdf', 1, ?, ?, '', 'success', ?, ?)",
                 (
@@ -104,6 +105,7 @@ def seed_case(spec: dict[str, Any], db_path: Path, user_id: int | None = None) -
                     user_id,
                 ),
             )
+            document_ids[document["context_id"]] = int(cursor.lastrowid)
 
     state = {"conversation_state_id": f"state_{spec['id']}", "primary_domain": spec["primary_domain"], **spec["conversation_state"]}
     first_context = next((contexts[turn["context_id"]] for turn in spec["turns"] if turn.get("context_id")), None)
@@ -111,6 +113,11 @@ def seed_case(spec: dict[str, Any], db_path: Path, user_id: int | None = None) -
     case_store.rename_case(case_id, spec["title"], db_path, user_id=user_id)
     for turn in spec["turns"]:
         case_store.save_message(case_id, "user", case_store.user_content_for_storage(turn["user"]), db_path)
+        if turn.get("context_id") in document_ids:
+            # Linked the way main.py links a document whose facts are used in a question: at that
+            # question's sequence number.
+            question_sequence = case_store.next_message_sequence(case_id, db_path) - 1
+            document_store.link_document_to_case(case_id, document_ids[turn["context_id"]], db_path, message_sequence=question_sequence)
         case_store.save_message(case_id, "assistant", case_store.assistant_content_for_storage(_response_for(turn, state, contexts)), db_path)
     return case_id
 

@@ -476,10 +476,14 @@ checker. There is no heading or placeholder for any of them in the template.
 - The export replays corrections using the turn type the app *recorded* for each message (stored
   on the assistant message) and the same `apply_correction()` rule, one fact at a time so its
   12-fact cap can't drop anything — it does not re-decide what was a correction.
-- `documents.case_id` has never been populated by the upload flow (0 of 133 rows in the dev DB).
-  Documents are linked to a case by exact `confirmed_fact_context_id` match: confirm-facts stores
-  it on the document row and every answer that used those facts stores it on the message. There
-  is no `case_documents` table; none was added.
+- Documents come from `main`'s `case_documents` link table (updated after the merge with
+  `origin/main`, which added it), owner-scoped, plus older links in `documents.case_id` -- the
+  same two sources `document_store.cases_for_documents()` uses for the Documents page. A linked
+  document's confirmed facts are placed just before the question it came in with
+  (`message_sequence`); facts confirmed without an uploaded document still come from the stored
+  confirmed context. The pre-merge version matched documents on `confirmed_fact_context_id`
+  because this copy had no link table; that id is now only used to avoid listing one document's
+  facts twice.
 
 **Privacy:**
 - All user-originated and app-generated text goes through `case_file.redact()` = existing
@@ -492,21 +496,22 @@ checker. There is no heading or placeholder for any of them in the template.
   `TemporaryDirectory` that is deleted as soon as conversion returns.
 - Logs carry only `case_id`, format and the section list — never case content (tested with
   `caplog`).
-- **Access control:** the endpoints use the same check as `GET /api/cases/{id}` — the case must
-  exist, else `404`. **This app has no user accounts or sign-in**, so there is no per-user
-  ownership check to mirror and no "guest" state; anyone who can reach the API can export any
-  case, exactly as they can already open or delete it. The requested "another user's case → 404,
-  guest → 401" tests could not be written. Adding auth is a separate, app-wide change.
+- **Access control:** the same as `GET /api/cases/{id}` -- `require_user` (guest -> `401`) and an
+  owner-scoped lookup (another user's case -> `404`, so a case's existence isn't revealed); the
+  documents listed are only the owner's. The button is shown only to signed-in owners (My Cases
+  needs an account; on the Ask page it appears only for a signed-in user's saved case). Added in
+  the merge with `origin/main`, which introduced accounts; before that this copy had none.
 
-**Endpoints:** `GET /api/cases/{case_id}/case-file.pdf` and `.../case-file.docx`. `404` unknown
-case; `409` case with no answers yet; `503` on the PDF endpoint when LibreOffice is missing (the
+**Endpoints:** `GET /api/cases/{case_id}/case-file.pdf` and `.../case-file.docx`. `401` guest; `404` unknown
+or someone else's case; `409` case with no answers yet; `503` on the PDF endpoint when LibreOffice is missing (the
 message tells the user to download the Word version; the dialog then offers it and moves focus to
 it). Filename: `case-file-<slug of title, max 40 chars>-<YYYY-MM-DD>.<ext>`, `[a-z0-9-]` only.
 
 **Frontend:** new `frontend/src/caseFile/` (`api.js`, `CaseFileButton.jsx`) — see
 `frontend/CHANGELOG.md`.
 
-**Tests / eval:** `backend/tests/test_case_file.py` (26 tests: the 5 fixture cases end to end,
+**Tests / eval:** `backend/tests/test_case_file.py` (32 tests after the merge: ownership -- another
+user's case 404 and guest 401 on both formats -- and `case_documents` linking/placement were added; originally 26: the 5 fixture cases end to end,
 document-labelled facts, correction replacement, no-timeline case, case-law / compiled-summary
 labels, OTP/Aadhaar/password/card redaction, source de-duplication, unverified and unrecorded
 sources excluded, date parsing never estimates, safe filenames, the storage/correction changes,

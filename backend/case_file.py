@@ -8,7 +8,7 @@ fields, the stored case summary), a corpus excerpt the app already retrieved and
 fixed text in case_file_constants.py. Same reasoning as complaint_drafter.py's slot-fill design.
 
 Split for testability:
-  - load_case_for_export(case_id)        reads the DB (case, messages, linked documents)
+  - load_case_for_export(case_id, user_id) reads the DB (owner's case, messages, case_documents)
   - build_case_file_context(case)        pure: case bundle -> template context dict
   - render_case_file_docx(context)       docxtpl render into memory (BytesIO), never to disk
   - complaint_drafter.convert_docx_bytes_to_pdf()  reused as-is for PDF (LibreOffice)
@@ -79,56 +79,48 @@ def load_case_for_export(case_id: int, db_path=None, user_id: int | None = None)
     if case is None:
         return None
     messages = case_store.get_messages(case_id, db_path)
-    context_ids = _referenced_context_ids(case, messages)
-    return {**case, "messages": messages, "documents": _documents_for_case(case_id, context_ids, db_path, user_id)}
+    return {**case, "messages": messages, "documents": _documents_for_case(case_id, db_path, user_id)}
 
 
-def _referenced_context_ids(case: dict[str, Any], messages: list[dict[str, Any]]) -> list[str]:
-    ids: list[str] = []
-    for message in messages:
-        content = message.get("content")
-        if message.get("role") == "assistant" and isinstance(content, dict):
-            context_id = content.get("confirmed_fact_context_id")
-            if context_id and context_id not in ids:
-                ids.append(context_id)
-    case_context_id = (case.get("confirmed_document_context") or {}).get("confirmed_fact_context_id")
-    if case_context_id and case_context_id not in ids:
-        ids.append(case_context_id)
-    return ids
-
-
-def _documents_for_case(case_id: int, context_ids: list[str], db_path=None, user_id: int | None = None) -> list[dict[str, Any]]:
-    """documents.case_id has never actually been populated by the upload flow, so a document is
-    linked to a case by the confirmed-fact context id it produced: confirm-facts stores that id
-    on the document row, and every answer that used those facts stores the same id on the
-    assistant message. Exact id match -- no filename or content guessing. Checks sqlite_master
-    rather than calling document_store.init_db(), which would create the upload directory."""
+def _documents_for_case(case_id: int, db_path=None, user_id: int | None = None) -> list[dict[str, Any]]:
+    """The case's documents from the case_documents link table (document_store.link_document_to_case()
+    fills it when a document is uploaded in a chat or its confirmed facts are used in one), plus
+    older links recorded only in documents.case_id -- the same two sources
+    document_store.cases_for_documents() reads for the Documents page. message_sequence is the
+    user question the document came in with (NULL for links made before that column existed).
+    Checks sqlite_master rather than calling document_store.init_db(), which would create the
+    upload directory."""
     with case_store.connect(db_path) as conn:
-        if not conn.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'documents'").fetchone():
+        tables = {row["name"] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        if not {"documents", "case_documents"} <= tables:
             return []
-        clauses = ["case_id = ?"]
-        params: list[Any] = [case_id]
-        for context_id in context_ids:
-            clauses.append("confirmed_fact_context_json LIKE ?")
-            params.append(f'%"{context_id}"%')
-        owner_sql, owner_params = case_store.owner_clause(user_id)
+        owner_sql, owner_params = case_store.owner_clause(user_id, column="documents.user_id")
         rows = conn.execute(
-            f"SELECT id, display_filename, created_at, case_id, confirmed_fact_context_json FROM documents "  # noqa: S608
-            f"WHERE ({' OR '.join(clauses)}){owner_sql} ORDER BY created_at ASC, id ASC",
-            [*params, *owner_params],
+            f"""
+            SELECT documents.id, documents.display_filename, documents.created_at,
+                   documents.confirmed_fact_context_json, case_documents.message_sequence
+            FROM case_documents JOIN documents ON documents.id = case_documents.document_id
+            WHERE case_documents.case_id = ?{owner_sql}
+            UNION
+            SELECT documents.id, documents.display_filename, documents.created_at,
+                   documents.confirmed_fact_context_json, NULL
+            FROM documents
+            WHERE documents.case_id = ?{owner_sql}
+              AND NOT EXISTS (SELECT 1 FROM case_documents
+                              WHERE case_documents.document_id = documents.id AND case_documents.case_id = ?)
+            """,  # noqa: S608 -- owner_sql is a fixed fragment; values are bound
+            [case_id, *owner_params, case_id, *owner_params, case_id],
         ).fetchall()
     documents = []
-    for row in rows:
+    for row in sorted(rows, key=lambda r: (r["message_sequence"] is not None, r["message_sequence"] or 0, r["created_at"] or "", r["id"])):
         confirmed = case_store.json_loads(row["confirmed_fact_context_json"]) or {}
-        context_id = confirmed.get("confirmed_fact_context_id")
-        if row["case_id"] != case_id and context_id not in context_ids:
-            continue  # LIKE matched a substring elsewhere in the JSON; not actually this context
         documents.append(
             {
                 "id": row["id"],
                 "filename": row["display_filename"],
                 "created_at": row["created_at"],
-                "confirmed_fact_context_id": context_id,
+                "message_sequence": row["message_sequence"],
+                "confirmed_fact_context_id": confirmed.get("confirmed_fact_context_id"),
                 "confirmed_facts": confirmed.get("confirmed_facts") or {},
             }
         )
@@ -236,6 +228,7 @@ def _turns(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
         turns.append(
             {
                 "text": redact(message.get("content")),
+                "sequence": message.get("sequence_number"),
                 "created_at": message.get("created_at"),
                 "reply": content,
                 "answer": content.get("answer") if isinstance(content.get("answer"), dict) else {},
@@ -258,33 +251,48 @@ def _fact_key(text: str) -> str:
 
 
 def _facts(case: dict[str, Any], turns: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """User facts in the order given, with document facts inserted at the turn their document was
-    first used. Corrections replay the app's own conversation_state.apply_correction() at each
-    turn the app RECORDED as a correction (the stored turn type) -- the same rule the live state
-    applied, minus its 12-fact cap -- rather than re-deciding here what was corrected."""
-    contexts = _document_contexts(case, turns)
+    """User facts in the order given, with document facts inserted where the document came into
+    the case: a linked document (case_documents) just before the question it came in with
+    (message_sequence; before the conversation for older links without one), and facts confirmed
+    without an uploaded document at the turn whose answer first used them. Corrections replay the
+    app's own conversation_state.apply_correction() at each turn the app RECORDED as a correction
+    (the stored turn type) -- the same rule the live state applied, minus its 12-fact cap --
+    rather than re-deciding here what was corrected."""
+    pending_documents = [doc for doc in case.get("documents") or [] if _confirmed_fact_texts(doc.get("confirmed_facts"))]
+    document_context_ids = {doc["confirmed_fact_context_id"] for doc in pending_documents if doc.get("confirmed_fact_context_id")}
+    contexts = _unlinked_contexts(case, turns, document_context_ids)
     facts: list[dict[str, Any]] = []
     seen_contexts: set[str] = set()
 
-    def add_document_facts(context_id: str) -> None:
+    def add_documents_up_to(sequence: int | None) -> None:
+        nonlocal pending_documents
+        ready = [doc for doc in pending_documents if sequence is None or doc["message_sequence"] is None or doc["message_sequence"] <= sequence]
+        for doc in ready:
+            label = f"From your document “{redact(doc['filename'])}” (facts you confirmed)"
+            facts.extend({"text": text, "label": label, "stated_on": None, "kind": "document"} for text in _confirmed_fact_texts(doc["confirmed_facts"]))
+        pending_documents = [doc for doc in pending_documents if doc not in ready]
+
+    def add_context_facts(context_id: str) -> None:
         if context_id in seen_contexts or context_id not in contexts:
             return
         seen_contexts.add(context_id)
         context = contexts[context_id]
-        for text in context["facts"]:
-            facts.append({"text": text, "label": context["label"], "stated_on": context["date"], "kind": "document"})
+        facts.extend({"text": text, "label": context["label"], "stated_on": None, "kind": "document"} for text in context["facts"])
 
-    # The case-level context was attached when the case was created or later updated. If no
-    # answer recorded using it, we can't place it more precisely than "before the conversation".
+    # Documents linked without a position, and a case-level confirmed context no answer recorded
+    # using, can't be placed more precisely than "before the conversation".
+    add_documents_up_to(min((turn["sequence"] for turn in turns if turn["sequence"] is not None), default=0) - 1)
     turn_context_ids = {turn["reply"].get("confirmed_fact_context_id") for turn in turns}
     for context_id in contexts:
         if context_id not in turn_context_ids:
-            add_document_facts(context_id)
+            add_context_facts(context_id)
 
     for turn in turns:
+        if turn["sequence"] is not None:
+            add_documents_up_to(turn["sequence"])
         context_id = turn["reply"].get("confirmed_fact_context_id")
         if context_id:
-            add_document_facts(context_id)
+            add_context_facts(context_id)
         text = turn["text"]
         lowered = text.lower()
         if not text or turn["turn_type"] in SKIPPED_TURN_TYPES or case_store.is_small_talk(text):
@@ -302,6 +310,7 @@ def _facts(case: dict[str, Any], turns: list[dict[str, Any]]) -> list[dict[str, 
         if turn["answering_question"]:
             label = f"As stated by you, answering: “{turn['answering_question']}”"
         facts.append({"text": text, "label": label, "stated_on": stated_on, "kind": "user"})
+    add_documents_up_to(None)  # linked after the last question
 
     output, seen = [], set()
     for fact in facts:
@@ -318,43 +327,43 @@ def _survives_correction(fact_text: str, correction: str) -> bool:
     return _fact_key(fact_text) in {_fact_key(item) for item in kept}
 
 
-def _document_contexts(case: dict[str, Any], turns: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
-    """confirmed_fact_context_id -> the confirmed facts and which document they came from.
-    Preference: the document row's own confirmed facts (full set, and it knows the filename) ->
-    the case's stored confirmed context -> the facts an answer recorded using."""
-    by_document = {doc["confirmed_fact_context_id"]: doc for doc in case.get("documents") or [] if doc.get("confirmed_fact_context_id")}
+def _confirmed_fact_texts(confirmed_facts: Any) -> list[str]:
+    if not isinstance(confirmed_facts, dict):
+        return []
+    pairs = [
+        (item.get("label"), item.get("value"))
+        for category, items in confirmed_facts.items()
+        if isinstance(items, list) and category not in {"uncertain_items", "warnings"}
+        for item in items
+        if isinstance(item, dict)
+    ]
+    return [f"{_pretty_label(label)}: {redact(value)}" for label, value in pairs if str(value or "").strip()]
+
+
+def _unlinked_contexts(case: dict[str, Any], turns: list[dict[str, Any]], document_context_ids: set[str]) -> dict[str, dict[str, Any]]:
+    """Confirmed facts with no linked document behind them (confirm-facts can be called without a
+    document_id): confirmed_fact_context_id -> facts. From the case's stored confirmed context, or
+    else the facts an answer recorded using. Contexts that belong to a linked document are
+    skipped -- that document already contributes its facts, with its filename -- which is the only
+    thing the confirmed-facts id is still used for."""
     case_context = case.get("confirmed_document_context") or {}
     contexts: dict[str, dict[str, Any]] = {}
 
     def register(context_id: str | None, confirmed_facts: dict[str, Any] | None, evidence: list[dict[str, Any]] | None = None) -> None:
-        if not context_id or context_id in contexts:
+        if not context_id or context_id in contexts or context_id in document_context_ids:
             return
-        document = by_document.get(context_id)
-        if document and document.get("confirmed_facts"):
-            confirmed_facts = document["confirmed_facts"]
         if confirmed_facts:
-            pairs = [
-                (item.get("label"), item.get("value"))
-                for category, items in confirmed_facts.items()
-                if isinstance(items, list) and category not in {"uncertain_items", "warnings"}
-                for item in items
-                if isinstance(item, dict)
-            ]
+            texts = _confirmed_fact_texts(confirmed_facts)
             document_type = confirmed_facts.get("document_type")
         else:
-            pairs = [(item.get("label"), item.get("value")) for item in evidence or [] if isinstance(item, dict)]
-            document_type = next((item.get("document_type") for item in evidence or [] if isinstance(item, dict)), None)
-        texts = [f"{_pretty_label(label)}: {redact(value)}" for label, value in pairs if str(value or "").strip()]
+            items = [item for item in evidence or [] if isinstance(item, dict)]
+            texts = [f"{_pretty_label(item.get('label'))}: {redact(item.get('value'))}" for item in items if str(item.get("value") or "").strip()]
+            document_type = next((item.get("document_type") for item in items), None)
         if not texts:
             return
-        if document:
-            label = f"From your document “{redact(document['filename'])}” (facts you confirmed)"
-        else:
-            kind = str(document_type or "").replace("_", " ").strip()
-            label = f"From a document you confirmed ({kind})" if kind and kind != "unknown" else "From a document you confirmed"
-        # No date on document facts: the only date we have is the upload date, which would read
-        # as the document's own date. Upload dates are listed under "Documents already uploaded".
-        contexts[context_id] = {"facts": texts, "label": label, "date": None}
+        kind = str(document_type or "").replace("_", " ").strip()
+        label = f"From a document you confirmed ({kind})" if kind and kind != "unknown" else "From a document you confirmed"
+        contexts[context_id] = {"facts": texts, "label": label}
 
     register(case_context.get("confirmed_fact_context_id"), case_context.get("confirmed_facts"))
     for turn in turns:

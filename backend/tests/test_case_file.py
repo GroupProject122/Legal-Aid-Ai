@@ -306,3 +306,83 @@ def test_export_writes_nothing_to_disk_or_db_and_logs_no_content(api_db, owner, 
     for fragment in ("stopped working", "Croma", "18,499", "written complaint", "croma_receipt.pdf", "Defective Product Refund"):
         assert fragment not in logged
     assert f"case_id={case_id}" in logged
+
+
+# --- Ownership (same auth as GET /api/cases/{id}) ---
+
+
+@pytest.mark.parametrize("suffix", ["case-file.pdf", "case-file.docx"])
+def test_another_users_case_returns_404_like_open_case(api_db, owner, suffix):
+    _owner_client, owner_id = owner
+    case_id = seed("consumer_receipt_document", api_db, owner_id)
+    other_client, _other_id = signed_in_client(email="someone.else@example.com")
+    assert other_client.get(f"/api/cases/{case_id}").status_code == 404
+    response = other_client.get(f"/api/cases/{case_id}/{suffix}")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Case not found."}
+
+
+@pytest.mark.parametrize("suffix", ["case-file.pdf", "case-file.docx"])
+def test_guest_gets_401(api_db, owner, suffix):
+    _client, owner_id = owner
+    case_id = seed("consumer_receipt_document", api_db, owner_id)
+    guest = TestClient(main.app)
+    assert guest.get(f"/api/cases/{case_id}").status_code == 401
+    response = guest.get(f"/api/cases/{case_id}/{suffix}")
+    assert response.status_code == 401
+
+
+# --- Documents come from case_documents ---
+
+
+def _insert_document(db: Path, user_id: int, filename: str, context_id: str | None, facts: dict | None) -> int:
+    import document_store
+
+    document_store.init_db(db)
+    confirmed = None
+    if context_id:
+        confirmed = case_store.json_dumps({"status": "confirmed", "confirmed_fact_context_id": context_id, "confirmed_facts": facts or {}})
+    now = case_store.utc_timestamp()
+    with case_store.connect(db) as conn:
+        cursor = conn.execute(
+            "INSERT INTO documents (original_filename, display_filename, file_type, mime_type, size_bytes, created_at, updated_at, "
+            "storage_path, extraction_status, confirmed_fact_context_json, user_id) VALUES (?, ?, 'pdf', 'application/pdf', 1, ?, ?, '', 'success', ?, ?)",
+            (filename, filename, now, now, confirmed, user_id),
+        )
+        return int(cursor.lastrowid)
+
+
+def test_documents_listed_from_case_documents_not_context_id(tmp_path):
+    import document_store
+
+    db = tmp_path / "legal_aid.db"
+    case_id = evaluate_case_file.seed_case(CASES["tenancy_no_dates"], db, user_id=1)
+    # Same confirmed-facts id as an answer in another case, but never linked to THIS case: the old
+    # context-id matching would have listed it; case_documents does not.
+    _insert_document(db, 1, "unlinked_notice.pdf", "ctx_not_linked", {"dates": [{"label": "notice_date", "value": "1 May 2026"}]})
+    # Linked, but with no confirmed facts: listed by name, contributes no facts.
+    plain = _insert_document(db, 1, "electricity_bill.pdf", None, None)
+    document_store.link_document_to_case(case_id, plain, db, message_sequence=1)
+    # Linked to this case but owned by another user: never listed for this owner.
+    foreign = _insert_document(db, 2, "someone_elses.pdf", "ctx_foreign", {"parties": [{"label": "tenant", "value": "X"}]})
+    document_store.link_document_to_case(case_id, foreign, db, message_sequence=1)
+
+    context = case_file.build_case_file_context(case_file.load_case_for_export(case_id, db, user_id=1))
+    assert [doc["name"] for doc in context["uploaded_documents"]] == ["electricity_bill.pdf"]
+    assert not any("1 May 2026" in fact["text"] or "unlinked" in fact["label"] for fact in context["facts"])
+
+
+def test_document_facts_placed_at_the_question_they_came_in_with(tmp_path):
+    import document_store
+
+    db = tmp_path / "legal_aid.db"
+    case_id = evaluate_case_file.seed_case(CASES["cyber_correction"], db, user_id=1)
+    document = _insert_document(db, 1, "bank_statement.pdf", "ctx_statement", {"amounts": [{"label": "debited", "value": "Rs. 42,000"}]})
+    second_question = 3  # user messages are sequences 1, 3, 5, ...
+    document_store.link_document_to_case(case_id, document, db, message_sequence=second_question)
+
+    facts = case_file.build_case_file_context(case_file.load_case_for_export(case_id, db, user_id=1))["facts"]
+    texts = [fact["text"] for fact in facts]
+    statement = texts.index("Debited: Rs. 42,000")
+    assert texts.index("Someone took money from my bank account through UPI without my permission.") < statement
+    assert facts[statement]["label"] == "From your document “bank_statement.pdf” (facts you confirmed)"

@@ -112,8 +112,9 @@ sources that passed claim verification. See `backend/case_file.py` and the 2026-
 | `GET /api/cases/{case_id}/case-file.pdf` | PDF (`application/pdf`) |
 | `GET /api/cases/{case_id}/case-file.docx` | Word document |
 
-Both return `404` for an unknown case (the same check as `GET /api/cases/{case_id}`) and `409` if
-the case has no answers yet. Files are generated per request and streamed back; nothing is
+Both need a signed-in user and use the same check as `GET /api/cases/{case_id}`: `401` for a
+guest, `404` for an unknown case or one that belongs to someone else, and `409` if the case has no
+answers yet. Files are generated per request and streamed back; nothing is
 stored. The filename is `case-file-<short-title>-<YYYY-MM-DD>.<ext>`.
 
 **PDF needs LibreOffice** (`soffice` on `PATH`), the same requirement as the Complaint Drafter's

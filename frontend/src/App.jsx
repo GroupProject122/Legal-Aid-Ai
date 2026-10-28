@@ -1343,7 +1343,7 @@ function isAnswerResponse(response) {
   return (response.sources?.length > 0) || SUBSTANTIVE_ANSWER_FIELDS.some((field) => answer[field]?.length > 0);
 }
 
-function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, caseId, caseTitle, focusSequence = null, focusKey = '' }) {
+function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, onClear, onAttach, onSourceClick, caseId, caseTitle, canExportCaseFile = false, focusSequence = null, focusKey = '' }) {
   const scrollRef = React.useRef(null);
   const focusDoneRef = React.useRef(false);
   const [highlightedSequence, setHighlightedSequence] = React.useState(null);
@@ -1382,8 +1382,9 @@ function ChatPanel({ input, setInput, messages, isLoading, onSubmit, onExample, 
           <p>Legal consultation workspace</p>
         </div>
         <div className="chat-panel-toolbar-actions">
-          {/* Only a saved case can be exported -- an unsaved conversation has no case id yet. */}
-          {caseId ? (
+          {/* Only a saved case can be exported, and only by its signed-in owner: guests' conversations
+              are never saved (no case id), and the export endpoints answer 401 to guests anyway. */}
+          {caseId && canExportCaseFile ? (
             <CaseFileButton
               caseId={caseId}
               caseTitle={caseTitle}
@@ -1984,6 +1985,7 @@ function AskQuestionPage({ initialQuery = '', initialCaseId = '', initialAttach 
             focusKey={`${initialCaseId}:${initialFocusSequence || ''}`}
             caseId={caseId}
             caseTitle={caseTitle}
+            canExportCaseFile={Boolean(user)}
           />
           <QuerySummaryPanel
             category={category}
