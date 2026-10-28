@@ -1,0 +1,785 @@
+{
+  "evaluation_config": {
+    "case_file": "/Users/arushig/Documents/ChatGPT/Legal AI 2/backend/eval/scam_check_cases.json",
+    "mode": "rules_only",
+    "gemini_model": null,
+    "gemini_calls": 0,
+    "gemini_unavailable_calls": 0,
+    "delay_seconds_between_calls": 0.0,
+    "note": "Message text is deliberately not copied into this report; see the case file by id."
+  },
+  "metrics": {
+    "scam_count": 26,
+    "genuine_count": 15,
+    "scam_recall": 1.0,
+    "scam_high_risk_rate": 0.462,
+    "scam_type_accuracy": 1.0,
+    "false_alarm_rate_high_risk": 0.0,
+    "genuine_any_warning_rate": 0.067
+  },
+  "per_type": {
+    "bank_kyc_fraud": {
+      "count": 2,
+      "flagged": 2,
+      "high_risk": 0,
+      "type_correct": 2
+    },
+    "courier_or_parcel_scam": {
+      "count": 2,
+      "flagged": 2,
+      "high_risk": 0,
+      "type_correct": 2
+    },
+    "digital_arrest_or_authority_threat": {
+      "count": 3,
+      "flagged": 3,
+      "high_risk": 3,
+      "type_correct": 3
+    },
+    "electricity_bill_scam": {
+      "count": 2,
+      "flagged": 2,
+      "high_risk": 0,
+      "type_correct": 2
+    },
+    "job_or_task_scam": {
+      "count": 3,
+      "flagged": 3,
+      "high_risk": 0,
+      "type_correct": 3
+    },
+    "loan_app_or_extortion": {
+      "count": 2,
+      "flagged": 2,
+      "high_risk": 1,
+      "type_correct": 2
+    },
+    "malicious_app_link": {
+      "count": 1,
+      "flagged": 1,
+      "high_risk": 1,
+      "type_correct": 1
+    },
+    "otp_or_credential_theft": {
+      "count": 3,
+      "flagged": 3,
+      "high_risk": 3,
+      "type_correct": 3
+    },
+    "prize_or_refund_scam": {
+      "count": 3,
+      "flagged": 3,
+      "high_risk": 0,
+      "type_correct": 3
+    },
+    "remote_access_scam": {
+      "count": 2,
+      "flagged": 2,
+      "high_risk": 2,
+      "type_correct": 2
+    },
+    "unknown": {
+      "count": 1,
+      "flagged": 1,
+      "high_risk": 0,
+      "type_correct": 1
+    },
+    "upi_collect_scam": {
+      "count": 2,
+      "flagged": 2,
+      "high_risk": 2,
+      "type_correct": 2
+    }
+  },
+  "per_language": {
+    "en": {
+      "scam_count": 17,
+      "genuine_count": 12,
+      "scam_recall": 1.0,
+      "scam_high_risk_rate": 0.412,
+      "scam_type_accuracy": 1.0,
+      "false_alarm_rate_high_risk": 0.0,
+      "genuine_any_warning_rate": 0.083
+    },
+    "hinglish": {
+      "scam_count": 9,
+      "genuine_count": 3,
+      "scam_recall": 1.0,
+      "scam_high_risk_rate": 0.556,
+      "scam_type_accuracy": 1.0,
+      "false_alarm_rate_high_risk": 0.0,
+      "genuine_any_warning_rate": 0.0
+    }
+  },
+  "results": [
+    {
+      "id": "scam_kyc_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "bank_kyc_fraud",
+      "verdict": "warning_signs",
+      "scam_type": "bank_kyc_fraud",
+      "signs": [
+        "urgency_or_threat",
+        "kyc_pan_aadhaar_update",
+        "link_lookalike_domain"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_kyc_02_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "bank_kyc_fraud",
+      "verdict": "warning_signs",
+      "scam_type": "bank_kyc_fraud",
+      "signs": [
+        "urgency_or_threat",
+        "kyc_pan_aadhaar_update",
+        "link_shortener"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_otp_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "otp_or_credential_theft",
+      "verdict": "high_risk",
+      "scam_type": "otp_or_credential_theft",
+      "signs": [
+        "asks_for_otp_pin_password"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_otp_02_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "otp_or_credential_theft",
+      "verdict": "high_risk",
+      "scam_type": "otp_or_credential_theft",
+      "signs": [
+        "asks_for_otp_pin_password"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_otp_03_en_cvv",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "otp_or_credential_theft",
+      "verdict": "high_risk",
+      "scam_type": "otp_or_credential_theft",
+      "signs": [
+        "asks_for_otp_pin_password"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_arrest_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "digital_arrest_or_authority_threat",
+      "verdict": "high_risk",
+      "scam_type": "digital_arrest_or_authority_threat",
+      "signs": [
+        "authority_threat"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_arrest_02_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "digital_arrest_or_authority_threat",
+      "verdict": "high_risk",
+      "scam_type": "digital_arrest_or_authority_threat",
+      "signs": [
+        "authority_threat",
+        "urgency_or_threat"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_courier_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "courier_or_parcel_scam",
+      "verdict": "warning_signs",
+      "scam_type": "courier_or_parcel_scam",
+      "signs": [
+        "urgency_or_threat",
+        "impersonates_bank_or_authority",
+        "link_lookalike_domain"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_courier_02_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "courier_or_parcel_scam",
+      "verdict": "warning_signs",
+      "scam_type": "courier_or_parcel_scam",
+      "signs": [
+        "impersonates_bank_or_authority",
+        "link_ip_address"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_electricity_01_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "electricity_bill_scam",
+      "verdict": "warning_signs",
+      "scam_type": "electricity_bill_scam",
+      "signs": [
+        "urgency_or_threat",
+        "impersonates_bank_or_authority"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_electricity_02_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "electricity_bill_scam",
+      "verdict": "warning_signs",
+      "scam_type": "electricity_bill_scam",
+      "signs": [
+        "urgency_or_threat"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_electricity_03_apk",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "malicious_app_link",
+      "verdict": "high_risk",
+      "scam_type": "malicious_app_link",
+      "signs": [
+        "impersonates_bank_or_authority",
+        "link_apk_file"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_prize_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "prize_or_refund_scam",
+      "verdict": "warning_signs",
+      "scam_type": "prize_or_refund_scam",
+      "signs": [
+        "unexpected_prize_or_refund"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_refund_02_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "prize_or_refund_scam",
+      "verdict": "warning_signs",
+      "scam_type": "prize_or_refund_scam",
+      "signs": [
+        "impersonates_bank_or_authority",
+        "unexpected_prize_or_refund",
+        "link_lookalike_domain"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_prize_03_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "prize_or_refund_scam",
+      "verdict": "warning_signs",
+      "scam_type": "prize_or_refund_scam",
+      "signs": [
+        "unexpected_prize_or_refund"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_job_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "job_or_task_scam",
+      "verdict": "warning_signs",
+      "scam_type": "job_or_task_scam",
+      "signs": [
+        "job_or_task_offer"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_job_02_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "job_or_task_scam",
+      "verdict": "warning_signs",
+      "scam_type": "job_or_task_scam",
+      "signs": [
+        "job_or_task_offer"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_job_03_en_fee",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "job_or_task_scam",
+      "verdict": "warning_signs",
+      "scam_type": "job_or_task_scam",
+      "signs": [
+        "job_or_task_offer"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_remote_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "remote_access_scam",
+      "verdict": "high_risk",
+      "scam_type": "remote_access_scam",
+      "signs": [
+        "remote_access_app"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_remote_02_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "remote_access_scam",
+      "verdict": "high_risk",
+      "scam_type": "remote_access_scam",
+      "signs": [
+        "remote_access_app"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_upi_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "upi_collect_scam",
+      "verdict": "high_risk",
+      "scam_type": "upi_collect_scam",
+      "signs": [
+        "asks_for_otp_pin_password",
+        "upi_collect_to_receive"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_upi_02_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "upi_collect_scam",
+      "verdict": "high_risk",
+      "scam_type": "upi_collect_scam",
+      "signs": [
+        "upi_collect_to_receive"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_loan_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "loan_app_or_extortion",
+      "verdict": "warning_signs",
+      "scam_type": "loan_app_or_extortion",
+      "signs": [
+        "loan_without_checks"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_loan_02_hinglish",
+      "label": "scam",
+      "language": "hinglish",
+      "expected_type": "loan_app_or_extortion",
+      "verdict": "high_risk",
+      "scam_type": "loan_app_or_extortion",
+      "signs": [
+        "threat_to_share_photos_or_contacts"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_trai_01_en",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "digital_arrest_or_authority_threat",
+      "verdict": "high_risk",
+      "scam_type": "digital_arrest_or_authority_threat",
+      "signs": [
+        "authority_threat",
+        "urgency_or_threat",
+        "impersonates_bank_or_authority"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "scam_family_01_en_subtle",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "unknown",
+      "verdict": "warning_signs",
+      "scam_type": "unknown",
+      "signs": [
+        "urgency_or_threat"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "genuine_otp_01",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_otp_02_hinglish",
+      "label": "genuine",
+      "language": "hinglish",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_upi_received",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_upi_debit",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_delivery_01",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_delivery_02",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_electricity_bill",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_electricity_hinglish",
+      "label": "genuine",
+      "language": "hinglish",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_job_interview",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_bank_warning",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_salary",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_appointment",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_friend_hinglish",
+      "label": "genuine",
+      "language": "hinglish",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_emi_due",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "no_common_signs",
+      "scam_type": "unknown",
+      "signs": [],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": false,
+        "high_risk": false
+      }
+    },
+    {
+      "id": "genuine_kyc_branch",
+      "label": "genuine",
+      "language": "en",
+      "expected_type": null,
+      "verdict": "warning_signs",
+      "scam_type": "bank_kyc_fraud",
+      "signs": [
+        "kyc_pan_aadhaar_update"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false
+      }
+    }
+  ]
+}

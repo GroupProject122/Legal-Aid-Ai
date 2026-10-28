@@ -38,6 +38,7 @@ import {
   ReceiptText,
   RefreshCw,
   Scale,
+  ScanSearch,
   Search,
   Send,
   ShieldCheck,
@@ -69,6 +70,7 @@ import { ApiError, postMatch } from './schemes/api.js';
 
 import { ScenarioPicker, SCENARIOS } from './complaints/ScenarioPicker.jsx';
 import Helplines from './helplines/Helplines.jsx';
+import ScamCheck from './scamcheck/ScamCheck.jsx';
 import { IntakeForm as ComplaintIntakeForm } from './complaints/IntakeForm.jsx';
 import { DraftPreview } from './complaints/DraftPreview.jsx';
 import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.js';
@@ -83,6 +85,7 @@ const navItems = [
   { label: 'Summarize Document', icon: Sparkles, page: 'summarize', href: '#/summarize-document' },
   { label: 'Know Your Rights', icon: ShieldCheck, page: 'rights', href: '#/rights' },
   { label: 'Schemes', icon: Gift, page: 'schemes', href: '#/schemes' },
+  { label: 'Check a Message', icon: ScanSearch, page: 'scam-check', href: '#/scam-check' },
   { label: 'Helplines', icon: Phone, page: 'helplines', href: '#/helplines' },
   { label: 'About Us', icon: CircleHelp, page: 'about', href: '#/about' }
 ];
@@ -128,6 +131,13 @@ const features = [
     button: 'View Schemes',
     icon: Gift,
     href: '#/schemes'
+  },
+  {
+    title: 'Check a Message',
+    description: 'Paste a suspicious SMS or WhatsApp message to spot common scam signs.',
+    button: 'Check Now',
+    icon: ScanSearch,
+    href: '#/scam-check'
   },
   {
     title: 'Helplines',
@@ -2933,7 +2943,8 @@ const aboutFeatures = [
   ['Documents', 'Upload a notice, receipt, or contract and pull out the key facts.', FileText, '#/documents'],
   ['Summarize Document', 'Get a short, plain-language summary of a legal document.', Sparkles, '#/summarize-document'],
   ['Know Your Rights', 'Browse common rights and the laws behind them, by topic.', ShieldCheck, '#/rights'],
-  ['Schemes', 'Find government schemes and services you may be able to use.', Gift, '#/schemes']
+  ['Schemes', 'Find government schemes and services you may be able to use.', Gift, '#/schemes'],
+  ['Check a Message', 'Paste a suspicious SMS or WhatsApp message to spot common scam warning signs.', ScanSearch, '#/scam-check']
 ];
 
 const aboutStats = [
@@ -4724,7 +4735,9 @@ export default function App() {
                   ? 'schemes'
                   : routeSegments[0] === 'helplines'
                     ? 'helplines'
-                    : 'home';
+                    : routeSegments[0] === 'scam-check'
+                      ? 'scam-check'
+                      : 'home';
 
   return (
     <div className={`app-shell ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
@@ -4753,6 +4766,7 @@ export default function App() {
         {activePage === 'about' && <AboutUsPage />}
         {activePage === 'schemes' && <SchemesPage />}
         {activePage === 'helplines' && <Helplines />}
+        {activePage === 'scam-check' && <ScamCheck />}
         {activePage === 'home' && <HomePage />}
       </main>
     </div>

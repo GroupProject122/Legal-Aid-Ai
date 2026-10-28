@@ -108,6 +108,24 @@ The template lives at `backend/templates/case_file_base.docx`; regenerate it wit
 Evaluation: `python evaluate_case_file.py` (5 fixture cases, writes
 `eval/case_file_evaluation.{json,md}`).
 
+## Check a Message (scam checker)
+
+The **Check a Message** page (`#/scam-check`) lets a user paste a suspicious SMS, WhatsApp or
+email message and see the warning signs found in it, what to do next, and corpus provisions that
+may apply. Backend: `backend/scam_checker.py`.
+
+| Endpoint | Body | Returns |
+| --- | --- | --- |
+| `POST /api/scam-check` | `{"message": "<up to 2,000 characters>"}` | `verdict` (`high_risk` / `warning_signs` / `no_common_signs`), `headline`, `signs_found[]` (`rule_id`, `explanation`, masked `snippet`, `highlight`, `source` = `rule`/`ai`, `strength`), `scam_type`, `ai_explanation`, `what_to_do[]`, `laws_that_may_apply[]` (each with a source-viewer `api_url`), `ai_check`, `note`, `disclaimer` |
+
+Empty, non-text or oversized input returns `422`. Fixed rules decide the verdict; one Gemini
+call can only *add* weak warning signs. If Gemini fails, the rules-only result comes back with a
+note. There is no "safe" verdict. The message is never stored or logged, and links in it are
+never opened. Evaluation: `python evaluate_scam_checker.py` (rules only) and
+`python evaluate_scam_checker.py --with-gemini --delay 5`. Add
+`--cases eval/scam_check_cases_heldout.json --tag heldout` for the held-out set. Results are in
+`eval/scam_check_evaluation_*.{json,md}`.
+
 The **Schemes** page (`#/schemes`) is served by the same frontend but talks to a
 **separate** backend — see the next section. If the schemes backend isn't
 running, every other page still works; only the Schemes search fails (with a

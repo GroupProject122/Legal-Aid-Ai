@@ -4,6 +4,47 @@ Notes on notable frontend changes so the team can see what moved and why.
 Entries up to and including 2026-09-06 only touch `frontend/src/App.jsx` and
 `frontend/src/styles.css`; later entries may add new files (noted per entry).
 
+## 2026-10-28 — Check a Message page (`#/scam-check`)
+
+New files: `src/scamcheck/ScamCheck.jsx`, `src/scamcheck/api.js`. Backend design, safety rules
+and eval results are in the root `CHANGELOG.md`'s "Scam Message Checker" entry.
+
+- **Where:** a "Check a Message" sidebar item (between Schemes and Helplines), a sixth home-page
+  feature card, and an entry in the About page feature list. All are wired in `App.jsx`.
+- **Form:**
+  - a labelled textarea ("Paste the message here");
+  - a live character count (2,000 max; turns red over the limit, and Check is then disabled);
+  - the privacy line "We don't save your message, and we never open links in it.";
+  - a Check button.
+- Nothing is put in `localStorage` or `sessionStorage`.
+- **Result card:**
+  - the verdict is colour-coded: red for `high_risk`, amber for `warning_signs`, grey for
+    `no_common_signs`, **never green**. The grey state's heading is "Check complete", and its
+    body is the required cautious sentence;
+  - warning signs are listed with the masked snippet and the matched words in a `<mark>`;
+    AI-added signs are labelled "(found by AI)";
+  - "What to do" is numbered steps: 1930 is a `tel:` link, and cybercrime.gov.in and Chakshu
+    are linked in place. The RBI-circular step links to its paragraphs in the source viewer;
+  - "Laws that may apply" link to `#/rights/source/<id>/provision/<id>`;
+  - the disclaimer.
+- **"I lost money -- what now?"** opens `#/ask?q=…` with a generic description plus the scam
+  type. It deliberately does **not** include the pasted message, which may hold OTPs or account
+  numbers. A "Helplines" button links to `#/helplines`.
+- **Accessibility:** the result is in an `aria-live="polite"` region, and focus moves to the
+  result heading (`tabIndex=-1`) after a check. Errors use `role="alert"`, and every interactive
+  element has a visible `:focus-visible` outline.
+- **Checked in headless Chrome** against the running dev servers, at 1280px and 390px:
+  - no horizontal scroll at either width;
+  - focus lands on the result heading;
+  - the OTP from the pasted message is absent from the rendered result;
+  - `tel:1930` and the source-viewer links are present;
+  - the action buttons stack on phone.
+
+  Both `high_risk` and `no_common_signs` states were screenshotted.
+- **Dark mode: not checked, because the app has none.** The moon button in `HeaderControls` is
+  decorative, and `styles.css` has no `prefers-color-scheme` rule. The new styles use `:root`
+  tokens (`--scam-*`) so they can be themed when dark mode is added.
+
 ## 2026-10-28 — Case File download (My Cases + Ask page)
 
 New files: `src/caseFile/api.js`, `src/caseFile/CaseFileButton.jsx`. Backend side and the

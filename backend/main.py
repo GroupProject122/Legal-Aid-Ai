@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import json
 import logging
 import re
 from contextlib import asynccontextmanager
@@ -28,6 +29,7 @@ import fact_sufficiency
 import grounded_answer
 import legal_education
 import query_normalizer
+import scam_checker
 import voice_transcription
 from config import DISCLAIMER, FRONTEND_ORIGINS, LLM_PROVIDER
 from rag import (
@@ -461,6 +463,24 @@ def legal_awareness_source_file(source_id: str) -> FileResponse:
         return FileResponse(source_path, media_type="application/pdf", filename=source["source_file"].split("/")[-1])
     except legal_education.LegalEducationError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.post("/api/scam-check")
+async def scam_check(request: Request) -> dict:
+    # The body is parsed here rather than declared as a pydantic model on purpose: the global
+    # RequestValidationError handler above logs the validation error, and pydantic's error text
+    # includes the submitted input -- which for this endpoint is a private message that may hold
+    # OTPs, account numbers and phone numbers. Nothing from the body is logged or stored here;
+    # scam_checker logs only rule IDs and the verdict.
+    try:
+        payload = json.loads(await request.body() or b"null")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        raise HTTPException(status_code=422, detail="The request format is invalid.") from None
+    message = payload.get("message") if isinstance(payload, dict) else None
+    try:
+        return scam_checker.check_message(message).to_dict()
+    except scam_checker.ScamCheckInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from None
 
 
 @app.post("/api/ask")

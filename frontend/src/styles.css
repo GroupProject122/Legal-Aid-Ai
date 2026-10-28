@@ -946,6 +946,10 @@ button {
   animation-delay: 640ms;
 }
 
+.features .feature-card:nth-child(6) {
+  animation-delay: 715ms;
+}
+
 .brand,
 .nav-list,
 .sidebar-cards {
@@ -6919,3 +6923,266 @@ body.has-custom-cursor textarea {
 }
 
 /* --- Check a Message (scam checker) page --- */
+/* Verdict colours are red / amber / grey and never green: there is no "safe" result. */
+
+:root {
+  --scam-danger: #8f2a17;
+  --scam-danger-tint: rgba(214, 101, 79, 0.13);
+  --scam-caution: #7a4a0c;
+  --scam-caution-tint: rgba(214, 150, 50, 0.16);
+  --scam-neutral: #4f4740;
+  --scam-neutral-tint: rgba(120, 110, 100, 0.12);
+  --scam-mark: rgba(214, 150, 50, 0.38);
+}
+
+.scam-form {
+  display: grid;
+  gap: 10px;
+}
+
+.scam-label {
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.scam-textarea {
+  width: 100%;
+  min-height: 170px;
+  padding: 14px 16px;
+  color: var(--ink);
+  background: rgba(255, 252, 245, 0.95);
+  border: 1px solid rgba(151, 91, 38, 0.38);
+  border-radius: 10px;
+  font: 1rem/1.5 var(--sans);
+  resize: vertical;
+}
+
+.scam-textarea:focus-visible,
+.scam-result h3:focus-visible,
+.scam-law-link:focus-visible,
+.scam-inline-link:focus-visible,
+.scam-tel:focus-visible {
+  outline: 3px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.scam-form-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 16px;
+}
+
+.scam-privacy,
+.scam-count {
+  margin: 0;
+  color: rgba(63, 40, 22, 0.78);
+  font-size: 0.88rem;
+}
+
+.scam-count-over,
+.scam-error {
+  color: var(--scam-danger);
+  font-weight: 600;
+}
+
+.scam-error {
+  margin: 0;
+}
+
+.scam-submit {
+  justify-self: start;
+}
+
+.scam-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.scam-result {
+  border-left-width: 5px;
+}
+
+.scam-result-danger { border-left-color: var(--scam-danger); }
+.scam-result-caution { border-left-color: var(--scam-caution); }
+.scam-result-neutral { border-left-color: var(--scam-neutral); }
+
+.scam-verdict {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 10px;
+}
+
+.scam-result-danger .scam-verdict { color: var(--scam-danger); background: var(--scam-danger-tint); }
+.scam-result-caution .scam-verdict { color: var(--scam-caution); background: var(--scam-caution-tint); }
+.scam-result-neutral .scam-verdict { color: var(--scam-neutral); background: var(--scam-neutral-tint); }
+
+.scam-verdict svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.scam-result .scam-verdict h3 {
+  margin: 0 0 4px;
+  color: inherit;
+}
+
+.scam-verdict p {
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+
+.scam-type strong {
+  color: inherit;
+}
+
+.scam-ai-explanation {
+  font-style: italic;
+}
+
+.scam-note {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  color: var(--mocha-soft);
+  background: rgba(245, 229, 199, 0.6);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.scam-section {
+  margin-top: 20px;
+}
+
+.scam-section h4 {
+  margin: 0 0 10px;
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-size: 1.2rem;
+}
+
+.scam-sign-list,
+.scam-law-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scam-sign {
+  padding: 12px 14px;
+  background: rgba(255, 249, 239, 0.6);
+  border: 1px solid rgba(179, 125, 57, 0.22);
+  border-left: 4px solid var(--scam-caution);
+  border-radius: 8px;
+}
+
+.scam-sign-strong {
+  border-left-color: var(--scam-danger);
+}
+
+.scam-sign p {
+  margin: 0;
+}
+
+.scam-sign-source {
+  color: var(--taupe);
+  font-size: 0.85rem;
+}
+
+.scam-snippet {
+  display: block;
+  margin-top: 6px;
+  padding: 6px 10px;
+  color: rgba(47, 32, 23, 0.85);
+  background: rgba(255, 253, 247, 0.9);
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+  quotes: none;
+}
+
+.scam-snippet mark {
+  color: inherit;
+  background: var(--scam-mark);
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.scam-steps li {
+  margin-bottom: 8px;
+}
+
+.scam-tel {
+  color: var(--scam-danger);
+  font-weight: 700;
+}
+
+.scam-inline-link,
+.scam-step-sources a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--walnut);
+}
+
+.scam-step-sources {
+  color: var(--taupe);
+  font-size: 0.86rem;
+}
+
+.scam-law-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--walnut);
+  font-weight: 600;
+}
+
+.scam-law-list p {
+  margin: 2px 0 0;
+  color: rgba(63, 40, 22, 0.8);
+  font-size: 0.9rem;
+}
+
+.scam-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.scam-actions .helpline-action {
+  cursor: pointer;
+}
+
+.scam-disclaimer {
+  margin-top: 18px;
+}
+
+@media (max-width: 640px) {
+  .scam-verdict {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .scam-actions {
+    flex-direction: column;
+  }
+
+  .scam-submit,
+  .scam-actions .helpline-action {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* --- Free Legal Aid Check page (legalaid/LegalAidCheck.jsx) --- */
