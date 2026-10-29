@@ -48,6 +48,38 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — e2e failures 2026-10-29: findings for the cases not fixed by code (2026-10-29)
+
+Follows the two retrieval fixes above. No code change in this entry; these stay known limitations
+until the labels are reviewed. None of them was re-run live after the fixes; that is pending.
+- **`public_004` "can I get a free lawyer" -- label right, ranking not fixed.** The governing law
+  is the Legal Services Authorities Act, 1987 s.12 (Criteria for giving legal services). It is in
+  the corpus and the Act *is* retrieved (ss.15 and 13 are selected), but s.12 ranks 10th: its text
+  ("Every person who has to file or defend a case shall be entitled to legal services...") shares
+  no words with "free lawyer". The answer cited only the NALSA Regulations. No general reranking
+  rule was found that lifts s.12 without tuning to this phrasing, so none was added.
+- **Found while tracing `public_004` (not fixed):** the NALSA (Legal Services Clinics)
+  Regulations, 2011 are mis-parsed. 7 of their 17 chunks are labelled "Regulation 1" with titles
+  like "SubstitutedbyNoC" -- amendment-footnote lines ("1. Substituted by Notification No. ...")
+  in a poor text layer were read as regulation headings. This is the same family as the NALSA 2010
+  footnote fix, in a different form. It is not the cause of `public_004`: removing those chunks
+  still leaves s.12 unselected.
+- **`cyber_008`, `multi_004`, `multi_005` -- expectations look stale.** All three expect the
+  "Digital Personal Data Protection Rules" and corpus status "limited". The cases were written on
+  2026-09-01, when the corpus held only the DPDP Rules, not the DPDP Act. The Act was added later,
+  and the same stale expectation was already recorded for retrieval-eval query `cyber_07`. Today
+  each one retrieves the DPDP Act plus the relevant consumer / IT / RTI law, and since the pool fix
+  `cyber_008` also selects the DPDP Rules (r.10; r.7 "Intimation of personal data breach" is in
+  the pool). Corpus gap says "sufficient", and the answers carry their own limitations. No general
+  rule was found that would make "limited" correct now, so the decision logic is unchanged.
+  Relabelling these cases is proposed and awaits review.
+- **`multi_006` "Mere saath fraud hua hai" -- left as is.** For that message alone, cyber-only
+  routing is reasonable: nothing in it points to consumer law, and the expected fact question is
+  asked. The consumer side appears only in the reply ("Instagram seller ne payment le kar block kar
+  diya"), and the final answer does cite the Consumer Protection Act and E-Commerce Rules. The
+  eval scores the first-turn router's domains. Changing that would need a second router call on
+  the reply, which is not a general improvement.
+
 ## Unreleased — Retrieval: "User reports that..." is no longer treated as a how-to-report question (2026-10-29)
 
 **Problem (e2e `multi_003`).** For the rewritten retrieval query "User reports that their online
