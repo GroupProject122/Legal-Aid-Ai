@@ -48,6 +48,39 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Checks on the merged code: eligibility source links, case file (2026-10-29)
+
+Hand checks after merging PR #1 and #2; **nothing needed fixing**. Run against a scratch database
+(headless Chrome via DevTools, scratch server on the rebuilt index; no Gemini).
+
+**Free Legal Aid Check (#/legal-aid).**
+- Every corpus source the checker can cite, collected from 16 answer sets (each category, a child,
+  low/high income in and outside Delhi, the Supreme Court): 5 distinct provisions -- Legal Services
+  Authorities Act s.12, s.13, s.19 and Regulation 3 of both NALSA regulations. Each `api_url`
+  returns 200 and names the provision the card shows (the card's "Section 12(c)" opens Section 12;
+  the viewer works at section level).
+- In the browser (Delhi, not the Supreme Court, "I am a woman", age 34 -> "You are likely entitled to
+  free legal aid"): each source link opens the right provision page, and each page's PDF link
+  returns the PDF. The result card is readable in dark mode. No page errors.
+- `/api/corpus/file` is not used by this page; it is the Ask page source viewer's link, checked in
+  the post-merge smoke test.
+
+**Case file.**
+- Signed-in owner, case with a document linked via `case_documents` (`croma_receipt.pdf`, question 1):
+  PDF and DOCX download; the document is listed under "Documents already uploaded" and its
+  confirmed facts are attributed to it by name; sources labelled ("Statute", page numbers), the
+  unverified source left out with a note; layout clean (cover, page breaks, no empty headings).
+- The OTP/Aadhaar/password/card fixture case: none of the seven secrets appears in the PDF text;
+  redaction markers in their place.
+- Another signed-in user: 404 "Case not found." for both formats; guest: 401 for both.
+- Guest: no case-file button on My Cases (sign-in panel) or the Ask page. Owner in dark mode: the
+  no-answer case's button is disabled, the dialog opens with the not-legal-advice notice, the Word
+  download completes, and the button is on the Ask page. No page errors.
+
+**Found while checking, not part of this branch:** on `main`, a full backend test run wrote 11 files
+into the real `backend/user_uploads/` (no database record pointed at them; moved out). PR #3's test
+isolation also redirects `document_store.UPLOAD_DIR`, which stops this.
+
 ## Unreleased — Parser: amendment footnote markers merged into provision numbers (2026-10-29)
 
 **Bug.** In the NALSA (Free and Competent Legal Services) Regulations, 2010, regulations **5, 7, 8 and
