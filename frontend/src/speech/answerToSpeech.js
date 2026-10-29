@@ -1,33 +1,105 @@
 /**
- * Turns an Ask-page answer into text for the browser's speechSynthesis, and splits it into
+ * Turns an assistant reply into text for the browser's speechSynthesis, and splits it into
  * sentence-sized chunks. Pure functions only -- no DOM, no speechSynthesis -- so they can be
  * unit-tested with `node --test` (see answerToSpeech.test.js).
  *
- * What is read, in order: "In short" (answer.issue_summary), then the suggested next steps, then
- * where to approach -- the parts a listener can act on. Skipped: sources, citation brackets,
- * disclaimers, limitations, and the raw text of URLs (read as "the link shown on screen").
+ * What is read: every section the reply card shows, in the same order as on screen, each
+ * introduced by its visible heading ("In short.", "Suggested next steps." ...). Skipped: the
+ * sources list, citation brackets, the disclaimer, and the raw text of URLs (read as "the link
+ * shown on screen"). responseSpeechSections() mirrors LegalAIResponse in App.jsx -- change both
+ * together.
  */
 
 const LINK_PHRASE = 'the link shown on screen';
 
-// Same rule the answer card uses to decide it is a full answer rather than a clarification
-// question, a technical error, an offline result or a one-line acknowledgement.
-export function isSpeakableAnswer(response) {
-  if (!response || response.technical_error || response.offline) return false;
-  if (response.clarification?.needed || response.clarification?.question) return false;
+// Shown on screen when a field is missing, so they are read too. App.jsx renders these same
+// constants, which keeps what is heard identical to what is seen.
+export const DISPLAY_FALLBACKS = {
+  summary: 'The available legal sources do not contain enough information to answer this reliably.',
+  technicalError: 'Legal Aid AI could not process your request right now. Please check that the backend and Gemini API are configured correctly and try again.',
+  offlineNotice: 'You are currently offline. Retrieving the relevant legal section, case, corpus, and law locally from the database and local files.',
+  offlineNoMatches: 'No relevant sections were found in the local legal corpus for this question.',
+  offlineNoExcerpt: 'No excerpt is available for this source.',
+  conversational: 'You can ask a follow-up question whenever you like.'
+};
+
+/**
+ * The reply as [{ heading, items, ordered }], in screen order, empty sections left out.
+ * `hints` are the extra one-line links the card shows under some answers (the 1930 line, the
+ * free-legal-aid check); App.jsx decides which are visible and passes their text.
+ */
+export function responseSpeechSections(response, { hints = [] } = {}) {
+  if (!response) return [];
   const answer = response.answer || {};
-  return Boolean(cleanText(answer.issue_summary));
+  const sections = [];
+  const add = (heading, values, { ordered = false } = {}) => {
+    const items = listItems(values);
+    if (items.length) sections.push({ heading, items, ordered });
+  };
+
+  if (response.offline) {
+    const sources = response.sources || [];
+    add('Offline mode', [response.offline_notice || DISPLAY_FALLBACKS.offlineNotice]);
+    // "Sections matched to your question" is the list of source cards: skipped like any sources list.
+    if (sources.length) {
+      add('The section text, as retrieved', sources.flatMap((source) => [
+        [source.document, source.section, source.page ? `page ${source.page}` : null].map(cleanText).filter(Boolean).join(', '),
+        source.full_text || source.excerpt || DISPLAY_FALLBACKS.offlineNoExcerpt
+      ]));
+    } else {
+      add('No local matches', [DISPLAY_FALLBACKS.offlineNoMatches]);
+    }
+    return sections;
+  }
+
+  if (response.technical_error) {
+    add('Request could not be processed', [cleanText(answer.issue_summary) || DISPLAY_FALLBACKS.technicalError]);
+    add('What to check', answer.next_steps || answer.suggested_next_steps, { ordered: true });
+    return sections;
+  }
+
+  const turnType = response.conversation?.turn_type;
+  if (turnType === 'acknowledgement' || turnType === 'small_talk') {
+    add('', [cleanText(answer.issue_summary) || DISPLAY_FALLBACKS.conversational]);
+    return sections;
+  }
+
+  add('In short', [cleanText(answer.issue_summary) || DISPLAY_FALLBACKS.summary]);
+  add('What this may involve', answer.what_this_may_involve);
+  const clarificationQuestion = cleanText(response.clarification?.question);
+  if (clarificationQuestion) {
+    // A clarification question replaces the rest of the answer on screen.
+    add('Clarification needed', [clarificationQuestion]);
+    return sections;
+  }
+  add('Your possible rights', answer.possible_rights || answer.possible_legal_position);
+  add('Suggested next steps', answer.next_steps || answer.suggested_next_steps, { ordered: true });
+  add('Evidence to preserve', answer.evidence_to_preserve);
+  add('Where to approach', answer.where_to_approach);
+  add('Limitations', answer.limitations);
+  // "Sources used" sits here on screen: skipped.
+  add('Document facts used', (response.document_evidence_used || []).map((fact) => [
+    [cleanText(fact.label), cleanText(fact.value)].filter(Boolean).join(': '),
+    fact.source_page ? `document page ${fact.source_page}` : null
+  ].filter(Boolean).join(', ')));
+  add('', hints);
+  return sections;
 }
 
-export function answerToSpeechText(response) {
-  if (!isSpeakableAnswer(response)) return '';
-  const answer = response.answer || {};
-  const parts = [ensureSentence(speakable(answer.issue_summary))];
-  const steps = listItems(answer.next_steps || answer.suggested_next_steps);
-  if (steps.length) parts.push('Suggested next steps.', ...steps.map(ensureSentence));
-  const places = listItems(answer.where_to_approach);
-  if (places.length) parts.push('Where to approach.', ...places.map(ensureSentence));
-  return parts.filter(Boolean).join(' ');
+export function answerToSpeechText(response, options) {
+  const parts = [];
+  for (const section of responseSpeechSections(response, options)) {
+    if (section.heading) parts.push(`${section.heading}.`);
+    section.items.forEach((item, position) => {
+      parts.push(ensureSentence(section.ordered ? `Step ${position + 1}. ${item}` : item));
+    });
+  }
+  return parts.join(' ');
+}
+
+/** True when the reply has anything to read; the Listen button is hidden otherwise. */
+export function isSpeakableResponse(response, options) {
+  return Boolean(answerToSpeechText(response, options));
 }
 
 function listItems(values) {
@@ -42,6 +114,7 @@ function isDisclaimer(text) {
 
 function cleanText(value) {
   return String(value || '')
+    .replace(/<svg\b[^>]*>.*?<\/svg>/gis, ' ')
     .replace(/\*\*(.*?)\*\*/g, '$1')
     .replace(/__(.*?)__/g, '$1')
     .replace(/`([^`]*)`/g, '$1')
@@ -52,7 +125,7 @@ function cleanText(value) {
 /** Normalises one piece of answer text for listening. Exported for tests. */
 export function speakable(value) {
   let text = cleanText(value)
-    // List numbering at the start ("1. ", "Step 2:") -- the voice reads items in order anyway.
+    // List numbering at the start ("1. ", "Step 2:") -- steps get a spoken "Step N." instead.
     .replace(/^\s*(?:step\s*)?\d+\s*[).:-]\s+/i, '');
 
   // Citation brackets: "[1]", "[Source 2]", "[IT Act, s. 66C]".
@@ -79,12 +152,15 @@ export function speakable(value) {
 
   // Money and common Latin abbreviations.
   text = text
-    .replace(/(?:₹|\bRs\.?|\bINR)\s*([\d,]+(?:\.\d+)?)/gi, '$1 rupees')
+    .replace(/(?:₹|\bRs\.?|\bINR)\s*(\d(?:[\d,]*\d)?(?:\.\d+)?)/gi, '$1 rupees')
     .replace(/\be\.g\.,?/gi, 'for example')
     .replace(/\bi\.e\.,?/gi, 'that is')
     .replace(/\betc\./gi, 'and so on');
 
-  return text.replace(/\s+/g, ' ').replace(/\s+([.,;:])/g, '$1').trim();
+  // Separators some voices read out by name ("middle dot", "em dash").
+  text = text.replace(/\s*[·—|]\s*/g, ', ');
+
+  return text.replace(/\s+/g, ' ').replace(/\s+([.,;:])/g, '$1').replace(/,{2,}/g, ',').trim();
 }
 
 function ensureSentence(text) {
