@@ -24,3 +24,11 @@ test('values that are not whole numbers are treated as unanswered, not guessed',
     assert.equal(parseWholeNumber(value), null);
   }
 });
+
+test('step 1 asks only the four questions that scheme rules use', async () => {
+  const { STEP1_FIELDS, EMPTY_ANSWERS } = await import('./questions.js');
+  assert.deepEqual([...STEP1_FIELDS].sort(), ['age', 'annualFamilyIncome', 'gender', 'residence']);
+  assert.deepEqual(Object.keys(EMPTY_ANSWERS).sort(), [...STEP1_FIELDS].sort());
+  // The API still takes the other two if they are ever sent.
+  assert.deepEqual(buildMatchRequest({ socialCategory: 'sc', occupation: 'farmer' }, []), { socialCategory: 'sc', occupation: 'farmer', areas: [] });
+});

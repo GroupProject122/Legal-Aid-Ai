@@ -3,6 +3,7 @@ import { ArrowLeft, ChevronRight, ExternalLink, Info, ShieldCheck } from 'lucide
 
 import { HeaderControls, PageDivider, DocumentsBackgroundArt } from '../shared/PageChrome.jsx';
 import { fetchAreas, matchSchemes, SchemesError } from './api.js';
+import { EMPTY_ANSWERS } from './questions.js';
 
 const NOTICE =
   'Information is based on official scheme guidelines and simplified for guidance. Always confirm on the official website before applying. Your answers are not saved.';
@@ -16,33 +17,11 @@ const RESIDENCES = [
   { value: 'rural', label: 'Village / rural area' },
   { value: 'urban', label: 'Town or city' }
 ];
-const SOCIAL_CATEGORIES = [
-  { value: 'general', label: 'General' },
-  { value: 'obc', label: 'OBC' },
-  { value: 'sc', label: 'SC' },
-  { value: 'st', label: 'ST' },
-  { value: 'ebc', label: 'EBC' },
-  { value: 'dnt', label: 'DNT (denotified tribe)' },
-  { value: 'other', label: 'Other' }
-];
-const OCCUPATIONS = [
-  { value: 'farmer', label: 'Farmer' },
-  { value: 'student', label: 'Student' },
-  { value: 'salaried', label: 'Salaried job' },
-  { value: 'self_employed', label: 'Self-employed / own business' },
-  { value: 'unemployed', label: 'Not working' },
-  { value: 'artisan', label: 'Artisan or craftsperson' },
-  { value: 'street_vendor', label: 'Street vendor' },
-  { value: 'other', label: 'Other' }
-];
-
 const SECTIONS = [
   { group: 'likely_eligible', title: 'Likely eligible', intro: 'Your answers meet all of the conditions listed for these schemes.' },
   { group: 'might_be_eligible', title: 'You might be eligible', intro: 'Nothing you said rules these out. The authority will check the other conditions shown on each card.' },
   { group: 'check_with_authority', title: 'Check with the authority', intro: "These schemes' eligibility can't be checked from a few questions. Here is what they cover and what they may ask you." }
 ];
-
-const EMPTY_ANSWERS = { age: '', gender: '', residence: '', annualFamilyIncome: '', socialCategory: '', occupation: '' };
 
 function formatDate(isoDate) {
   const date = new Date(`${isoDate}T00:00:00`);
@@ -89,8 +68,6 @@ function QuestionsStep({ answers, setAnswers, onNext }) {
   const set = (field) => (value) => setAnswers((current) => ({ ...current, [field]: value }));
   const ageId = React.useId();
   const incomeId = React.useId();
-  const categoryId = React.useId();
-  const occupationId = React.useId();
   return (
     <form
       className="scheme-form"
@@ -112,22 +89,6 @@ function QuestionsStep({ answers, setAnswers, onNext }) {
       </div>
       <ChoiceField legend="Gender" name="schemes-gender" options={GENDERS} value={answers.gender} onChange={set('gender')} />
       <ChoiceField legend="Where do you live?" name="schemes-residence" options={RESIDENCES} value={answers.residence} onChange={set('residence')} />
-      <div className="scheme-field-grid">
-        <div className="scheme-field">
-          <label htmlFor={categoryId}>Social category <span className="schemes-optional">(optional)</span></label>
-          <select id={categoryId} value={answers.socialCategory} onChange={(event) => set('socialCategory')(event.target.value)}>
-            <option value="">Skip</option>
-            {SOCIAL_CATEGORIES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </div>
-        <div className="scheme-field">
-          <label htmlFor={occupationId}>What do you do? <span className="schemes-optional">(optional)</span></label>
-          <select id={occupationId} value={answers.occupation} onChange={(event) => set('occupation')(event.target.value)}>
-            <option value="">Skip</option>
-            {OCCUPATIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </div>
-      </div>
       <div className="scheme-actions">
         <button type="submit" className="ask-button">
           Next: choose areas <ChevronRight size={16} strokeWidth={2} aria-hidden="true" />

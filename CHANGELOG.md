@@ -48,6 +48,15 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Schemes: step 1 asks only the questions the rules use (2026-10-29)
+
+Social category and occupation are no longer asked on the Schemes page: no scheme rule uses
+them, so they could never change a result. Step 1 now has age, family income, gender and
+rural/urban (`frontend/src/schemes/questions.js`). `POST /api/schemes/match` still accepts both
+as optional, so they can come back if a rule needs them. Tests: the step-1 field list
+(`api.test.js`), and that the two fields are accepted and change nothing
+(`test_schemes_matcher.py`).
+
 ## Unreleased — Helplines: Tele-Law and e-Jagriti added (2026-10-29)
 
 Neither was on the Helplines page. Both added in the existing format

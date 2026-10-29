@@ -219,3 +219,11 @@ def test_module_makes_no_ai_network_or_storage_calls():
     source = Path(sm.__file__).read_text(encoding="utf-8").split('"""', 2)[-1].lower()
     for forbidden in ("genai", "gemini", "httpx", "requests", "import logging", "sqlite3", "case_store"):
         assert forbidden not in source
+
+
+def test_social_category_and_occupation_stay_optional_and_change_nothing():
+    # No current rule uses them, so the page no longer asks; the API still accepts them.
+    base = match(age=30, gender="female", residence="rural", annualFamilyIncome=150000)
+    with_extra = match(age=30, gender="female", residence="rural", annualFamilyIncome=150000, socialCategory="st", occupation="farmer")
+    assert [(r["id"], r["group"]) for r in with_extra["results"]] == [(r["id"], r["group"]) for r in base["results"]]
+    assert client.post(URL, json={"socialCategory": "obc", "occupation": "artisan"}).status_code == 200
