@@ -2,6 +2,7 @@ import React from 'react';
 import { Download, FileText, ShieldCheck, X } from 'lucide-react';
 
 import { saveBlob } from '../complaints/api.js';
+import { ModalPortal } from '../shared/ModalPortal.jsx';
 import { CaseFileError, downloadCaseFile } from './api.js';
 
 const NOT_LEGAL_ADVICE_NOTICE =
@@ -71,13 +72,17 @@ function CaseFileDialog({ caseId, caseTitle, onClose }) {
     if (pdfUnavailable) docxButtonRef.current?.focus();
   }, [pdfUnavailable]);
 
-  // Escape closes; Tab stays inside the dialog.
+  // Escape closes even when focus has left the dialog's buttons (e.g. after clicking its text).
+  React.useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && !busy) onClose();
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [busy, onClose]);
+
+  // Tab stays inside the dialog.
   const handleKeyDown = (event) => {
-    if (event.key === 'Escape' && !busy) {
-      event.stopPropagation();
-      onClose();
-      return;
-    }
     if (event.key !== 'Tab') return;
     const focusable = [...dialogRef.current.querySelectorAll('button:not([disabled])')];
     if (!focusable.length) return;
@@ -110,58 +115,71 @@ function CaseFileDialog({ caseId, caseTitle, onClose }) {
     }
   };
 
+  // Portalled to <body>: on My Cases this dialog sits inside a case card, whose hover transform
+  // would otherwise trap the fixed backdrop inside that one card (see ModalPortal.jsx).
   return (
-    <div className="modal-backdrop" role="presentation" onMouseDown={busy ? undefined : onClose}>
-      <section
-        ref={dialogRef}
-        className="attachment-modal document-action-modal case-file-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={noticeId}
-        onMouseDown={(event) => event.stopPropagation()}
-        onKeyDown={handleKeyDown}
+    <ModalPortal>
+      <div
+        className="modal-backdrop case-file-backdrop"
+        role="presentation"
+        onMouseDown={(event) => {
+          // preventDefault: the browser's own mousedown focus handling would otherwise run after
+          // the dialog closed and move focus to <body> instead of back to the trigger button.
+          event.preventDefault();
+          if (!busy) onClose();
+        }}
       >
-        <button type="button" className="modal-close" aria-label="Close case file dialog" onClick={onClose} disabled={busy}>
-          <X size={20} />
-        </button>
-        <div className="modal-emblem">
-          <FileText size={30} strokeWidth={1.55} />
-        </div>
-        <h3 id={titleId}>Download case file</h3>
-        {caseTitle ? <p className="case-file-case-title">{caseTitle}</p> : null}
-        <div className="case-file-notice" id={noticeId}>
-          <ShieldCheck size={18} strokeWidth={1.7} aria-hidden="true" />
-          <p>{NOT_LEGAL_ADVICE_NOTICE}</p>
-        </div>
-        <p className="case-file-contents">
-          A summary of your situation, the facts you gave, a timeline, the legal sources Legal Aid AI checked, where to go,
-          an evidence checklist and free legal help contacts — to take to a lawyer or your District Legal Services Authority.
-          Sensitive numbers like OTPs and passwords are removed.
-        </p>
-        {error ? <p className="document-error" role="alert">{error}</p> : null}
-        <div className="document-dialog-actions case-file-actions">
-          <button
-            ref={pdfButtonRef}
-            type="button"
-            className="case-open-button"
-            onClick={() => download('pdf')}
-            disabled={busy || pdfUnavailable}
-          >
-            <Download size={16} strokeWidth={1.8} aria-hidden="true" />
-            {status === 'pdf' ? 'Preparing…' : 'Download PDF'}
+        <section
+          ref={dialogRef}
+          className="attachment-modal document-action-modal case-file-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          aria-describedby={noticeId}
+          onMouseDown={(event) => event.stopPropagation()}
+          onKeyDown={handleKeyDown}
+        >
+          <button type="button" className="modal-close" aria-label="Close case file dialog" onClick={onClose} disabled={busy}>
+            <X size={20} />
           </button>
-          <button
-            ref={docxButtonRef}
-            type="button"
-            className={pdfUnavailable ? 'case-open-button' : 'document-outline-button'}
-            onClick={() => download('docx')}
-            disabled={busy}
-          >
-            {status === 'docx' ? 'Preparing…' : 'Word (.docx)'}
-          </button>
-        </div>
-      </section>
-    </div>
+          <div className="modal-emblem">
+            <FileText size={30} strokeWidth={1.55} />
+          </div>
+          <h3 id={titleId}>Download case file</h3>
+          {caseTitle ? <p className="case-file-case-title">{caseTitle}</p> : null}
+          <div className="case-file-notice" id={noticeId}>
+            <ShieldCheck size={18} strokeWidth={1.7} aria-hidden="true" />
+            <p>{NOT_LEGAL_ADVICE_NOTICE}</p>
+          </div>
+          <p className="case-file-contents">
+            A summary of your situation, the facts you gave, a timeline, the legal sources Legal Aid AI checked, where to go,
+            an evidence checklist and free legal help contacts — to take to a lawyer or your District Legal Services Authority.
+            Sensitive numbers like OTPs and passwords are removed.
+          </p>
+          {error ? <p className="document-error" role="alert">{error}</p> : null}
+          <div className="document-dialog-actions case-file-actions">
+            <button
+              ref={pdfButtonRef}
+              type="button"
+              className="case-open-button"
+              onClick={() => download('pdf')}
+              disabled={busy || pdfUnavailable}
+            >
+              <Download size={16} strokeWidth={1.8} aria-hidden="true" />
+              {status === 'pdf' ? 'Preparing…' : 'Download PDF'}
+            </button>
+            <button
+              ref={docxButtonRef}
+              type="button"
+              className={pdfUnavailable ? 'case-open-button' : 'document-outline-button'}
+              onClick={() => download('docx')}
+              disabled={busy}
+            >
+              {status === 'docx' ? 'Preparing…' : 'Word (.docx)'}
+            </button>
+          </div>
+        </section>
+      </div>
+    </ModalPortal>
   );
 }

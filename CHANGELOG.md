@@ -48,6 +48,41 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — "Download case file" dialog no longer hidden behind the case cards (2026-10-29)
+
+**Problem.** On My Cases the dialog opened inside its case card. Hovering a card lifts it with
+`transform: translateY(-2px)`, and a transformed ancestor becomes the containing block for
+`position: fixed` -- so the "full-screen" backdrop covered only that one card, the cards below
+painted over the dialog and its content was cut off. On the Ask page the sidebar also stayed above
+the backdrop.
+
+**Fix.**
+- New `frontend/src/shared/ModalPortal.jsx` renders the dialog and its backdrop into
+  `document.body` (still inside the dark-mode filter, which sits on `<html>`) and locks page
+  scrolling while it is open (restored on close).
+- `CaseFileButton.jsx` uses it, so the fix covers both places the dialog is used (My Cases and the
+  Ask page). The backdrop (`.case-file-backdrop`, z-index 1000) covers the whole viewport,
+  sidebar and header included. The dialog stays centred, at most 90vh tall with its own scroll,
+  and full-width at 520 px and below.
+- Escape, X and backdrop click close it. Escape now also works after focus has left the dialog's
+  buttons (e.g. after clicking its text). Backdrop click now returns focus to the Download button;
+  before, the browser's own mousedown focus handling moved it to `<body>`. Focus still starts on
+  "Download PDF", Tab stays inside, and every close returns focus to the button.
+- On short screens (max-height 760 px), where the dialog scrolls, its decorative inset frame is
+  hidden, because it would slide across the text.
+
+**Other modals checked, not changed.** The source excerpt, attachment, document
+preview/rename/delete, case rename/delete and "delete all" modals are all mounted at page level,
+not inside a transformed card, so they don't have this problem.
+
+**Checked in headless Chrome** with real mouse hover/clicks, on a scratch database: My Cases
+(first and last card, the last with a very long title) and the Ask page, at 1366 px and 390 px,
+light and dark. In each: the backdrop is what's under all four viewport corners and the sidebar,
+the whole dialog is visible inside the viewport, page scroll is locked and then restored, and
+Escape / X / backdrop close it with focus back on the button. On a 390x520 screen the dialog
+scrolls internally to reach its buttons. 26/26 checks pass. The same script on the old build:
+7/26 -- card lifted, corners showing the page, sidebar above the backdrop.
+
 ## Unreleased — Helplines: 112 / ERSS entry removed (2026-10-29)
 
 Removed the 112 / ERSS entry from Helplines (owner decision). The "Emergency Response Support

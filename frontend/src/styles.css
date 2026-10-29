@@ -7228,10 +7228,26 @@ body.has-custom-cursor textarea {
   visibility: visible;
 }
 
+/* Portalled to <body> (shared/ModalPortal.jsx), so this covers the whole viewport -- sidebar and
+   header included -- whatever card the dialog was opened from. */
+.case-file-backdrop {
+  z-index: 1000;
+}
+
 .case-file-dialog {
   width: min(480px, 100%);
-  max-height: calc(100dvh - 44px);
+  max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* On short screens the dialog scrolls; the card's decorative inset frame (::before, absolutely
+   positioned) would then slide across the text, so leave it out there. */
+@media (max-height: 760px) {
+  .case-file-dialog::before {
+    display: none;
+  }
 }
 
 .case-file-dialog .case-file-case-title {
@@ -7279,6 +7295,15 @@ body.has-custom-cursor textarea {
 }
 
 @media (max-width: 520px) {
+  .case-file-backdrop {
+    padding: 12px;
+  }
+
+  .case-file-dialog {
+    width: 100%;
+    padding: 24px 18px;
+  }
+
   .chat-panel-toolbar {
     flex-wrap: wrap;
   }
