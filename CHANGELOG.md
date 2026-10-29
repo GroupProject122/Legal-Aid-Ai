@@ -48,6 +48,55 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — "Where can I file a consumer complaint" no longer refused; e2e run 2026-10-29 (46/55) (2026-10-29)
+
+**Problem (e2e `consumer_006_complaint_forum`).** "where can I file a consumer complaint" was
+refused by corpus gap as `insufficient`, although retrieval returned the Consumer Protection Act
+and the deterministic corpus-gap pre-check said `sufficient`. Trace: `grounded_answer.
+is_too_vague_for_grounding()` matched its pattern `file (a )?consumer complaint` (written for
+bare statements like "consumer complaint file karni hai") and returned an "insufficient" answer
+before Gemini was asked. `corpus_gap.post_generation_check()` then refused on the strength of
+that answer.
+
+**Fix (`backend/grounded_answer.py`).** `is_too_vague_for_grounding()` now returns False for a
+general question about the law, using `fact_sufficiency.is_general_information_question()` --
+the same detector the fact-sufficiency fix uses, so both stages agree on what a general question
+is. Bare statements ("consumer complaint file karni hai", "I want to file a consumer complaint")
+are still treated as too vague. Tests (`tests/test_grounded_answer.py`, +7): the filing
+questions are not vague, the bare statements still are, and the question now reaches the
+answer model. 3 of them fail without the fix. Full backend suite: 882 passed. Live re-run of
+`consumer_006` alone: passes -- answered from the Consumer Protection Act (ss. 17 and 35),
+pointing to the District Commission; corpus status `sufficient`; 3 Gemini requests. It does not
+cite s. 34 or the 2021 Jurisdiction Rules: that is retrieval ranking, not changed here.
+
+**E2e run 2026-10-29 (before this fix)** --
+`backend/eval/final_end_to_end_evaluation_2026-10-29.{md,json}`: **46/55**. All 55 cases, run in a
+separate process on a scratch database, 5 s between cases. Two per-minute 429s
+(`tenancy_004`, `public_004`) were each re-run once after 60 s; no daily-quota stop; 166 Gemini
+requests. The case file now has 55 cases (`public_011` "Indra Sawhney" was added after the last
+run; it passes). On the 54 cases in common: **45/54** (last run 42/54) -- 4 now pass
+(`cyber_006`, `public_008`, `gap_002`, `gap_004`), 1 newly fails (`multi_003`).
+
+**Known limitations -- the other 8 failures in that run, not fixed:**
+- **Retrieval -- procedural manuals ahead of the law:** `cyber_001` "cyber fraud online
+  payment", `cyber_010` "Instagram seller took payment and blocked me" and `multi_003` "online
+  marketplace account hacked and money lost" (passed last run) are answered from the
+  Cybercrime Portal citizen manual, the I4C 1930 FAQ and an RBI circular instead of the expected
+  IT Act / Consumer Protection Act. This is consistent with the PR #4 finding that down-weighted
+  manuals still take candidate-pool slots; not confirmed with a retrieval trace.
+- **Retrieval -- expected document not in what was retrieved:** `cyber_008` "company leaked my
+  personal data and I want DPDP Act details" expects the DPDP *Rules*, but retrieves only the
+  DPDP Act and IT Act. `public_004` "can I get a free lawyer" gets the NALSA (Free and Competent
+  Legal Services) Regulations, while the case expects the Legal Services Authorities Act.
+- **Corpus gap -- "sufficient" where "limited" is expected:** `cyber_008`, `multi_004` "public
+  authority leaked my personal information online" and `multi_005` "delivery app refused
+  refund and exposed my phone number" (same as last run).
+- **Routing:** `multi_006` "Mere saath fraud hua hai" ends up cyber-only after its (expected)
+  fact question, where consumer + cyber is expected; the answer still cites the Consumer
+  Protection Act.
+- Router clarification, fact sufficiency, answer writing and claim verification: 0 failures in
+  this run.
+
 ## Unreleased — Documents page: heading no longer hits the outline; neater layout, fixed on phones (2026-10-29)
 
 `frontend/src/styles.css` only, scoped to the Documents page (the same upload card in the Ask

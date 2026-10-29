@@ -14,6 +14,7 @@ from google.genai import types
 
 from gemini_http import gemini_http_options
 from config import DISCLAIMER, GEMINI_API_KEY, GEMINI_MODEL
+import fact_sufficiency
 import source_text
 
 logger = logging.getLogger("legal_aid_ai.grounded_answer")
@@ -392,6 +393,12 @@ def is_disclaimer_text(text: str) -> bool:
 
 
 def is_too_vague_for_grounding(original_message: str, normalized_case_summary: str) -> bool:
+    # A general question about the law ("where can I file a consumer complaint?") has no incident
+    # to be vague about. The patterns below are for bare statements like "consumer complaint
+    # file karni hai"; without this check they also refused the question (e2e consumer_006).
+    # Same detector fact sufficiency uses, so the two stages agree on what a general question is.
+    if fact_sufficiency.is_general_information_question(original_message):
+        return False
     text = f"{original_message} {normalized_case_summary}".lower()
     text = re.sub(r"[^a-z0-9\u0900-\u097f\s]+", " ", text)
     text = re.sub(r"\s+", " ", text).strip()

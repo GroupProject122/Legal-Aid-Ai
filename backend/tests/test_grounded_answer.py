@@ -4,6 +4,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import grounded_answer
@@ -185,3 +187,43 @@ def test_neutral_issue_summary_is_preserved():
     )
 
     assert "illegally" not in output["answer"]["issue_summary"].lower()
+
+
+# e2e consumer_006: "where can I file a consumer complaint" matched the "file a consumer complaint"
+# vague-statement pattern, so it got an "insufficient" answer without Gemini ever being asked,
+# and corpus gap then refused it -- though the Consumer Protection Act was retrieved.
+@pytest.mark.parametrize(
+    "question",
+    ["where can I file a consumer complaint", "How do I file a consumer complaint?", "Where should a consumer complaint be filed?"],
+)
+def test_general_question_about_filing_is_not_too_vague(question):
+    assert grounded_answer.is_too_vague_for_grounding(question, question) is False
+
+
+@pytest.mark.parametrize(
+    "statement",
+    ["consumer complaint file karni hai", "I want to file a consumer complaint", "file a consumer complaint"],
+)
+def test_bare_filing_statement_is_still_too_vague(statement):
+    assert grounded_answer.is_too_vague_for_grounding(statement, statement) is True
+
+
+def test_general_filing_question_reaches_the_answer_model(monkeypatch):
+    calls = []
+
+    class Models:
+        def generate_content(self, **_kwargs):
+            calls.append(1)
+            raise RuntimeError("stop after proving the model was asked")
+
+    monkeypatch.setattr(grounded_answer, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(grounded_answer.genai, "Client", lambda *_a, **_kw: type("Client", (), {"models": Models()})())
+
+    with pytest.raises(grounded_answer.GroundedAnswerError):
+        grounded_answer.generate_grounded_answer(
+            original_message="where can I file a consumer complaint",
+            normalized_case_summary="where can I file a consumer complaint",
+            domains=["consumer"],
+            chunks=[chunk()],
+        )
+    assert calls == [1]
