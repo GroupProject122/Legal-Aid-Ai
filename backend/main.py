@@ -981,6 +981,12 @@ def continue_clarification(state_id: str, answer: str, conversation_state_id: st
         route.status,
         route.domains,
     )
+    # Same offline check as every other route_issue() call site: if Gemini failed here, answer
+    # from local retrieval instead of asking the clarification question again.
+    offline_response = offline_route_response(route, state.accumulated_context)
+    if offline_response is not None:
+        clarification.clear_state(state_id)
+        return offline_response
     if route.status == "classified":
         clarification.clear_state(state_id)
         return with_routing(handle_classified_issue(state.accumulated_context, route, conversation_state_id=conversation_state_id), route)
@@ -1463,8 +1469,9 @@ OFFLINE_SCOPE_MESSAGE = (
 
 
 def offline_question_in_scope(retrieval_text: str, chunks: list) -> bool:
-    """Offline, the router could not reach Gemini (its fallback is always status=unclear with no
-    domains), so nothing upstream has decided whether this is a legal question at all -- and
+    """Offline, the router could not reach Gemini (its fallback is status=unclear with no domains
+    unless a keyword safety override recognised the domain), so usually nothing upstream has
+    decided whether this is a legal question at all -- and
     local retrieval always returns *something*. Found in the 2026-10-28 end-to-end run: "weather
     tomorrow" and "Python code likho" got Constitution articles back as an offline "answer".
     Only hand back legal sections when the deterministic domain signals find a legal domain, or

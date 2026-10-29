@@ -104,7 +104,9 @@ def test_out_of_scope_schema_normalizes_domains():
     assert decision.needs_clarification is False
 
 
-def test_invalid_gemini_output_safely_becomes_unclear(monkeypatch):
+def test_invalid_gemini_output_fails_safely_and_uses_keyword_rules(monkeypatch):
+    # Changed 2026-10-29: the Gemini-failure fallback now applies the keyword safety overrides
+    # (Set 1 banking_07), so a message with clear cues is classified instead of left "unclear".
     class FakeModels:
         def generate_content(self, **_kwargs):
             class Response:
@@ -120,8 +122,16 @@ def test_invalid_gemini_output_safely_becomes_unclear(monkeypatch):
 
     decision = domain_router.route_issue("seller refund nahi de raha")
 
-    assert decision.status == "unclear"
-    assert decision.needs_clarification is True
+    assert decision.routing_error is True
+    assert decision.status == "classified"
+    assert decision.domains == ["consumer"]
+
+    no_cues = domain_router.route_issue("mujhe ek problem hai, help chahiye")
+
+    assert no_cues.routing_error is True
+    assert no_cues.status == "unclear"
+    assert no_cues.domains == []
+    assert no_cues.needs_clarification is True
 
 
 def test_invalid_domain_is_rejected():

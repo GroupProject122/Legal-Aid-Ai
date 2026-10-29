@@ -117,3 +117,60 @@ def test_case_law_question_abstains_when_the_judgment_is_not_in_the_corpus():
     gap = corpus_gap.deterministic_pre_check(question, ["constitutional_public_authority"], [statute_only], raw_user_query=question)
     assert gap.status == "insufficient"
     assert "case_law_not_in_corpus" in gap.reason_codes
+
+
+def test_banking_07_second_turn_with_gemini_failing_is_not_asked_again(monkeypatch, tmp_path):
+    # Set 1 banking_07: "Can I withdraw my complaint at any stage?" -> router asks which area ->
+    # user: "complaint against my bank to the RBI Ombudsman". With Gemini failing on that second
+    # routing call, continue_clarification() used to get a bare "unclear" (no keyword overrides,
+    # no offline check) and asked "Briefly, who is involved and what happened?" again.
+    import httpx
+
+    monkeypatch.setattr(main.case_store, "DB_PATH", tmp_path / "legal_aid.db")
+    monkeypatch.setattr(main, "LLM_PROVIDER", "gemini")
+    monkeypatch.setattr(main, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(domain_router, "GEMINI_API_KEY", "test-key")
+    calls = []
+
+    class Models:
+        def generate_content(self, **_kwargs):
+            calls.append(1)
+            if len(calls) == 1:  # the first-turn router call works and says "unclear"
+                return type("Response", (), {"text": '{"status": "unclear", "domains": [], "primary_domain": "", '
+                                                     '"confidence": "low", "issue_summary": "", "needs_clarification": true}'})()
+            raise httpx.ConnectError("simulated Gemini failure")
+
+    monkeypatch.setattr(domain_router.genai, "Client", lambda *_a, **_kw: type("Client", (), {"models": Models()})())
+    monkeypatch.setattr(main.clarification, "GEMINI_API_KEY", "")  # deterministic clarification question
+    monkeypatch.setattr(main.rag, "retrieve", lambda _text: [chunk(0.62, source="consumer/rbi_integrated_ombudsman_scheme.pdf",
+                                                                    document_title="Reserve Bank - Integrated Ombudsman Scheme")])
+    client = TestClient(main.app)
+
+    first = client.post("/api/ask", json={"question": "Can I withdraw my complaint at any stage?"}).json()
+    assert first["clarification"]["needed"] is True
+
+    second = client.post("/api/ask", json={
+        "question": "This is about a complaint against my bank to the RBI Ombudsman.",
+        "clarification_state_id": first["clarification"]["state_id"],
+    }).json()
+
+    assert not (second.get("clarification") or {}).get("needed")
+    assert second.get("offline") is True
+    assert second["routing"]["domains"] == ["consumer"]
+    assert second["sources"]
+
+
+def test_router_failure_fallback_keeps_routing_error_after_keyword_override(monkeypatch):
+    import httpx
+
+    def failing_client(*_args, **_kwargs):
+        raise httpx.ConnectError("simulated Gemini failure")
+
+    monkeypatch.setattr(domain_router, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(domain_router.genai, "Client", failing_client)
+
+    decision = domain_router.route_issue("Can I withdraw my complaint against my bank to the RBI Ombudsman?")
+
+    assert decision.status == "classified"
+    assert decision.domains == ["consumer"]
+    assert decision.routing_error is True

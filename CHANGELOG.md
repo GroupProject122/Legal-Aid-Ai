@@ -48,6 +48,30 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Router: Gemini failure no longer loses the keyword rules or the offline fallback (2026-10-29)
+
+Fix for the router-fallback finding in the general-question entry below (Set 1 banking_07: "Can I
+withdraw my complaint at any stage?" -> "complaint against my bank to the RBI Ombudsman" was asked
+"Briefly, who is involved and what happened?" again).
+- `domain_router.route_issue()`: when the Gemini call fails, the keyword safety overrides
+  (`apply_router_safety_overrides()`, incl. the RBI-ombudsman rule) are now applied to the
+  "unclear" fallback, as they already were to a successful Gemini result. `routing_error=True` is
+  set afterwards so `main.offline_route_response()` still knows Gemini is unreachable. A message
+  with no keyword cues still comes back "unclear".
+- `main.continue_clarification()` now calls `offline_route_response()` after re-routing, like the
+  other three `route_issue()` call sites, so a Gemini failure on a clarification reply answers
+  from local retrieval instead of repeating the question.
+
+**Changed test (owner decision):** `test_invalid_gemini_output_safely_becomes_unclear` asserted the
+old fallback ("seller refund nahi de raha" -> unclear). Renamed
+`test_invalid_gemini_output_fails_safely_and_uses_keyword_rules`: still checks the failure is safe
+(`routing_error=True`), now expects consumer, and checks that a no-cue message stays unclear.
+**New tests** (`tests/test_e2e_regressions.py`): banking_07's second turn with Gemini failing gets
+the offline answer routed to consumer, not the question again; the override keeps
+`routing_error`. Both fail without the fix. The offline out-of-scope tests from the end-to-end
+investigation ("Python code likho", "weather tomorrow", "best pizza recipe") still pass, and the
+real failing router still returns "unclear" for those three.
+
 ## Unreleased — Home page background on Free Legal Aid Check, Check a Message and Helplines (2026-10-29)
 
 These three pages now use exactly Home's background: `ask-page-bg.png`, `cover`, centred,

@@ -139,7 +139,11 @@ def route_issue(
         return decision
     except (genai_errors.APIError, TimeoutError, httpx.HTTPError, RuntimeError, json.JSONDecodeError, ValueError, TypeError) as exc:
         logger.warning("Gemini routing failed safely: %s: %s", exc.__class__.__name__, str(exc))
-        fallback = RouteDecision(**UNCLEAR_FALLBACK.to_dict())
+        # The keyword safety overrides don't need Gemini, so apply them to the failure fallback
+        # too: "complaint against my bank to the RBI Ombudsman" is consumer with or without the
+        # model. routing_error stays True afterwards -- main.offline_route_response() needs it to
+        # know Gemini is unreachable (the overrides build a fresh RouteDecision without it).
+        fallback = apply_router_safety_overrides(safety_text or message, RouteDecision(**UNCLEAR_FALLBACK.to_dict()))
         fallback.latency_ms = int((time.perf_counter() - started) * 1000)
         fallback.routing_error = True
         return fallback
