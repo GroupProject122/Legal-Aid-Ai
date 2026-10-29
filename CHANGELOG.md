@@ -48,6 +48,52 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Set 1 re-run complete: after the general-question fix (2026-10-29)
+
+Finishes the Set 1 re-run left incomplete in the general-question entry below. All 50 questions
+answered; scored against the re-scored baseline (`set1_scores_before_general_question_fix_rescored.json`,
+n=49 -- `rti_01` was empty in the baseline run, so it is left out of the comparison):
+
+| | n | Needed clarification | clarification_unresolved | Right law retrieved | BERTScore F1 | ROUGE-L |
+|---|---:|---:|---:|---:|---:|---:|
+| **Overall (same 49)** | 49 | 35% -> 27% | 4 -> 0 | 59% -> 71% | 0.092 -> 0.125 | 0.179 -> 0.199 |
+| Consumer | 14 | 57% -> 43% | 2 -> 0 | 64% -> 86% | 0.084 -> 0.175 | 0.193 -> 0.260 |
+| Cybercrime reporting | 9 | 56% -> 33% | 1 -> 0 | 67% -> 100% | 0.039 -> 0.097 | 0.127 -> 0.166 |
+| Banking ombudsman (RBI) | 8 | 38% -> 38% | 1 -> 0 | 38% -> 38% | 0.035 -> 0.055 | 0.157 -> 0.166 |
+| RTI | 7 | 14% -> 14% | 0 -> 0 | 71% -> 71% | 0.128 -> 0.107 | 0.196 -> 0.189 |
+| Free legal aid | 11 | 0% -> 0% | 0 -> 0 | 55% -> 55% | 0.165 -> 0.144 | 0.210 -> 0.180 |
+
+All 50 (including `rti_01`, now answered from the RTI Act): needed clarification 26%, unresolved
+0, right law 72%, BERTScore F1 0.129, ROUGE-L 0.199.
+
+**Caveats:**
+- The difference is not the general-question fix alone. The router fallback, the `consumer_006`
+  grounded-answer fix, the two retrieval changes and earlier corpus/index changes all landed
+  between the runs.
+- This run mixes code versions: questions 1-28 (to `banking_05`) were answered at midday, before
+  the later fixes; 29-50 ran on the day's final code.
+
+**What still fails (not fixed)**, details in
+`4parameters_test/tests/results/set1_comparison_after_general_question_fix.md`:
+- **No answer (7):**
+  - 5 RBI Ombudsman questions, mostly a corpus mismatch: the questions cite "RB-IOS, 2026", while
+    the corpus holds the 2021 scheme without clause structure;
+  - `rti_02` (RTI s.7 time limit), a real miss;
+  - `legalaid_03` (NALSA helpline), a fair refusal, as the helpline is not in any law in the
+    corpus.
+- **Clarification first, then answered (13):** the router asking which area for questions that
+  don't name one -- deliberate.
+- **Different document cited (7):**
+  - 6 are labelling differences: the Commission Procedure Regulations or the NALSA Regulations
+    instead of the parent Act, with right answers;
+  - `rti_08` cites a judgment instead of the RTI Act, a minor real retrieval issue.
+
+Files (`4parameters_test/tests/results/`): `set1_answers_after_general_question_fix.json`,
+`set1_scores_after_general_question_fix.json`, `set1_report_after_general_question_fix.md`, and
+`set1_comparison_after_general_question_fix.md`. The default `set1_answers.json`,
+`set1_scores.json` and `set1_report.md` now hold this run too. Gemini requests: 71 for questions
+29-50, no 429s.
+
 ## Unreleased — Schemes: top notice banner removed (2026-10-29)
 
 Removed the banner at the top of the Schemes page ("Information is based on official scheme
