@@ -233,6 +233,123 @@
       "expected_needs_clarification": true,
       "replies": ["human rights complaint against public authority"],
       "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_consumer_01",
+      "message": "Who is a consumer?",
+      "domains": ["consumer"],
+      "issue_summary": "Question about who counts as a consumer.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_consumer_02",
+      "message": "Who is a not a consumer?",
+      "domains": ["consumer"],
+      "issue_summary": "Question about who is not a consumer.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_consumer_03",
+      "message": "What is an unfair contract?",
+      "domains": ["consumer"],
+      "issue_summary": "Question about unfair contracts under consumer law.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_consumer_04",
+      "message": "Is there any fee for mediation?",
+      "domains": ["consumer"],
+      "issue_summary": "Question about consumer mediation fees.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_consumer_05",
+      "message": "consumer kaun hota hai?",
+      "domains": ["consumer"],
+      "issue_summary": "Question about who counts as a consumer.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_cyber_01",
+      "message": "How can I file the complaints about other cybercrimes?",
+      "domains": ["cyber"],
+      "issue_summary": "Question about filing cybercrime complaints.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_cyber_02",
+      "message": "What type of information would be considered as evidence while filing my complaint related to cybercrime?",
+      "domains": ["cyber"],
+      "issue_summary": "Question about evidence for a cybercrime complaint.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_public_01",
+      "message": "What is the fee for filing an RTI application?",
+      "domains": ["constitutional_public_authority"],
+      "issue_summary": "Question about RTI application fees.",
+      "expected_needs_clarification": false,
+      "replies": [],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "general_reply_consumer_01",
+      "message": "consumer complaint karni hai",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer issue.",
+      "expected_needs_clarification": true,
+      "replies": ["It is a general question about what the law says, not about a specific incident of mine."],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "personal_tenancy_01",
+      "message": "What should I do about my landlord?",
+      "domains": ["tenancy"],
+      "issue_summary": "Possible landlord-tenant issue.",
+      "expected_needs_clarification": true,
+      "replies": ["landlord is not returning my security deposit"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "personal_consumer_01",
+      "message": "I paid 5000 rupees for a course, what are my rights?",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer issue about a paid course.",
+      "expected_needs_clarification": true,
+      "replies": ["the institute cancelled the course and refused a refund"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "personal_cyber_01",
+      "message": "my bank account was emptied, can I get it back?",
+      "domains": ["cyber"],
+      "issue_summary": "Possible unauthorized bank transactions.",
+      "expected_needs_clarification": true,
+      "replies": ["someone made unauthorized transactions after a phishing link"],
+      "expected_final_status": "sufficient"
+    },
+    {
+      "id": "personal_consumer_02",
+      "message": "mujhe kya karna chahiye?",
+      "domains": ["consumer"],
+      "issue_summary": "Possible consumer issue.",
+      "expected_needs_clarification": true,
+      "replies": ["phone defective tha aur seller refund nahi de raha"],
+      "expected_final_status": "sufficient"
     }
   ]
 }

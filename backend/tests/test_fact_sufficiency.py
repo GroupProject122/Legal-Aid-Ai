@@ -212,3 +212,88 @@ def test_fact_reply_can_continue_to_retrieval(monkeypatch):
 
     assert "phone defective" in second["answer"]["issue_summary"].lower()
     assert "clarification" not in second
+
+
+# General questions about the law (Set 1 official-FAQ evaluation: consumer_01, consumer_02,
+# consumer_06, cyber_04, cyber_05 were asked for incident details they could not give).
+GENERAL_QUESTIONS = [
+    ("Who is a consumer?", "consumer"),
+    ("Who is a not a consumer?", "consumer"),
+    ("What is an unfair contract?", "consumer"),
+    ("How can I file the complaints about other cybercrimes?", "cyber"),
+    ("What type of information would be considered as evidence while filing my complaint related to cybercrime?", "cyber"),
+    ("What is the fee for filing an RTI application?", "constitutional_public_authority"),
+    ("consumer kaun hota hai?", "consumer"),
+]
+NEEDS_FACTS = [
+    ("consumer complaint karni hai", "consumer"),
+    ("consumer issue hai?", "consumer"),
+    ("What should I do about my landlord?", "tenancy"),
+    ("I paid 5000 rupees for a course, what are my rights?", "consumer"),
+    ("my bank account was emptied, can I get it back?", "cyber"),
+    ("mujhe kya karna chahiye?", "consumer"),
+]
+GENERAL_REPLY = "It is a general question about what the law says, not about a specific incident of mine"
+
+
+@pytest.mark.parametrize(("message", "domain"), GENERAL_QUESTIONS)
+def test_general_question_about_the_law_is_sufficient(monkeypatch, message, domain):
+    monkeypatch.setattr(fact_sufficiency, "GEMINI_API_KEY", "")
+    _context, result = fact_sufficiency.start_fact_check(message, route(domain))
+
+    assert result.status == "sufficient"
+    assert result.needs_fact_clarification is False
+    assert result.provider == "deterministic"
+
+
+@pytest.mark.parametrize(("message", "domain"), NEEDS_FACTS)
+def test_personal_or_bare_issue_messages_still_get_a_fact_question(monkeypatch, message, domain):
+    monkeypatch.setattr(fact_sufficiency, "GEMINI_API_KEY", "")
+    _context, result = fact_sufficiency.start_fact_check(message, route(domain))
+
+    assert result.status == "insufficient"
+    assert result.needs_fact_clarification is True
+
+
+def test_general_question_reply_ends_clarification_without_safe_exit(monkeypatch):
+    monkeypatch.setattr(fact_sufficiency, "GEMINI_API_KEY", "")
+    context, first = fact_sufficiency.start_fact_check("consumer complaint karni hai", route("consumer"))
+    assert first.status == "insufficient"
+
+    progress, result = fact_sufficiency.continue_fact_check(context, GENERAL_REPLY)
+
+    assert result.status == "sufficient"
+    assert progress.progress == "meaningful"
+    assert progress.safe_exit is False
+    assert "general question" not in fact_sufficiency.retrieval_query(context, result).lower()
+    assert "consumer complaint karni hai" in fact_sufficiency.retrieval_query(context, result)
+
+
+def test_general_question_reply_never_counts_towards_safe_exit(monkeypatch):
+    monkeypatch.setattr(fact_sufficiency, "GEMINI_API_KEY", "")
+    context, _result = fact_sufficiency.start_fact_check("consumer issue hai", route("consumer"))
+    # Saying it again adds no new words -- before the fix, the repeats counted as "no progress"
+    # and the second one triggered safe_exit.
+    for reply in (GENERAL_REPLY, GENERAL_REPLY, GENERAL_REPLY, "sirf jaankari chahiye"):
+        progress = fact_sufficiency.record_fact_answer(context, reply)
+        assert progress.progress == "meaningful"
+        assert progress.safe_exit is False
+
+
+@pytest.mark.parametrize(
+    "message",
+    ["consumer", "what?", "I bought a phone and it stopped working", "Can I get back the Rs 20,000 I lost?"],
+)
+def test_general_question_detector_rejects_non_questions_and_incidents(message):
+    assert fact_sufficiency.is_general_information_question(message) is False
+
+
+def test_general_question_detector_does_not_treat_years_as_money():
+    assert fact_sufficiency.is_general_information_question("Who is a consumer under the Consumer Protection Act, 2019?") is True
+
+
+def test_general_declaration_detector():
+    for reply in (GENERAL_REPLY, "just want to know what the law says", "sirf jaankari chahiye", "general jankari hai"):
+        assert fact_sufficiency.declares_general_question(reply)
+    for reply in ("phone defective tha", "seller refused a refund"):
+        assert not fact_sufficiency.declares_general_question(reply)
