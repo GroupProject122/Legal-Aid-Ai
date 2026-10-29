@@ -211,7 +211,6 @@
       "expected_domains": ["cyber"],
       "expected_primary_documents": ["Digital Personal Data Protection Act", "Digital Personal Data Protection Rules"],
       "expected_corpus_status": "sufficient",
-      "must_include_concepts": ["limited", "corpus"],
       "document_context_expected": false
     },
     {

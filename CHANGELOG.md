@@ -57,9 +57,9 @@ Personal Data Protection Rules" and corpus status "limited". Each now also expec
 Personal Data Protection Act" (the Rules stay listed), and the expected corpus status is
 "sufficient". Not re-run live; tomorrow's full e2e run covers them. On today's recorded
 responses all three would now match (each cited the DPDP Act or another listed document, and
-corpus gap said "sufficient"), but that is not a substitute for the run. `cyber_008` still
-carries `must_include_concepts: ["limited", "corpus"]` from the old expectation. The evaluator
-does not read that field, so it has no effect; left as is.
+corpus gap said "sufficient"), but that is not a substitute for the run. `cyber_008`'s outdated
+`must_include_concepts: ["limited", "corpus"]` was removed too, so the case no longer contradicts
+itself (the evaluator never read that field, so scoring is unaffected).
 
 **Known issue (not fixed): NALSA (Legal Services Clinics) Regulations, 2011 are mis-parsed.** In
 a poor text layer, amendment-footnote lines ("1. Substituted by Notification No. ...") are read
