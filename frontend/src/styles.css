@@ -8253,3 +8253,128 @@ body.has-custom-cursor textarea {
     flex-basis: 100%;
   }
 }
+
+/* --- Documents page polish (2026-10-29) ---
+   The upload card sits inside the documents panel and both drew PanelCorners: the card's own
+   brackets (10px in from its edge, no padding) cut through "Upload Document" and sat inside the
+   drop zone. The panel keeps its brackets; the card gets padding and a soft frame of its own. All
+   scoped to this page -- the same UploadDocumentCard is also used in the Ask page's attach dialog. */
+.documents-content-frame {
+  padding-top: 34px;
+}
+
+.persisted-documents-panel {
+  /* One column that never grows past the panel: with the implicit `auto` column the grid took
+     its widest child's min-content (466px on a 390px phone) and everything ran off-screen. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+  padding: 34px 38px 38px;
+}
+
+.persisted-documents-panel .upload-card > .ornament {
+  display: none;
+}
+
+.persisted-documents-panel .upload-card {
+  position: relative;
+  z-index: 1;
+  padding: 22px 24px 24px;
+  background: rgba(255, 251, 243, 0.72);
+  border: 1px solid rgba(179, 125, 57, 0.24);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(92, 56, 26, 0.05);
+}
+
+.persisted-documents-panel .upload-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+}
+
+/* A short rule after the heading, like the page's other section headings. */
+.persisted-documents-panel .upload-card h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(179, 125, 57, 0.45), transparent);
+}
+
+.persisted-documents-panel .drop-zone {
+  min-height: 170px;
+  gap: 4px;
+  padding: 24px 18px;
+  background: rgba(255, 249, 238, 0.85);
+  border: 1.5px dashed rgba(179, 125, 57, 0.5);
+  border-radius: 12px;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.persisted-documents-panel .drop-zone svg {
+  box-sizing: content-box;
+  padding: 12px;
+  margin-bottom: 6px;
+  color: var(--caramel);
+  background: rgba(214, 170, 108, 0.18);
+  border-radius: 999px;
+}
+
+.persisted-documents-panel .drop-zone strong {
+  font-size: 1.12rem;
+}
+
+.persisted-documents-panel .drop-zone small {
+  margin-top: 6px;
+  padding: 6px 14px;
+  background: rgba(214, 170, 108, 0.14);
+  border-radius: 10px;
+}
+
+.persisted-documents-panel .drop-zone:hover,
+.persisted-documents-panel .drop-zone:focus-visible {
+  border-color: rgba(139, 82, 31, 0.7);
+  background-color: rgba(255, 252, 246, 0.96);
+}
+
+.persisted-documents-panel .persisted-documents-total-card {
+  margin-bottom: 0;
+  padding: 20px 26px;
+}
+
+/* Same narrow-screen layout My Cases' cards already use: icon + text on one row, the action
+   buttons on their own row underneath, instead of squeezing the filename and date into a sliver. */
+@media (max-width: 850px) {
+  .document-list-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  /* "Not under any case" / "Go to case" on its own line (at its natural width), the three
+     buttons together below it. */
+  .document-list-actions {
+    grid-column: 2;
+    justify-self: start;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+  }
+
+  .document-list-actions > :is(.document-case-link, .document-no-case, .document-case-menu-wrap) {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .documents-content-frame {
+    padding-top: 18px;
+  }
+
+  .persisted-documents-panel {
+    padding: 26px 18px 24px;
+  }
+
+  .persisted-documents-panel .upload-card {
+    padding: 18px 16px 18px;
+  }
+}

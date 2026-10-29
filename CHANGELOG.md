@@ -48,6 +48,24 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Documents page: heading no longer hits the outline; neater layout, fixed on phones (2026-10-29)
+
+`frontend/src/styles.css` only, scoped to the Documents page (the same upload card in the Ask
+page's attach dialog is unchanged).
+- **Heading collision:** the upload card and the panel around it both drew corner brackets. The
+  card's own brackets sat 10 px inside its unpadded edge, so they cut through "Upload Document"
+  and landed inside the drop zone. The card's duplicate brackets are hidden; the panel keeps
+  its own, and the panel and card get padding that clears them.
+- **Neater:** the upload card is now a soft framed card with a ruled heading. The drop zone has an
+  icon badge, the supported formats in a small tag, and a clearer hover/focus state. There's more
+  space between the top ornament and the "Documents" title, and the total card is more compact.
+- **Phones (also before this change):** the panel's grid column sized itself to its widest
+  child (466 px on a 390 px screen), so every section ran off the right edge and the document rows
+  squeezed the filename and date into a narrow column. The column is now `minmax(0, 1fr)`. Below
+  850 px, document cards use the same layout My Cases already uses: the case link on its own line,
+  and edit / delete / View together under it.
+- Checked in headless Chrome at 1440x690, 820 px and 390 px, light and dark.
+
 ## Unreleased — "Download case file" dialog no longer hidden behind the case cards (2026-10-29)
 
 **Problem.** On My Cases the dialog opened inside its case card. Hovering a card lifts it with
