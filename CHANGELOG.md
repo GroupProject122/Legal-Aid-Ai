@@ -48,6 +48,104 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — General questions about the law no longer get asked "what happened?" (2026-10-29)
+
+**Problem (Set 1 official-FAQ evaluation, `4parameters_test`).** General questions about the law
+were asked for personal incident details, and some never got an answer: consumer_01 "Who is a
+consumer?", consumer_02 "Who is a not a consumer?", consumer_06 "What is an unfair contract?",
+cyber_04 "How can I file the complaints about other cybercrimes?", cyber_05 "What type of
+information would be considered as evidence while filing my complaint related to cybercrime?"
+(consumer_02, consumer_06 and cyber_05 ended `clarification_unresolved`). Cause, confirmed on
+current `main` before changing anything: `fact_sufficiency.deterministic_fact_result()` used
+`is_too_generic()`, which calls a message too generic when it lacks incident cue words
+(`CONSUMER_FACT_CUES`, `CYBER_FACT_CUES`, ...), so these got "What happened with the product or
+service?"; `FACT_PROMPT` only described incident facts, so Gemini agreed; and the reply "It is a
+general question about what the law says" was answered with the same question until safe exit.
+
+**Fix (`backend/fact_sufficiency.py`).**
+- `is_general_information_question()`: true only for a question (ends in "?" or starts with
+  what/who/which/when/where/how/why/is/are/can/does/do/should/may/must/explain/define/tell me or
+  kya/kaun/kaise/kab/kahan/kitna) with at least 2 content words, and none of: personal
+  advice-seeking ("what should i do", "my case", "mujhe kya", "kya karna chahiye"...), a bare
+  issue statement ("consumer issue hai", "complaint karni hai" -- the existing patterns, split out
+  of `is_too_generic()` into `is_generic_issue_statement()`), first-person narration of an event
+  ("I/my/mera/mujhe ... bought/paid/lost/was/hacked/ho gaya/nahi mila..."), or a money amount
+  (₹, "rs 500", rupees, lakh, crore -- bare numbers such as "2019" in an Act's name don't count).
+- `declares_general_question()` for replies like "general question", "just want to know",
+  "what the law says", "sirf jaankari", "general jankari".
+- `deterministic_fact_result()` returns "sufficient" (provider `deterministic`, no Gemini call)
+  when the original message is a general question or any clarification reply declares it general
+  -- including on the first turn, before `is_too_generic()`.
+- `record_fact_answer()` counts a "general question" reply as progress, so it never triggers
+  safe exit; `build_case_summary()` leaves such replies out so they don't reach retrieval.
+- `FACT_PROMPT`: general questions about the law (definitions, who can file, where/how to file,
+  fees, time limits, procedure, what a forum can order) are always sufficient; never ask such a
+  user what happened, and never ask again once they say it is general.
+
+**Deliberately not changed.**
+- Personal or bare messages still get a fact question (tested): "consumer complaint karni hai",
+  "consumer issue hai?", "What should I do about my landlord?", "I paid 5000 rupees for a course,
+  what are my rights?", "my bank account was emptied, can I get it back?", "mujhe kya karna
+  chahiye?".
+- The router still asks which legal area when it genuinely can't tell -- e.g. "Where the
+  complaint can be filed?" or "What is meant by 'deficiency' under the Act?" with no context.
+  That is `clarification.py` / `domain_router.py`, not fact sufficiency.
+- No other module calls the restructured functions; `conversation_state.py` and
+  `clarification.py` have their own `content_terms()`.
+
+**Router fallback (Part 2 -- checked, not changed).** banking_07 "Can I withdraw my complaint at
+any stage?" stayed "unclear" after the reply "complaint against my bank to the RBI Ombudsman".
+Still reproducible on current `main` with a simulated Gemini failure: `main.continue_clarification()`
+re-routes the reply with `domain_router.route_issue()`, whose `except` branch returns
+`UNCLEAR_FALLBACK` *without* `apply_router_safety_overrides()` -- which on the same text would
+classify it as consumer (RBI ombudsman cue). Unlike the other three `route_issue()` call sites,
+this one also never calls `offline_route_response()`, so the offline fallback added in the
+end-to-end investigation doesn't reach it either; the user just gets "Briefly, who is involved and
+what happened?" again. Proposed fix, awaiting review because it touches many routing tests:
+call `offline_route_response()` in `continue_clarification()` like the other call sites, and/or
+apply the keyword overrides to the failure fallback while keeping `routing_error=True` (needed by
+the offline check).
+
+**Tests.** `tests/test_fact_sufficiency.py`: +21 tests (Gemini key empty) -- the 5 Set 1 questions
+plus "What is the fee for filing an RTI application?" and "consumer kaun hota hai?" are sufficient;
+the 6 messages above stay insufficient; a "general question" reply ends clarification without safe
+exit (also when repeated) and stays out of `retrieval_query()`; the detector rejects "consumer",
+"what?", "I bought a phone and it stopped working", "Can I get back the Rs 20,000 I lost?" and
+doesn't treat "2019" as money. With the fix stashed, 14 of them fail; the 7 that pass on the old
+code are the must-not-change guards and the RTI fee question ("rti" was already a fact cue). Full
+backend suite: 873 passed.
+
+**Eval data.** 13 scenarios appended to `eval/fact_sufficiency_queries.json` (now 39). Deterministic
+path (Gemini key empty, 0 Gemini calls), same 39 scenarios:
+
+| | Before fix | After fix |
+|---|---:|---:|
+| Overall accuracy | 76.9% | 97.4% |
+| Unnecessary-question rate | 20.5% | 2.6% |
+| Missing-question rate | 0.0% | 0.0% |
+
+The one remaining miss, `multi_sufficient_01` "Instagram seller took payment and blocked me", is
+an existing scenario that only the Gemini check passes (unchanged by this fix). Report:
+`eval/fact_sufficiency_evaluation_deterministic.{json,md}`; the Gemini-path report
+`eval/fact_sufficiency_evaluation.*` was not re-run.
+
+**Set 1 re-run -- incomplete, pending.** Stopped at question 8 of 50 on a Gemini 429 (free-tier
+*per-minute* limit, 15 requests/minute; not the daily quota), as the task's budget rule requires;
+37 Gemini requests used in total. No before/after numbers are given, since 8 consumer questions
+are not comparable with the full set. What the 8 show: consumer_01, consumer_02 and consumer_06
+were answered with no clarification (before: 2 clarification rounds each, consumer_02 and
+consumer_06 unresolved); consumer_03/04/05 got one router question about the legal area (see
+"not changed"); consumer_08 came back empty because of the 429. Kept as
+`4parameters_test/tests/results/set1_answers_after_general_question_fix_incomplete_429.json`;
+`set1_answers.json` is the previous complete run, also saved with a `_before_general_question_fix`
+suffix (answers, scores, reports). Baseline note: the stored `set1_scores.json` (n=50) predates the
+last update of `set1_answers.json`, in which rti_01 is an empty answer; re-scoring the current
+answers gives the n=49 baseline in `set1_scores_before_general_question_fix_rescored.json`
+(per-question scores identical to the stored ones). To finish: run `evaluate_set1.py answer`
+again (it resumes) when the quota allows, ideally with a longer pause between questions than the
+script's 2 s, then `evaluate_set1.py score`. `make_set1_report.py` builds the test-set PDF, not
+results, and uses a Windows font path (`C:/Windows/Fonts/arial.ttf`), so it was not run here.
+
 ## Unreleased — Read aloud: the whole reply, on every reply, to the end (2026-10-29)
 
 Follow-up to "Read answers aloud" below. Frontend only; no backend change, no Gemini request.

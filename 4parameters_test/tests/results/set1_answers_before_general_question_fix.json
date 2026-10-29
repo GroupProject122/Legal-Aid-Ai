@@ -1,0 +1,1903 @@
+{
+  "banking_01": {
+    "id": "banking_01",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "You can file a complaint before the RBI Ombudsman online through the designated portal or submit it through electronic or physical mode to the Centralised Receipt and Processing Centre.",
+      "what_this_may_involve": [
+        "Lodging a complaint online via the official portal at https://cms.rbi.org.in",
+        "Submitting the complaint through electronic or physical mode to the Centralised Receipt and Processing Centre notified by the Reserve Bank"
+      ],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Prepare the complaint containing the necessary information and format specified by the Reserve Bank",
+        "Ensure the physical complaint form is duly signed by you or your authorised representative if submitted in physical form"
+      ],
+      "evidence_to_preserve": [
+        "Copies of the written complaint and supporting documents submitted to the Centralised Receipt and Processing Centre or the online portal"
+      ],
+      "where_to_approach": [
+        "The online portal at https://cms.rbi.org.in or the Centralised Receipt and Processing Centre notified by the Reserve Bank"
+      ],
+      "limitations": [
+        "The retrieved legal material outlines the basic filing modes but does not detail every procedural step or subsequent stage of adjudication beyond initial submission.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Prepare the complaint containing the necessary information and format specified by the Reserve Bank",
+        "Ensure the physical complaint form is duly signed by you or your authorised representative if submitted in physical form"
+      ]
+    },
+    "sources": [
+      "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
+      "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 13.9
+  },
+  "banking_02": {
+    "id": "banking_02",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "You can lodge complaints online through the dedicated Reserve Bank portal at https://cms.rbi.org.in or through electronic and physical modes to the Centralised Receipt and Processing Centre, but the retrieved material does not explicitly detail the status-tracking procedure.",
+      "what_this_may_involve": [
+        "Filing a complaint through the designated online portal or via electronic and physical modes to the Centralised Receipt and Processing Centre"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that complaints may be lodged online through the designated portal or submitted through electronic or physical modes to the Centralised Receipt and Processing Centre"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [
+        "Copies of the submitted complaint and any acknowledgment receipts or reference numbers provided upon filing"
+      ],
+      "where_to_approach": [
+        "The online portal at https://cms.rbi.org.in or the Centralised Receipt and Processing Centre"
+      ],
+      "limitations": [
+        "The supplied legal material does not contain specific provisions regarding the exact mechanism for tracking the status of a lodged complaint",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that complaints may be lodged online through the designated portal or submitted through electronic or physical modes to the Centralised Receipt and Processing Centre"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
+      "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 13.6
+  },
+  "banking_03": {
+    "id": "banking_03",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": true,
+    "seconds": 8.8
+  },
+  "banking_04": {
+    "id": "banking_04",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, there is no mention of any fee or charge required for filing a complaint under the Reserve Bank - Integrated Ombudsman Scheme. You may lodge a complaint online through the designated portal or submit it through electronic or physical modes without incurring stated charges in the provided text.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Centralised Receipt and Processing Centre or the online portal at https://cms.rbi.org.in"
+      ],
+      "limitations": [
+        "Some generated points were not clearly supported by the retrieved sources, so the answer should be treated as limited.",
+        "The supplied legal material does not explicitly state whether fees are absent or required, but it does not prescribe any fee.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [],
+      "next_steps": []
+    },
+    "sources": [
+      "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 11.2
+  },
+  "banking_05": {
+    "id": "banking_05",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What kind of complaint or dispute is this about, such as buying a product, renting a house, or online issues?",
+        "reply": "This is about a complaint against my bank to the RBI Ombudsman."
+      }
+    ],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": true,
+    "seconds": 15.3
+  },
+  "banking_06": {
+    "id": "banking_06",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What kind of case or matter is this appeal about, such as consumer disputes, tenancy, or cyber issues?",
+        "reply": "This is about a complaint against my bank to the RBI Ombudsman."
+      }
+    ],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": true,
+    "seconds": 13.6
+  },
+  "banking_07": {
+    "id": "banking_07",
+    "status": "clarification_unresolved",
+    "clarifications": [
+      {
+        "app_asked": "Briefly, who is involved and what happened?",
+        "reply": "This is about a complaint against my bank to the RBI Ombudsman."
+      },
+      {
+        "app_asked": "Briefly, who is involved and what happened?",
+        "reply": "It is a general question about what the law says, not about a specific product, transaction or incident of mine."
+      }
+    ],
+    "answer": {
+      "issue_summary": "I need a little more detail about what happened before I can point you to the relevant law.",
+      "possible_rights": [],
+      "next_steps": [
+        "Briefly, who is involved and what happened?"
+      ]
+    },
+    "sources": [],
+    "routing": [],
+    "insufficient_context": true,
+    "seconds": 12.4
+  },
+  "banking_08": {
+    "id": "banking_08",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": true,
+    "seconds": 13.3
+  },
+  "consumer_01": {
+    "id": "consumer_01",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "Could you briefly describe the specific product or service issue and the seller or provider's behavior involved in your situation?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      },
+      {
+        "app_asked": "Please briefly describe what happened.",
+        "reply": "It is a general question about what the law says, not about a specific product, transaction or incident of mine."
+      }
+    ],
+    "answer": {
+      "issue_summary": "A consumer refers to any person who buys any goods or hires or avails of any services for consideration, including transactions conducted offline or online through electronic means, teleshopping, direct selling, or multi-level marketing. The retrieved material indicates that this does not include a person who avails of goods or services for any commercial purpose, except when goods are bought and used exclusively for the purpose of earning a livelihood by means of self-employment.",
+      "what_this_may_involve": [
+        "Distinguishing between personal use, self-employment livelihood use, and commercial purposes"
+      ],
+      "possible_legal_position": [
+        "You may be recognized as a consumer if you purchase goods or hire services for personal use or exclusively for earning your livelihood through self-employment",
+        "You may fall outside the definition of a consumer if the goods or services are obtained for commercial purposes"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material does not provide an exhaustive list of all judicial interpretations surrounding commercial purposes",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "You may be recognized as a consumer if you purchase goods or hire services for personal use or exclusively for earning your livelihood through self-employment",
+        "You may fall outside the definition of a consumer if the goods or services are obtained for commercial purposes"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": null,
+    "insufficient_context": false,
+    "seconds": 23.0
+  },
+  "consumer_02": {
+    "id": "consumer_02",
+    "status": "clarification_unresolved",
+    "clarifications": [
+      {
+        "app_asked": "What is the specific transaction or purpose of the purchase that is raising questions about consumer status?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      },
+      {
+        "app_asked": "What type of product or service was involved in the transaction, and was it for commercial purpose or personal use?",
+        "reply": "It is a general question about what the law says, not about a specific product, transaction or incident of mine."
+      }
+    ],
+    "answer": {
+      "issue_summary": "What happened with the product or service?",
+      "possible_rights": [],
+      "next_steps": [
+        "What happened with the product or service?"
+      ]
+    },
+    "sources": [],
+    "routing": null,
+    "insufficient_context": true,
+    "seconds": 13.0
+  },
+  "consumer_03": {
+    "id": "consumer_03",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What kind of complaint or issue are you referring to, such as a consumer dispute, cybercrime, or tenant problem?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": true,
+    "seconds": 12.1
+  },
+  "consumer_04": {
+    "id": "consumer_04",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What is your complaint about, such as a faulty product, online issue, rental problem, or an issue with a government authority?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "You can file a consumer complaint before the appropriate consumer commission based on your dispute. The retrieved material indicates that complaints may be filed before commissions such as the District Commission, State Commission, or National Commission depending on the case.",
+      "what_this_may_involve": [
+        "Filing a formal complaint before the appropriate consumer commission",
+        "Adhering to procedures regarding the admission and processing of complaints"
+      ],
+      "possible_legal_position": [
+        "Consumers may seek remedies and file complaints before consumer commissions for violations of consumer rights or unfair trade practices"
+      ],
+      "suggested_next_steps": [
+        "Identify the appropriate consumer commission forum such as the District Commission, State Commission, or National Commission"
+      ],
+      "evidence_to_preserve": [
+        "Documents, records, or receipts relating to the consumer transaction and dispute"
+      ],
+      "where_to_approach": [
+        "District Commission",
+        "State Commission",
+        "National Commission"
+      ],
+      "limitations": [
+        "The retrieved material does not specify exact pecuniary limits or detailed jurisdictional rules for choosing between different commission levels",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "Consumers may seek remedies and file complaints before consumer commissions for violations of consumer rights or unfair trade practices"
+      ],
+      "next_steps": [
+        "Identify the appropriate consumer commission forum such as the District Commission, State Commission, or National Commission"
+      ]
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 21.0
+  },
+  "consumer_05": {
+    "id": "consumer_05",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, deficiency means any fault, imperfection, shortcoming or inadequacy in the quality, nature and manner of performance which is required to be maintained under any law or undertaken to be performed in pursuance of a contract or otherwise in relation to any service. It includes any act of negligence, omission, or commission causing loss or injury, and the deliberate withholding of relevant information from you.",
+      "what_this_may_involve": [
+        "Fault, imperfection, shortcoming, or inadequacy in the quality, nature, or manner of service performance",
+        "Acts of negligence, omission, or commission by a service provider causing loss or injury",
+        "Deliberate withholding of relevant information by a service provider"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that deficiency applies specifically in relation to any service required by law or undertaken through a contract or otherwise"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material explains the statutory definition under the Consumer Protection Act, 2019, but does not provide facts about a specific dispute"
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that deficiency applies specifically in relation to any service required by law or undertaken through a contract or otherwise"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "The Insurance Ombudsman Rules, 2017 (updated to 18 May 2021)"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 12.6
+  },
+  "consumer_06": {
+    "id": "consumer_06",
+    "status": "clarification_unresolved",
+    "clarifications": [
+      {
+        "app_asked": "Are you asking about a specific unfair contract you entered into as a consumer, or is this a general legal inquiry?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      },
+      {
+        "app_asked": "Could you briefly describe the specific terms of the contract and how they create an unfair advantage for the seller or service provider?",
+        "reply": "It is a general question about what the law says, not about a specific product, transaction or incident of mine."
+      }
+    ],
+    "answer": {
+      "issue_summary": "The query is a general legal inquiry without a specific consumer transaction or incident, which is required for effective legal-source retrieval in the consumer domain.",
+      "possible_rights": [],
+      "next_steps": [
+        "Could you describe a specific consumer transaction or service issue you are dealing with?"
+      ]
+    },
+    "sources": [],
+    "routing": null,
+    "insufficient_context": true,
+    "seconds": 12.8
+  },
+  "consumer_07": {
+    "id": "consumer_07",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, a misleading advertisement in relation to any product or service means an advertisement that falsely describes the product or service, gives a false guarantee, or is likely to mislead consumers as to its nature, substance, quantity, or quality. It also includes any express or implied representation that, if made by the manufacturer, seller, or service provider, would constitute an unfair trade practice.",
+      "what_this_may_involve": [
+        "False descriptions of products or services",
+        "False guarantees or misleading representations regarding nature, substance, quantity, or quality"
+      ],
+      "possible_legal_position": [],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material explains the definition of a misleading advertisement under consumer protection provisions but does not establish a specific dispute or set of facts for this case.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 9.7
+  },
+  "consumer_08": {
+    "id": "consumer_08",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, you may bring a product liability action for compensation against a manufacturer, service provider, or seller if harm is caused by a defective product.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [
+        "A product liability action may be brought by a complainant against a product manufacturer, product service provider, or product seller for any harm caused on account of a defective product based on the provisions of the Consumer Protection Act, 2019."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [
+        "Records of the purchase, details of the product defect, and documentation of any harm caused."
+      ],
+      "where_to_approach": [],
+      "limitations": [
+        "Some generated points were not clearly supported by the retrieved sources, so the answer should be treated as limited.",
+        "The retrieved legal material indicates general provisions for product liability actions but does not guarantee the outcome of any specific claim.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "A product liability action may be brought by a complainant against a product manufacturer, product service provider, or product seller for any harm caused on account of a defective product based on the provisions of the Consumer Protection Act, 2019."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 10.2
+  },
+  "consumer_09": {
+    "id": "consumer_09",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Yes, based on the retrieved material, a consumer complaint may be resolved through mediation when referred by a Consumer Commission, provided the matter does not fall under excluded categories like medical negligence resulting in grievous injury or serious fraud.",
+      "what_this_may_involve": [
+        "Mediation may be held in a consumer mediation cell attached to the District Commission, State Commission, or National Commission.",
+        "A nominated mediator may consider the rights and obligations of the parties, trade usages, and circumstances while being guided by principles of natural justice."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that certain matters such as medical negligence resulting in grievous injury or death, serious fraud, forgery, criminal prosecutions, and matters involving public interest shall not be referred to mediation.",
+        "Parties generally may not initiate arbitral or judicial proceedings regarding a matter that is the subject of mediation if they have undertaken not to do so."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "District Commission",
+        "State Commission",
+        "National Commission"
+      ],
+      "limitations": [
+        "The retrieved material notes that a Commission may choose not to refer a case to mediation if no elements of an acceptable settlement exist or if mediation is otherwise not appropriate."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that certain matters such as medical negligence resulting in grievous injury or death, serious fraud, forgery, criminal prosecutions, and matters involving public interest shall not be referred to mediation.",
+        "Parties generally may not initiate arbitral or judicial proceedings regarding a matter that is the subject of mediation if they have undertaken not to do so."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection (Mediation) Rules, 2020",
+      "The Consumer Protection (Mediation) Rules, 2020"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 15.8
+  },
+  "consumer_10": {
+    "id": "consumer_10",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "Kya yeh mediation consumer complaint, property dispute, ya kisi aur maamle se judi hai?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "You are asking whether any fee is payable for mediation in a consumer complaint before a consumer commission. Based on the retrieved material, specific details regarding mediation fees are not explicitly detailed in the provided text, though the rules indicate that if a settlement is reached during mediation, you may be entitled to a full refund of the application fee paid in respect of the complaint.",
+      "what_this_may_involve": [
+        "Referral of a consumer dispute to a consumer mediation cell attached to the District, State, or National Commission",
+        "Conduct of mediation by a nominated mediator guided by principles of natural justice"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that where the Commission refers the parties to mediation and a settlement is reached, the complainant may be entitled to receive the full amount of the application fee paid in respect of such complaint"
+      ],
+      "suggested_next_steps": [
+        "Participate in the mediation proceedings before the consumer mediation cell if referred by the Commission"
+      ],
+      "evidence_to_preserve": [
+        "Copy of the consumer complaint application",
+        "Fee receipts related to the consumer complaint filing"
+      ],
+      "where_to_approach": [
+        "The District Commission, State Commission, or National Commission where your consumer complaint is pending"
+      ],
+      "limitations": [
+        "The retrieved legal material does not specify whether a separate fee is charged to conduct the mediation itself",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that where the Commission refers the parties to mediation and a settlement is reached, the complainant may be entitled to receive the full amount of the application fee paid in respect of such complaint"
+      ],
+      "next_steps": [
+        "Participate in the mediation proceedings before the consumer mediation cell if referred by the Commission"
+      ]
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection (Mediation) Rules, 2020"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 20.0
+  },
+  "consumer_11": {
+    "id": "consumer_11",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What kind of matter or dispute was settled in mediation, such as a consumer complaint, tenant issue, or cyber dispute?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "Based on the retrieved material regarding consumer mediation, you may be restricted from initiating judicial proceedings in respect of a matter that is the subject-matter of mediation when parties have expressly undertaken not to initiate any such proceeding. The retrieved material does not explicitly detail a mechanism for filing a standard appeal against a successfully mediated settlement agreement where an undertaking not to sue was given.",
+      "what_this_may_involve": [
+        "Mediation proceedings under the Consumer Protection (Mediation) Rules, 2020",
+        "Restrictions on initiating further judicial proceedings regarding settled mediation matters"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that parties shall not initiate any arbitral or judicial proceedings in respect of a matter which is the subject-matter of the mediation and also when such parties have expressly undertaken not to initiate any such proceeding"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [
+        "Copy of the mediation settlement agreement",
+        "Records of proceedings before the consumer commission"
+      ],
+      "where_to_approach": [],
+      "limitations": [
+        "The supplied legal material does not contain provisions addressing the exact procedure or grounds for appealing after a mediation settlement is concluded",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that parties shall not initiate any arbitral or judicial proceedings in respect of a matter which is the subject-matter of the mediation and also when such parties have expressly undertaken not to initiate any such proceeding"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection (Mediation) Rules, 2020"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 24.3
+  },
+  "consumer_12": {
+    "id": "consumer_12",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, you can appear in person before a Consumer Commission or choose to be represented by an agent or a counsel. Voluntary consumer organisations may also represent consumers or engage a counsel of their choice.",
+      "what_this_may_involve": [
+        "Appearing personally or through an authorized representative or advocate before the Consumer Commission."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that a complainant has the option to appear in person, through an agent, or through a counsel in the proceedings before the Consumer Commission."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Consumer Commission"
+      ],
+      "limitations": [
+        "The retrieved material does not explicitly state whether an advocate is mandatory or compulsory for every consumer."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that a complainant has the option to appear in person, through an agent, or through a counsel in the proceedings before the Consumer Commission."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 13.9
+  },
+  "consumer_13": {
+    "id": "consumer_13",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What kind of complaint is this about, such as online fraud, buying goods, or renting a house?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "The time limit for filing a consumer complaint before a consumer commission is generally within two years from the date on which the cause of action has arisen.",
+      "what_this_may_involve": [
+        "The District Commission, State Commission, or National Commission not admitting a complaint unless it is filed within the specified period",
+        "The possibility of a complaint being entertained after the limitation period if you satisfy the commission that you had sufficient cause for the delay"
+      ],
+      "possible_legal_position": [
+        "Based on the retrieved material, the consumer commission may entertain a delayed complaint if reasons for condoning the delay are recorded and sufficient cause is shown",
+        "The retrieved material indicates that the limitation period for filing a complaint is calculated from the date on which the cause of action has arisen"
+      ],
+      "suggested_next_steps": [
+        "Prepare an explanation and seek condonation of delay from the commission if the complaint is filed after two years"
+      ],
+      "evidence_to_preserve": [
+        "Documents establishing the date on which the cause of action arose",
+        "Records or evidence supporting any reasons for delay if filing after the standard period"
+      ],
+      "where_to_approach": [
+        "The appropriate District Commission, State Commission, or National Commission"
+      ],
+      "limitations": [
+        "The retrieved material does not guarantee that a delayed filing will be condoned by the commission without sufficient cause",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "Based on the retrieved material, the consumer commission may entertain a delayed complaint if reasons for condoning the delay are recorded and sufficient cause is shown",
+        "The retrieved material indicates that the limitation period for filing a complaint is calculated from the date on which the cause of action has arisen"
+      ],
+      "next_steps": [
+        "Prepare an explanation and seek condonation of delay from the commission if the complaint is filed after two years"
+      ]
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 21.2
+  },
+  "consumer_14": {
+    "id": "consumer_14",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": true,
+    "seconds": 9.6
+  },
+  "cyber_01": {
+    "id": "cyber_01",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "The National Cyber Crime Reporting Portal is designed to facilitate online reporting of all types of cybercrimes, with a special focus on offences against women and children. It acts as a centralised platform for citizens to submit complaints that are subsequently routed to respective state and union territory police authorities for necessary action.",
+      "what_this_may_involve": [
+        "Providing a centralised online mechanism to report cybercrimes under various available categories and subcategories.",
+        "Enabling the public to report incidents online due to the transnational and borderless nature of cybercrimes.",
+        "Assigning reported complaints to respective State or UT police authorities based on the address of the complainant for necessary action."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that the portal is developed to facilitate public reporting and should not be treated as an FIR.",
+        "State and UT authorities are responsible for appropriate action on the complaints reported on the portal based on the information provided."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "National Cyber Crime Reporting Portal"
+      ],
+      "limitations": [
+        "Only supporting or procedural sources were retrieved.",
+        "The portal submissions are not automatically treated as a formal FIR."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the portal is developed to facilitate public reporting and should not be treated as an FIR.",
+        "State and UT authorities are responsible for appropriate action on the complaints reported on the portal based on the information provided."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)"
+    ],
+    "routing": [
+      "cyber"
+    ],
+    "insufficient_context": false,
+    "seconds": 15.0
+  },
+  "cyber_02": {
+    "id": "cyber_02",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Apart from reporting portals, you may explore alternative options such as approaching the Grievance Appellate Committee or utilizing self-regulating bodies for addressing objectionable content.",
+      "what_this_may_involve": [
+        "The retrieved material indicates mechanisms involving Grievance Appellate Committees and self-regulating bodies for handling content issues."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that frameworks exist under the Information Technology rules for addressing content through appellate and self-regulatory channels."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Grievance Appellate Committee",
+        "Self-regulating body"
+      ],
+      "limitations": [
+        "The retrieved material does not detail every alternative forum outside the provided rules."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that frameworks exist under the Information Technology rules for addressing content through appellate and self-regulatory channels."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021",
+      "The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021"
+    ],
+    "routing": [
+      "cyber"
+    ],
+    "insufficient_context": false,
+    "seconds": 14.9
+  },
+  "cyber_03": {
+    "id": "cyber_03",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "You can report all types of cybercrimes on the official National Cybercrime Reporting Portal, with a special focus on cybercrimes affecting women and children. The retrieved material indicates that the portal provides various categories and sub-categories for reporting, and you can also find detailed descriptions of reportable cybercrimes under the Learn about Cybercrime section on the home page.",
+      "what_this_may_involve": [
+        "Navigating the official cybercrime reporting portal to review available categories and sub-categories of cybercrimes.",
+        "Accessing the dedicated Learn about Cybercrime section on the portal home page for descriptions of various reportable offenses."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that the National Cybercrime Reporting Portal facilitates filing complaints for all types of cybercrimes under various available categories and sub-categories, including special provisions for cybercrimes against women and children."
+      ],
+      "suggested_next_steps": [
+        "Visit the official National Cybercrime Reporting Portal website at cybercrime.gov.in.",
+        "Check the Learn about Cybercrime section on the home page to read descriptions of the types of cybercrimes that can be reported.",
+        "Review the categories and sub-categories listed on the portal to identify the specific classification relevant to your situation."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "National Cybercrime Reporting Portal online platform"
+      ],
+      "limitations": [
+        "Only supporting or procedural sources were retrieved.",
+        "The retrieved material lists categories broadly and mentions that the complete list of categories and subcategories is available in the portal documentation and Annexure A of the user manual."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the National Cybercrime Reporting Portal facilitates filing complaints for all types of cybercrimes under various available categories and sub-categories, including special provisions for cybercrimes against women and children."
+      ],
+      "next_steps": [
+        "Visit the official National Cybercrime Reporting Portal website at cybercrime.gov.in.",
+        "Check the Learn about Cybercrime section on the home page to read descriptions of the types of cybercrimes that can be reported.",
+        "Review the categories and sub-categories listed on the portal to identify the specific classification relevant to your situation."
+      ]
+    },
+    "sources": [
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)"
+    ],
+    "routing": [
+      "cyber"
+    ],
+    "insufficient_context": false,
+    "seconds": 15.3
+  },
+  "cyber_04": {
+    "id": "cyber_04",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What specific type of cybercrime incident are you trying to report?",
+        "reply": "This is about reporting a cyber crime on the National Cyber Crime Reporting Portal."
+      }
+    ],
+    "answer": {
+      "issue_summary": "You can file complaints regarding other cybercrimes online through the National Cyber Crime Reporting Portal by selecting the appropriate category and subcategory on the platform. The system facilitates reporting various cyber offences and assigns complaints to the relevant State or Union Territory authorities based on your address.",
+      "what_this_may_involve": [
+        "Navigating the official reporting portal to select the specific category and subcategory matching the cybercrime incident",
+        "Providing accurate complainant details, mandatory identification documents, and correspondence address information",
+        "Reviewing the entered details and submitting the report to generate a unique complaint ID for tracking"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that the portal is developed to facilitate online reporting due to the transnational and borderless nature of cybercrimes",
+        "The retrieved material indicates that submitted complaints are dealt with by respective State or Union Territory police authorities based on the information provided",
+        "The retrieved material notes that the portal is designed for reporting complaints and should not be treated as a formal First Information Report"
+      ],
+      "suggested_next_steps": [
+        "Visit the official National Cyber Crime Reporting Portal website",
+        "Review the Learn about Cybercrime section on the home page to identify descriptions of various types of cybercrimes",
+        "Fill in the required complainant details, upload a mandatory government-issued national identification card, and provide your address details",
+        "Preview the information, complete the submission, and download the generated PDF of the reported complaint for your records and future tracking"
+      ],
+      "evidence_to_preserve": [
+        "A downloaded copy of the reported complaint in PDF format",
+        "Any confirmation messages and emails received on your registered mobile number and email ID"
+      ],
+      "where_to_approach": [
+        "National Cyber Crime Reporting Portal online platform",
+        "Respective State or Union Territory police authorities responsible for action on reported complaints"
+      ],
+      "limitations": [
+        "Only supporting or procedural sources were retrieved.",
+        "The retrieved material does not cover procedures for offline complaints or remedies outside the online portal mechanism",
+        "The portal serves as a reporting mechanism and does not replace formal police procedures such as an FIR"
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the portal is developed to facilitate online reporting due to the transnational and borderless nature of cybercrimes",
+        "The retrieved material indicates that submitted complaints are dealt with by respective State or Union Territory police authorities based on the information provided",
+        "The retrieved material notes that the portal is designed for reporting complaints and should not be treated as a formal First Information Report"
+      ],
+      "next_steps": [
+        "Visit the official National Cyber Crime Reporting Portal website",
+        "Review the Learn about Cybercrime section on the home page to identify descriptions of various types of cybercrimes",
+        "Fill in the required complainant details, upload a mandatory government-issued national identification card, and provide your address details",
+        "Preview the information, complete the submission, and download the generated PDF of the reported complaint for your records and future tracking"
+      ]
+    },
+    "sources": [
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+      "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal",
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+      "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+    ],
+    "routing": null,
+    "insufficient_context": false,
+    "seconds": 24.8
+  },
+  "cyber_05": {
+    "id": "cyber_05",
+    "status": "clarification_unresolved",
+    "clarifications": [
+      {
+        "app_asked": "What specific type of cybercrime incident did you experience, such as online financial fraud, unauthorized access, or social media harassment?",
+        "reply": "This is about reporting a cyber crime on the National Cyber Crime Reporting Portal."
+      },
+      {
+        "app_asked": "What specific type of cybercrime incident occurred, such as online financial fraud, identity misuse, or social media harassment?",
+        "reply": "It is a general question about what the law says, not about a specific product, transaction or incident of mine."
+      }
+    ],
+    "answer": {
+      "issue_summary": "What happened — account hacking, payment fraud, identity misuse, or something else?",
+      "possible_rights": [],
+      "next_steps": [
+        "What happened — account hacking, payment fraud, identity misuse, or something else?"
+      ]
+    },
+    "sources": [],
+    "routing": null,
+    "insufficient_context": true,
+    "seconds": 11.0
+  },
+  "cyber_06": {
+    "id": "cyber_06",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "Aap kis cheez ya kis department mein complaint report kar rahe hain?",
+        "reply": "This is about reporting a cyber crime on the National Cyber Crime Reporting Portal."
+      }
+    ],
+    "answer": {
+      "issue_summary": "Once you report a complaint on the National Cyber Crime Reporting Portal, you receive a confirmation message containing a Complaint ID and an acknowledgment via SMS and email. The retrieved material indicates that the jurisdictional State or UT law enforcement agency will handle the investigation and send updates of action taken to your registered mobile number and email ID.",
+      "what_this_may_involve": [
+        "Receiving a unique Complaint ID as confirmation of registration on the portal",
+        "Review and handling of the matter by the jurisdictional State or UT law enforcement agency",
+        "Receipt of status updates and action taken reports on your registered mobile number and email ID"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that the Complaint ID generated upon submission is not an FIR number but serves as a confirmation of registration on the portal",
+        "The retrieved material indicates that if you are not satisfied with the action taken by the State or UT law enforcement agency, you may reach out to the designated grievance officers of the concerned State or UT"
+      ],
+      "suggested_next_steps": [
+        "Log into your account on the National Cyber Crime Reporting Portal to track the status of your reported complaint",
+        "Download and save the PDF copy of the reported complaint from the portal for your records",
+        "Watch for updates sent by the jurisdictional law enforcement agency via your registered mobile number or email ID"
+      ],
+      "evidence_to_preserve": [
+        "The complaint submission confirmation message and the generated Complaint ID",
+        "The downloaded PDF copy of the reported complaint"
+      ],
+      "where_to_approach": [
+        "The National Cyber Crime Reporting Portal online dashboard",
+        "The jurisdictional State or UT law enforcement agency handling the complaint",
+        "The grievance officers of the concerned State or UT if not satisfied with the action taken"
+      ],
+      "limitations": [
+        "Only supporting or procedural sources were retrieved.",
+        "The retrieved material does not guarantee specific timelines for police investigation or resolution",
+        "The generated Complaint ID does not automatically constitute a formal First Information Report"
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the Complaint ID generated upon submission is not an FIR number but serves as a confirmation of registration on the portal",
+        "The retrieved material indicates that if you are not satisfied with the action taken by the State or UT law enforcement agency, you may reach out to the designated grievance officers of the concerned State or UT"
+      ],
+      "next_steps": [
+        "Log into your account on the National Cyber Crime Reporting Portal to track the status of your reported complaint",
+        "Download and save the PDF copy of the reported complaint from the portal for your records",
+        "Watch for updates sent by the jurisdictional law enforcement agency via your registered mobile number or email ID"
+      ]
+    },
+    "sources": [
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+      "User Manual for Reporting Cyber Crime Against Women and Children / Citizen Manual for National Cybercrime Reporting Portal"
+    ],
+    "routing": [
+      "cyber"
+    ],
+    "insufficient_context": false,
+    "seconds": 22.0
+  },
+  "cyber_07": {
+    "id": "cyber_07",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What is the subject matter of your complaint, such as a purchase, online issue, rental property, or government matter?",
+        "reply": "This is about reporting a cyber crime on the National Cyber Crime Reporting Portal."
+      }
+    ],
+    "answer": {
+      "issue_summary": "You can check the status of your complaint on the National Cyber Crime Reporting Portal by logging into your account with your registered user name and mobile number, entering the OTP, and providing the security answer.",
+      "what_this_may_involve": [
+        "Receiving updates on action taken from the jurisdictional State or UT law enforcement agency on your registered mobile number and email ID",
+        "Reaching out to grievance officers of the concerned State or UT if you are not satisfied with the action taken by the law enforcement agency"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that the complaint ID generated upon submission is a confirmation of registration of the complaint on the portal rather than an FIR number"
+      ],
+      "suggested_next_steps": [
+        "Visit the homepage of the National Cyber Crime Reporting Portal",
+        "Click on File a Complaint, read and accept the acknowledgement, and select Report Other Cyber Crime",
+        "Log in using your registered user name and mobile number"
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "National Cyber Crime Reporting Portal online platform",
+        "Grievance officers of the concerned State or UT law enforcement agency"
+      ],
+      "limitations": [
+        "Only supporting or procedural sources were retrieved.",
+        "The retrieved material may not cover all specialized tracking scenarios or offline inquiries.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the complaint ID generated upon submission is a confirmation of registration of the complaint on the portal rather than an FIR number"
+      ],
+      "next_steps": [
+        "Visit the homepage of the National Cyber Crime Reporting Portal",
+        "Click on File a Complaint, read and accept the acknowledgement, and select Report Other Cyber Crime",
+        "Log in using your registered user name and mobile number"
+      ]
+    },
+    "sources": [
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)"
+    ],
+    "routing": [
+      "cyber"
+    ],
+    "insufficient_context": false,
+    "seconds": 21.7
+  },
+  "cyber_08": {
+    "id": "cyber_08",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "Which type of portal or issue is this complaint about, such as consumer disputes, cybercrime, or tenant matters?",
+        "reply": "This is about reporting a cyber crime on the National Cyber Crime Reporting Portal."
+      }
+    ],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "cyber"
+    ],
+    "insufficient_context": true,
+    "seconds": 18.7
+  },
+  "cyber_09": {
+    "id": "cyber_09",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Yes, you can report cyber crimes online through the National Cyber Crime Reporting Portal even when dealing with transnational issues, as the portal is specifically designed to handle borderless cybercrimes. The retrieved material indicates that because cybercrimes often have a transnational nature, the portal facilitates online reporting by the public, and complaints are subsequently routed to the respective State or UT police authorities for necessary action based on the details you provide.",
+      "what_this_may_involve": [
+        "Reporting cybercrimes through a centralized online mechanism designed to account for the borderless nature of offenses."
+      ],
+      "possible_legal_position": [
+        "State or UT police authorities are responsible for dealing with and taking appropriate action on complaints reported on the portal based on the information provided."
+      ],
+      "suggested_next_steps": [
+        "Visit the official National Cyber Crime Reporting Portal website at https://www.cybercrime.gov.in.",
+        "Navigate to the Report Other Cyber Crime section and click on File a Complaint."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "National Cyber Crime Reporting Portal at https://www.cybercrime.gov.in"
+      ],
+      "limitations": [
+        "Only supporting or procedural sources were retrieved.",
+        "The retrieved material notes that public and police order is the responsibility of the State under the Constitution of India, and the portal is designed to facilitate reporting rather than serving as an FIR.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "State or UT police authorities are responsible for dealing with and taking appropriate action on complaints reported on the portal based on the information provided."
+      ],
+      "next_steps": [
+        "Visit the official National Cyber Crime Reporting Portal website at https://www.cybercrime.gov.in.",
+        "Navigate to the Report Other Cyber Crime section and click on File a Complaint."
+      ]
+    },
+    "sources": [
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
+      "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)"
+    ],
+    "routing": [
+      "cyber"
+    ],
+    "insufficient_context": false,
+    "seconds": 13.9
+  },
+  "rti_01": {
+    "id": "rti_01",
+    "status": "empty_answer",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "",
+      "possible_rights": [],
+      "next_steps": []
+    },
+    "sources": [
+      "The Right to Information Act, 2005",
+      "The Right to Information Act, 2005",
+      "The Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011"
+    ],
+    "routing": [],
+    "insufficient_context": false,
+    "seconds": 2.0
+  },
+  "rti_02": {
+    "id": "rti_02",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "The generated answer itself indicates that the retrieved material is insufficient.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The generated answer itself indicates that the retrieved material is insufficient."
+      ],
+      "possible_rights": [],
+      "next_steps": [
+        "Try asking with a narrower issue or check an official source that covers this legal area.",
+        "Consider speaking with a qualified legal professional before relying on this corpus for the issue."
+      ]
+    },
+    "sources": [],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": true,
+    "seconds": 9.6
+  },
+  "rti_03": {
+    "id": "rti_03",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "To seek information from a public authority, you must submit a written or electronic request in English, Hindi, or the official local language along with the prescribed fee. You need to specify the particulars of the information you want and provide contact details, but you are not required to give reasons for your request.",
+      "what_this_may_involve": [
+        "Submitting an application in writing or through electronic means to the appropriate Central or State Public Information Officer or Assistant Public Information Officer",
+        "Specifying the particulars of the required information clearly",
+        "Paying the prescribed application fee",
+        "Receiving assistance from the public information officer to reduce an oral request into writing if you cannot make it in writing"
+      ],
+      "possible_legal_position": [
+        "You are not required to give any reason for requesting the information or provide personal details other than what is necessary for contact purposes",
+        "If the public authority does not hold the requested information or the subject matter is more closely connected with another public authority, your application may be transferred to that other authority"
+      ],
+      "suggested_next_steps": [
+        "Draft your request specifying the details of the information you need",
+        "Submit the request in writing or electronically to the relevant Public Information Officer along with the required fee",
+        "Contact the Public Information Officer for reasonable assistance if you are unable to make the request in writing"
+      ],
+      "evidence_to_preserve": [
+        "A copy of the written or electronic request submitted to the public authority",
+        "Proof of payment of the prescribed application fee",
+        "Any communication or transfer notice received from the public authority"
+      ],
+      "where_to_approach": [
+        "The Central Public Information Officer or State Public Information Officer of the concerned public authority",
+        "The Central Assistant Public Information Officer or State Assistant Public Information Officer"
+      ],
+      "limitations": [
+        "The retrieved material indicates that requests must be accompanied by the prescribed fee and made in specified languages",
+        "The retrieved material does not detail specific deadlines or exact fee amounts for every jurisdiction"
+      ],
+      "possible_rights": [
+        "You are not required to give any reason for requesting the information or provide personal details other than what is necessary for contact purposes",
+        "If the public authority does not hold the requested information or the subject matter is more closely connected with another public authority, your application may be transferred to that other authority"
+      ],
+      "next_steps": [
+        "Draft your request specifying the details of the information you need",
+        "Submit the request in writing or electronically to the relevant Public Information Officer along with the required fee",
+        "Contact the Public Information Officer for reasonable assistance if you are unable to make the request in writing"
+      ]
+    },
+    "sources": [
+      "The Right to Information Act, 2005"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 15.1
+  },
+  "rti_04": {
+    "id": "rti_04",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Under the Right to Information Act, 2005, persons who are of below poverty line are not charged any fee for seeking information.",
+      "what_this_may_involve": [
+        "Exemption from application and access fees for BPL applicants as determined by the appropriate Government"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that no fee shall be charged from persons who are of below poverty line for requests made under section 6 and sub-sections (1) and (5) of section 7 of the Right to Information Act, 2005"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The specific proof required to establish below poverty line status may depend on the rules and determinations of the appropriate Government"
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that no fee shall be charged from persons who are of below poverty line for requests made under section 6 and sub-sections (1) and (5) of section 7 of the Right to Information Act, 2005"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Right to Information Act, 2005"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 12.4
+  },
+  "rti_05": {
+    "id": "rti_05",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What kind of application are you asking about, such as a consumer complaint, cyber issue, rental dispute, or government matter?",
+        "reply": "This is about an RTI application to a government public authority."
+      }
+    ],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, an application for obtaining information under the Right to Information Act must be made in writing or through electronic means in English, Hindi, or the official language of the area, accompanied by the prescribed fee and specifying the particulars of the information sought. You are not required to give any reason for requesting the information or provide personal details other than those necessary for contact.",
+      "what_this_may_involve": [
+        "Making a request in writing or through electronic means to the appropriate Central or State Public Information Officer or Assistant Public Information Officer",
+        "Specifying the particulars of the information sought without needing to provide reasons for the request"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that an applicant has the right to submit an RTI request in writing or electronically in English, Hindi, or the official language of the area, along with the prescribed fee"
+      ],
+      "suggested_next_steps": [
+        "Submit your RTI application in writing or through electronic means specifying the particulars of the information sought",
+        "Include the prescribed fee along with your application"
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Central Public Information Officer or State Public Information Officer of the concerned public authority",
+        "Central Assistant Public Information Officer or State Assistant Public Information Officer"
+      ],
+      "limitations": [],
+      "possible_rights": [
+        "The retrieved material indicates that an applicant has the right to submit an RTI request in writing or electronically in English, Hindi, or the official language of the area, along with the prescribed fee"
+      ],
+      "next_steps": [
+        "Submit your RTI application in writing or through electronic means specifying the particulars of the information sought",
+        "Include the prescribed fee along with your application"
+      ]
+    },
+    "sources": [
+      "The Right to Information Act, 2005"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 16.1
+  },
+  "rti_06": {
+    "id": "rti_06",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Yes, provisions for appeal do exist under the Right to Information Act, allowing you to challenge decisions or delays regarding your information requests.",
+      "what_this_may_involve": [
+        "The retrieved material indicates that Section 19 of the Right to Information Act governs appeal proceedings.",
+        "Appeals may be filed, and the onus to prove that a denial was justified rests on the Central Public Information Officer or State Public Information Officer.",
+        "Appeals are generally required to be disposed of within thirty days or an extended period not exceeding forty-five days from filing."
+      ],
+      "possible_legal_position": [
+        "The decision of the Central Information Commission or State Information Commission shall be binding.",
+        "The Information Commission has the power to require public authorities to take necessary steps to secure compliance, require compensation, or impose penalties as provided under the Act."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Central Information Commission or State Information Commission"
+      ],
+      "limitations": [
+        "The retrieved legal material explains the general appeal provisions under Section 19 but does not detail every procedural step for every tier of appeal."
+      ],
+      "possible_rights": [
+        "The decision of the Central Information Commission or State Information Commission shall be binding.",
+        "The Information Commission has the power to require public authorities to take necessary steps to secure compliance, require compensation, or impose penalties as provided under the Act."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Right to Information Act, 2005"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 10.4
+  },
+  "rti_07": {
+    "id": "rti_07",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Yes, you may pursue a second appeal under the RTI Act, as the retrieved material indicates that decisions of the Central Information Commission or State Information Commission are binding and follow appellate proceedings.",
+      "what_this_may_involve": [
+        "The retrieved material indicates that appeal proceedings involve the Central Information Commission or State Information Commission reviewing decisions, where the decision of the Commission shall be binding and may include powers to require compliance, compensate for loss, or impose penalties."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that the onus to prove that a denial of a request was justified is on the Central Public Information Officer or State Public Information Officer, and the Commission has powers to require public authorities to take necessary steps to secure compliance."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Central Information Commission or State Information Commission"
+      ],
+      "limitations": [
+        "The retrieved text does not explicitly detail the standalone procedure or filing mechanism specifically titled second appeal, though it outlines the binding decisions and powers of the Central Information Commission or State Information Commission."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the onus to prove that a denial of a request was justified is on the Central Public Information Officer or State Public Information Officer, and the Commission has powers to require public authorities to take necessary steps to secure compliance."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Right to Information Act, 2005",
+      "The Right to Information Rules, 2012"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 9.8
+  },
+  "rti_08": {
+    "id": "rti_08",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, certain intelligence and security organizations specified in the Second Schedule of the Right to Information Act are excluded entirely from the Act, and specific categories of information are exempted under Section 8, subject to certain conditions such as allegations of corruption and human rights violations.",
+      "what_this_may_involve": [
+        "Exclusion of the Act in entirety under section 24 for specified intelligence and security organizations",
+        "Exemption of several categories of information enumerated in section 8(1) of the Act"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that intelligence and security organizations specified in the Second Schedule are excluded from the Act in entirety, except for information relating to allegations of corruption and human rights violations",
+        "Public authorities are under no obligation to give exempted categories of information under section 8(1) to citizens, though disclosure may sometimes be directed if larger public interest warrants it"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved legal material does not list every specific organization named in the Second Schedule of the Act"
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that intelligence and security organizations specified in the Second Schedule are excluded from the Act in entirety, except for information relating to allegations of corruption and human rights violations",
+        "Public authorities are under no obligation to give exempted categories of information under section 8(1) to citizens, though disclosure may sometimes be directed if larger public interest warrants it"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "Central Board of Secondary Education v. Aditya Bandopadhyay, (2011) 8 SCC 497"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 9.8
+  },
+  "legalaid_01": {
+    "id": "legalaid_01",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the Legal Services Authorities Act, 1987, legal services institutions are established to provide free and competent legal services to eligible weaker sections of society so that justice is not denied due to economic or other disabilities. You may not need to pay for these services if you qualify under the applicable regulations and criteria.",
+      "what_this_may_involve": [
+        "Providing free and competent legal services to ensure that opportunities for securing justice are not denied by reason of economic or other disabilities",
+        "Potential coverage of additional expenditures and expenses like payment of court fees or obtaining certified copies by the Legal Services Institution when legal aid has been granted"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that the Legal Services Authorities Act, 1987, is enacted to provide free and competent legal services to weaker sections of society",
+        "The retrieved material suggests that financial assistance for expenses such as court fees may be borne by the Legal Services Institution in cases where legal aid is granted"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material does not detail the specific income thresholds or exact eligibility criteria required to qualify for free legal services"
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the Legal Services Authorities Act, 1987, is enacted to provide free and competent legal services to weaker sections of society",
+        "The retrieved material suggests that financial assistance for expenses such as court fees may be borne by the Legal Services Institution in cases where legal aid is granted"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Legal Services Authorities Act, 1987",
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 15.8
+  },
+  "legalaid_02": {
+    "id": "legalaid_02",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "You do not need to pay any charge or fee for acquiring or submitting an application form for free legal aid, as the retrieved legal materials do not mention any application fees.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved legal material does not explicitly mention application fees for acquiring or submitting forms, but it outlines how legal services institutions handle expenses and scrutiny of applications."
+      ],
+      "possible_rights": [],
+      "next_steps": []
+    },
+    "sources": [
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 7.1
+  },
+  "legalaid_03": {
+    "id": "legalaid_03",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, requests for legal services can be made through oral requests, e-mails, and interactive online facilities, and emergency situations can be handled by para-legal volunteers who may take you to the nearest legal services institution.",
+      "what_this_may_involve": [
+        "Oral requests for legal services being entertained in the same manner as written applications",
+        "Requests being received through e-mails and interactive on-line facilities after identity verification",
+        "Para-legal volunteers assisting in emergencies by taking you to the nearest legal services institution"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that oral requests, e-mails, and interactive on-line facilities may be considered for free legal services after identity verification and ensuring authorship"
+      ],
+      "suggested_next_steps": [
+        "Contact the nearest legal services institution or approach a legal services clinic for assistance",
+        "Submit requests through available channels such as email, interactive online facilities, or oral requests"
+      ],
+      "evidence_to_preserve": [
+        "Records of any emails or online communications sent regarding the request for legal assistance"
+      ],
+      "where_to_approach": [
+        "Nearest Legal Services Institution",
+        "Legal Services Clinics"
+      ],
+      "limitations": [
+        "The retrieved legal material does not explicitly detail specific nationwide telephone helpline numbers or dedicated hotline services for urgent legal assistance."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that oral requests, e-mails, and interactive on-line facilities may be considered for free legal services after identity verification and ensuring authorship"
+      ],
+      "next_steps": [
+        "Contact the nearest legal services institution or approach a legal services clinic for assistance",
+        "Submit requests through available channels such as email, interactive online facilities, or oral requests"
+      ]
+    },
+    "sources": [
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
+      "The National Legal Services Authority (Legal Services Clinics) Regulations, 2011"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 15.8
+  },
+  "legalaid_04": {
+    "id": "legalaid_04",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "You can approach legal services institutions such as NALSA, SLSA, DLSA, TLSC, HCLSC, and SCLSC by submitting an application for free legal services.",
+      "what_this_may_involve": [
+        "Applications may be presented preferably in Form-I in the local language or English, accompanied by a summary of grievances.",
+        "Applications not in Form-I or even oral requests may also be entertained if they reasonably explain the facts.",
+        "Assistance may be provided by legal services institutions if you are illiterate or unable to complete the application independently.",
+        "Requests can also be submitted through e-mails and interactive online facilities after identity verification."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that eligible persons may seek free legal services through various legal services authorities and committees."
+      ],
+      "suggested_next_steps": [
+        "Prepare an application preferably in Form-I in English or your local language along with a summary of your grievances.",
+        "Submit the application to the appropriate legal services institution or utilize available e-mail and online facilities if applicable."
+      ],
+      "evidence_to_preserve": [
+        "A written summary of your grievances and any records establishing your identity or eligibility."
+      ],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material explains the procedure for applying for legal services but does not specify individual eligibility criteria or exact jurisdictional contact addresses.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that eligible persons may seek free legal services through various legal services authorities and committees."
+      ],
+      "next_steps": [
+        "Prepare an application preferably in Form-I in English or your local language along with a summary of your grievances.",
+        "Submit the application to the appropriate legal services institution or utilize available e-mail and online facilities if applicable."
+      ]
+    },
+    "sources": [
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 13.4
+  },
+  "legalaid_05": {
+    "id": "legalaid_05",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "When you avail of free legal aid, you may express a choice of a panel lawyer, and that choice may be considered by the legal services institution.",
+      "what_this_may_involve": [
+        "The retrieved material indicates that if the legal services institution decides to provide legal services through a panel lawyer, any preference or choice of panel lawyer expressed by you may be considered."
+      ],
+      "possible_legal_position": [
+        "The retrieved material suggests that while you are permitted to express a preference for a specific panel lawyer when applying for free legal services, the final decision rests with the legal services institution."
+      ],
+      "suggested_next_steps": [
+        "You may express your choice of panel lawyer when submitting your application or request for free legal services to the legal services institution."
+      ],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material indicates that expressing a preference is subject to consideration and does not guarantee the assignment of your chosen lawyer.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material suggests that while you are permitted to express a preference for a specific panel lawyer when applying for free legal services, the final decision rests with the legal services institution."
+      ],
+      "next_steps": [
+        "You may express your choice of panel lawyer when submitting your application or request for free legal services to the legal services institution."
+      ]
+    },
+    "sources": [
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 10.0
+  },
+  "legalaid_06": {
+    "id": "legalaid_06",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, you may be able to obtain free legal advice and consultation through legal services institutions without necessarily having to pursue a court case.",
+      "what_this_may_involve": [
+        "Receiving legal advice, consultation, drafting, and conveyancing services through designated legal services authorities or legal services clinics.",
+        "Attempting to amicably resolve pre-litigation matters through volunteers or lawyers at legal services clinics."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that legal services can encompass advice and consultation distinct from formal court proceedings.",
+        "Applicants whose cases do not fall under specific categories may be advised to seek assistance from other bodies or persons rendering free legal services."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Legal Services Institution",
+        "Legal Services Clinic"
+      ],
+      "limitations": [
+        "The availability of free legal services may depend on the rules, evaluation procedures, and resources of the specific legal services institution.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that legal services can encompass advice and consultation distinct from formal court proceedings.",
+        "Applicants whose cases do not fall under specific categories may be advised to seek assistance from other bodies or persons rendering free legal services."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
+      "The National Legal Services Authority (Legal Services Clinics) Regulations, 2011"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 13.7
+  },
+  "legalaid_07": {
+    "id": "legalaid_07",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "You are asking about who is eligible to seek free legal aid from Legal Services Institutions under the Legal Services Authorities Act, 1987, and the types of cases for which legal aid can be applied.",
+      "what_this_may_involve": [
+        "The retrieved material indicates that legal services authorities are constituted to provide free and competent legal services to the weaker sections of society to ensure opportunities for securing justice are not denied by reason of economic or other disabilities.",
+        "Applicants who are not covered under the eligible categories may be advised to seek assistance from other bodies or persons rendering free legal services.",
+        "Applicants may present applications in the specified form or provide a summary of grievances, and oral requests or electronic submissions may also be entertained after identity verification."
+      ],
+      "possible_legal_position": [
+        "The retrieved legal material indicates that legal services are intended for persons who may face economic or other disabilities, ensuring equal opportunity in the legal system."
+      ],
+      "suggested_next_steps": [
+        "You may submit an application for legal services preferably in Form-I in the local language or English, or furnish a summary of your grievances.",
+        "You may make an oral request or submit an application through e-mails or interactive online facilities if eligible.",
+        "If aggrieved by a decision or order regarding your application, you may prefer an appeal to the Executive Chairman or Chairman of the Legal Services Institution."
+      ],
+      "evidence_to_preserve": [
+        "Any documents or summaries detailing your grievances for which you seek legal services."
+      ],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved legal material does not explicitly list the specific categories of persons under Section 12 or the exact kinds of eligible cases beyond general provisions.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved legal material indicates that legal services are intended for persons who may face economic or other disabilities, ensuring equal opportunity in the legal system."
+      ],
+      "next_steps": [
+        "You may submit an application for legal services preferably in Form-I in the local language or English, or furnish a summary of your grievances.",
+        "You may make an oral request or submit an application through e-mails or interactive online facilities if eligible.",
+        "If aggrieved by a decision or order regarding your application, you may prefer an appeal to the Executive Chairman or Chairman of the Legal Services Institution."
+      ]
+    },
+    "sources": [
+      "The Legal Services Authorities Act, 1987",
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010",
+      "The National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 12.3
+  },
+  "legalaid_08": {
+    "id": "legalaid_08",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved legal material, you may be eligible for free legal aid as a woman regardless of your financial independence. The Legal Services Authorities Act provides that every woman is entitled to legal services under the criteria for giving legal services.",
+      "what_this_may_involve": [
+        "Being classified as an eligible category based solely on gender under Section 12 of the Legal Services Authorities Act, 1987"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that women are explicitly listed among the entitled categories for free legal services without a stated financial restriction in that specific clause"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "Some generated points were not clearly supported by the retrieved sources, so the answer should be treated as limited.",
+        "The retrieved material does not detail administrative verification procedures that the authority might apply",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that women are explicitly listed among the entitled categories for free legal services without a stated financial restriction in that specific clause"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Legal Services Authorities Act, 1987"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 10.7
+  },
+  "legalaid_09": {
+    "id": "legalaid_09",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, the Legal Services Authorities Act, 1987 specifies that a child is entitled to free legal services without stating an upper age limit. However, the supplied text does not define a specific age limit for free legal aid eligibility.",
+      "what_this_may_involve": [
+        "Being classified as a child under applicable laws to meet the criteria for free legal services under Section 12 of the Legal Services Authorities Act, 1987",
+        "Requirement for the concerned Authority to be satisfied that you have a prima facie case to prosecute or defend"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that a child is explicitly listed as a category entitled to free legal services under Section 12 of the Legal Services Authorities Act, 1987, provided there is a prima facie case"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "The concerned Legal Services Authority"
+      ],
+      "limitations": [
+        "The supplied legal material does not state a specific age limit for a child regarding free legal aid eligibility",
+        "Entitlement is subject to the concerned Authority being satisfied that there is a prima facie case"
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that a child is explicitly listed as a category entitled to free legal services under Section 12 of the Legal Services Authorities Act, 1987, provided there is a prima facie case"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Legal Services Authorities Act, 1987",
+      "The Legal Services Authorities Act, 1987"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 14.7
+  },
+  "legalaid_10": {
+    "id": "legalaid_10",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "As a senior citizen, you may be eligible for free legal aid under the Legal Services Authorities Act, 1987, depending on whether you meet specific criteria such as income limits or other prescribed categories.",
+      "what_this_may_involve": [
+        "Eligibility is determined by Section 12 of the Legal Services Authorities Act, 1987, which sets out criteria including membership of certain communities, women, children, persons with disabilities, and individuals satisfying income limits.",
+        "Entitlement requires the concerned Legal Services Authority to be satisfied that you have a prima facie case to prosecute or defend."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that individuals meeting the criteria under Section 12 are entitled to receive free legal services if they have a prima facie case."
+      ],
+      "suggested_next_steps": [
+        "Submit an affidavit regarding your income or status if required by the authority to establish eligibility."
+      ],
+      "evidence_to_preserve": [
+        "Any income proof or documents verifying your financial status",
+        "Any documents or records relating to the case you need to file or defend"
+      ],
+      "where_to_approach": [
+        "District Legal Services Authority",
+        "Legal Services Clinic"
+      ],
+      "limitations": [
+        "The supplied central statutory material under Section 12 does not explicitly list senior citizens as a distinct standalone category purely based on age, though eligibility may depend on state-level rules, income thresholds, or other circumstances like underserved want.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that individuals meeting the criteria under Section 12 are entitled to receive free legal services if they have a prima facie case."
+      ],
+      "next_steps": [
+        "Submit an affidavit regarding your income or status if required by the authority to establish eligibility."
+      ]
+    },
+    "sources": [
+      "The Legal Services Authorities Act, 1987",
+      "The Legal Services Authorities Act, 1987",
+      "The National Legal Services Authority (Legal Services Clinics) Regulations, 2011",
+      "The Constitution of India"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 16.5
+  },
+  "legalaid_11": {
+    "id": "legalaid_11",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, persons in custody are explicitly entitled to free legal services under Section 12 of the Legal Services Authorities Act, 1987. Therefore, individuals who are arrested may be eligible to avail of such legal aid.",
+      "what_this_may_involve": [
+        "Being in custody as a criterion for qualifying for free legal services",
+        "Fulfillment of eligibility criteria specified under Section 12 of the Legal Services Authorities Act, 1987"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that persons in custody, including within the meaning of relevant statutes, are entitled to legal services provided they meet the criteria under Section 12"
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "Some generated points were not clearly supported by the retrieved sources, so the answer should be treated as limited.",
+        "The retrieved material does not explicitly detail the procedure for persons merely called for questioning unless they fall under custody or other specified eligibility criteria",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that persons in custody, including within the meaning of relevant statutes, are entitled to legal services provided they meet the criteria under Section 12"
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Legal Services Authorities Act, 1987"
+    ],
+    "routing": [
+      "constitutional_public_authority"
+    ],
+    "insufficient_context": false,
+    "seconds": 10.9
+  }
+}

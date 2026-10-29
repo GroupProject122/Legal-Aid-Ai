@@ -37,6 +37,11 @@ Domain expectations:
 - tenancy: enough if landlord/tenant relationship and dispute type are broadly clear. Do not ask state/city.
 - constitutional_public_authority: enough if RTI, public authority action, legal aid, human rights, contempt, or fundamental-rights issue type is broadly clear.
 
+General questions about the law are ALWAYS sufficient: definitions ("who is a consumer?"), who can
+file, where or how to file, fees, time limits, procedure, or what a forum can order. Never ask such
+a user what happened to them. If the user has said their question is general (e.g. "it is a
+general question about what the law says"), it is sufficient: never ask again.
+
 Return only structured JSON.
 """
 
@@ -171,6 +176,11 @@ def record_fact_answer(context: CaseContext, answer: str) -> FactProgress:
         context.no_progress_count = 0
     else:
         context.no_progress_count += 1
+    if declares_general_question(clean_answer):
+        # "It is a general question" is an answer, not a failure to give facts: it ends the
+        # clarification (see deterministic_fact_result), so it must never count towards safe_exit.
+        progress = "meaningful"
+        context.no_progress_count = 0
     if clean_answer:
         context.facts.append(clean_answer)
     safe_exit = progress != "meaningful" and context.no_progress_count >= 2
@@ -270,22 +280,30 @@ def deterministic_fact_result(context: CaseContext) -> FactSufficiencyResult:
     text = " ".join([context.original_message, *context.facts, context.issue_summary or ""]).lower()
     user_text = " ".join([context.original_message, *context.facts]).lower()
     domains = set(context.domains)
+    # A general question about the law ("Who is a consumer?") has no incident to describe, so it
+    # never needs incident facts -- checked before is_too_generic(), which would otherwise ask
+    # "What happened with the product or service?" on the first turn.
+    if is_general_information_question(context.original_message) or any(
+        declares_general_question(turn.answer or "") for turn in context.fact_clarification_history
+    ):
+        return sufficient_result(context)
     if not context.fact_clarification_history and is_too_generic(user_text, domains):
         return fallback_insufficient(context)
     if has_specific_fact_cue(text, domains):
-        summary = build_case_summary(context)
-        return FactSufficiencyResult(
-            status="sufficient",
-            missing_facts=[],
-            needs_fact_clarification=False,
-            question=None,
-            reason=None,
-            normalized_case_summary=summary,
-            provider="deterministic",
-        )
-    if is_too_generic(user_text, domains):
-        return fallback_insufficient(context)
+        return sufficient_result(context)
     return fallback_insufficient(context)
+
+
+def sufficient_result(context: CaseContext) -> FactSufficiencyResult:
+    return FactSufficiencyResult(
+        status="sufficient",
+        missing_facts=[],
+        needs_fact_clarification=False,
+        question=None,
+        reason=None,
+        normalized_case_summary=build_case_summary(context),
+        provider="deterministic",
+    )
 
 
 def apply_fact_safety_overrides(context: CaseContext, result: FactSufficiencyResult) -> FactSufficiencyResult:
@@ -334,7 +352,12 @@ def insufficient_result(reason: str, question: str, missing_facts: list[str] | N
 
 
 def build_case_summary(context: CaseContext) -> str:
-    facts = [sanitize_user_fact(item) for item in context.facts if sanitize_user_fact(item)]
+    # "It is a general question..." is not a fact; left in, it would pollute the retrieval query.
+    facts = [
+        sanitize_user_fact(item)
+        for item in context.facts
+        if sanitize_user_fact(item) and not declares_general_question(item)
+    ]
     combined = " ".join(facts)
     combined = re.sub(r"\s+", " ", combined).strip()
     if len(combined) > 280:
@@ -354,23 +377,32 @@ def avoid_repeated_question(question: str, context: CaseContext) -> str:
     return question
 
 
+GENERIC_ISSUE_PATTERNS = (
+    "consumer complaint karni hai",
+    "consumer issue",
+    "consumer issue hai",
+    "cyber issue",
+    "mera cyber issue",
+    "landlord dispute hai",
+    "rent matter hai",
+    "government authority ke against issue",
+    "government authority ke against issue hai",
+    "public authority problem",
+    "public authority issue",
+    "legal aid issue",
+    "complaint karni hai",
+)
+
+
+def is_generic_issue_statement(text: str) -> bool:
+    """A bare "I have an X issue" ("consumer issue hai", "complaint karni hai") -- names an area
+    but neither an incident nor a question about the law."""
+    lowered = text.lower()
+    return any(pattern in lowered for pattern in GENERIC_ISSUE_PATTERNS)
+
+
 def is_too_generic(text: str, domains: set[str]) -> bool:
-    generic_patterns = (
-        "consumer complaint karni hai",
-        "consumer issue",
-        "consumer issue hai",
-        "cyber issue",
-        "mera cyber issue",
-        "landlord dispute hai",
-        "rent matter hai",
-        "government authority ke against issue",
-        "government authority ke against issue hai",
-        "public authority problem",
-        "public authority issue",
-        "legal aid issue",
-        "complaint karni hai",
-    )
-    if any(pattern in text for pattern in generic_patterns):
+    if is_generic_issue_statement(text):
         return True
     if "consumer" in domains and not contains_any(text, CONSUMER_FACT_CUES):
         return True
@@ -381,6 +413,72 @@ def is_too_generic(text: str, domains: set[str]) -> bool:
     if "constitutional_public_authority" in domains and not contains_any(text, PUBLIC_FACT_CUES):
         return True
     return False
+
+
+INTERROGATIVE_START_RE = re.compile(
+    r"^(?:what|who|whom|whose|which|when|where|how|why|is|are|can|does|do|should|may|must|explain|define|tell me"
+    r"|kya|kaun|kaise|kab|kahan|kitna|kitni|kitne)\b"
+)
+PERSONAL_ADVICE_PHRASES = (
+    "what can i do",
+    "what should i do",
+    "what to do",
+    "my case",
+    "help me",
+    "kya karu",
+    "kya karun",
+    "kya karna chahiye",
+    "mujhe kya",
+    "mera case",
+)
+FIRST_PERSON_RE = re.compile(r"\b(?:i|my|me|we|our|us|mera|meri|mere|mujhe|maine|hum|humne|hamara|hamari)\b")
+PAST_EVENT_RE = re.compile(
+    r"\b(?:bought|ordered|paid|received|lost|was|were|happened|hacked|cheated|blocked|evicted|charged|deducted"
+    r"|purchased|booked|transferred|stolen|scammed|defrauded|refused|rejected|denied"
+    r"|ho gaya|ho gayi|ho gaye|kar diya|kar di|kar diye|nahi diya|nahi di|nahi mila|nahi mili|kat gaya|kat gaye|chale gaye)\b"
+)
+# Only an amount -- a currency sign or word -- not a bare number, since years like 2019 appear
+# in the names of Acts.
+MONEY_RE = re.compile(r"₹|\brs\.?\s*\d|\binr\s*\d|\b(?:rupees?|rupaye|rupay|lakhs?|crores?)\b")
+GENERAL_DECLARATION_PHRASES = (
+    "general question",
+    "general query",
+    "in general",
+    "generally asking",
+    "not about a specific",
+    "just want to know",
+    "just wanted to know",
+    "what the law says",
+    "sirf jaankari",
+    "sirf jankari",
+    "general jaankari",
+    "general jankari",
+)
+
+
+def is_general_information_question(message: str) -> bool:
+    """True for a question about what the law says ("Who is a consumer?", "Is there any fee for
+    mediation?") rather than about the user's own incident. Deliberately narrow: any sign of a
+    personal situation -- asking what *I* should do, first-person narration of something that
+    happened, a money amount -- or a bare "X issue hai" keeps the normal fact check."""
+    text = normalize_text(message).lower()
+    if not text:
+        return False
+    if not (text.endswith("?") or INTERROGATIVE_START_RE.match(text)):
+        return False
+    if len(content_terms(text)) < 2:
+        return False
+    if contains_any(text, PERSONAL_ADVICE_PHRASES) or is_generic_issue_statement(text):
+        return False
+    first_person = FIRST_PERSON_RE.search(text)
+    if first_person and PAST_EVENT_RE.search(text, first_person.end()):
+        return False
+    return not MONEY_RE.search(text)
+
+
+def declares_general_question(answer: str) -> bool:
+    """A clarification reply saying the question is general, not about an incident of the user's."""
+    return contains_any(normalize_text(answer).lower(), GENERAL_DECLARATION_PHRASES)
 
 
 def has_specific_fact_cue(text: str, domains: set[str] | list[str]) -> bool:
