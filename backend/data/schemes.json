@@ -1,0 +1,902 @@
+[
+  {
+    "id": "PM-KISAN",
+    "name": "Pradhan Mantri Kisan Samman Nidhi",
+    "scope": "central",
+    "category": "agriculture",
+    "benefitType": "income_support",
+    "benefits": "₹6,000 per year in three instalments for eligible farmer families.",
+    "eligibilitySummary": "Landholding farmer families that satisfy the scheme's conditions and exclusions.",
+    "eligibilityRules": [
+      {
+        "field": "ownsCultivableLand",
+        "operator": "equals",
+        "value": true
+      },
+      {
+        "field": "institutionalLandholder",
+        "operator": "equals",
+        "value": false
+      },
+      {
+        "field": "excludedUnderPMKisanRules",
+        "operator": "equals",
+        "value": false
+      }
+    ],
+    "requiredQuestions": [
+      "ownsCultivableLand",
+      "institutionalLandholder",
+      "excludedUnderPMKisanRules",
+      "landRecordVerified"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://pmkisan.gov.in/",
+    "sourceUrl": "https://pmkisan.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMUY",
+    "name": "Pradhan Mantri Ujjwala Yojana",
+    "scope": "central",
+    "category": "women_family",
+    "benefitType": "LPG_connection",
+    "benefits": "Deposit-free LPG connection assistance for eligible women and households, subject to scheme terms.",
+    "eligibilitySummary": "A woman aged at least 18 from an eligible poor household, with no existing household LPG connection.",
+    "eligibilityRules": [
+      {
+        "field": "age",
+        "operator": "greaterThanOrEqual",
+        "value": 18
+      },
+      {
+        "field": "gender",
+        "operator": "equals",
+        "value": "female"
+      },
+      {
+        "field": "eligiblePoorHousehold",
+        "operator": "equals",
+        "value": true
+      },
+      {
+        "field": "householdHasLPGConnection",
+        "operator": "equals",
+        "value": false
+      }
+    ],
+    "requiredQuestions": [
+      "age",
+      "gender",
+      "eligiblePoorHousehold",
+      "householdHasLPGConnection"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://www.pmuy.gov.in/",
+    "sourceUrl": "https://www.pmuy.gov.in/ujjwala2.html",
+    "lastVerified": null
+  },
+  {
+    "id": "PMAY-U-2.0",
+    "name": "Pradhan Mantri Awas Yojana - Urban 2.0",
+    "scope": "central",
+    "category": "housing",
+    "benefitType": "housing_assistance",
+    "benefits": "Housing assistance through applicable scheme components for eligible urban households.",
+    "eligibilitySummary": "Eligible urban households in the EWS, LIG or MIG income groups, subject to housing ownership and previous-benefit conditions.",
+    "eligibilityRules": [
+      {
+        "field": "residence",
+        "operator": "equals",
+        "value": "urban"
+      },
+      {
+        "field": "annualFamilyIncome",
+        "operator": "lessThanOrEqual",
+        "value": 900000
+      },
+      {
+        "field": "familyOwnsPuccaHouseInIndia",
+        "operator": "equals",
+        "value": false
+      },
+      {
+        "field": "familyReceivedGovernmentHousingBenefitInLast20Years",
+        "operator": "equals",
+        "value": false
+      }
+    ],
+    "requiredQuestions": [
+      "residence",
+      "annualFamilyIncome",
+      "familyOwnsPuccaHouseInIndia",
+      "familyReceivedGovernmentHousingBenefitInLast20Years"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://pmay-urban.gov.in/",
+    "sourceUrl": "https://pmay-urban.gov.in/uploads/guidelines/Operational-Guidelines-of- PMAY-U-2.pdf",
+    "lastVerified": null
+  },
+  {
+    "id": "PMMY-MUDRA",
+    "name": "Pradhan Mantri MUDRA Yojana",
+    "scope": "central",
+    "category": "business",
+    "benefitType": "business_loan",
+    "benefits": "Loans through participating lenders for eligible non-corporate, non-farm micro and small business activities.",
+    "eligibilitySummary": "Eligible small business owners and entrepreneurs, subject to lender assessment, loan purpose and applicable scheme conditions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "businessActivity",
+      "loanPurpose",
+      "businessType",
+      "existingLoanDetails",
+      "lenderEligibilityAssessment"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://www.mudra.org.in/",
+    "sourceUrl": "https://www.mudra.org.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMJAY",
+    "name": "Ayushman Bharat - Pradhan Mantri Jan Arogya Yojana",
+    "scope": "central",
+    "category": "healthcare",
+    "benefitType": "health_insurance",
+    "benefits": "Cashless hospitalisation cover for eligible beneficiaries at participating hospitals, subject to scheme rules.",
+    "eligibilitySummary": "Eligibility depends on the applicable beneficiary identification rules, official records and any relevant state-specific expansion.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "state",
+      "beneficiaryDatabaseStatus",
+      "stateSchemeEligibility"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmjay.gov.in/",
+    "sourceUrl": "https://pmjay.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMJJBY",
+    "name": "Pradhan Mantri Jeevan Jyoti Bima Yojana",
+    "scope": "central",
+    "category": "insurance",
+    "benefitType": "life_insurance",
+    "benefits": "Life insurance cover of ₹2 lakh, subject to the policy terms and applicable conditions.",
+    "eligibilitySummary": "Eligible individual holders of participating bank or post-office accounts aged 18 to 50 at entry, with the required enrolment consent.",
+    "eligibilityRules": [
+      {
+        "field": "age",
+        "operator": "betweenInclusive",
+        "value": [
+          18,
+          50
+        ]
+      },
+      {
+        "field": "hasParticipatingBankOrPostOfficeAccount",
+        "operator": "equals",
+        "value": true
+      },
+      {
+        "field": "consentsToEnrolmentAndAutoDebit",
+        "operator": "equals",
+        "value": true
+      }
+    ],
+    "requiredQuestions": [
+      "age",
+      "hasParticipatingBankOrPostOfficeAccount",
+      "consentsToEnrolmentAndAutoDebit",
+      "existingEnrolmentDetails"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://jansuraksha.gov.in/",
+    "sourceUrl": "https://jansuraksha.gov.in/Files/PMJJBY/English/Rules.pdf",
+    "lastVerified": null
+  },
+  {
+    "id": "CSSS",
+    "name": "Central Sector Scheme of Scholarship for College and University Students",
+    "scope": "central",
+    "category": "education",
+    "benefitType": "scholarship",
+    "benefits": "Financial assistance for eligible college and university students under the applicable scholarship guidelines.",
+    "eligibilitySummary": "Students meeting the relevant Class XII merit, course, income and other scheme conditions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "educationLevel",
+      "class12Marks",
+      "annualFamilyIncome",
+      "courseType",
+      "otherScholarshipStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://scholarships.gov.in/",
+    "sourceUrl": "https://scholarships.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMMVY",
+    "name": "Pradhan Mantri Matru Vandana Yojana",
+    "scope": "central",
+    "category": "women_family",
+    "benefitType": "maternity_benefit",
+    "benefits": "Maternity benefit for eligible pregnant and lactating women, subject to scheme conditions.",
+    "eligibilitySummary": "Eligible women meeting the applicable pregnancy, childbirth, and beneficiary-category requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "pregnancyOrChildbirthStatus",
+      "numberOfLivingChildren",
+      "eligibleBeneficiaryCategory",
+      "previousMaternityBenefitStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://wcd.gov.in/",
+    "sourceUrl": "https://wcd.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMFBY",
+    "name": "Pradhan Mantri Fasal Bima Yojana",
+    "scope": "central",
+    "category": "agriculture",
+    "benefitType": "crop_insurance",
+    "benefits": "Crop insurance against covered agricultural risks for eligible farmers under notified scheme conditions.",
+    "eligibilitySummary": "Farmers growing notified crops in notified areas and meeting the applicable enrolment requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "state",
+      "district",
+      "season",
+      "crop",
+      "cultivationStatus",
+      "notifiedAreaStatus",
+      "enrolmentDeadlineStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmfby.gov.in/",
+    "sourceUrl": "https://pmfby.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMAY-G",
+    "name": "Pradhan Mantri Awaas Yojana - Gramin",
+    "scope": "central",
+    "category": "housing",
+    "benefitType": "housing_assistance",
+    "benefits": "Financial assistance for eligible rural households to construct a house, subject to scheme guidelines.",
+    "eligibilitySummary": "Rural households identified through the applicable selection and verification process.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "residence",
+      "ruralHousingEligibilityStatus",
+      "existingHouseCondition",
+      "officialBeneficiaryListStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmayg.nic.in/",
+    "sourceUrl": "https://pmayg.nic.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMEGP",
+    "name": "Prime Minister's Employment Generation Programme",
+    "scope": "central",
+    "category": "business",
+    "benefitType": "creditLinkedSubsidy",
+    "benefits": "Credit-linked subsidy support for eligible new micro-enterprise projects.",
+    "eligibilitySummary": "Applicants and projects meeting the current scheme's age, project, activity and other conditions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "age",
+      "newOrExistingEnterprise",
+      "projectType",
+      "projectCost",
+      "educationQualification",
+      "applicantCategory"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://www.kviconline.gov.in/pmegpeportal/",
+    "sourceUrl": "https://www.kviconline.gov.in/pmegpeportal/",
+    "lastVerified": null
+  },
+  {
+    "id": "APY",
+    "name": "Atal Pension Yojana",
+    "scope": "central",
+    "category": "pension",
+    "benefitType": "pension",
+    "benefits": "A contributory pension scheme offering eligible subscribers a pension based on their selected contribution and applicable scheme terms.",
+    "eligibilitySummary": "Eligible Indian citizens aged 18 to 40 who meet the scheme's account, tax-status and other enrolment requirements.",
+    "eligibilityRules": [
+      {
+        "field": "age",
+        "operator": "betweenInclusive",
+        "value": [
+          18,
+          40
+        ]
+      },
+      {
+        "field": "hasSavingsBankOrPostOfficeAccount",
+        "operator": "equals",
+        "value": true
+      }
+    ],
+    "requiredQuestions": [
+      "age",
+      "hasSavingsBankOrPostOfficeAccount",
+      "incomeTaxpayerStatus",
+      "existingAPYSubscription"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://www.pfrda.org.in/",
+    "sourceUrl": "https://www.pfrda.org.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "SSA",
+    "name": "Sukanya Samriddhi Account Scheme",
+    "scope": "central",
+    "category": "women_family",
+    "benefitType": "savings",
+    "benefits": "Government-backed savings account for a girl child, with interest at the rate notified by the government.",
+    "eligibilitySummary": "An account may be opened by a guardian in the name of a girl child before she turns 10, subject to account and family rules.",
+    "eligibilityRules": [
+      {
+        "field": "girlChildAge",
+        "operator": "lessThan",
+        "value": 10
+      },
+      {
+        "field": "girlChildIsResidentIndian",
+        "operator": "equals",
+        "value": true
+      }
+    ],
+    "requiredQuestions": [
+      "girlChildAge",
+      "girlChildIsResidentIndian",
+      "existingSukanyaAccountForChild",
+      "numberOfEligibleGirlChildrenInFamily"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://www.nsiindia.gov.in/",
+    "sourceUrl": "https://www.nsiindia.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMSVANIDHI",
+    "name": "PM Street Vendor's AtmaNirbhar Nidhi",
+    "scope": "central",
+    "category": "business",
+    "benefitType": "working_capital_loan",
+    "benefits": "Working-capital loan support for eligible street vendors under applicable scheme terms.",
+    "eligibilitySummary": "Street vendors meeting the current scheme's identification, vending and application requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "state",
+      "urbanLocalBody",
+      "streetVendorStatus",
+      "certificateOfVendingOrVendorIdentification",
+      "previousLoanStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmsvanidhi.mohua.gov.in/",
+    "sourceUrl": "https://pmsvanidhi.mohua.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMVISHWAKARMA",
+    "name": "PM Vishwakarma",
+    "scope": "central",
+    "category": "business",
+    "benefitType": "artisan_support",
+    "benefits": "Eligible traditional artisans and craftspeople may receive recognition, skill training, toolkit incentives, credit support and other scheme benefits.",
+    "eligibilitySummary": "Traditional artisans working with eligible family-based trades, subject to age, trade, household and other scheme conditions.",
+    "eligibilityRules": [
+      {
+        "field": "age",
+        "operator": "greaterThanOrEqual",
+        "value": 18
+      },
+      {
+        "field": "worksInEligibleTraditionalTrade",
+        "operator": "equals",
+        "value": true
+      }
+    ],
+    "requiredQuestions": [
+      "age",
+      "traditionalTrade",
+      "selfEmployedArtisanStatus",
+      "previousGovernmentCreditSchemeStatus",
+      "familyMemberAlreadyRegistered"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://pmvishwakarma.gov.in/",
+    "sourceUrl": "https://pmvishwakarma.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "ADIP",
+    "name": "Assistance to Persons with Disabilities for Purchase/Fitting of Aids and Appliances",
+    "scope": "central",
+    "category": "disability_support",
+    "benefitType": "assistive_devices",
+    "benefits": "Eligible persons with disabilities may receive approved assistive devices, subject to the scheme's requirements and assistance limits.",
+    "eligibilitySummary": "Applicants meeting disability certification, income, device and other applicable requirements.",
+    "eligibilityRules": [
+      {
+        "field": "disabilityPercentage",
+        "operator": "greaterThanOrEqual",
+        "value": 40
+      }
+    ],
+    "requiredQuestions": [
+      "disabilityPercentage",
+      "hasDisabilityCertificateOrUDID",
+      "monthlyFamilyIncome",
+      "requiredAssistiveDevice",
+      "previousDeviceAssistance"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://depwd.gov.in/en/adip-scheme/",
+    "sourceUrl": "https://depwd.gov.in/en/adip-scheme/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMGKAY",
+    "name": "Pradhan Mantri Garib Kalyan Anna Yojana",
+    "scope": "central",
+    "category": "food_security",
+    "benefitType": "food_grains",
+    "benefits": "Free food grains for eligible beneficiaries covered under the applicable National Food Security Act provisions.",
+    "eligibilitySummary": "Eligible ration-card households and beneficiaries identified under applicable food-security rules.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "state",
+      "hasRationCard",
+      "rationCardCategory",
+      "listedAsNFSAEligibleBeneficiary"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://dfpd.gov.in/",
+    "sourceUrl": "https://dfpd.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMCARES-CHILDREN",
+    "name": "PM CARES for Children Scheme",
+    "scope": "central",
+    "category": "child_welfare",
+    "benefitType": "child_support",
+    "benefits": "Support for eligible children who lost both parents, surviving parent, or legal guardian due to COVID-19, subject to the scheme's specific conditions.",
+    "eligibilitySummary": "Children meeting the scheme's specified COVID-19 orphanhood, age, date and registration requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "dateOfParentalLoss",
+      "ageAtRelevantDate",
+      "parentOrGuardianCircumstances",
+      "officialRegistrationStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmcaresforchildren.in/",
+    "sourceUrl": "https://pmcaresforchildren.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "AICTE-PRAGATI",
+    "name": "AICTE Pragati Scholarship Scheme for Girl Students",
+    "scope": "central",
+    "category": "education",
+    "benefitType": "scholarship",
+    "benefits": "Scholarship assistance for eligible girl students pursuing approved technical diploma or degree programmes.",
+    "eligibilitySummary": "Girl students enrolled in eligible technical programmes, subject to the applicable intake, family income and other guidelines.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "gender",
+      "courseType",
+      "technicalInstitutionApproval",
+      "yearOfStudy",
+      "familyIncome",
+      "scholarshipIntakeEligibility"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://scholarships.gov.in/",
+    "sourceUrl": "https://scholarships.gov.in/All-Scholarships",
+    "lastVerified": null
+  },
+  {
+    "id": "AICTE-SAKSHAM",
+    "name": "AICTE Saksham Scholarship Scheme",
+    "scope": "central",
+    "category": "education",
+    "benefitType": "scholarship",
+    "benefits": "Financial assistance for eligible specially abled students pursuing approved technical diploma or degree programmes.",
+    "eligibilitySummary": "Students meeting the applicable disability, course, institution, income and intake conditions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "disabilityPercentage",
+      "disabilityCertificateStatus",
+      "courseType",
+      "technicalInstitutionApproval",
+      "familyIncome",
+      "yearOfStudy"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://scholarships.gov.in/",
+    "sourceUrl": "https://scholarships.gov.in/All-Scholarships",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-YASASVI-TOP-CLASS",
+    "name": "PM YASASVI Top Class Education Scheme for OBC, EBC and DNT Students",
+    "scope": "central",
+    "category": "education",
+    "benefitType": "scholarship",
+    "benefits": "Education assistance for eligible students under the applicable school or college scheme component.",
+    "eligibilitySummary": "Students belonging to eligible OBC, EBC or DNT groups who meet the relevant education, income and institution requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "socialCategory",
+      "educationLevel",
+      "institutionEligibility",
+      "annualFamilyIncome",
+      "academicYear",
+      "freshOrRenewalApplication"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://scholarships.gov.in/",
+    "sourceUrl": "https://scholarships.gov.in/All-Scholarships",
+    "lastVerified": null
+  },
+  {
+    "id": "TOP-CLASS-SC",
+    "name": "Central Sector Scholarship of Top Class Education for SC Students",
+    "scope": "central",
+    "category": "education",
+    "benefitType": "scholarship",
+    "benefits": "Education assistance for eligible SC students studying in institutions covered by the scheme.",
+    "eligibilitySummary": "SC students meeting the applicable institution, family income, admission and scholarship conditions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "socialCategory",
+      "institutionEligibility",
+      "courseType",
+      "annualFamilyIncome",
+      "admissionStatus",
+      "otherScholarshipStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://scholarships.gov.in/",
+    "sourceUrl": "https://scholarships.gov.in/All-Scholarships",
+    "lastVerified": null
+  },
+  {
+    "id": "NSAP-OLD-AGE",
+    "name": "Indira Gandhi National Old Age Pension Scheme",
+    "scope": "central",
+    "category": "pension",
+    "benefitType": "social_pension",
+    "benefits": "Pension assistance for eligible older persons under the National Social Assistance Programme, with state-specific additions potentially available.",
+    "eligibilitySummary": "Older persons meeting the applicable age, poverty-status, identification and state implementation requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "age",
+      "state",
+      "povertyOrEligibilityStatus",
+      "existingPensionStatus",
+      "beneficiaryIdentificationStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://nsap.nic.in/",
+    "sourceUrl": "https://nsap.nic.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-AJAY",
+    "name": "Pradhan Mantri Anusuchit Jaati Abhyuday Yojana",
+    "scope": "central",
+    "category": "social_welfare",
+    "benefitType": "community_development",
+    "benefits": "Support for eligible community development and socio-economic improvement activities under the scheme's applicable components.",
+    "eligibilitySummary": "Eligibility depends on the particular scheme component, beneficiary group and implementing agency's criteria.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "socialCategory",
+      "state",
+      "district",
+      "beneficiaryType",
+      "schemeComponent"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://socialjustice.gov.in/",
+    "sourceUrl": "https://socialjustice.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-SURYA-GHAR",
+    "name": "PM Surya Ghar: Muft Bijli Yojana",
+    "scope": "central",
+    "category": "energy",
+    "benefitType": "rooftop_solar_subsidy",
+    "benefits": "Central financial assistance for eligible residential rooftop solar installations under scheme guidelines.",
+    "eligibilitySummary": "Indian residential households with a suitable roof and valid electricity connection, subject to scheme conditions and previous subsidy restrictions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "indianCitizen",
+      "hasResidentialElectricityConnection",
+      "ownsOrCanUseSuitableRoof",
+      "electricityDistributionCompany",
+      "previousSolarSubsidyStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmsuryaghar.gov.in/",
+    "sourceUrl": "https://www.myscheme.gov.in/schemes/pmsgmb",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-KMY",
+    "name": "Pradhan Mantri Kisan Maandhan Yojana",
+    "scope": "central",
+    "category": "pension",
+    "benefitType": "farmer_pension",
+    "benefits": "A contributory pension scheme providing an assured pension of ₹3,000 per month to eligible subscribers after reaching the prescribed pension age.",
+    "eligibilitySummary": "Eligible small and marginal farmers aged 18 to 40, with cultivable land up to 2 hectares and subject to exclusion criteria.",
+    "eligibilityRules": [
+      {
+        "field": "age",
+        "operator": "betweenInclusive",
+        "value": [
+          18,
+          40
+        ]
+      },
+      {
+        "field": "cultivableLandHectares",
+        "operator": "lessThanOrEqual",
+        "value": 2
+      }
+    ],
+    "requiredQuestions": [
+      "age",
+      "cultivableLandHectares",
+      "smallOrMarginalFarmerStatus",
+      "pensionSchemeExclusionStatus"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://maandhan.in/",
+    "sourceUrl": "https://eshram.gov.in/Schemes",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-SYM",
+    "name": "Pradhan Mantri Shram Yogi Maandhan",
+    "scope": "central",
+    "category": "pension",
+    "benefitType": "unorganised_worker_pension",
+    "benefits": "A contributory pension scheme offering eligible unorganised workers an assured pension of ₹3,000 per month after age 60, subject to scheme terms.",
+    "eligibilitySummary": "Eligible unorganised workers aged 18 to 40 with monthly income within the prescribed limit and meeting other conditions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "age",
+      "monthlyIncome",
+      "unorganisedWorkerStatus",
+      "incomeTaxpayerStatus",
+      "existingEligiblePensionMembership"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://maandhan.in/",
+    "sourceUrl": "https://labour.gov.in/pm-sym",
+    "lastVerified": null
+  },
+  {
+    "id": "MGNREGA",
+    "name": "Mahatma Gandhi National Rural Employment Guarantee Act Scheme",
+    "scope": "central",
+    "category": "employment",
+    "benefitType": "rural_wage_employment",
+    "benefits": "Provides a legal guarantee of up to 100 days of wage employment per financial year to eligible rural households, subject to the Act and applicable rules.",
+    "eligibilitySummary": "Rural households whose adult members are willing to undertake unskilled manual work and meet registration and job-card requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "residence",
+      "ruralHouseholdStatus",
+      "adultMembersWillingToWork",
+      "jobCardStatus"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://nrega.nic.in/",
+    "sourceUrl": "https://nrega.nic.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "NSAP-NFBS",
+    "name": "National Family Benefit Scheme",
+    "scope": "central",
+    "category": "social_welfare",
+    "benefitType": "family_assistance",
+    "benefits": "One-time financial assistance to an eligible household following the death of its primary breadwinner, subject to scheme rules.",
+    "eligibilitySummary": "Eligible households meeting the applicable poverty, age, breadwinner and state implementation requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "state",
+      "householdEligibilityStatus",
+      "deceasedPersonAge",
+      "primaryBreadwinnerStatus",
+      "dateOfDeath"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://nsap.nic.in/",
+    "sourceUrl": "https://nsap.nic.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-POSHAN",
+    "name": "PM POSHAN Scheme",
+    "scope": "central",
+    "category": "education",
+    "benefitType": "school_meals",
+    "benefits": "Nutritional support through school meals for eligible children in covered schools.",
+    "eligibilitySummary": "Children enrolled in eligible government and government-aided schools covered by the scheme, subject to applicable guidelines.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "schoolEnrollmentStatus",
+      "schoolManagementType",
+      "schoolCoverageStatus",
+      "classOrEducationLevel"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmposhan.education.gov.in/",
+    "sourceUrl": "https://pmposhan.education.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PMKVY",
+    "name": "Pradhan Mantri Kaushal Vikas Yojana",
+    "scope": "central",
+    "category": "skills_employment",
+    "benefitType": "skill_training",
+    "benefits": "Skill training and certification opportunities through approved programmes and training providers.",
+    "eligibilitySummary": "Eligibility depends on the specific training course, candidate profile, and current programme guidelines.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "age",
+      "educationLevel",
+      "employmentStatus",
+      "preferredSkill",
+      "courseAvailability",
+      "trainingProviderEligibility"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://www.msde.gov.in/",
+    "sourceUrl": "https://www.myscheme.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-VISHWAKARMA-VERIFIED",
+    "name": "PM Vishwakarma",
+    "scope": "central",
+    "category": "business",
+    "benefitType": "artisan_support",
+    "benefits": "Eligible artisans can receive recognition, skill training, toolkit incentives, credit support and marketing assistance.",
+    "eligibilitySummary": "Adults engaged in one of the 18 notified traditional trades, subject to self-employment, family, previous-loan and other scheme conditions.",
+    "eligibilityRules": [
+      {
+        "field": "age",
+        "operator": "greaterThanOrEqual",
+        "value": 18
+      },
+      {
+        "field": "worksInEligibleTraditionalTrade",
+        "operator": "equals",
+        "value": true
+      },
+      {
+        "field": "governmentEmployeeOrFamilyMember",
+        "operator": "equals",
+        "value": false
+      }
+    ],
+    "requiredQuestions": [
+      "age",
+      "traditionalTrade",
+      "selfEmployedArtisanStatus",
+      "previousSimilarGovernmentLoan",
+      "familyMemberAlreadyRegistered",
+      "governmentEmployeeOrFamilyMember"
+    ],
+    "eligibilityStatus": "needs_verification",
+    "officialUrl": "https://pmvishwakarma.gov.in/",
+    "sourceUrl": "https://www.myscheme.gov.in/schemes/pmv",
+    "lastVerified": null
+  },
+  {
+    "id": "MUDRA",
+    "name": "Pradhan Mantri MUDRA Yojana",
+    "scope": "central",
+    "category": "business",
+    "benefitType": "business_loan",
+    "benefits": "Collateral-free institutional credit for eligible micro-enterprise activities. Loan categories include Shishu, Kishore, Tarun and Tarun Plus, subject to applicable terms.",
+    "eligibilitySummary": "Eligible micro-enterprises and entrepreneurs assessed by participating lending institutions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "businessActivity",
+      "loanPurpose",
+      "businessType",
+      "requestedLoanAmount",
+      "previousTarunLoanRepaymentStatus",
+      "lenderAssessment"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://financialservices.gov.in/pradhan-mantri-mudra-yojana-pmmy",
+    "sourceUrl": "https://financialservices.gov.in/pradhan-mantri-mudra-yojana-pmmy",
+    "lastVerified": null
+  },
+  {
+    "id": "PM-SURAJ",
+    "name": "PM-SURAJ National Portal for Credit Support",
+    "scope": "central",
+    "category": "business",
+    "benefitType": "credit_support",
+    "benefits": "Credit-support access for eligible disadvantaged entrepreneurs through participating institutions and applicable programmes.",
+    "eligibilitySummary": "Eligibility depends on the credit product, applicant category, business proposal and participating institution's conditions.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "socialCategory",
+      "businessActivity",
+      "loanPurpose",
+      "requestedLoanAmount",
+      "participatingInstitutionCriteria"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://pmsuraj.dosje.gov.in/",
+    "sourceUrl": "https://pmsuraj.dosje.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "NAPS",
+    "name": "National Apprenticeship Promotion Scheme",
+    "scope": "central",
+    "category": "skills_employment",
+    "benefitType": "apprenticeship",
+    "benefits": "Apprenticeship opportunities and applicable government support under the current programme guidelines.",
+    "eligibilitySummary": "Candidates and establishments must meet the applicable apprenticeship, trade, age and contract requirements.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "age",
+      "educationLevel",
+      "tradeOrOccupation",
+      "apprenticeshipContractStatus",
+      "establishmentEligibility"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://www.apprenticeshipindia.gov.in/",
+    "sourceUrl": "https://www.apprenticeshipindia.gov.in/",
+    "lastVerified": null
+  },
+  {
+    "id": "ESHRAM",
+    "name": "e-Shram Portal",
+    "scope": "central",
+    "category": "worker_welfare",
+    "benefitType": "worker_registration",
+    "benefits": "Registration of eligible unorganised workers in the national database to facilitate access to relevant social-security schemes.",
+    "eligibilitySummary": "Unorganised workers who meet current registration conditions. Registration itself does not automatically confer every linked scheme benefit.",
+    "eligibilityRules": [],
+    "requiredQuestions": [
+      "age",
+      "occupation",
+      "organisedSectorEmploymentStatus",
+      "incomeTaxpayerStatus",
+      "existingEShramRegistration"
+    ],
+    "eligibilityStatus": "manual_review",
+    "officialUrl": "https://eshram.gov.in/",
+    "sourceUrl": "https://eshram.gov.in/",
+    "lastVerified": null
+  }
+]
