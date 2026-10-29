@@ -30,6 +30,7 @@ import domain_router
 import fact_sufficiency
 import grounded_answer
 import legal_aid_eligibility
+import schemes_matcher
 import legal_education
 import query_normalizer
 import scam_checker
@@ -78,6 +79,9 @@ async def lifespan(_app: FastAPI):
         legal_education.get_index()
     except Exception:
         logger.exception("Legal education index failed to build during startup")
+    # Schemes data (validated by scripts/clean_schemes.py): loaded once, here, so a missing or
+    # broken file shows up at startup rather than on someone's first search.
+    schemes_matcher.load_schemes()
     yield
 
 
@@ -619,6 +623,32 @@ async def legal_aid_eligibility_endpoint(request: Request) -> JSONResponse:
             content={"detail": "Some answers need fixing.", "errors": legal_aid_eligibility.validation_errors(exc)},
         )
     return JSONResponse(content=legal_aid_eligibility.check_eligibility(answers).to_dict())
+
+
+@app.get("/api/schemes/areas")
+def schemes_areas() -> dict:
+    return schemes_matcher.areas_payload()
+
+
+@app.post("/api/schemes/match")
+async def schemes_match_endpoint(request: Request) -> JSONResponse:
+    # Parsed by hand like /api/legal-aid/eligibility: the answers (age, income, social category)
+    # must not reach the global validation-error handler, which logs pydantic's error text. Nothing
+    # here is logged or stored.
+    try:
+        payload = json.loads(await request.body() or b"{}")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    if not isinstance(payload, dict):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    try:
+        answers = schemes_matcher.MatchRequest.model_validate(payload)
+    except ValidationError as exc:
+        return JSONResponse(
+            status_code=422,
+            content={"detail": "Some answers need fixing.", "errors": schemes_matcher.validation_errors(exc)},
+        )
+    return JSONResponse(content=schemes_matcher.match(answers))
 
 
 @app.get("/api/corpus/file")
