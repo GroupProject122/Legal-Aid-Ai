@@ -48,6 +48,17 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Home page background on Free Legal Aid Check, Check a Message and Helplines (2026-10-29)
+
+These three pages now use exactly Home's background: `ask-page-bg.png`, `cover`, centred,
+`background-attachment: fixed`, `#f3e6cd` fallback, and the decorative SVG watermarks hidden, as
+on Home. Done by adding `.legal-aid-page-panel`, `.scam-check-page-panel` and
+`.helplines-page-panel` to the existing shared rule that Schemes and About already use for the
+same image (`frontend/src/styles.css`); no styles copied, no other page's background changed. The
+cards keep their own backgrounds, so text and form fields read the same as on Home. Checked in
+headless Chrome: computed background identical to Home on all three pages; Documents unchanged;
+readable at 1366 px and 390 px in light and dark; no horizontal scroll.
+
 ## Unreleased — General questions about the law no longer get asked "what happened?" (2026-10-29)
 
 **Problem (Set 1 official-FAQ evaluation, `4parameters_test`).** General questions about the law

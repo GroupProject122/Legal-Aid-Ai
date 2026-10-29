@@ -1885,8 +1885,12 @@ body.has-custom-cursor textarea {
   display: none;
 }
 
+/* Same background image and styling as Home (.home-page-panel). */
 .schemes-page-panel,
-.about-page-panel {
+.about-page-panel,
+.legal-aid-page-panel,
+.scam-check-page-panel,
+.helplines-page-panel {
   background-color: #f3e6cd;
   background-image: url('/ask-page-bg.png');
   background-size: cover;
@@ -1896,7 +1900,10 @@ body.has-custom-cursor textarea {
 }
 
 .schemes-page-panel .documents-background-art,
-.about-page-panel .documents-background-art {
+.about-page-panel .documents-background-art,
+.legal-aid-page-panel .documents-background-art,
+.scam-check-page-panel .documents-background-art,
+.helplines-page-panel .documents-background-art {
   display: none;
 }
 
