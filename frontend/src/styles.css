@@ -8331,6 +8331,79 @@ body.has-custom-cursor textarea {
   font-style: italic;
 }
 
+.schemes-quick {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 249, 238, 0.9);
+  border: 1px dashed rgba(179, 125, 57, 0.45);
+  border-radius: 10px;
+}
+
+.schemes-quick-title {
+  color: var(--mocha);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.schemes-quick-row {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.schemes-quick-row > label,
+.schemes-quick-row > legend {
+  padding: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.schemes-quick-row input[inputmode] {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 11px;
+  color: var(--mocha);
+  background: rgba(255, 252, 245, 0.95);
+  border: 1px solid rgba(179, 125, 57, 0.35);
+  border-radius: 9px;
+  font: inherit;
+}
+
+.schemes-quick-row input[inputmode]:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 1px;
+}
+
+.schemes-quick .schemes-pill {
+  padding: 6px 12px;
+  font-size: 0.88rem;
+}
+
+.schemes-quick-submit {
+  justify-self: start;
+}
+
+.schemes-quick-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.schemes-authority {
+  display: grid;
+  gap: 4px;
+  font-size: 0.88rem;
+}
+
+.schemes-authority strong {
+  color: var(--mocha);
+}
+
 .schemes-empty {
   margin: 10px 0 0;
   color: rgba(63, 40, 22, 0.7);

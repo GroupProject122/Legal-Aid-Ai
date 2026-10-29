@@ -69,3 +69,30 @@ export function matchSchemes(answers, areas) {
     body: JSON.stringify(buildMatchRequest(answers, areas))
   });
 }
+
+/**
+ * Answers for re-checking one scheme: the step-1 answers plus the card's quick-question answers
+ * (yes/no as true/false, numbers parsed; unanswered questions are left out).
+ */
+export function buildCheckAnswers(profileAnswers, cardAnswers, questions) {
+  const { areas: _areas, socialCategory: _category, occupation: _occupation, ...profile } = buildMatchRequest(profileAnswers, []);
+  const answers = { ...profile };
+  for (const question of questions) {
+    const raw = cardAnswers[question.field];
+    if (raw === undefined || raw === '') continue;
+    if (question.type === 'yes_no') answers[question.field] = raw === 'yes';
+    else if (question.type === 'number') {
+      const cleaned = String(raw).replace(/[,\s₹%]/g, '');
+      if (/^\d+(\.\d+)?$/.test(cleaned)) answers[question.field] = Number(cleaned);
+    } else answers[question.field] = raw;
+  }
+  return answers;
+}
+
+export function checkScheme(schemeId, answers) {
+  return request('/api/schemes/check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ schemeId, answers })
+  });
+}

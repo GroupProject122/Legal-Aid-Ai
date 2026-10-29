@@ -90,12 +90,36 @@ def test_all_rules_pass_is_likely_eligible(monkeypatch):
     assert "you are between 18 and 40 years old" in item["reason"]
 
 
-def test_unknown_fields_give_might_be_eligible_with_what_will_be_checked(monkeypatch):
-    monkeypatch.setattr(sm, "load_schemes", lambda: (scheme([rule("age", "greaterThanOrEqual", 18), rule("ownsCultivableLand", "equals", True)]),))
+def test_unknown_fields_give_might_be_eligible_with_questions_and_authority_checks(monkeypatch):
+    monkeypatch.setattr(sm, "load_schemes", lambda: (scheme([
+        rule("age", "greaterThanOrEqual", 18),
+        rule("ownsCultivableLand", "equals", True),            # the person can answer this
+        rule("excludedUnderPMKisanRules", "equals", False),     # only the authority can judge this
+    ]),))
     item = match(age=30)["results"][0]
     assert item["group"] == "might_be_eligible"
-    assert item["alsoCheck"] == ["you own cultivable land"]
-    assert "The authority will also check: you own cultivable land" in item["reason"]
+    assert [q["field"] for q in item["questions"]] == ["ownsCultivableLand"]
+    assert item["questions"][0]["question"] == "Do you own cultivable (farm) land?"
+    assert item["questions"][0]["type"] == "yes_no"
+    assert item["alsoCheck"] == ["you do not fall in any group excluded under the PM-KISAN rules"]
+    assert item["authorityChecks"][0]["explanation"]
+    assert "Answer the quick questions below" in item["reason"]
+    assert "can only be checked by the authority" in item["reason"]
+    assert item["authorityChecks"][0]["condition"] == "you do not fall in any group excluded under the PM-KISAN rules"
+
+
+def test_every_rule_field_is_either_answerable_or_left_to_the_authority():
+    fields = {r["field"] for s in sm.load_schemes() for r in s["eligibilityRules"]}
+    assert fields <= set(sm.ANSWERABLE) | set(sm.AUTHORITY_ONLY)
+    assert not set(sm.ANSWERABLE) & set(sm.AUTHORITY_ONLY)
+    assert set(sm.AUTHORITY_ONLY) == {"excludedUnderPMKisanRules", "eligiblePoorHousehold",
+                                      "hasParticipatingBankOrPostOfficeAccount", "worksInEligibleTraditionalTrade"}
+
+
+def test_only_schemes_without_authority_only_conditions_can_become_likely():
+    reachable = sorted(s["id"] for s in sm.load_schemes()
+                       if s["eligibilityRules"] and all(r["field"] in sm.ANSWERABLE for r in s["eligibilityRules"]))
+    assert reachable == ["ADIP", "APY", "PM-KMY", "PMAY-U-2.0", "SSA"]
 
 
 def test_one_failing_rule_hides_the_scheme(monkeypatch):
@@ -146,7 +170,8 @@ def test_rural_woman_25_ujjwala_is_might_not_likely():
     result = match(age=25, gender="female", residence="rural", annualFamilyIncome=150000)
     ujjwala = by_id(result, "PMUY")
     assert ujjwala["group"] == "might_be_eligible"
-    assert "no one in your household already has an LPG connection" in ujjwala["alsoCheck"]
+    assert [q["field"] for q in ujjwala["questions"]] == ["householdHasLPGConnection"]
+    assert ujjwala["alsoCheck"] == ["your household is an eligible poor household under the scheme"]
     assert by_id(result, "PMAY-U-2.0")["group"] == "not_eligible"  # urban-only
 
 
@@ -227,3 +252,58 @@ def test_social_category_and_occupation_stay_optional_and_change_nothing():
     with_extra = match(age=30, gender="female", residence="rural", annualFamilyIncome=150000, socialCategory="st", occupation="farmer")
     assert [(r["id"], r["group"]) for r in with_extra["results"]] == [(r["id"], r["group"]) for r in base["results"]]
     assert client.post(URL, json={"socialCategory": "obc", "occupation": "artisan"}).status_code == 200
+
+
+# --- quick questions: POST /api/schemes/check -------------------------------------------------
+
+CHECK = "/api/schemes/check"
+URBAN_MAN = {"age": 30, "gender": "male", "residence": "urban", "annualFamilyIncome": 600000}
+
+
+def test_answering_the_quick_questions_makes_pmay_urban_likely():
+    answers = {**URBAN_MAN, "familyOwnsPuccaHouseInIndia": False, "familyReceivedGovernmentHousingBenefitInLast20Years": False}
+    item = client.post(CHECK, json={"schemeId": "PMAY-U-2.0", "answers": answers}).json()
+    assert item["group"] == "likely_eligible"
+    assert item["questions"] == [] and item["authorityChecks"] == []
+
+
+def test_a_failing_quick_answer_makes_the_scheme_not_eligible_with_the_reason():
+    item = client.post(CHECK, json={"schemeId": "PMAY-U-2.0", "answers": {**URBAN_MAN, "familyOwnsPuccaHouseInIndia": True}}).json()
+    assert item["group"] == "not_eligible"
+    assert "your family does not own a pucca house anywhere in India (you said yes)" in item["reason"]
+
+
+def test_number_quick_questions_use_the_same_rule_and_edges():
+    ok = client.post(CHECK, json={"schemeId": "PM-KMY", "answers": {"age": 40, "cultivableLandHectares": 2}}).json()
+    too_much = client.post(CHECK, json={"schemeId": "PM-KMY", "answers": {"age": 40, "cultivableLandHectares": 2.5}}).json()
+    assert ok["group"] == "likely_eligible"
+    assert too_much["group"] == "not_eligible"
+
+
+def test_authority_only_conditions_keep_a_scheme_at_might_even_when_every_question_is_answered():
+    item = client.post(CHECK, json={"schemeId": "PMUY", "answers": {"age": 25, "gender": "female", "householdHasLPGConnection": False}}).json()
+    assert item["group"] == "might_be_eligible"
+    assert item["questions"] == []
+    assert [c["condition"] for c in item["authorityChecks"]] == ["your household is an eligible poor household under the scheme"]
+
+
+def test_check_rejects_bad_answers_and_unknown_schemes():
+    assert client.post(CHECK, json={"schemeId": "NOPE", "answers": {}}).status_code == 404
+    for answers in ({"eligiblePoorHousehold": True}, {"ownsCultivableLand": "yes"}, {"disabilityPercentage": 140}, {"gender": "x"}):
+        response = client.post(CHECK, json={"schemeId": "PM-KISAN", "answers": answers})
+        assert response.status_code == 422, answers
+    assert client.post(CHECK, json={"answers": {}}).status_code == 422
+
+
+def test_check_is_not_logged_or_stored(monkeypatch, caplog):
+    def no_db(*_args, **_kwargs):
+        raise AssertionError("schemes check tried to open a database")
+
+    monkeypatch.setattr(sqlite3, "connect", no_db)
+    with caplog.at_level(logging.DEBUG):
+        ok = client.post(CHECK, json={"schemeId": "ADIP", "answers": {"disabilityPercentage": 73}})
+        bad = client.post(CHECK, json={"schemeId": "ADIP", "answers": {"disabilityPercentage": 173}})
+    assert ok.status_code == 200 and ok.json()["group"] == "likely_eligible"
+    assert bad.status_code == 422 and "173" not in bad.text
+    app_records = [record for record in caplog.records if record.name.split(".")[0] not in ("httpx", "asyncio")]
+    assert app_records == []

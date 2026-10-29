@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { buildMatchRequest, parseWholeNumber } from './api.js';
+import { buildCheckAnswers, buildMatchRequest, parseWholeNumber } from './api.js';
 
 test('skipped questions are left out of the request', () => {
   assert.deepEqual(buildMatchRequest({ age: '', gender: '', residence: 'rural', annualFamilyIncome: '' }, []), {
@@ -31,4 +31,18 @@ test('step 1 asks only the four questions that scheme rules use', async () => {
   assert.deepEqual(Object.keys(EMPTY_ANSWERS).sort(), [...STEP1_FIELDS].sort());
   // The API still takes the other two if they are ever sent.
   assert.deepEqual(buildMatchRequest({ socialCategory: 'sc', occupation: 'farmer' }, []), { socialCategory: 'sc', occupation: 'farmer', areas: [] });
+});
+
+test('quick-question answers: yes/no become true/false, numbers are parsed, blanks are left out', () => {
+  const questions = [
+    { field: 'familyOwnsPuccaHouseInIndia', type: 'yes_no' },
+    { field: 'cultivableLandHectares', type: 'number' },
+    { field: 'residence', type: 'choice' },
+    { field: 'girlChildAge', type: 'number' }
+  ];
+  assert.deepEqual(
+    buildCheckAnswers({ age: '30', annualFamilyIncome: '6,00,000', gender: '', residence: '' },
+      { familyOwnsPuccaHouseInIndia: 'no', cultivableLandHectares: '1.5', residence: 'urban', girlChildAge: '' }, questions),
+    { age: 30, annualFamilyIncome: 600000, familyOwnsPuccaHouseInIndia: false, cultivableLandHectares: 1.5, residence: 'urban' }
+  );
 });

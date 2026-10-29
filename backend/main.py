@@ -651,6 +651,29 @@ async def schemes_match_endpoint(request: Request) -> JSONResponse:
     return JSONResponse(content=schemes_matcher.match(answers))
 
 
+@app.post("/api/schemes/check")
+async def schemes_check_endpoint(request: Request) -> JSONResponse:
+    # One scheme re-checked with the quick-question answers from its card. Parsed by hand and never
+    # logged or stored, like /api/schemes/match.
+    try:
+        payload = json.loads(await request.body() or b"{}")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    if not isinstance(payload, dict):
+        return JSONResponse(status_code=422, content={"detail": "The request format is invalid.", "errors": []})
+    try:
+        check = schemes_matcher.CheckRequest.model_validate(payload)
+    except ValidationError as exc:
+        return JSONResponse(
+            status_code=422,
+            content={"detail": "Some answers need fixing.", "errors": schemes_matcher.validation_errors(exc)},
+        )
+    result = schemes_matcher.check_scheme(check)
+    if result is None:
+        return JSONResponse(status_code=404, content={"detail": "That scheme was not found."})
+    return JSONResponse(content=result)
+
+
 @app.get("/api/corpus/file")
 def corpus_source_file(source: str) -> FileResponse:
     """Open a corpus PDF that an answer cited (the "Open full PDF" button in the source viewer),

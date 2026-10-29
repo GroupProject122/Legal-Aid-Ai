@@ -48,6 +48,51 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Schemes: quick questions make "Likely eligible" reachable (2026-10-29)
+
+On each "You might be eligible" card, the unknown conditions a person can answer for themselves
+become quick questions (yes/no, a number, or a choice). "Check this scheme" re-evaluates that one
+scheme with its unchanged rules (new `POST /api/schemes/check`, same three-valued evaluation,
+nothing logged or stored), and the card moves to "Likely eligible", stays "might", or moves to
+"Not eligible" with the reason ("... (you said yes)"). A screen-reader announcement says where it
+went. No rule or value was changed; only how unknown conditions are presented.
+
+**Answerable** (`ANSWERABLE` in `backend/schemes_matcher.py`):
+- PM-KISAN: own cultivable land; land held by an institution.
+- Ujjwala: household already has an LPG connection.
+- PMAY-U 2.0: family owns a pucca house in India; government housing benefit in the last 20
+  years.
+- PMJJBY: willing to enrol with auto-debit.
+- APY: savings bank or post-office account.
+- SSA: girl child's age (number); girl child resident in India.
+- ADIP: disability percentage on the certificate (number).
+- PM-KMY: cultivable land in hectares (number).
+- PM Vishwakarma: you or a family member is a government employee.
+- The four step-1 fields, if skipped there: age, income, gender, rural/urban.
+
+**Left for the authority** (`AUTHORITY_ONLY`, shown under "The authority will also check" with a
+short explanation each; any new rule field defaults here):
+- PM-KISAN exclusion groups;
+- Ujjwala's "eligible poor household";
+- PMJJBY's participating bank or post office;
+- PM Vishwakarma's notified traditional trades.
+
+**Effect:** PMAY-U 2.0, APY, SSA, ADIP and PM-KMY can now reach "Likely eligible". PM-KISAN,
+Ujjwala, PMJJBY and PM Vishwakarma stay at "might" at best, because one condition is always the
+authority's. The 25 schemes with no rules are unchanged ("check with the authority").
+
+**Tests:** `tests/test_schemes_matcher.py` (+9): questions vs authority checks; every rule field
+is in one table; the reachable set; quick answers move PMAY-U 2.0 to likely and a "yes" on
+pucca house to not eligible; number edges (PM-KMY 2 vs 2.5 ha); authority-only keeps Ujjwala at
+might; bad answers 422, unknown scheme 404; not logged or stored. `api.test.js` (+1) covers how
+answers are built. Backend 951 passed, `npm test` 28.
+
+**Checked in headless Chrome:** the three spot-check profiles as before. For a 30-year-old urban
+man earning Rs 6,00,000, answering "No" to PMAY-U 2.0's two questions moves it to "Likely
+eligible", and "No" to APY's savings-account question moves APY to "Not eligible" with the reason.
+Helplines shows Tele-Law and e-Jagriti. Phone width and dark mode were checked, there were no
+page errors, and every page loads.
+
 ## Unreleased — Schemes: step 1 asks only the questions the rules use (2026-10-29)
 
 Social category and occupation are no longer asked on the Schemes page: no scheme rule uses

@@ -77,6 +77,30 @@ class MatchRequest(BaseModel):
         return value
 
 
+class CheckRequest(BaseModel):
+    """Re-check one scheme with the quick-question answers added (POST /api/schemes/check)."""
+    model_config = ConfigDict(extra="forbid")
+
+    schemeId: str = Field(min_length=1, max_length=80)
+    answers: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("answers")
+    @classmethod
+    def check_answers(cls, value: dict[str, Any]) -> dict[str, Any]:
+        for field, answer in value.items():
+            spec = ANSWERABLE.get(field)
+            if spec is None:
+                raise ValueError("One of the answers is not a question this page asks.")
+            if spec["type"] == "yes_no" and not isinstance(answer, bool):
+                raise ValueError("Answer yes or no.")
+            if spec["type"] == "choice" and answer not in {option["value"] for option in spec["options"]}:
+                raise ValueError("This answer is not one of the allowed options.")
+            if spec["type"] == "number":
+                if isinstance(answer, bool) or not isinstance(answer, (int, float)) or not spec["min"] <= answer <= spec["max"]:
+                    raise ValueError("Enter a number in the allowed range.")
+        return value
+
+
 def validation_errors(exc: ValidationError) -> list[dict[str, str]]:
     """Field-level errors built from loc + type only, never from the submitted input."""
     errors = []
@@ -130,6 +154,41 @@ EQUALS_CONDITIONS = {
     ("residence", "urban"): "you live in an urban area",
     ("residence", "rural"): "you live in a rural area",
 }
+
+# Conditions a person can answer for themselves, asked on "You might be eligible" cards as quick
+# questions. Answering re-evaluates the scheme with its unchanged rules (POST /api/schemes/check).
+# type: yes_no (bool), number (with min/max/step), choice (one of options).
+ANSWERABLE = {
+    "age": {"question": "How old are you?", "type": "number", "unit": "years", "min": 0, "max": 120, "step": 1},
+    "annualFamilyIncome": {"question": "What is your family's yearly income, in rupees?", "type": "number", "unit": "rupees", "min": 0, "max": 1_000_000_000, "step": 1},
+    "gender": {"question": "Is the applicant a woman, a man, or other?", "type": "choice",
+               "options": [{"value": "female", "label": "Woman"}, {"value": "male", "label": "Man"}, {"value": "other", "label": "Other"}]},
+    "residence": {"question": "Do you live in a village/rural area or a town/city?", "type": "choice",
+                  "options": [{"value": "rural", "label": "Village / rural area"}, {"value": "urban", "label": "Town or city"}]},
+    "ownsCultivableLand": {"question": "Do you own cultivable (farm) land?", "type": "yes_no"},
+    "institutionalLandholder": {"question": "Is the land held by an institution rather than by you or your family?", "type": "yes_no"},
+    "householdHasLPGConnection": {"question": "Does your household already have an LPG connection?", "type": "yes_no"},
+    "familyOwnsPuccaHouseInIndia": {"question": "Does anyone in your family own a pucca (permanent) house anywhere in India?", "type": "yes_no"},
+    "familyReceivedGovernmentHousingBenefitInLast20Years": {"question": "Has your family received a government housing scheme benefit in the last 20 years?", "type": "yes_no"},
+    "consentsToEnrolmentAndAutoDebit": {"question": "Are you willing to enrol and have the yearly premium auto-debited from your account?", "type": "yes_no"},
+    "hasSavingsBankOrPostOfficeAccount": {"question": "Do you have a savings account in a bank or post office?", "type": "yes_no"},
+    "girlChildAge": {"question": "How old is the girl child, in years?", "type": "number", "unit": "years", "min": 0, "max": 30, "step": 1},
+    "girlChildIsResidentIndian": {"question": "Is the girl child a resident of India?", "type": "yes_no"},
+    "disabilityPercentage": {"question": "What disability percentage is on your disability certificate?", "type": "number", "unit": "%", "min": 0, "max": 100, "step": 1},
+    "cultivableLandHectares": {"question": "How much cultivable land do you have, in hectares?", "type": "number", "unit": "hectares", "min": 0, "max": 100000, "step": 0.01},
+    "governmentEmployeeOrFamilyMember": {"question": "Are you or a member of your family a government employee?", "type": "yes_no"},
+}
+
+# Conditions only the authority can judge -- they depend on official criteria, lists or records the
+# person can't check from home. Shown as "The authority will also check: ..." with a short reason.
+# Any rule field in neither table is treated as authority-only too.
+AUTHORITY_ONLY = {
+    "excludedUnderPMKisanRules": "PM-KISAN leaves out certain groups under its own rules; officials check this against records when you apply.",
+    "eligiblePoorHousehold": "Which households count as eligible poor households is decided by the scheme's own criteria and official lists.",
+    "hasParticipatingBankOrPostOfficeAccount": "Only accounts with banks or post offices that take part in the scheme qualify; your bank or post office can confirm.",
+    "worksInEligibleTraditionalTrade": "Only the trades notified under the scheme qualify; the authority checks your trade against that list.",
+}
+DEFAULT_AUTHORITY_EXPLANATION = "This depends on official criteria or records that the authority checks."
 
 ACRONYMS = {"lpg": "LPG", "udid": "UDID", "nfsa": "NFSA", "apy": "APY", "pm": "PM", "kisan": "KISAN", "e": "e",
             "shram": "Shram", "eshram": "e-Shram", "sukanya": "Sukanya", "tarun": "Tarun", "india": "India", "indian": "Indian"}
@@ -212,8 +271,13 @@ def condition_text(rule: dict[str, Any]) -> str:
 
 
 def answer_text(field: str, answer: Any) -> str:
+    if isinstance(answer, bool):
+        return "yes" if answer else "no"
     if field in NUMERIC_SUBJECTS:
         return format_value(field, answer)
+    for option in ANSWERABLE.get(field, {}).get("options", []):
+        if option["value"] == answer:
+            return option["label"].lower()
     return str(answer)
 
 
@@ -251,6 +315,8 @@ def match_scheme(scheme: dict[str, Any], answers: dict[str, Any]) -> dict[str, A
     passed = [rule for rule, outcome in outcomes if outcome == "pass"]
     unknown = [rule for rule, outcome in outcomes if outcome == "unknown"]
     also_check: list[str] = []
+    questions: list[dict[str, Any]] = []
+    authority_checks: list[dict[str, str]] = []
     if not rules:
         group = "check_with_authority"
         # The summary itself is a separate field (eligibilitySummary), shown next to this.
@@ -262,9 +328,25 @@ def match_scheme(scheme: dict[str, Any], answers: dict[str, Any]) -> dict[str, A
         ) + "."
     elif unknown:
         group = "might_be_eligible"
-        also_check = [condition_text(rule) for rule in unknown]
-        met = f" Your answers meet: {'; '.join(condition_text(rule) for rule in passed)}." if passed else ""
-        reason = f"Nothing in your answers rules this out.{met} The authority will also check: {'; '.join(also_check)}."
+        for rule in unknown:
+            if rule["field"] in ANSWERABLE:
+                if rule["field"] not in {question["field"] for question in questions}:
+                    questions.append({"field": rule["field"], **ANSWERABLE[rule["field"]]})
+            else:
+                authority_checks.append({
+                    "condition": condition_text(rule),
+                    "explanation": AUTHORITY_ONLY.get(rule["field"], DEFAULT_AUTHORITY_EXPLANATION),
+                })
+        also_check = [check["condition"] for check in authority_checks]
+        parts = ["Nothing in your answers rules this out."]
+        if passed:
+            parts.append(f"Your answers meet: {'; '.join(condition_text(rule) for rule in passed)}.")
+        if questions:
+            parts.append("Answer the quick questions below to check the rest.")
+        if also_check:
+            # Listed with a short explanation each in authorityChecks; the reason only points to it.
+            parts.append("Some conditions can only be checked by the authority (listed below).")
+        reason = " ".join(parts)
     else:
         group = "likely_eligible"
         reason = f"Your answers meet all of this scheme's listed conditions: {'; '.join(condition_text(rule) for rule in passed)}."
@@ -278,6 +360,8 @@ def match_scheme(scheme: dict[str, Any], answers: dict[str, Any]) -> dict[str, A
         "group": group,
         "reason": reason,
         "alsoCheck": also_check,
+        "questions": questions,
+        "authorityChecks": authority_checks,
         "whatTheyMayAsk": [humanize(question) for question in scheme["requiredQuestions"]],
         "officialUrl": scheme["officialUrl"],
         "sourceUrl": scheme["sourceUrl"],
@@ -300,6 +384,12 @@ def match(request: MatchRequest) -> dict[str, Any]:
     )
     not_eligible = sorted((result for result in results if result["group"] == "not_eligible"), key=lambda r: r["name"].lower())
     return {"results": shown, "notEligible": not_eligible, "disclaimer": DISCLAIMER}
+
+
+def check_scheme(request: CheckRequest) -> dict[str, Any] | None:
+    """The one scheme re-evaluated with the given answers, or None if the id is unknown."""
+    scheme = next((item for item in load_schemes() if item["id"] == request.schemeId), None)
+    return match_scheme(scheme, dict(request.answers)) if scheme else None
 
 
 def areas_payload() -> dict[str, Any]:
