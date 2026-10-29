@@ -8204,6 +8204,8 @@ body.has-custom-cursor textarea {
 .schemes-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* Each card is its own height: opening one must not stretch the others in its row. */
+  align-items: start;
   gap: 14px;
   margin-top: 14px;
 }
@@ -8402,6 +8404,122 @@ body.has-custom-cursor textarea {
 
 .schemes-authority strong {
   color: var(--mocha);
+}
+
+/* Collapsible result cards (schemes/SchemeCard.jsx). */
+.schemes-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.schemes-card-head-text {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.schemes-badge {
+  justify-self: start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.schemes-badge-likely_eligible {
+  color: #2f5a2f;
+  background: rgba(63, 109, 63, 0.14);
+}
+
+.schemes-badge-might_be_eligible {
+  color: #7a4e15;
+  background: rgba(179, 125, 57, 0.18);
+}
+
+.schemes-badge-check_with_authority {
+  color: #5c4a38;
+  background: rgba(120, 100, 80, 0.14);
+}
+
+.schemes-badge-not_eligible {
+  color: #8f2c1d;
+  background: rgba(163, 49, 31, 0.12);
+}
+
+.schemes-card p.schemes-card-summary {
+  overflow: hidden;
+  color: rgba(47, 32, 23, 0.8);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.schemes-card-toggle {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: var(--mocha);
+  background: rgba(255, 250, 242, 0.9);
+  border: 1px solid rgba(151, 91, 38, 0.4);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.schemes-card-toggle:hover {
+  border-color: rgba(139, 82, 31, 0.7);
+}
+
+.schemes-card-toggle:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.schemes-card-toggle svg {
+  transition: transform 0.2s ease;
+}
+
+.schemes-card.is-open .schemes-card-toggle svg {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schemes-card-toggle svg {
+    transition: none;
+  }
+}
+
+.schemes-card-details {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.schemes-card-details[hidden] {
+  display: none;
+}
+
+.schemes-section-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.schemes-section-toggles .outline-action {
+  /* Stay side by side on phones too (a mobile rule stretches .outline-action to full width). */
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 32px;
+  font-size: 0.82rem;
+}
+
+.schemes-not-eligible .schemes-section-toggles {
+  margin-top: 12px;
 }
 
 .schemes-empty {

@@ -48,6 +48,37 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Schemes: collapsible result cards (2026-10-29)
+
+Result cards were around 770 px tall each. They now start collapsed (about 140-200 px), showing
+only the category, scheme name (still a heading), result badge (Likely eligible / You might be
+eligible / Check with the authority / Not eligible), a one-line benefit summary (first sentence,
+cut with an ellipsis), and a chevron button.
+- The button, or a click anywhere on the card header, shows everything that was there before:
+  full benefits, reason, quick questions, "The authority will also check", "In short", "What they
+  may ask you", the official-website button and the verification line. Clicking again hides it.
+- The chevron turns with a 0.2 s animation, off under `prefers-reduced-motion`.
+- Several cards can be open at once; each section (and "Not eligible") has "Expand all" /
+  "Collapse all".
+- The grid uses `align-items: start`, so an open card doesn't stretch its row.
+- Nothing is remembered: each new search starts collapsed. Quick-question answers survive
+  collapsing (the details stay rendered, only hidden), and a card that moves section after a
+  re-check stays open.
+- Accessibility: the toggle is a `<button>` with `aria-expanded`, `aria-controls` (pointing at
+  the details) and "Show/Hide details for <scheme>"; Enter and Space work; visible focus ring.
+
+Code: the card moved to `frontend/src/schemes/SchemeCard.jsx`; text helpers are in
+`cardText.js`. Tests: `SchemeCard.test.js` renders the card with `react-dom/server` (compiled with
+the esbuild that ships with Vite; no new dependency) and checks the collapsed and expanded
+markup, `aria-expanded`, `aria-controls` and `hidden`. `cardText.test.js` covers the summary
+line. `npm test` 34 passed.
+
+Checked in headless Chrome: collapsed by default; header click, arrow, Enter and Space toggle;
+the focus ring shows on Tab; row neighbours keep their height (205/137/156 px -> 650/137/156 px);
+expand/collapse all act on one section only; quick questions still move PMAY-U 2.0 to "Likely
+eligible"; reduced motion gives no animation; a new search starts collapsed; phone width is one
+column with no horizontal scroll; light and dark mode; no page errors.
+
 ## Unreleased — Schemes: quick questions make "Likely eligible" reachable (2026-10-29)
 
 On each "You might be eligible" card, the unknown conditions a person can answer for themselves

@@ -1,9 +1,10 @@
 import React from 'react';
-import { ArrowLeft, ChevronRight, ExternalLink, Info, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Info, ShieldCheck } from 'lucide-react';
 
 import { HeaderControls, PageDivider, DocumentsBackgroundArt } from '../shared/PageChrome.jsx';
-import { buildCheckAnswers, checkScheme, fetchAreas, matchSchemes, SchemesError } from './api.js';
+import { fetchAreas, matchSchemes, SchemesError } from './api.js';
 import { EMPTY_ANSWERS } from './questions.js';
+import SchemeCard from './SchemeCard.jsx';
 
 const NOTICE =
   'Information is based on official scheme guidelines and simplified for guidance. Always confirm on the official website before applying. Your answers are not saved.';
@@ -22,12 +23,6 @@ const SECTIONS = [
   { group: 'might_be_eligible', title: 'You might be eligible', intro: 'Nothing you said rules these out. The authority will check the other conditions shown on each card.' },
   { group: 'check_with_authority', title: 'Check with the authority', intro: "These schemes' eligibility can't be checked from a few questions. Here is what they cover and what they may ask you." }
 ];
-
-function formatDate(isoDate) {
-  const date = new Date(`${isoDate}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return isoDate;
-  return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-}
 
 /** Moves focus to a step's heading when the step changes, so keyboard and screen-reader users land on it. */
 function useFocusOnChange(step) {
@@ -149,116 +144,18 @@ const SECTION_TITLES = {
   not_eligible: 'Not eligible based on your answers'
 };
 
-/** The "You might be eligible" card's quick questions: answering re-checks this one scheme. */
-function QuickQuestions({ scheme, profileAnswers, onChecked }) {
-  const [cardAnswers, setCardAnswers] = React.useState({});
-  const [busy, setBusy] = React.useState(false);
-  const [error, setError] = React.useState('');
-  const baseId = React.useId();
-  const set = (field, value) => setCardAnswers((current) => ({ ...current, [field]: value }));
-  const answered = scheme.questions.some((question) => (cardAnswers[question.field] ?? '') !== '');
-
-  const submit = async (event) => {
-    event.preventDefault();
-    setBusy(true);
-    setError('');
-    try {
-      onChecked(await checkScheme(scheme.id, buildCheckAnswers(profileAnswers, cardAnswers, scheme.questions)));
-    } catch (err) {
-      setError(err instanceof SchemesError ? err.message : 'Could not check this scheme. Please try again.');
-      setBusy(false);
-    }
-  };
-
+/** "Expand all" / "Collapse all" for one section's cards. */
+function SectionToggles({ schemes, setOpen, label }) {
+  const ids = schemes.map((scheme) => scheme.id);
   return (
-    <form className="schemes-quick" onSubmit={submit}>
-      <p className="schemes-quick-title">Quick questions</p>
-      {scheme.questions.map((question, index) => {
-        const id = `${baseId}-${index}`;
-        if (question.type === 'number') {
-          return (
-            <div className="schemes-quick-row" key={question.field}>
-              <label htmlFor={id}>{question.question}</label>
-              <input id={id} inputMode="decimal" autoComplete="off" value={cardAnswers[question.field] ?? ''}
-                onChange={(event) => set(question.field, event.target.value)}
-                placeholder={question.unit === 'rupees' ? 'e.g. 1,50,000' : question.unit} />
-            </div>
-          );
-        }
-        const options = question.type === 'yes_no' ? [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }] : question.options;
-        return (
-          <fieldset className="schemes-quick-row" key={question.field}>
-            <legend>{question.question}</legend>
-            <div className="schemes-choice-row">
-              {options.map((option) => (
-                <label className="scheme-radio schemes-pill" key={option.value}>
-                  <input type="radio" name={id} value={option.value} checked={cardAnswers[question.field] === option.value}
-                    onChange={() => set(question.field, option.value)} />
-                  {option.label}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        );
-      })}
-      {error ? <p className="scheme-error" role="alert">{error}</p> : null}
-      <button type="submit" className="outline-action schemes-quick-submit" disabled={!answered || busy}>
-        {busy ? 'Checking…' : 'Check this scheme'}
-      </button>
-    </form>
+    <div className="schemes-section-toggles" role="group" aria-label={`Show or hide details: ${label}`}>
+      <button type="button" className="outline-action schemes-expand-all" onClick={() => setOpen(ids, true)}>Expand all</button>
+      <button type="button" className="outline-action schemes-collapse-all" onClick={() => setOpen(ids, false)}>Collapse all</button>
+    </div>
   );
 }
 
-function SchemeCard({ scheme, showReason = true, profileAnswers, onChecked }) {
-  return (
-    <article className={`schemes-card schemes-card-${scheme.group}`}>
-      <p className="schemes-card-area">{scheme.area}</p>
-      <h4>{scheme.name}</h4>
-      <p className="schemes-card-benefits">{scheme.benefits}</p>
-      {showReason ? <p className="schemes-card-reason">{scheme.reason}</p> : null}
-      {scheme.group === 'might_be_eligible' && scheme.questions?.length && onChecked ? (
-        <QuickQuestions scheme={scheme} profileAnswers={profileAnswers} onChecked={onChecked} />
-      ) : null}
-      {scheme.authorityChecks?.length ? (
-        <div className="schemes-authority">
-          <p className="schemes-card-ask-title">The authority will also check</p>
-          <ul>
-            {scheme.authorityChecks.map((check) => (
-              <li key={check.condition}><strong>{check.condition[0].toUpperCase() + check.condition.slice(1)}.</strong> {check.explanation}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-      {scheme.group === 'check_with_authority' ? (
-        <div className="schemes-card-ask">
-          <p><strong>In short:</strong> {scheme.eligibilitySummary}</p>
-          {scheme.whatTheyMayAsk.length ? (
-            <>
-              <p className="schemes-card-ask-title">What they may ask you</p>
-              <ul>{scheme.whatTheyMayAsk.map((item) => <li key={item}>{item}</li>)}</ul>
-            </>
-          ) : null}
-        </div>
-      ) : scheme.whatTheyMayAsk.length ? (
-        <details className="schemes-card-more">
-          <summary>What they may ask you</summary>
-          <ul>{scheme.whatTheyMayAsk.map((item) => <li key={item}>{item}</li>)}</ul>
-        </details>
-      ) : null}
-      <div className="schemes-card-footer">
-        <a className="schemes-official" href={scheme.officialUrl} target="_blank" rel="noopener noreferrer">
-          Official website <ExternalLink size={14} strokeWidth={2} aria-hidden="true" />
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
-        <span className={`schemes-verified ${scheme.lastVerified ? '' : 'is-unverified'}`.trim()}>
-          {scheme.lastVerified ? `Last verified: ${formatDate(scheme.lastVerified)}` : 'Not yet verified'}
-        </span>
-      </div>
-    </article>
-  );
-}
-
-function ResultsStep({ data, onChange, profileAnswers, onSchemeChecked, announcement }) {
+function ResultsStep({ data, onChange, profileAnswers, onSchemeChecked, announcement, openIds, toggleOpen, setOpen }) {
   const byName = (a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' });
   const visible = SECTIONS.map((section) => ({ ...section, schemes: data.results.filter((scheme) => scheme.group === section.group).sort(byName) }));
   return (
@@ -274,11 +171,15 @@ function ResultsStep({ data, onChange, profileAnswers, onSchemeChecked, announce
           </h3>
           <p className="schemes-section-intro">{section.intro}</p>
           {section.schemes.length ? (
-            <div className="schemes-card-grid">
-              {section.schemes.map((scheme) => (
-                <SchemeCard scheme={scheme} key={`${scheme.id}-${scheme.group}`} profileAnswers={profileAnswers} onChecked={onSchemeChecked} />
-              ))}
-            </div>
+            <>
+              <SectionToggles schemes={section.schemes} setOpen={setOpen} label={section.title} />
+              <div className="schemes-card-grid">
+                {section.schemes.map((scheme) => (
+                  <SchemeCard scheme={scheme} key={`${scheme.id}-${scheme.group}`} open={openIds.has(scheme.id)}
+                    onToggle={() => toggleOpen(scheme.id)} profileAnswers={profileAnswers} onChecked={onSchemeChecked} />
+                ))}
+              </div>
+            </>
           ) : (
             <p className="schemes-empty">
               {section.group === 'likely_eligible'
@@ -291,8 +192,11 @@ function ResultsStep({ data, onChange, profileAnswers, onSchemeChecked, announce
       {data.notEligible.length ? (
         <details className="schemes-not-eligible">
           <summary>Not eligible based on your answers ({data.notEligible.length})</summary>
+          <SectionToggles schemes={data.notEligible} setOpen={setOpen} label="Not eligible" />
           <div className="schemes-card-grid">
-            {[...data.notEligible].sort(byName).map((scheme) => <SchemeCard scheme={scheme} key={scheme.id} />)}
+            {[...data.notEligible].sort(byName).map((scheme) => (
+              <SchemeCard scheme={scheme} key={scheme.id} open={openIds.has(scheme.id)} onToggle={() => toggleOpen(scheme.id)} />
+            ))}
           </div>
         </details>
       ) : null}
@@ -311,6 +215,19 @@ export default function SchemesPage() {
   const [chosen, setChosen] = React.useState([]);
   const [results, setResults] = React.useState(null);
   const [announcement, setAnnouncement] = React.useState('');
+  // Which result cards are expanded. Not remembered: every new search starts with all collapsed.
+  const [openIds, setOpenIds] = React.useState(() => new Set());
+  const toggleOpen = (id) => setOpenIds((current) => {
+    const next = new Set(current);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    return next;
+  });
+  const setOpen = (ids, open) => setOpenIds((current) => {
+    const next = new Set(current);
+    ids.forEach((id) => (open ? next.add(id) : next.delete(id)));
+    return next;
+  });
 
   // A re-checked scheme replaces its card: it moves to its new section (or into "Not eligible").
   const onSchemeChecked = (updated) => {
@@ -340,6 +257,7 @@ export default function SchemesPage() {
     setError('');
     try {
       setResults(await matchSchemes(answers, chosen));
+      setOpenIds(new Set());
       setStep('results');
     } catch (err) {
       setError(err instanceof SchemesError ? err.message : 'Something went wrong while finding schemes. Please try again.');
@@ -387,7 +305,8 @@ export default function SchemesPage() {
           ) : null}
           {step === 'results' && results ? (
             <ResultsStep data={results} onChange={() => setStep('questions')} profileAnswers={answers}
-              onSchemeChecked={onSchemeChecked} announcement={announcement} />
+              onSchemeChecked={onSchemeChecked} announcement={announcement}
+              openIds={openIds} toggleOpen={toggleOpen} setOpen={setOpen} />
           ) : null}
         </section>
       </div>
