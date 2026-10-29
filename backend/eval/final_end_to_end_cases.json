@@ -209,8 +209,8 @@
       "query": "company leaked my personal data and I want DPDP Act details",
       "expected_status": "answered",
       "expected_domains": ["cyber"],
-      "expected_primary_documents": ["Digital Personal Data Protection Rules"],
-      "expected_corpus_status": "limited",
+      "expected_primary_documents": ["Digital Personal Data Protection Act", "Digital Personal Data Protection Rules"],
+      "expected_corpus_status": "sufficient",
       "must_include_concepts": ["limited", "corpus"],
       "document_context_expected": false
     },
@@ -558,8 +558,8 @@
       "query": "public authority leaked my personal information online",
       "expected_status": "answered",
       "expected_domains": ["constitutional_public_authority", "cyber"],
-      "expected_primary_documents": ["Protection of Human Rights Act", "Information Technology Act", "Digital Personal Data Protection Rules"],
-      "expected_corpus_status": "limited",
+      "expected_primary_documents": ["Protection of Human Rights Act", "Information Technology Act", "Digital Personal Data Protection Act", "Digital Personal Data Protection Rules"],
+      "expected_corpus_status": "sufficient",
       "document_context_expected": false
     },
     {
@@ -568,8 +568,8 @@
       "query": "delivery app refused refund and exposed my phone number",
       "expected_status": "answered",
       "expected_domains": ["consumer", "cyber"],
-      "expected_primary_documents": ["Consumer Protection Act", "Digital Personal Data Protection Rules"],
-      "expected_corpus_status": "limited",
+      "expected_primary_documents": ["Consumer Protection Act", "Digital Personal Data Protection Act", "Digital Personal Data Protection Rules"],
+      "expected_corpus_status": "sufficient",
       "document_context_expected": false
     },
     {

@@ -48,6 +48,29 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — e2e labels updated for the DPDP Act; Clinics Regulations parse recorded as a known issue (2026-10-29)
+
+**Relabelled (owner decision), `backend/eval/final_end_to_end_cases.json`:** `cyber_008`,
+`multi_004` and `multi_005` were written on 2026-09-01, before the DPDP Act was in the corpus
+(only the DPDP Rules were), so their expectations were out of date. They expected the "Digital
+Personal Data Protection Rules" and corpus status "limited". Each now also expects the "Digital
+Personal Data Protection Act" (the Rules stay listed), and the expected corpus status is
+"sufficient". Not re-run live; tomorrow's full e2e run covers them. On today's recorded
+responses all three would now match (each cited the DPDP Act or another listed document, and
+corpus gap said "sufficient"), but that is not a substitute for the run. `cyber_008` still
+carries `must_include_concepts: ["limited", "corpus"]` from the old expectation. The evaluator
+does not read that field, so it has no effect; left as is.
+
+**Known issue (not fixed): NALSA (Legal Services Clinics) Regulations, 2011 are mis-parsed.** In
+a poor text layer, amendment-footnote lines ("1. Substituted by Notification No. ...") are read
+as regulation headings. 7 of the document's 17 chunks are labelled "Regulation 1", with titles like
+"SubstitutedbyNoC", so citations to it show the wrong regulation number and title. This is the
+same family as the NALSA 2010 footnote-marker fix, in a different form. It did not cause
+`public_004` (removing those chunks still leaves LSA Act s.12 unselected).
+
+**Still known limitations (recorded above):** `public_004` (s.12 ranks 10th for "can I get a free
+lawyer") and `multi_006` (cyber-only routing for "Mere saath fraud hua hai").
+
 ## Unreleased — Schemes page rebuilt: Python-only, deterministic, in the main app (2026-10-29)
 
 **New design.** `#/schemes` is now a self-contained page in the main app
