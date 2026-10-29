@@ -9,16 +9,8 @@ export default defineConfig({
     port: 4000,
     strictPort: true,
     proxy: {
-      // Python FastAPI backend (legal RAG).
-      '/api': 'http://localhost:8000',
-      // Node schemes backend (Schemes & Legal Support), on 4001 so it never clashes with this
-      // dev server on 4000. The `/schemes-api` prefix is stripped before forwarding, so the
-      // browser calls `/schemes-api/match` and the backend sees `/match`.
-      '/schemes-api': {
-        target: 'http://localhost:4001',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/schemes-api/, '')
-      }
+      // Python FastAPI backend: every API the app uses, including Schemes.
+      '/api': 'http://localhost:8000'
     }
   }
 });

@@ -48,6 +48,81 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Schemes page rebuilt: Python-only, deterministic, in the main app (2026-10-29)
+
+**New design.** `#/schemes` is now a self-contained page in the main app
+(`frontend/src/schemes/SchemesPage.jsx`), with Home's background and page styling:
+1. Six common questions, each skippable: age, gender, rural/urban, family income, social
+   category, occupation.
+2. Pick areas (the scheme categories in plain words, or "All").
+3. Results in three sections:
+   - **Likely eligible**;
+   - **You might be eligible**, with "The authority will also check: ...";
+   - **Check with the authority**, with the summary and "what they may ask you";
+   - plus a collapsed **Not eligible based on your answers** section with the reason.
+
+Each card shows the name, benefits, plain-English reason, an official-website button (new tab),
+and "Last verified: <date>" or "Not yet verified". A notice at the top says the information is
+simplified, to confirm on the official website, and that answers are not saved.
+
+**Backend** (`backend/schemes_matcher.py`, `POST /api/schemes/match`, `GET /api/schemes/areas`):
+no Gemini, no database, answers never logged or stored, data loaded once at startup. Each
+scheme's rules are evaluated three-valued: a rule on an answered field passes or fails; any
+other rule is unknown. Any fail -> not eligible; all pass -> likely eligible; none fail but some
+unknown -> might be eligible; no rules at all -> check with the authority (never "likely").
+
+**Data and cleaning.** Source: `backend/data/schemes.json` (36 central schemes, kept unchanged).
+`backend/scripts/clean_schemes.py` writes `backend/data/schemes_clean.json` and fails loudly on
+bad data (missing keys, unknown operators, bad `betweenInclusive` ranges, non-https URLs, bad
+dates). It:
+- removes 2 duplicates: keeps `PM-VISHWAKARMA-VERIFIED` over `PMVISHWAKARMA`, and `MUDRA` over
+  `PMMY-MUDRA` -> **34 schemes**;
+- merges 4 field synonyms so one answer works everywhere: `familyIncome` -> `annualFamilyIncome`,
+  `applicantCategory` -> `socialCategory`, `educationQualification` -> `educationLevel`,
+  `disabilityCertificateStatus` -> `hasDisabilityCertificateOrUDID`. (Two other synonym pairs
+  existed only inside the dropped duplicates.)
+
+No eligibility rule, value or URL was changed. One source URL contains a space (PMAY-U 2.0,
+`...Operational-Guidelines-of- PMAY-U-2.pdf`); it is kept as given and the cleaner prints a
+warning.
+
+**What the data allows.**
+- **25 of the 34 schemes have no machine-checkable rules** and are always shown under "check
+  with the authority".
+- Of the six questions, only age, gender, residence and income appear in any rule. Social
+  category and occupation are accepted, but no current rule uses them.
+- Every scheme that has rules also has a condition the form does not ask (e.g. "eligible poor
+  household", "owns cultivable land"). So with today's data nothing reaches "likely eligible";
+  the page says so instead of showing an empty section.
+- **All schemes are unverified** (`lastVerified` is null) until someone checks them against the
+  official sources and fills the date in; the page shows "Not yet verified".
+
+**Removed:** the old Schemes page code (`frontend/src/schemes/IntakeForm.jsx`, `ResultsList.jsx`,
+`format.js`, `options.js`, the old `api.js`, the "Other free legal-aid services" list it
+showed, and its styles), the `/schemes-api` proxy in `vite.config.js`, and
+`frontend/.env.example` (it held only `VITE_SCHEMES_API_BASE_URL`). The app now needs only the
+Python backend and the frontend. `schemes-legal-support/` is untouched and unlinked; the README
+notes it is a separate, unused experimental project. The form styles the complaint drafter
+shares (`.scheme-field`, `.scheme-radio`, ...) are kept.
+
+**Tests:**
+- `tests/test_clean_schemes.py` (14): duplicates, synonyms, rules and URLs unchanged, bad data
+  rejected;
+- `tests/test_schemes_matcher.py` (32): every operator including `betweenInclusive` edges;
+  no-rules never "likely"; unknown -> might; one failing rule hides a scheme; area filter;
+  ordering; nothing logged or stored; the three spot-check profiles;
+- `frontend/src/schemes/api.test.js` (3).
+
+Backend suite 940 passed; `npm test` 24 passed.
+
+**Checked in headless Chrome** (scratch backend):
+- a 25-year-old rural woman, Rs 1,50,000: Ujjwala under "You might be eligible" (the authority
+  also checks the poor-household and LPG conditions); PMAY-U 2.0 not eligible (urban only);
+- a 30-year-old urban man, Rs 6,00,000: PMAY-U 2.0 "might be eligible";
+- age 45: APY and PM-KMY "not eligible" (between 18 and 40);
+- also: phone width and dark mode, focus moves to each step's heading, official links open in a
+  new tab, every other page still loads, no page errors.
+
 ## Unreleased — e2e failures 2026-10-29: findings for the cases not fixed by code (2026-10-29)
 
 Follows the two retrieval fixes above. No code change in this entry; these stay known limitations

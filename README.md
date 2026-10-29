@@ -166,60 +166,29 @@ the right authority. The answers are never stored or logged. Evaluation:
 `python evaluate_legal_aid_eligibility.py` (writes
 `eval/legal_aid_eligibility_evaluation.{json,md}`).
 
-The **Schemes** page (`#/schemes`) is served by the same frontend but talks to a
-**separate** backend — see the next section. If the schemes backend isn't
-running, every other page still works; only the Schemes search fails (with a
-clear error).
+The **Schemes** page (`#/schemes`) helps someone find central government schemes they may be
+able to apply for. It runs entirely on the Python backend and the frontend (no Node, no
+Postgres): `backend/schemes_matcher.py`, fixed rules only, no Gemini, no login, nothing stored.
 
-## Schemes & Legal Support (second backend)
+| Endpoint | Body | Returns |
+| --- | --- | --- |
+| `GET /api/schemes/areas` | -- | `areas[]` (`id`, `label`, `count`) |
+| `POST /api/schemes/match` | all optional: `age`, `gender` (`male`/`female`/`other`), `residence` (`urban`/`rural`), `annualFamilyIncome` (rupees), `socialCategory` (`general`/`obc`/`sc`/`st`/`ebc`/`dnt`/`other`), `occupation` (`farmer`/`student`/`salaried`/`self_employed`/`unemployed`/`artisan`/`street_vendor`/`other`), `areas[]` | `results[]` grouped `likely_eligible` / `might_be_eligible` / `check_with_authority` (each with `reason`, `alsoCheck[]`, `whatTheyMayAsk[]`, `officialUrl`, `sourceUrl`, `lastVerified`, `disclaimer`), `notEligible[]`, `disclaimer` |
 
-`schemes-legal-support/` is a self-contained service: a **Node/Express** API
-(`schemes-legal-support/backend`, port **4001**) backed by **PostgreSQL**, plus
-an internal-only admin tool (`schemes-legal-support/frontend`, not linked from
-the main app). The main `frontend/` **Schemes** page consumes its `POST /match`
-endpoint.
+Data: `backend/data/schemes.json` (as provided, never edited) is cleaned by
+`python scripts/clean_schemes.py` (from `backend/`) into `backend/data/schemes_clean.json`, which
+the app loads at startup. Re-run the script after editing the source file; it refuses bad data.
 
-One-time setup (needs a local Postgres — on macOS: `brew install postgresql@17
-&& brew services start postgresql@17 && createdb schemes_legal_support`):
-
-```bash
-cd schemes-legal-support/backend
-npm install
-cp .env.example .env          # then set DATABASE_URL for your Postgres
-npx prisma migrate dev        # create tables
-npm run prisma:seed           # load the sample schemes
-```
-
-Run it (third terminal):
-
-```bash
-cd schemes-legal-support/backend
-npm run dev                   # Express API on http://localhost:4001
-```
-
-### All services at once (3 terminals)
+### Running everything (2 terminals)
 
 | Terminal | Command | Port | Serves |
 |----------|---------|------|--------|
-| 1 | `cd backend && source .venv/bin/activate && uvicorn main:app --reload --port 8000` | **8000** | Python RAG API (`/api/*`) |
-| 2 | `cd schemes-legal-support/backend && npm run dev` | **4001** | Node schemes API (`/match`, `/schemes`) |
-| 3 | `cd frontend && npm run dev` | **4000** | the single React app |
+| 1 | `cd backend && source .venv/bin/activate && uvicorn main:app --reload --port 8000` | **8000** | Python API (`/api/*`) |
+| 2 | `cd frontend && npm run dev` | **4000** | the React app |
 
-Ports 8000, 4001 and 4000 don't overlap, so all three run together. The Vite
-dev server (port set in `frontend/vite.config.js`) proxies both backends, so the
-browser only ever talks to `:4000`:
+The Vite dev server proxies `/api/*` to `http://localhost:8000`, so the browser only talks to `:4000`.
 
-- `/api/*`         → `http://localhost:8000` (Python)
-- `/schemes-api/*` → `http://localhost:4001` (Node; the `/schemes-api` prefix is
-  stripped before forwarding)
-
-To point the Schemes page at a non-default schemes backend (e.g. in
-production), set `VITE_SCHEMES_API_BASE_URL` in `frontend/.env` — see
-`frontend/.env.example`. Left unset, it uses the `/schemes-api` proxy path.
-
-The admin scheme-entry tool stays in `schemes-legal-support/frontend`
-(`npm run dev` there, then open `#/admin`) and is deliberately not linked from
-the main app's navigation. **It has no authentication — do not expose it.**
+`schemes-legal-support/` is a separate, unused experimental project; the app does not use it.
 
 ## Local Development Fallback
 
