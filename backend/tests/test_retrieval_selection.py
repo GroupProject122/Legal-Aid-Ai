@@ -59,3 +59,45 @@ def test_only_manuals_retrieved_still_returns_them():
     only_manuals = [c for c in candidates() if c.source.endswith("manual_latest.pdf")]
     selected = select_relevant_chunks(only_manuals, "someone hacked my social media account")
     assert selected
+
+
+# LegalRAG.production_candidates() (2026-10-29, e2e cyber_001/cyber_010): manuals that match the
+# phrasing closely filled the whole raw-similarity pool (12 of 12, 35 of 40), so the statute was
+# never fetched. Down-weighted manuals must not count towards candidate_k.
+def stub_engine(ranked: list[RetrievedChunk]):
+    import rag
+
+    engine = rag.LegalRAG.__new__(rag.LegalRAG)
+    engine.chunks = [None] * 1000
+    engine.retrieve_candidates = lambda question, candidate_k=None: [c for c in ranked][:candidate_k]
+    return engine
+
+
+def manuals_then_statute() -> list[RetrievedChunk]:
+    manuals = [chunk(MANUAL, 0.70 - i * 0.01, f"Portal step {i}: report fraud online.", chunk_id=f"m{i}") for i in range(12)]
+    statute = chunk(IT_ACT, 0.51, "66D. Punishment for cheating by personation by using computer resource.", section_number="66D", chunk_id="i66d")
+    return [*manuals, statute]
+
+
+def test_down_weighted_manuals_do_not_take_candidate_pool_slots(monkeypatch):
+    import rag
+
+    monkeypatch.setattr(rag, "production_candidate_k", lambda question, top_k=rag.TOP_K: 12)
+    question = "General inquiry regarding online payment fraud through cyber means."
+    engine = stub_engine(manuals_then_statute())
+
+    pool = engine.production_candidates(question)
+    assert "i66d" in [c.chunk_id for c in pool]
+    assert sum(1 for c in pool if c.source.endswith("manual_latest.pdf")) == 12  # kept, not dropped
+
+    selected = select_relevant_chunks(pool, question)
+    assert selected[0].source == "cyber/information_technology_act_2000.pdf"
+
+
+def test_pool_is_unchanged_for_procedural_questions(monkeypatch):
+    import rag
+
+    monkeypatch.setattr(rag, "production_candidate_k", lambda question, top_k=rag.TOP_K: 12)
+    question = "how do I report payment fraud on the cybercrime portal"
+    pool = stub_engine(manuals_then_statute()).production_candidates(question)
+    assert [c.chunk_id for c in pool] == [f"m{i}" for i in range(12)]  # manuals count normally here

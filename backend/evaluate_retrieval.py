@@ -118,7 +118,8 @@ def serialize_result(rank: int, retrieved, metadata: dict[str, Any]) -> dict[str
 
 def ranked_results_for_query(engine: LegalRAG, query: str, lookup: dict[tuple[str, int, str], dict[str, Any]]) -> dict[str, Any]:
     candidate_k = production_candidate_k(query, TOP_K)
-    candidates = engine.retrieve_candidates(query, candidate_k=candidate_k)
+    # The same pool LegalRAG.retrieve() ranks (down-weighted manuals don't count towards candidate_k).
+    candidates = engine.production_candidates(query, TOP_K)
     for candidate in candidates:
         candidate.rerank_score = final_rerank_score(query, candidate)
     ranked = sorted(candidates, key=lambda item: (item.rerank_score, item.score), reverse=True)

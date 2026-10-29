@@ -298,6 +298,11 @@ CASE_LAW_QUERY_TERMS = (
     " vs ",
     " v. ",
 )
+# How far LegalRAG.production_candidates() may widen the raw-similarity pool past candidate_k to
+# find enough chunks that are not down-weighted manuals (6,709 chunks in the corpus; the worst
+# case found, a substantive cyber query, needed ~150).
+MAX_CANDIDATE_POOL = 600
+
 PROCEDURAL_QUERY_TERMS = {
     "report",
     "reporting",
@@ -842,9 +847,37 @@ class LegalRAG:
                 return [(score, chunk_position) for chunk_position, score in best.items()]
             search_k = min(vector_total, search_k * 2)
 
-    def retrieve(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
+    def production_candidates(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
+        """The candidate pool LegalRAG.retrieve() ranks: production_candidate_k() chunks, except that
+        down-weighted manuals (is_down_weighted_manual(): manifest authority_level/document_type/
+        retrieval_priority on a substantive question) don't count towards it. Found 2026-10-29
+        (e2e cyber_001/cyber_010): with windowed embeddings a manual can match plain-language
+        phrasing so closely that it fills the raw-similarity pool -- 12 of 12 and 35 of 40
+        candidates -- so the statute (IT Act at raw rank 44 / 112) was never fetched, and the
+        down-weighting in ranking and admission had nothing to promote. The pool now widens
+        until it holds candidate_k other chunks; the manuals stay in it, in raw order, and still
+        compete on rerank score, so they can't displace primary law but aren't removed either."""
         candidate_k = production_candidate_k(question, top_k)
-        candidates = self.retrieve_candidates(question, candidate_k=candidate_k)
+        limit = min(len(self.chunks), MAX_CANDIDATE_POOL)
+        fetch = candidate_k
+        while True:
+            candidates = self.retrieve_candidates(question, candidate_k=fetch)
+            others = sum(1 for chunk in candidates if not is_down_weighted_manual(question, chunk))
+            if others >= candidate_k or fetch >= limit:
+                break
+            fetch = min(limit, max(fetch * 2, fetch + candidate_k - others))
+        pool: list[RetrievedChunk] = []
+        kept = 0
+        for chunk in candidates:
+            if not is_down_weighted_manual(question, chunk):
+                if kept == candidate_k:
+                    break
+                kept += 1
+            pool.append(chunk)
+        return pool
+
+    def retrieve(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
+        candidates = self.production_candidates(question, top_k)
         results = select_relevant_chunks(candidates, question=question, top_k=top_k)
         logger.info(
             "Retrieved %s strong chunks from %s candidates for query=%r. Final sources=%s",

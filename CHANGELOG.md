@@ -48,6 +48,34 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Retrieval: down-weighted manuals no longer fill the candidate pool (2026-10-29)
+
+**Problem (e2e `cyber_001`, `cyber_010`).** Answers cited the Cybercrime Portal citizen manual
+and the I4C 1930 FAQ instead of the IT Act. Retrieval trace (with the retrieval queries the e2e
+run actually used): the raw-similarity candidate pool was 12 of 12 manual chunks for "General
+inquiry regarding online payment fraud through cyber means." (IT Act's best chunk at raw rank
+44), and 35 of 40 for the Instagram-seller query (IT Act at 112). The down-weighting of manuals
+(`is_down_weighted_manual()`: manifest `authority_level=procedural_guide`,
+`document_type=procedural_user_guide`, low/medium `retrieval_priority`, on a substantive
+question) only acts in ranking and admission, so a statute that never entered the pool could not
+be promoted.
+
+**Fix (`backend/rag.py`).** New `LegalRAG.production_candidates()`, used by `retrieve()`:
+down-weighted manuals no longer count towards `production_candidate_k()`. The pool widens
+(capped at `MAX_CANDIDATE_POOL` = 600) until it holds that many other chunks. The manuals stay in
+the pool and still compete on rerank score, so they can't displace primary law but aren't
+removed. Procedural questions ("how do I report...") are unaffected. `evaluate_retrieval.py` now
+calls the same method, so the eval keeps measuring the production pool.
+
+**Effect.** `cyber_001`'s query now selects the IT Act, CERT-In Directions, the Intermediary
+Rules and the RBI liability circular (was: 4 manual chunks). The Instagram-seller query now
+selects the Consumer Protection Act, the E-Commerce Rules and the DPDP Act (was: a manual and
+the Intermediary Rules). Local retrieval eval (47 queries): provision Hit@5 78.6% -> 85.7%
+(`cyber_03_hinglish_severe` recovered -- the regression noted when the I4C/DoT sources were
+added); Hit@1/3/5 83.0/93.6/95.7%, MRR 0.892 and off-domain 0.021 unchanged; no other query
+changed. Scam checker rules-only (main, held-out, blind): unchanged. Tests
+(`tests/test_retrieval_selection.py`, +2) fail without the fix; full backend suite 884 passed.
+
 ## Unreleased — "Where can I file a consumer complaint" no longer refused; e2e run 2026-10-29 (46/55) (2026-10-29)
 
 **Problem (e2e `consumer_006_complaint_forum`).** "where can I file a consumer complaint" was
