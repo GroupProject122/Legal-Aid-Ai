@@ -48,6 +48,18 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Schemes: PMAY-U 2.0 source link fixed (2026-10-29)
+
+The PMAY-U 2.0 `sourceUrl` in `backend/data/schemes.json` contained a stray space
+(`.../Operational-Guidelines-of- PMAY-U-2.pdf`) and returned 404 with the space raw or encoded.
+The same path without the space,
+`https://pmay-urban.gov.in/uploads/guidelines/Operational-Guidelines-of-PMAY-U-2.pdf`, is the
+official "Pradhan Mantri Awas Yojana - Urban 2.0 Scheme Guidelines" (Ministry of Housing and
+Urban Affairs, September 2024, 112 pages), checked by downloading it on 2026-10-29. The source file
+stays untouched: `scripts/clean_schemes.py` applies this as a listed `URL_CORRECTIONS` entry
+(only if the old value is still there), and whitespace in any URL is now a validation error
+rather than a warning.
+
 ## Unreleased — e2e labels updated for the DPDP Act; Clinics Regulations parse recorded as a known issue (2026-10-29)
 
 **Relabelled (owner decision), `backend/eval/final_end_to_end_cases.json`:** `cyber_008`,

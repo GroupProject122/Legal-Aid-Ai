@@ -6,9 +6,10 @@ Re-runnable; the original file is never modified. It:
 - drops two duplicate entries (the same scheme listed twice under different ids);
 - renames question/rule field names that mean the same thing, so one answer works for every
   scheme that asks it (FIELD_SYNONYMS);
+- corrects URLs that were checked and found broken (URL_CORRECTIONS, each with the reason);
 - validates every scheme and stops with a list of every problem if anything is wrong.
 
-It does not add, remove or change any eligibility rule, value or URL.
+It does not add, remove or change any eligibility rule or value.
 """
 from __future__ import annotations
 
@@ -34,6 +35,19 @@ FIELD_SYNONYMS = {
     "applicantCategory": "socialCategory",
     "educationQualification": "educationLevel",
     "disabilityCertificateStatus": "hasDisabilityCertificateOrUDID",
+}
+
+# (scheme id, key) -> (the URL in schemes.json, the corrected URL). Applied only if the source
+# still holds exactly the old value, so a fixed source file is never overwritten.
+URL_CORRECTIONS = {
+    # Checked 2026-10-29: the given URL has a stray space ("...-of- PMAY-U-2.pdf") and returns 404
+    # with the space raw or encoded. The same path without the space is the official "Pradhan
+    # Mantri Awas Yojana - Urban 2.0 Scheme Guidelines" (MoHUA, September 2024, 112 pages) on
+    # pmay-urban.gov.in.
+    ("PMAY-U-2.0", "sourceUrl"): (
+        "https://pmay-urban.gov.in/uploads/guidelines/Operational-Guidelines-of- PMAY-U-2.pdf",
+        "https://pmay-urban.gov.in/uploads/guidelines/Operational-Guidelines-of-PMAY-U-2.pdf",
+    ),
 }
 
 REQUIRED_KEYS = (
@@ -82,6 +96,8 @@ def validate(schemes: list[dict]) -> list[str]:
         for key in ("officialUrl", "sourceUrl"):
             if not isinstance(scheme[key], str) or not scheme[key].startswith("https://"):
                 problems.append(f"{where}: '{key}' must be an https URL, got {scheme[key]!r}")
+            elif re.search(r"\s", scheme[key]):
+                problems.append(f"{where}: '{key}' contains whitespace: {scheme[key]!r}")
         verified = scheme["lastVerified"]
         if verified is not None and not (isinstance(verified, str) and DATE_RE.match(verified)):
             problems.append(f"{where}: 'lastVerified' must be null or YYYY-MM-DD, got {verified!r}")
@@ -123,6 +139,9 @@ def clean(raw: list[dict]) -> list[dict]:
         raise SchemeDataError("\n".join(problems))
     kept = [dict(scheme) for scheme in raw if scheme.get("id") not in DUPLICATES]
     for scheme in kept:
+        for (scheme_id, key), (old, new) in URL_CORRECTIONS.items():
+            if scheme.get("id") == scheme_id and scheme.get(key) == old:
+                scheme[key] = new
         scheme["eligibilityRules"] = [{**rule, "field": rename(rule["field"])} for rule in scheme["eligibilityRules"]]
         questions: list[str] = []
         for question in scheme["requiredQuestions"]:
@@ -149,16 +168,6 @@ def validate_raw_duplicates(raw: list[dict]) -> list[str]:
     ]
 
 
-def url_warnings(schemes: list[dict]) -> list[str]:
-    """Not errors (the URLs are kept exactly as given), but worth a human look."""
-    return [
-        f"{scheme['id']}: {key} contains whitespace: {scheme[key]!r}"
-        for scheme in schemes
-        for key in ("officialUrl", "sourceUrl")
-        if re.search(r"\s", scheme[key])
-    ]
-
-
 def main() -> int:
     raw = json.loads(SOURCE.read_text(encoding="utf-8"))
     try:
@@ -166,8 +175,6 @@ def main() -> int:
     except SchemeDataError as exc:
         print(f"schemes.json is not valid -- nothing written:\n{exc}", file=sys.stderr)
         return 1
-    for warning in url_warnings(schemes):
-        print(f"warning: {warning}", file=sys.stderr)
     TARGET.write_text(json.dumps(schemes, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     without_rules = sum(1 for scheme in schemes if not scheme["eligibilityRules"])
     print(f"Wrote {TARGET.relative_to(BACKEND)}: {len(schemes)} schemes ({len(raw) - len(schemes)} duplicates removed), "

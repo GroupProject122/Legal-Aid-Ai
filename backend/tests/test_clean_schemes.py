@@ -35,13 +35,20 @@ def test_synonyms_are_merged_everywhere():
     assert "annualFamilyIncome" in fields and "socialCategory" in fields
 
 
-def test_rules_urls_and_verification_are_unchanged():
+def test_rules_urls_and_verification_are_unchanged_except_listed_url_corrections():
     original = {scheme["id"]: scheme for scheme in RAW}
     for scheme in clean_schemes.clean(RAW):
         before = original[scheme["id"]]
         assert scheme["eligibilityRules"] == before["eligibilityRules"]
         for key in ("officialUrl", "sourceUrl", "lastVerified", "benefits", "eligibilitySummary", "name"):
-            assert scheme[key] == before[key]
+            correction = clean_schemes.URL_CORRECTIONS.get((scheme["id"], key))
+            assert scheme[key] == (correction[1] if correction else before[key])
+
+
+def test_pmay_urban_source_url_is_corrected():
+    pmayu = next(s for s in clean_schemes.clean(RAW) if s["id"] == "PMAY-U-2.0")
+    assert pmayu["sourceUrl"] == "https://pmay-urban.gov.in/uploads/guidelines/Operational-Guidelines-of-PMAY-U-2.pdf"
+    assert " " in next(s for s in RAW if s["id"] == "PMAY-U-2.0")["sourceUrl"]  # the source file is untouched
 
 
 def test_input_is_not_modified():
@@ -70,6 +77,7 @@ def broken(mutate):
         (lambda s: s["eligibilityRules"].__setitem__(0, {"field": "age", "operator": "betweenInclusive", "value": 18}), "betweenInclusive"),
         (lambda s: s["eligibilityRules"].__setitem__(0, {"field": "age", "operator": "lessThan", "value": "forty"}), "needs a number"),
         (lambda s: s.__setitem__("officialUrl", "http://www.pfrda.org.in/"), "https"),
+        (lambda s: s.__setitem__("sourceUrl", "https://www.pfrda.org.in/apy rules.pdf"), "whitespace"),
         (lambda s: s.__setitem__("lastVerified", "last week"), "lastVerified"),
         (lambda s: s.__setitem__("id", "PMJJBY"), "duplicate id"),
     ],
