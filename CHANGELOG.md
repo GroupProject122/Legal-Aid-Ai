@@ -48,11 +48,71 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Read aloud: the whole reply, on every reply, to the end (2026-10-29)
+
+Follow-up to "Read answers aloud" below. Frontend only; no backend change, no Gemini request.
+
+- **Reads every visible section, in screen order**, each introduced by its on-screen heading
+  ("In short.", "What this may involve.", "Your possible rights.", "Suggested next steps." with
+  "Step 1." ..., "Evidence to preserve.", "Where to approach.", "Limitations.", "Document facts
+  used.", then the 1930 / free-legal-aid lines when they are shown). Previously only In short,
+  next steps and where to approach were read. Still skipped: the sources list, citation brackets,
+  URLs ("the link shown on screen") and the disclaimer. Empty sections are skipped, heading and
+  all. No second mode.
+- **Listen on every assistant reply**, not just full answers: clarification questions (In short,
+  What this may involve, Clarification needed -- what the card shows), out-of-scope / can't-answer
+  replies, short conversational replies, offline results (the notice and the retrieved section
+  text; the matched-sources list is skipped), technical-error replies, and the homepage answer
+  panel. Older messages and messages in reopened saved cases included. Still one at a time and
+  never auto-plays; leaving the homepage now stops speech too.
+- **Same text as the screen:** `responseSpeechSections()` in `speech/answerToSpeech.js` mirrors
+  `LegalAIResponse` in `App.jsx` (change both together), and the card's fallback texts ("The
+  available legal sources do not contain enough information...", the technical-error and offline
+  messages) are now one shared `DISPLAY_FALLBACKS` constant rendered by `App.jsx` and read by
+  Listen.
+- **Long replies play to the end in Chrome** (`speech/speechController.js`):
+  - the utterance being spoken is held in a module variable (Chrome can garbage-collect an
+    unreferenced utterance and never fire its `onend`, which silently stopped playback);
+  - a chunk that fires `onerror` is skipped and the next one plays (before, any error ended the
+    whole reply);
+  - a once-a-second tick adds a keep-alive (`pause()`+`resume()` after 10 s on one chunk, for
+    Chrome's ~15 s cut-off; not on Android, where `pause()` cancels) and a watchdog that moves on
+    if speech went quiet without an `onend`.
+- **Fixed:** changing speed mid-chunk queued a second copy of the chunk behind the first instead
+  of replacing it (it is now cancelled and restarted once). "Rs. 25,000, paid" was read "25,000,
+  rupees" (the number took the comma).
+
+**Tests:** `answerToSpeech.test.js` now 19 tests (all sections in screen order with headings;
+sources, disclaimer and disclaimer-like items skipped; empty sections skipped; clarification,
+out-of-scope, technical-error, offline and conversational replies; the rupee comma).
+
+**Checked in Chromium (headless Chrome 156 via DevTools, scratch database, `/api/ask` stubbed; no
+Gemini):**
+- the **longest real saved answer** (2,187 spoken characters, 37 chunks) was read to the very end
+  at 1.25x: all 37 chunks spoken once, in order, each with `start` and `end`, in 134 s; every
+  visible heading except "Sources used" spoken in screen order; controls returned to Listen;
+- on a second run through it: pause at chunk 4 stayed silent, resume re-read that chunk, a speed
+  change restarted the chunk once at 0.75x, an injected `onerror` chunk was skipped, a chunk
+  dropped with no events at all was recovered by the watchdog after 1.7 s, and it still reached
+  the last chunk;
+- keep-alive: no chunk ran 10 s in these runs, so it did not fire there; checked directly that
+  `pause()`+`resume()` mid-utterance in this Chrome lets a 14 s utterance continue and end
+  normally;
+- a Listen button on all 6 reply types in a reopened saved case and on every reply in an older
+  case; none auto-plays; starting another reply stops the current one; the conversational,
+  clarification, out-of-scope, offline and technical-error replies were each read in full;
+  homepage answer has Listen and leaving the homepage stops it; light, dark and 390 px phone
+  width with no horizontal scroll; no page errors.
+
+**Limitation:** the offline result reads the full retrieved section text, which can be long.
+Not tested on Safari or Android.
+
 ## Unreleased — Helplines page: "In an emergency, call 112" banner removed (2026-10-29)
 
-Removed at the team's request (`frontend/src/helplines/Helplines.jsx`), along with its now-unused
-`.helpline-emergency-banner` CSS in `frontend/src/styles.css`. 112 is still listed on the page as
-a regular helpline card (`erss-112` in `helplinesData.js`); only the banner at the top is gone.
+Removed the emergency banner at the top of the Helplines page (owner decision).
+(`frontend/src/helplines/Helplines.jsx`, plus its now-unused `.helpline-emergency-banner` CSS in
+`frontend/src/styles.css`.) 112 is still listed first in the Urgent help section as a regular
+helpline card (`erss-112` in `helplinesData.js`) with a `tel:112` call link; only the banner is gone.
 
 ## Unreleased — Checks on the merged code: eligibility source links, case file (2026-10-29)
 

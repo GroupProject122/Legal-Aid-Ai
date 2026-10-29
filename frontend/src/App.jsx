@@ -81,6 +81,7 @@ import { ApiError as ComplaintApiError, generateDraft } from './complaints/api.j
 import { CaseFileButton } from './caseFile/CaseFileButton.jsx';
 import { ListenControls, useSpeechState } from './speech/ListenControls.jsx';
 import { stopSpeech } from './speech/speechController.js';
+import { DISPLAY_FALLBACKS } from './speech/answerToSpeech.js';
 
 import { AccountMenu, AuthForm, signInHref, useAuth } from './auth.jsx';
 
@@ -511,7 +512,7 @@ function HomeAnswerPanel({ chat }) {
             ? <UserMessage text={message.text} key={message.id} />
             : message.role === 'assistant_loading'
               ? <LoadingMessage key={message.id} />
-              : <LegalAIResponse response={message.response} onSourceClick={chat.setSelectedSource} key={message.id} />
+              : <LegalAIResponse response={message.response} onSourceClick={chat.setSelectedSource} speechId={message.id} key={message.id} />
         ))}
       </div>
     </section>
@@ -718,7 +719,7 @@ function createErrorResponse(message) {
   };
 }
 
-const TECHNICAL_ERROR_MESSAGE = 'Legal Aid AI could not process your request right now. Please check that the backend and Gemini API are configured correctly and try again.';
+const TECHNICAL_ERROR_MESSAGE = DISPLAY_FALLBACKS.technicalError;
 
 function cleanDisplayText(value) {
   return String(value || '')
@@ -808,6 +809,8 @@ function SourceCard({ source, onClick }) {
 // Matches a question that asks about free legal aid or a free lawyer. Only the user's own
 // question text (already on screen) is read; nothing new is sent to or asked of the backend.
 const LEGAL_AID_QUESTION_PATTERN = /legal[\s-]*aid|free\s+(lawyer|advocate|legal\s+(help|services?|advice|representation))|legal\s+services\s+authority|\b(nalsa|dlsa|dslsa)\b/i;
+const CYBER_HINT_TEXT = 'Lost money to online fraud? Call 1930 as soon as possible.';
+const LEGAL_AID_HINT_TEXT = 'Check if you qualify for free legal aid';
 
 function LegalAIResponse({ response, onSourceClick, question = '', speechId = null }) {
   const speech = useSpeechState();
@@ -827,6 +830,13 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
   const isCyberRouted = (response?.routing?.domains || []).includes('cyber');
   const isLegalAidQuestion = (response?.routing?.domains || []).includes('constitutional_public_authority')
     && LEGAL_AID_QUESTION_PATTERN.test(question);
+  // The one-line links shown under some answers, passed to Listen so they are read too.
+  const visibleHints = clarificationQuestion ? [] : [
+    isCyberRouted ? CYBER_HINT_TEXT : null,
+    isLegalAidQuestion ? LEGAL_AID_HINT_TEXT : null
+  ].filter(Boolean);
+  const cardClass = (base) => `${base}${isBeingRead ? ' is-being-read' : ''}`;
+  const listen = speechId !== null ? <ListenControls speechId={speechId} response={response} hints={visibleHints} /> : null;
 
   // No internet / Gemini unreachable: the backend already fell back to what it found locally
   // (embeddings + FAISS, no network involved) instead of a Gemini-written answer. Shown as its
@@ -838,7 +848,7 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
         <div className="message-avatar ai-message-avatar offline-avatar" aria-hidden="true">
           <WifiOff size={20} strokeWidth={1.8} />
         </div>
-        <section className="legal-response-card offline-response-card">
+        <section className={cardClass('legal-response-card offline-response-card')}>
           <div className="response-header">
             <div className="response-brand">
               <div className="response-emblem">
@@ -848,13 +858,12 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
             </div>
             <span className="response-pill offline-pill">Offline mode</span>
           </div>
+          {listen}
 
           <div className="offline-notice">
             <WifiOff size={18} strokeWidth={1.8} />
             <span>
-              {cleanDisplayText(response.offline_notice) || cleanDisplayText(
-                'You are currently offline. Retrieving the relevant legal section, case, corpus, and law locally from the database and local files.'
-              )}
+              {cleanDisplayText(response.offline_notice) || DISPLAY_FALLBACKS.offlineNotice}
             </span>
           </div>
 
@@ -878,7 +887,7 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
                       {source.section ? ` — ${cleanDisplayText(source.section)}` : ''}
                       {source.page ? ` · Page ${source.page}` : ''}
                     </p>
-                    <p className="offline-section-text">{source.full_text || source.excerpt || 'No excerpt is available for this source.'}</p>
+                    <p className="offline-section-text">{source.full_text || source.excerpt || DISPLAY_FALLBACKS.offlineNoExcerpt}</p>
                   </div>
                 ))}
               </div>
@@ -886,7 +895,7 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
           ) : (
             <div className="response-section">
               <h4>No local matches</h4>
-              <p>No relevant sections were found in the local legal corpus for this question.</p>
+              <p>{DISPLAY_FALLBACKS.offlineNoMatches}</p>
             </div>
           )}
 
@@ -905,7 +914,7 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
         <div className="message-avatar ai-message-avatar" aria-hidden="true">
           <Info size={21} strokeWidth={1.7} />
         </div>
-        <section className="legal-response-card technical-response-card">
+        <section className={cardClass('legal-response-card technical-response-card')}>
           <div className="response-header">
             <div className="response-brand">
               <div className="response-emblem">
@@ -915,6 +924,7 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
             </div>
             <span className="response-pill">Technical issue</span>
           </div>
+          {listen}
           <div className="response-section">
             <h4>Request could not be processed</h4>
             <p>{cleanDisplayText(answer.issue_summary) || TECHNICAL_ERROR_MESSAGE}</p>
@@ -943,8 +953,9 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
         <div className="message-avatar ai-message-avatar" aria-hidden="true">
           <Scale size={21} strokeWidth={1.45} />
         </div>
-        <section className="legal-response-card conversational-reply-card">
-          <p>{cleanDisplayText(answer.issue_summary) || 'You can ask a follow-up question whenever you like.'}</p>
+        <section className={cardClass('legal-response-card conversational-reply-card')}>
+          <p>{cleanDisplayText(answer.issue_summary) || DISPLAY_FALLBACKS.conversational}</p>
+          {listen}
         </section>
       </article>
     );
@@ -955,7 +966,7 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
       <div className="message-avatar ai-message-avatar" aria-hidden="true">
         <Scale size={21} strokeWidth={1.45} />
       </div>
-      <section className={`legal-response-card${isBeingRead ? ' is-being-read' : ''}`}>
+      <section className={cardClass('legal-response-card')}>
         <div className="response-header">
           <div className="response-brand">
             <div className="response-emblem">
@@ -965,13 +976,13 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
           </div>
           <span className="response-pill">Legal information</span>
         </div>
-        {speechId !== null ? <ListenControls speechId={speechId} response={response} /> : null}
+        {listen}
 
         {/* issue_summary is written as a direct reply to the user's latest message, so it gets
             its own heading rather than sitting under "What this may involve". */}
         <div className="response-section">
           <h4>In short</h4>
-          <p>{cleanDisplayText(answer.issue_summary) || 'The available legal sources do not contain enough information to answer this reliably.'}</p>
+          <p>{cleanDisplayText(answer.issue_summary) || DISPLAY_FALLBACKS.summary}</p>
         </div>
 
         {whatThisMayInvolve.length > 0 && (
@@ -1063,14 +1074,14 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
         {!clarificationQuestion && isCyberRouted ? (
           <a className="response-cyber-hint" href="#/helplines">
             <Phone size={14} strokeWidth={2} />
-            Lost money to online fraud? Call 1930 as soon as possible.
+            {CYBER_HINT_TEXT}
           </a>
         ) : null}
 
         {!clarificationQuestion && isLegalAidQuestion ? (
           <a className="response-cyber-hint" href="#/legal-aid">
             <HandHelping size={14} strokeWidth={2} />
-            Check if you qualify for free legal aid
+            {LEGAL_AID_HINT_TEXT}
           </a>
         ) : null}
 
@@ -4311,6 +4322,7 @@ function InteractiveCursor() {
 
 function HomePage() {
   const chat = useLegalChat();
+  React.useEffect(() => stopSpeech, []); // leaving the homepage silences an answer being read
   return (
     <>
       <InteractiveCursor />
