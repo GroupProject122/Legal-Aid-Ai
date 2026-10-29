@@ -1,0 +1,83 @@
+{
+  "evaluation_config": {
+    "case_file": "eval/scam_check_cases_blind.json",
+    "mode": "rules_only",
+    "gemini_model": null,
+    "gemini_calls": 0,
+    "gemini_unavailable_calls": 0,
+    "delay_seconds_between_calls": 0.0,
+    "note": "Message text is deliberately not copied into this report; see the case file by id."
+  },
+  "metrics": {
+    "scam_count": 2,
+    "genuine_count": 0,
+    "scam_recall": 1.0,
+    "scam_high_risk_rate": 0.5,
+    "scam_type_accuracy": 1.0,
+    "false_alarm_rate_high_risk": 0.0,
+    "genuine_any_warning_rate": 0.0
+  },
+  "per_type": {
+    "bank_kyc_fraud": {
+      "count": 1,
+      "flagged": 1,
+      "high_risk": 0,
+      "type_correct": 1
+    },
+    "upi_collect_scam": {
+      "count": 1,
+      "flagged": 1,
+      "high_risk": 1,
+      "type_correct": 1
+    }
+  },
+  "per_language": {
+    "en": {
+      "scam_count": 2,
+      "genuine_count": 0,
+      "scam_recall": 1.0,
+      "scam_high_risk_rate": 0.5,
+      "scam_type_accuracy": 1.0,
+      "false_alarm_rate_high_risk": 0.0,
+      "genuine_any_warning_rate": 0.0
+    }
+  },
+  "results": [
+    {
+      "id": "blind_certin_ngrok_kyc_sms",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "bank_kyc_fraud",
+      "verdict": "warning_signs",
+      "scam_type": "bank_kyc_fraud",
+      "signs": [
+        "urgency_or_threat",
+        "kyc_pan_aadhaar_update"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": false,
+        "type_correct": true
+      }
+    },
+    {
+      "id": "blind_rbi_upi_request_pin_to_receive",
+      "label": "scam",
+      "language": "en",
+      "expected_type": "upi_collect_scam",
+      "verdict": "high_risk",
+      "scam_type": "upi_collect_scam",
+      "signs": [
+        "asks_for_otp_pin_password",
+        "upi_collect_to_receive"
+      ],
+      "ai_check": "skipped",
+      "evaluation": {
+        "flagged": true,
+        "high_risk": true,
+        "type_correct": true
+      }
+    }
+  ]
+}

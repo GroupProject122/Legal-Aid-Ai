@@ -48,6 +48,189 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Helplines page: "In an emergency, call 112" banner removed (2026-10-29)
+
+Removed at the team's request (`frontend/src/helplines/Helplines.jsx`), along with its now-unused
+`.helpline-emergency-banner` CSS in `frontend/src/styles.css`. 112 is still listed on the page as
+a regular helpline card (`erss-112` in `helplinesData.js`); only the banner at the top is gone.
+
+## Unreleased — Checks on the merged code: eligibility source links, case file (2026-10-29)
+
+Hand checks after merging PR #1 and #2; **nothing needed fixing**. Run against a scratch database
+(headless Chrome via DevTools, scratch server on the rebuilt index; no Gemini).
+
+**Free Legal Aid Check (#/legal-aid).**
+- Every corpus source the checker can cite, collected from 16 answer sets (each category, a child,
+  low/high income in and outside Delhi, the Supreme Court): 5 distinct provisions -- Legal Services
+  Authorities Act s.12, s.13, s.19 and Regulation 3 of both NALSA regulations. Each `api_url`
+  returns 200 and names the provision the card shows (the card's "Section 12(c)" opens Section 12;
+  the viewer works at section level).
+- In the browser (Delhi, not the Supreme Court, "I am a woman", age 34 -> "You are likely entitled to
+  free legal aid"): each source link opens the right provision page, and each page's PDF link
+  returns the PDF. The result card is readable in dark mode. No page errors.
+- `/api/corpus/file` is not used by this page; it is the Ask page source viewer's link, checked in
+  the post-merge smoke test.
+
+**Case file.**
+- Signed-in owner, case with a document linked via `case_documents` (`croma_receipt.pdf`, question 1):
+  PDF and DOCX download; the document is listed under "Documents already uploaded" and its
+  confirmed facts are attributed to it by name; sources labelled ("Statute", page numbers), the
+  unverified source left out with a note; layout clean (cover, page breaks, no empty headings).
+- The OTP/Aadhaar/password/card fixture case: none of the seven secrets appears in the PDF text;
+  redaction markers in their place.
+- Another signed-in user: 404 "Case not found." for both formats; guest: 401 for both.
+- Guest: no case-file button on My Cases (sign-in panel) or the Ask page. Owner in dark mode: the
+  no-answer case's button is disabled, the dialog opens with the not-legal-advice notice, the Word
+  download completes, and the button is on the Ask page. No page errors.
+
+**Found while checking, not part of this branch:** on `main`, a full backend test run wrote 11 files
+into the real `backend/user_uploads/` (no database record pointed at them; moved out). PR #3's test
+isolation also redirects `document_store.UPLOAD_DIR`, which stops this.
+
+## Unreleased — Parser: amendment footnote markers merged into provision numbers (2026-10-29)
+
+**Bug.** In the NALSA (Free and Competent Legal Services) Regulations, 2010, regulations **5, 7, 8 and
+9** were indexed as **115, 147, 158 and 199** (the report named 7 and 8; checking the document found 5
+and 9 too). Cause, confirmed in the raw PDF text: each was amended, and pypdf extracts the
+superscript amendment footnote marker (11, 14, 15, 19) as part of the number -- the matching
+footnotes ("11 Substituted vide notification dated 22/10/2018 ...") are on the same pages.
+
+**Fix (general, `ingest.py`).** `legal_units_from_pages()` now collects the amendment footnote markers
+on each page and tracks the previous provision number; `split_footnote_marker()` splits a number into
+marker + real number only when **both** signals agree -- the prefix is a footnote marker on that
+page, and the remainder (not the merged number) continues the provision sequence (within 3). So a
+genuine Section 115 after Section 114 is never touched. The marker is also removed from the chunk's
+heading line.
+
+**Effect on every document** (all 83 parsed in memory with the parser before and after the fix,
+nothing written): **only this document changed, and only these four numbers**
+(115->5, 147->7, 158->8, 199->9); chunk counts unchanged; the other 82 documents' provision lists
+identical. Re-ingested with `--only` for that document: same 30 chunk IDs, 10 chunks changed (number
+and heading line), every other document's records unchanged. Audit MEDIUM warnings 96 -> 94; retrieval
+metrics identical. The source viewer now lists regulations 1-9 and 12-16 (10 and 11 were omitted by
+amendment). The eligibility checker cites only Regulation 3 of this document, so no citation changed.
+
+**Tests:** `tests/test_ingest.py` -- the split happens when both signals agree, never otherwise
+(Section 115 after 114, no footnote, remainder out of sequence), and an end-to-end page parse yields
+regulations 4, 5, 6, 7.
+
+## Unreleased — Scam checker: corrected manifest notes, official 1930 / Chakshu sources, blind test set (2026-10-29)
+
+**Manifest corrections** (`backend/documents/corpus_manifest.json`). Checked against the indexed text:
+- `cyber/sanchar_saathi_ceir_user_manual.pdf` is C-DOT's CEIR user manual -- blocking/unblocking a
+  lost or stolen phone and request status only. Its note *and title* claimed SIM verification
+  (TAFCOP) and fraud reporting (Chakshu); neither word appears in it. Note and title corrected.
+- `cyber/cybercrime_portal_citizen_manual_latest.pdf`'s note claimed it covers the 1930 helpline.
+  "1930" does not appear as a helpline anywhere in the indexed corpus (every hit was the year in
+  "Sale of Goods Act, 1930"). Note corrected.
+
+**Two official sources added** (`backend/documents/cyber/`), recorded like the other procedural
+guides (`authority_level: procedural_guide`, `document_type: procedural_user_guide`,
+`status: reference_only`, so PR #2's down-weighting applies), with new provenance fields
+`source_url` and `retrieved` and the details in `notes`:
+- `i4c_1930_helpline_faq.pdf` -- **official website**: the I4C (MHA) FAQ page
+  https://i4c.mha.gov.in/FAQ.aspx, retrieved 2026-10-29, collapsed answers expanded before printing
+  to PDF. "Complaints related to financial cyber frauds can be reported by calling the National
+  Helpline number 1930..."
+- `dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf` -- **press release**: Ministry of
+  Communications (DoT), posted 05 Oct 2026 by PIB Delhi, the PDF as published on dot.gov.in.
+  Describes Chakshu (report suspicious calls, SMS, WhatsApp) and repeats 1930 for money already lost.
+- Not obtainable: the 2024 DoT Chakshu launch release and two other Sanchar Saathi PDFs (404), PIB
+  release PRID 1814120 (PIB refuses automated download; not worked around), the cybercrime.gov.in
+  instructions PDF (now serves an HTML page), MHA parliament-answer PDFs (404).
+
+**Ingestion -- full re-parse is NOT safe; new `ingest.py --parse-only --only <files>`.** Re-parsing
+every PDF with today's parser does not reproduce the frozen `parsed/legal_chunks.jsonl`: 1,441
+chunks changed and 94 disappeared across 12 documents (1,278 in the Constitution). That run was
+discarded and the frozen file restored byte-for-byte. The new `--only` option re-parses just the
+named documents and splices them in (replaced in place / appended), leaving every other record
+unchanged. Result: 6,697 -> 6,709 records (+7 I4C, +5 DoT; the 6 Sanchar Saathi chunks pick up the
+corrected title); every other document's records identical and in the same order. Also:
+`clean_text()` now strips NUL characters (pypdf emitted them for the I4C page's Devanagari header;
+none existed in the corpus before). `audit_ingestion.py`: PASS WITH WARNINGS, HIGH 0; the only new
+warnings are the two new documents being 100% fallback chunks (no section structure, like the
+other manuals). Re-embedded: 6,709 chunks, 83 documents. Tests in `tests/test_ingest.py`.
+
+**Retrieval before/after** (local, no Gemini; `eval/retrieval_evaluation_before_official_sources.*`
+vs `eval/retrieval_evaluation_official_sources.*`, 47 single-domain queries):
+
+| Metric | Before | After |
+|---|---:|---:|
+| Document Hit@1 / @3 / @5 | 83.0% / 93.6% / 95.7% | 83.0% / 93.6% / 95.7% |
+| Provision Hit@5 (14 labelled) | 85.7% | **78.6%** |
+| MRR | 0.892 | 0.892 |
+| Off-domain in top 5 | 0.021 | 0.021 |
+| Production `rag.retrieve()` has expected document | 47/47 | 47/47 |
+
+- Both new documents are down-weighted on substantive questions (gate score 0.600 -> 0.400) and not
+  on procedural ones ("how do I report ... 1930"); `is_down_weighted_manual()` applies to them.
+- IT Act ranks first for "identity theft using my password", "cheating by personation online",
+  "phishing link stole my money", "cyber fraud online payment"; for "someone hacked my social media
+  account" the portal manual stays first (as before), with IT Act s.42 and s.66C next.
+- **Regression, one query:** `cyber_03_hinglish_severe` ("mera Instagram hack ho gaya") lost s.66C
+  from the top 5. Cause: two DoT chunks (raw 0.283 and 0.220) entered the fixed 100-candidate pool,
+  whose cut-off is 0.216, displacing s.66C; they are then down-weighted to ranks 79 and 98 but still
+  took the slots. Not fixed: the principled fix is the candidate-pool counterpart of PR #2's anchor
+  fix (down-weighted manuals shouldn't take pool slots), a retrieval change for a separate decision.
+
+**Citations.** The checker's 1930 step now cites the I4C FAQ and its Chakshu step the DoT release,
+as whole-document links to the source viewer (`#/rights/source/<id>`); like provision citations,
+the citation is dropped if the document is missing and the step is still shown. Tests in
+`tests/test_scam_checker.py` (both links resolve, PDFs served, dropped when missing).
+
+**Blind test set -- incomplete, 2 of ~20 scam cases.** `eval/scam_check_cases_blind.json` holds only
+messages an official source shows verbatim: CERT-In CICA-2021-2948's KYC SMS (link host masked) and
+the RBI BE(A)WARE booklet's "Please enter PIN to receive money!!" (marked as a fragment). Most
+official pages (RBI, CERT-In, TRAI, Income Tax, DoT) describe scams instead of quoting them, and
+PIB Fact Check -- the main source that does -- refuses automated download; nothing was invented to
+fill the gap. The file lists, per scam type, where to collect the rest by hand;
+`eval/scam_check_genuine_submissions_template.json` and `eval/README_scam_check_blind_set.md` explain
+how teammates add ~15 real genuine messages. The cases were picked from what official sources
+published, without reading the rules (the rule *names* had been seen while wiring citations).
+Ran both modes on the 2 cases (2/2 flagged, types correct, rules-only and with Gemini -- 2 Gemini
+requests); with 2 cases this checks the pipeline, not recall. Per-type recall is pending.
+
+## Unreleased — Read answers aloud on the Ask page (2026-10-29)
+
+Frontend only: the browser's own `speechSynthesis`, no backend change, no Gemini request.
+
+- **"Listen"** on each full assistant answer (not on clarification questions, technical errors,
+  offline results or one-line acknowledgements). Never auto-plays.
+- **What is read** (`frontend/src/speech/answerToSpeech.js`, pure functions): "In short"
+  (`issue_summary`), then the suggested next steps, then where to approach. Skipped: sources,
+  citation brackets, disclaimers, limitations. URLs and bare official domains are read as "the
+  link shown on screen"; "S. 69"/"Sec."/"Ss."/"u/s"/"r/w"/"Art."/"Reg." are read in full, "Rs.
+  25,000" as "25,000 rupees".
+- **Voice:** an `en-IN` voice if the browser has one, else any English voice (voices load
+  asynchronously; the voice is picked when speaking starts, after `voiceschanged`). Hinglish in
+  Latin letters is passed through as typed.
+- **Controls:** play, pause/resume, stop, speed 0.75x / 1x / 1.25x remembered in `localStorage`
+  (try/catch). The answer being read is outlined and labelled "Reading aloud".
+- **One at a time** (`speech/speechController.js`, a single app-wide speaker). Speech stops when
+  a new question is sent, when voice recording starts (the existing `onVoiceStart` hook, which
+  nothing was wired to before), when the chat is cleared, when leaving the Ask page, and on
+  `pagehide`.
+- **Long answers** are spoken as sentence-sized chunks (max ~200 characters; Chrome cuts off long
+  single utterances). Pause cancels the current chunk and resume re-reads it from its start --
+  more reliable across chunks than `speechSynthesis.pause()`.
+- Hidden when `speechSynthesis` is missing. `aria-label`/`aria-pressed`, keyboard-operable,
+  phone width, light and dark.
+
+**Tests:** `frontend/src/speech/answerToSpeech.test.js`, 14 tests, run with `npm test` (new
+script; Node's built-in `node --test`, no new dependency).
+
+**Checked in Chromium (headless Chrome via DevTools, on a scratch database; no Gemini):** Chrome
+actually speaks (utterance `start`/`end` events) with the en-IN voice "Rishi"; Listen appears on
+the 2 full answers and not on the acknowledgement; nothing auto-plays; keyboard Enter starts it;
+chunks advance; pause stays silent across chunks and resume re-reads the paused chunk; 1.25x is
+applied and stored; Stop works; starting a second answer stops the first; sending a new message,
+starting voice recording, New Question and navigating away each stop speech; no horizontal
+scroll at 390 px; hidden when `speechSynthesis` is removed; no page errors.
+
+**Limitations:** voice quality and availability depend on the operating system's installed
+voices; without an en-IN voice, Indian names and Hinglish are read with another English accent.
+Pause/resume restarts the current sentence rather than the exact word.
+
 ## Unreleased — tests can no longer write to the real database; junk test cases removed (2026-10-28)
 
 **Fix.** `backend/tests/conftest.py` now gives every test its own empty app database and upload

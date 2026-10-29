@@ -309,6 +309,9 @@ def manifest_chunk_metadata(entry: dict, source_file: str) -> dict:
 
 
 def clean_text(text: str) -> str:
+    # pypdf can emit NUL characters for glyphs it can't map (seen in Devanagari headers of
+    # web-page captures); a NUL in chunk text breaks XML-based exports such as the case file DOCX.
+    text = text.replace("\x00", "")
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
@@ -533,8 +536,8 @@ def schedule_or_annexure_metadata(line: str) -> dict | None:
     return None
 
 
-def provision_metadata_from_match(structure_type: str, match: re.Match) -> dict:
-    number = match.group("number")
+def provision_metadata_from_match(structure_type: str, match: re.Match, number: str | None = None) -> dict:
+    number = number or match.group("number")
     title = normalize_heading_title(match.groupdict().get("title"))
     metadata = {
         "structure_type": structure_type,
@@ -598,11 +601,44 @@ def fresh_structure_metadata(structure_type: str = "fallback") -> dict:
     }
 
 
+# An amendment footnote at the foot of a page: "11 Substituted vide notification dated ...".
+AMENDMENT_FOOTNOTE_RE = re.compile(
+    r"^\s*(?P<marker>\d{1,3})\s+(?:Substituted|Inserted|Omitted|Added|Amended|Renumbered|Deleted|Subs\.|Ins\.)\b",
+    re.I,
+)
+# How far past the previous provision a number may jump and still count as "next in sequence"
+# (omitted provisions leave small gaps).
+SEQUENCE_SLACK = 3
+
+
+def page_footnote_markers(text: str) -> set[str]:
+    return {match.group("marker") for line in text.splitlines() if (match := AMENDMENT_FOOTNOTE_RE.match(line))}
+
+
+def split_footnote_marker(number: str, markers: set[str], previous: int | None) -> str | None:
+    """A superscript footnote marker printed just before a provision number is extracted by pypdf
+    as part of it: NALSA (Free and Competent Legal Services) Regulations, 2010 gave regulations 5,
+    7, 8 and 9 as "115", "147", "158" and "199" (markers 11, 14, 15, 19). Returns the real number
+    only when BOTH signals agree -- the prefix is an amendment footnote marker on the same page,
+    and the remainder (not the merged number) continues the provision sequence -- so a genuine
+    Section 115 or 147 is never split."""
+    if previous is None or not number.isdigit():
+        return None
+    if previous < int(number) <= previous + SEQUENCE_SLACK:
+        return None  # the merged-looking number is itself the plausible next provision
+    for marker in sorted(markers, key=len, reverse=True):
+        rest = number[len(marker):]
+        if number.startswith(marker) and rest and not rest.startswith("0") and previous < int(rest) <= previous + SEQUENCE_SLACK:
+            return rest
+    return None
+
+
 def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_family: str) -> list[dict]:
     structure_type, boundary_pattern = parser_boundary_pattern(parser_family)
     context = {"part": None, "chapter": None}
     units: list[dict] = []
     current: dict | None = None
+    previous_number: int | None = None
 
     def start_unit(page_number: int, metadata: dict, first_line: str) -> None:
         nonlocal current
@@ -622,6 +658,7 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
         if is_arrangement_page(text, pdf_path, page_number):
             logger.info("Skipping arrangement/contents page %s in %s", page_number, pdf_path.name)
             continue
+        footnote_markers = page_footnote_markers(text)
         for raw_line in text.splitlines():
             line = raw_line.strip()
             if not line:
@@ -639,7 +676,15 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
 
             boundary_match = boundary_pattern.match(line) if boundary_pattern else None
             if boundary_match and not is_probable_false_boundary(boundary_match):
-                start_unit(page_number, provision_metadata_from_match(structure_type, boundary_match), line)
+                number = boundary_match.group("number")
+                real_number = split_footnote_marker(number, footnote_markers, previous_number)
+                if real_number:
+                    # Drop the marker from the displayed line too ("147. Scrutiny" -> "7. Scrutiny").
+                    line = line[: boundary_match.start("number")] + real_number + line[boundary_match.end("number"):]
+                    number = real_number
+                if number.isdigit():
+                    previous_number = int(number)
+                start_unit(page_number, provision_metadata_from_match(structure_type, boundary_match, number), line)
                 continue
 
             if current is None:
@@ -1595,6 +1640,88 @@ def ingest(parse_only: bool = False) -> dict:
     return build_vector_store_from_jsonl()
 
 
+def splice_documents(
+    source_files: list[str],
+    chunks_path: Path | None = None,
+    summary_path: Path | None = None,
+) -> dict:
+    """Re-parse ONLY the given manifest documents and splice their chunks into the existing
+    legal_chunks.jsonl: a document already present has its chunks replaced in place, a new one is
+    appended, and every other record is written back unchanged.
+
+    Added 2026-10-29 because a full `--parse-only` is not safe on this corpus: re-parsing every
+    PDF with the current parser does not reproduce the frozen legal_chunks.jsonl (1,441 chunks
+    changed and 94 disappeared across 12 documents, 1,278 of them in the Constitution), so adding
+    one document that way silently rewrites much of the corpus. Use this to add or re-parse
+    specific documents; run `python ingest.py` afterwards to re-embed."""
+    chunks_path = chunks_path or LEGAL_CHUNKS_PATH
+    summary_path = summary_path or PARSE_SUMMARY_PATH
+    wanted = list(dict.fromkeys(source_files))
+    entries = {entry.get("source_file"): (path, entry) for path, entry in discover_document_entries()[0]}
+    unknown = [source for source in wanted if source not in entries]
+    if unknown:
+        raise ValueError(f"Not active documents in corpus_manifest.json: {unknown}")
+
+    replacement = {}
+    for source in wanted:
+        pdf_path, entry = entries[source]
+        replacement[source] = [jsonl_record_from_chunk(chunk) for chunk in parse_document(pdf_path, entry)]
+        if not replacement[source]:
+            raise ValueError(f"No chunks parsed from {source}")
+
+    existing = load_legal_chunks_jsonl(chunks_path)
+    records: list[dict] = []
+    placed: set[str] = set()
+    for record in existing:
+        source = record.get("source_file")
+        if source in replacement:
+            if source not in placed:
+                records.extend(replacement[source])
+                placed.add(source)
+            continue
+        records.append(record)
+    for source in wanted:
+        if source not in placed:
+            records.extend(replacement[source])
+
+    atomic_write_text(
+        chunks_path,
+        "".join(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n" for record in records),
+    )
+    validation = validate_parse_outputs(chunks_path, {"chunk_count": len(records)})
+
+    summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else {"documents": []}
+    by_source = {document.get("source_file"): document for document in summary.get("documents", [])}
+    for source in wanted:
+        chunks = replacement[source]
+        fallback = sum(1 for chunk in chunks if chunk.get("structure_type") == "fallback")
+        by_source[source] = {
+            "source_file": source,
+            "domain": entries[source][1].get("domain"),
+            "document_type": entries[source][1].get("document_type"),
+            "total_chunks": len(chunks),
+            "structure_aware_chunks": len(chunks) - fallback,
+            "fallback_chunks": fallback,
+        }
+    fallback_total = sum(1 for record in records if record.get("structure_type") == "fallback")
+    summary.update(
+        {
+            "documents_parsed": len({record.get("source_file") for record in records}),
+            "total_chunks": len(records),
+            "structure_aware_chunks": len(records) - fallback_total,
+            "fallback_chunks": fallback_total,
+            "structure_aware_percentage": round((len(records) - fallback_total) / len(records) * 100, 2),
+            "chunks_by_domain": dict(Counter(record.get("domain") for record in records)),
+            "chunks_by_structure_type": dict(Counter(record.get("structure_type") for record in records)),
+            "chunks_by_document_type": dict(Counter(record.get("document_type") for record in records)),
+            "documents": list(by_source.values()),
+        }
+    )
+    atomic_write_text(summary_path, json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
+    logger.info("Spliced %s document(s) into %s: %s records", len(wanted), chunks_path, validation["record_count"])
+    return {"spliced": {source: len(replacement[source]) for source in wanted}, "validation": validation}
+
+
 def main(argv: list[str] | None = None) -> dict:
     parser = argparse.ArgumentParser(description="Parse legal PDFs and optionally build the FAISS vector store.")
     parser.add_argument(
@@ -1602,7 +1729,21 @@ def main(argv: list[str] | None = None) -> dict:
         action="store_true",
         help="Parse PDFs and create chunks without generating embeddings or modifying the vector store.",
     )
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        metavar="SOURCE_FILE",
+        help=(
+            "With --parse-only: re-parse only these manifest documents (e.g. cyber/x.pdf) and splice "
+            "their chunks into the existing legal_chunks.jsonl, leaving every other document's "
+            "chunks unchanged. Prefer this over a full --parse-only (see splice_documents)."
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.only:
+        if not args.parse_only:
+            parser.error("--only is used with --parse-only; run `python ingest.py` afterwards to re-embed.")
+        return splice_documents(args.only)
     return ingest(parse_only=args.parse_only)
 
 

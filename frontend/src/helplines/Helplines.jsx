@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, ExternalLink, Phone } from 'lucide-react';
+import { ExternalLink, Phone } from 'lucide-react';
 
 import { HeaderControls, PageDivider, DocumentsBackgroundArt } from '../shared/PageChrome.jsx';
 import helplines, { HELPLINE_DOMAINS, TENANCY_NOTE, LAST_VERIFIED } from './helplinesData.js';
@@ -99,13 +99,6 @@ export default function Helplines() {
           <p>Official Indian helplines and complaint portals for the problems this app covers.</p>
           <PageDivider />
         </header>
-
-        <div className="helpline-emergency-banner" role="alert">
-          <AlertTriangle size={22} strokeWidth={1.8} />
-          <span>
-            In an emergency, call <a href="tel:112">112</a>.
-          </span>
-        </div>
 
         <div className="helpline-filter-row" role="group" aria-label="Filter helplines by domain">
           <button

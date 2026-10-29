@@ -226,6 +226,32 @@ def test_steps_include_1930_and_chakshu():
     assert "cybercrime.gov.in" in texts
 
 
+def test_1930_and_chakshu_steps_cite_official_corpus_sources():
+    result = scam_checker.check_message("Install AnyDesk now", use_ai=False)
+    helpline = next(step for step in result.what_to_do if step.get("tel") == "1930")
+    chakshu = next(step for step in result.what_to_do if "Chakshu" in step["text"])
+    assert [source["source_id"] for source in helpline["sources"]] == [scam_checker.HELPLINE_1930_SOURCE]
+    assert [source["source_id"] for source in chakshu["sources"]] == [scam_checker.CHAKSHU_SOURCE]
+    for source in helpline["sources"] + chakshu["sources"]:
+        assert source["provision_id"] is None  # whole-document citation
+        response = client.get(source["api_url"])
+        assert response.status_code == 200, source["api_url"]
+        pdf = client.get(f"/api/legal-awareness/sources/{source['source_id']}/file")
+        assert pdf.status_code == 200 and pdf.headers["content-type"] == "application/pdf"
+
+
+def test_citation_is_dropped_when_the_document_is_missing(monkeypatch):
+    def missing(*_args):
+        raise scam_checker.legal_education.LegalEducationError("not here")
+
+    monkeypatch.setattr(scam_checker.legal_education, "get_source", missing)
+    result = scam_checker.check_message("Install AnyDesk now", use_ai=False)
+    helpline = next(step for step in result.what_to_do if step.get("tel") == "1930")
+    chakshu = next(step for step in result.what_to_do if "Chakshu" in step["text"])
+    assert helpline["sources"] == [] and chakshu["sources"] == []
+    assert "1930" in helpline["text"]  # the step itself is still shown
+
+
 # --- Gemini constraints ---
 
 

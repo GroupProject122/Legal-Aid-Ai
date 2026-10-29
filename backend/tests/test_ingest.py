@@ -894,3 +894,80 @@ def test_normal_indexing_path_uses_frozen_jsonl_builder(monkeypatch):
 
     assert called["used_jsonl_builder"] is True
     assert result["built"] is True
+
+
+# --- splice_documents (python ingest.py --parse-only --only ...) ---
+
+
+def _record(source: str, n: int, text: str = "text") -> dict:
+    return {"chunk_id": f"{source}__{n}", "source_file": source, "text": f"{text} {n}", "structure_type": "section", "domain": "cyber", "document_type": "statute"}
+
+
+def _write_jsonl(path: Path, records: list[dict]) -> None:
+    path.write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in records), encoding="utf-8")
+
+
+def test_splice_replaces_only_the_named_document_and_appends_new_ones(monkeypatch, tmp_path):
+    chunks_path, summary_path = tmp_path / "legal_chunks.jsonl", tmp_path / "parse_summary.json"
+    frozen = [_record("a.pdf", 1), _record("b.pdf", 1), _record("b.pdf", 2), _record("c.pdf", 1)]
+    _write_jsonl(chunks_path, frozen)
+    entries = [(tmp_path / name, {"source_file": name, "domain": "cyber", "document_type": "statute"}) for name in ("a.pdf", "b.pdf", "c.pdf", "new.pdf")]
+    monkeypatch.setattr(ingest, "discover_document_entries", lambda: (entries, []))
+    reparsed = {"b.pdf": [_record("b.pdf", 1, "fixed"), _record("b.pdf", 2, "fixed"), _record("b.pdf", 3, "fixed")], "new.pdf": [_record("new.pdf", 1)]}
+    monkeypatch.setattr(ingest, "parse_document", lambda _path, entry: reparsed[entry["source_file"]])
+
+    result = ingest.splice_documents(["b.pdf", "new.pdf"], chunks_path, summary_path)
+
+    records = [json.loads(line) for line in chunks_path.read_text(encoding="utf-8").splitlines()]
+    assert [r["chunk_id"] for r in records] == ["a.pdf__1", "b.pdf__1", "b.pdf__2", "b.pdf__3", "c.pdf__1", "new.pdf__1"]
+    assert records[0] == frozen[0] and records[4] == frozen[3]  # untouched documents byte-for-byte
+    assert all(r["text"].startswith("fixed") for r in records if r["source_file"] == "b.pdf")
+    assert result["spliced"] == {"b.pdf": 3, "new.pdf": 1}
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert summary["total_chunks"] == 6 and summary["documents_parsed"] == 4
+
+
+def test_splice_refuses_documents_not_in_the_manifest(monkeypatch, tmp_path):
+    chunks_path = tmp_path / "legal_chunks.jsonl"
+    _write_jsonl(chunks_path, [_record("a.pdf", 1)])
+    monkeypatch.setattr(ingest, "discover_document_entries", lambda: ([], []))
+    with pytest.raises(ValueError, match="Not active documents"):
+        ingest.splice_documents(["missing.pdf"], chunks_path, tmp_path / "summary.json")
+    assert chunks_path.read_text(encoding="utf-8").count("\n") == 1  # nothing written
+
+
+def test_clean_text_removes_nul_characters():
+    assert "\x00" not in ingest.clean_text("क\x00 द्र Indian Cybercrime")
+
+
+# --- footnote markers merged into provision numbers (NALSA Regulations 2010: 7 -> "147") ---
+
+
+def test_footnote_marker_is_split_from_a_provision_number_when_both_signals_agree():
+    assert ingest.split_footnote_marker("147", {"14"}, previous=6) == "7"
+    assert ingest.split_footnote_marker("115", {"11", "10"}, previous=4) == "5"
+    assert ingest.split_footnote_marker("199", {"19"}, previous=8) == "9"
+
+
+def test_genuine_large_numbers_are_never_split():
+    assert ingest.split_footnote_marker("115", {"11"}, previous=114) is None  # Section 115 after 114
+    assert ingest.split_footnote_marker("147", set(), previous=6) is None  # no footnote on the page
+    assert ingest.split_footnote_marker("147", {"14"}, previous=40) is None  # remainder doesn't fit
+    assert ingest.split_footnote_marker("147", {"14"}, previous=None) is None
+    assert ingest.split_footnote_marker("12A", {"1"}, previous=1) is None
+
+
+def test_regulation_numbers_parse_correctly_with_merged_footnote_markers(tmp_path):
+    page_three = "\n".join([
+        "4. Legal Services Institution to process the application.- The application shall be processed.",
+        "115. Proof of entitlement of free legal services. - A self-certificate of income shall suffice.",
+        "6. Consequences of false or untrue information.- Legal services may be withdrawn.",
+        "147. Scrutiny and evaluation of the application for free legal services.- The Member Secretary shall scrutinise.",
+        "11 Substituted vide notification dated 22/10/2018, published in the Gazette of India on 25/10/2018",
+        "14 Substituted vide notification dated 22/10/2018, published in the Gazette of India on 25/10/2018",
+    ])
+    units = ingest.legal_units_from_pages(tmp_path / "regs.pdf", [(3, page_three)], "regulations")
+    numbers = [unit["metadata"].get("regulation_number") for unit in units if unit["metadata"].get("structure_type") == "regulation"]
+    assert numbers == ["4", "5", "6", "7"]
+    seven = next(unit for unit in units if unit["metadata"].get("regulation_number") == "7")
+    assert seven["lines"][0].startswith("7. Scrutiny")

@@ -83,6 +83,9 @@ function StepText({ step }) {
 }
 
 function sourceHref(law) {
+  // A whole-document source (an official web page or press release) has no provision: link to
+  // the document itself in the source viewer.
+  if (!law.provision_id) return `#/rights/source/${encodeURIComponent(law.source_id)}`;
   return `#/rights/source/${encodeURIComponent(law.source_id)}/provision/${encodeURIComponent(law.provision_id)}`;
 }
 
@@ -142,7 +145,7 @@ function ResultCard({ result, headingRef }) {
                 <span className="scam-step-sources">
                   {' '}Source:{' '}
                   {step.sources.map((source, index) => (
-                    <React.Fragment key={source.provision_id}>
+                    <React.Fragment key={`${source.source_id}-${source.provision_id || 'document'}`}>
                       {index ? ', ' : ''}
                       <a href={sourceHref(source)}>{source.label}</a>
                     </React.Fragment>

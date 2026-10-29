@@ -4,11 +4,11 @@
     "severity_counts": {
       "HIGH": 0,
       "LOW": 3,
-      "MEDIUM": 96
+      "MEDIUM": 94
     },
     "status": "PASS WITH WARNINGS",
-    "total_chunks_checked": 6697,
-    "unique_chunk_ids": 6697
+    "total_chunks_checked": 6709,
+    "unique_chunk_ids": 6709
   },
   "child_chunk_issues": [],
   "duplicate_findings": {
@@ -230,6 +230,26 @@
         "structure_aware_chunks": 0,
         "structure_aware_percentage": 0.0,
         "total_chunks": 6
+      },
+      {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 7,
+        "fallback_percentage": 100.0,
+        "source_file": "cyber/i4c_1930_helpline_faq.pdf",
+        "structure_aware_chunks": 0,
+        "structure_aware_percentage": 0.0,
+        "total_chunks": 7
+      },
+      {
+        "document_type": "procedural_user_guide",
+        "domain": "cyber",
+        "fallback_chunks": 5,
+        "fallback_percentage": 100.0,
+        "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+        "structure_aware_chunks": 0,
+        "structure_aware_percentage": 0.0,
+        "total_chunks": 5
       },
       {
         "document_type": "amendment_rules",
@@ -1032,7 +1052,7 @@
         "total_chunks": 12
       }
     ],
-    "total_fallback_chunks": 95
+    "total_fallback_chunks": 107
   },
   "header_footer_noise": {
     "patterns": [
@@ -1924,6 +1944,30 @@
     },
     {
       "counts_by_structure_type": {
+        "fallback": 5
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 5,
+      "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+      "structure_aware_chunks": 0,
+      "structure_aware_percentage": 0.0,
+      "total_chunks": 5
+    },
+    {
+      "counts_by_structure_type": {
+        "fallback": 7
+      },
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 7,
+      "source_file": "cyber/i4c_1930_helpline_faq.pdf",
+      "structure_aware_chunks": 0,
+      "structure_aware_percentage": 0.0,
+      "total_chunks": 7
+    },
+    {
+      "counts_by_structure_type": {
         "fallback": 1,
         "schedule": 3,
         "section": 126
@@ -2780,26 +2824,6 @@
       "severity": "MEDIUM",
       "source_file": "constitutional_public_authority/contempt_of_courts_act_1971.pdf",
       "structure_type": "section",
-      "type": "sequence_reverse_jump"
-    },
-    {
-      "current_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0008",
-      "current_number": "6",
-      "previous_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0007",
-      "previous_number": "115",
-      "severity": "MEDIUM",
-      "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
-      "structure_type": "regulation",
-      "type": "sequence_reverse_jump"
-    },
-    {
-      "current_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0018",
-      "current_number": "12",
-      "previous_chunk_id": "constitutional_public_authority_nalsa_free_and_competent_legal_services_regulations_2010__chunk_0014",
-      "previous_number": "199",
-      "severity": "MEDIUM",
-      "source_file": "constitutional_public_authority/nalsa_free_and_competent_legal_services_regulations_2010.pdf",
-      "structure_type": "regulation",
       "type": "sequence_reverse_jump"
     },
     {
