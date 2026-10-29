@@ -48,6 +48,14 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Retrieval: RTI time-limit question answered (Set 1 rti_02) (2026-10-29)
+
+`rag.py`: retrieval now uses the router's domains when the question's wording has no domain
+keyword (so "What is the Time Period for Supply of Information?" gets the full candidate pool,
+not the 12-chunk fallback); also, deadline questions ("how long", "time limit", ...) favour
+provisions that state a period, so RTI s.7 ("within thirty days ... forty-eight hours") is
+selected. Retrieval eval (47 queries) and scam checker unchanged; not re-run live yet.
+
 ## Unreleased — Set 1 re-run complete: after the general-question fix (2026-10-29)
 
 Finishes the Set 1 re-run left incomplete in the general-question entry below. All 50 questions

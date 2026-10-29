@@ -141,3 +141,83 @@ def test_narration_and_partial_words_are_not_procedural(question):
 def test_manual_is_down_weighted_for_a_narrated_substantive_summary():
     question = "User reports that their online marketplace account was hacked resulting in loss of money."
     assert is_down_weighted_manual(question, candidates()[0]) is True
+
+
+# Set 1 rti_02 (2026-10-29): "What is the Time Period for Supply of Information?" had no domain
+# keyword, so retrieval used a 12-candidate pool and missed RTI s.7 although the router had
+# classified the question; and for "How long does the public authority have to supply
+# information?" s.7 ranked below ss.25 and 4. Two general fixes below.
+import rag  # noqa: E402
+
+RTI = dict(source="constitutional_public_authority/right_to_information_act_2005.pdf", document_title="The Right to Information Act, 2005",
+           authority_level="primary", document_type="statute", retrieval_priority="high", status="active")
+
+
+def rti_chunk(section, score, text):
+    return RetrievedChunk(text=text, page=1, score=score, domain="constitutional_public_authority", section_number=section,
+                          chunk_id=f"rti{section}", **RTI)
+
+
+def test_router_domains_are_used_only_inside_retrieve_and_only_without_keyword_signals():
+    question = "What is the Time Period for Supply of Information?"
+    assert rag.detect_domain_signals(question)["primary_domains"] == []
+    token = rag._ROUTED_DOMAINS.set(("constitutional_public_authority",))
+    try:
+        assert rag.detect_domain_signals(question)["primary_domains"] == ["constitutional_public_authority"]
+        assert rag.production_candidate_k(question) == 40  # was the 12-candidate fallback
+        # keyword signals still win when the question has any
+        assert rag.detect_domain_signals("my instagram account was hacked")["primary_domains"] == ["cyber"]
+    finally:
+        rag._ROUTED_DOMAINS.reset(token)
+    assert rag.production_candidate_k(question) == 12
+
+
+def test_retrieve_sets_and_clears_the_router_domains(monkeypatch):
+    seen = []
+    engine = rag.LegalRAG.__new__(rag.LegalRAG)
+    engine.chunks = [None] * 100
+
+    def candidates(question, top_k=rag.TOP_K):
+        seen.append(rag._ROUTED_DOMAINS.get())
+        return []
+
+    engine.production_candidates = candidates
+    engine.retrieve("What is the Time Period for Supply of Information?", domains=["constitutional_public_authority"])
+    assert seen == [("constitutional_public_authority",)]
+    assert rag._ROUTED_DOMAINS.get() == ()
+
+
+def test_time_limit_questions_favour_provisions_that_state_a_period():
+    with_period = rti_chunk("7", 0.60, "7. Disposal of request.--(1) ... as expeditiously as possible, and in any case within thirty days of the receipt of the request ... within forty-eight hours")
+    without = rti_chunk("25", 0.65, "25. Monitoring and reporting.--(1) The Central Information Commission shall, as soon as practicable after the end of each year, prepare a report")
+    for question in ("How long does the public authority have to supply information?", "What is the time limit for filing the complaint?",
+                     "within how many days must they reply"):
+        assert rag.query_intent_boost(question, with_period) == rag.TIME_LIMIT_BOOST
+        assert rag.query_intent_boost(question, without) == 0.0
+    assert rag.query_intent_boost("Who is a public information officer?", with_period) == 0.0
+
+
+def test_section_7_is_selected_for_the_time_limit_question():
+    question = "How long does the public authority have to supply information?"
+    pool = [
+        rti_chunk("25", 0.651, "25. Monitoring and reporting. The Commission shall prepare a report on the implementation of the provisions of this Act."),
+        rti_chunk("4", 0.595, "4. Obligations of public authorities. Every public authority shall maintain all its records duly catalogued and indexed."),
+        rti_chunk("7", 0.601, "7. Disposal of request. Within thirty days of the receipt of the request, provide the information; where it concerns life or liberty, within forty-eight hours."),
+    ]
+    # Before the fix s.7 reranked below s.4 (and s.25), so the two-per-document cap left it out.
+    s25, s4, s7 = pool
+    assert rag.final_rerank_score(question, s7) > rag.final_rerank_score(question, s4)
+    assert "7" in [c.section_number for c in select_relevant_chunks(pool, question)]
+
+
+def test_main_passes_the_router_domains_to_retrieval(monkeypatch):
+    import fact_sufficiency
+    import main
+
+    calls = []
+    monkeypatch.setattr(main.rag, "retrieve", lambda query, domains=None: calls.append(domains) or [])
+    context = fact_sufficiency.CaseContext(state_id="x", original_message="What is the Time Period for Supply of Information?",
+                                           domains=["constitutional_public_authority"], issue_summary=None)
+    result = fact_sufficiency.FactSufficiencyResult("sufficient", [], False, None, None, "What is the Time Period for Supply of Information?")
+    main.answer_grounded_from_context(original_message=context.original_message, context=context, fact_result=result)
+    assert calls == [["constitutional_public_authority"]]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextvars
 import json
 import logging
 import re
@@ -585,7 +586,31 @@ def is_online_seller_blocked_payment_query(question: str) -> bool:
     )
 
 
+# The router's domains for the question being retrieved, set only for the duration of
+# LegalRAG.retrieve(..., domains=...). Used when the question's own wording carries no domain
+# keyword at all (Set 1 rti_02: "What is the Time Period for Supply of Information?" scored 0 for
+# every domain, so retrieval fell back to a 12-candidate pool and missed RTI s.7, although the
+# router had already classified it as a public-authority question). Keyword signals always win
+# when there are any; outside retrieve() nothing changes.
+_ROUTED_DOMAINS: contextvars.ContextVar[tuple[str, ...]] = contextvars.ContextVar("routed_domains", default=())
+ROUTED_DOMAIN_SCORE = 0.45  # the weight of one strong keyword cue
+
+
 def detect_domain_signals(query: str) -> dict[str, Any]:
+    signals = keyword_domain_signals(query)
+    routed = _ROUTED_DOMAINS.get()
+    if routed and not signals["primary_domains"] and not signals["secondary_domains"]:
+        known = [domain for domain in routed if domain in signals["scores"]]
+        if known:
+            return {
+                "scores": {domain: (ROUTED_DOMAIN_SCORE if domain in known else 0.0) for domain in signals["scores"]},
+                "primary_domains": known,
+                "secondary_domains": [],
+            }
+    return signals
+
+
+def keyword_domain_signals(query: str) -> dict[str, Any]:
     lowered = re.sub(r"\s+", " ", query.lower()).strip()
     scores = {domain: 0.0 for domain in DOMAIN_SIGNAL_CUES}
     for domain, cues in DOMAIN_SIGNAL_CUES.items():
@@ -876,9 +901,15 @@ class LegalRAG:
             pool.append(chunk)
         return pool
 
-    def retrieve(self, question: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
-        candidates = self.production_candidates(question, top_k)
-        results = select_relevant_chunks(candidates, question=question, top_k=top_k)
+    def retrieve(self, question: str, top_k: int = TOP_K, domains: list[str] | None = None) -> list[RetrievedChunk]:
+        """`domains`: the router's classification, if any -- used only when the question's own
+        wording has no domain keyword (see _ROUTED_DOMAINS)."""
+        token = _ROUTED_DOMAINS.set(tuple(domains or ()))
+        try:
+            candidates = self.production_candidates(question, top_k)
+            results = select_relevant_chunks(candidates, question=question, top_k=top_k)
+        finally:
+            _ROUTED_DOMAINS.reset(token)
         logger.info(
             "Retrieved %s strong chunks from %s candidates for query=%r. Final sources=%s",
             len(results),
@@ -1085,11 +1116,34 @@ def legal_substance_boost(chunk: RetrievedChunk) -> float:
     return min(keyword_boost, 0.10) + doc_preference + title_boost - min(penalty, 0.14)
 
 
+# A question about a deadline ("how long", "time limit", "within how many days") is answered by
+# the provision that states the period. Added 2026-10-29 (Set 1 rti_02): RTI s.7 ("within thirty
+# days ... within forty-eight hours") ranked below ss.25 and 4 for "How long does the public
+# authority have to supply information?", and the two-per-document cap then left it out.
+TIME_LIMIT_QUERY_RE = re.compile(
+    r"\b(?:how long|time limit|time-limit|time period|time frame|timeframe|within how many|how many days|"
+    r"how many months|deadline|limitation period|period of limitation|how soon|by when)\b"
+)
+_DURATION_NUMBER = (
+    r"(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|twenty-one|thirty|forty[- ]eight|"
+    r"forty-five|forty|sixty|ninety)"
+)
+DURATION_RE = re.compile(
+    rf"\bwithin (?:a period of )?{_DURATION_NUMBER} (?:working )?(?:days?|weeks?|months?|years?|hours?)\b"
+    rf"|\b{_DURATION_NUMBER} (?:days?|hours?|months?) (?:of|from|after) the\b"
+    rf"|\bperiod of {_DURATION_NUMBER} (?:days?|weeks?|months?|years?)\b"
+)
+TIME_LIMIT_BOOST = 0.08
+
+
 def query_intent_boost(question: str, chunk: RetrievedChunk) -> float:
     query = question.lower()
     text = chunk.text.lower()
     title = f"{chunk.section_title or ''} {chunk.rule_title or ''}".lower()
     boost = 0.0
+
+    if TIME_LIMIT_QUERY_RE.search(query) and DURATION_RE.search(text):
+        boost += TIME_LIMIT_BOOST
 
     if any(term in query for term in ("refund", "return", "money back")):
         if any(term in text for term in ("return to the complainant the price", "return the price", "charges paid")):

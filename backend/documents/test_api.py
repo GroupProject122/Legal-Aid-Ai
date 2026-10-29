@@ -43,7 +43,7 @@ def test_empty_question_rejected():
 def test_missing_vector_store_handling(monkeypatch):
     monkeypatch.setattr(main.domain_router, "route_issue", lambda _question: classified_route())
 
-    def missing_retrieve(_question: str):
+    def missing_retrieve(_question: str, domains=None):
         raise main.VectorStoreMissingError("Vector store is missing. Run `python ingest.py` inside backend first.")
 
     monkeypatch.setattr(main.rag, "retrieve", missing_retrieve)

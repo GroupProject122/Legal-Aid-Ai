@@ -1247,7 +1247,7 @@ def answer_grounded_from_context(
     # string actually sent to rag.retrieve() is affected. Behind config.HINGLISH_RETRIEVAL_NORMALIZER
     # (default off) -- see that setting for why.
     rag_query = query_normalizer.english_retrieval_query(retrieval_text) if HINGLISH_RETRIEVAL_NORMALIZER else retrieval_text
-    chunks = rag.retrieve(rag_query)
+    chunks = rag.retrieve(rag_query, domains=context.domains)
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
     # user_question (falling back to original_message) is the text the user actually typed this

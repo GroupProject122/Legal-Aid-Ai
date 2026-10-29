@@ -68,7 +68,7 @@ def patch_answer_flow(monkeypatch, captured: dict | None = None, domain: str = "
         captured["route_text"] = safety_text or text
         return route(domain)
 
-    def fake_retrieve(text):
+    def fake_retrieve(text, domains=None):
         captured["retrieval_text"] = text
         return [legal_chunk(domain)]
 
@@ -179,7 +179,7 @@ def test_small_talk_bypasses_legal_pipeline(monkeypatch):
     state = conversation_state.create_state(["tenancy"], "tenancy", "Landlord electricity dispute.", ["landlord cut electricity"])
     called = {"route": False, "retrieve": False}
     monkeypatch.setattr(main.domain_router, "route_issue", lambda _text, **_kw: called.update(route=True) or route())
-    monkeypatch.setattr(main.rag, "retrieve", lambda _text: called.update(retrieve=True) or [])
+    monkeypatch.setattr(main.rag, "retrieve", lambda _text, domains=None: called.update(retrieve=True) or [])
 
     response = client.post("/api/ask", json={"question": "thanks", "conversation_state_id": state.conversation_state_id})
     data = response.json()
