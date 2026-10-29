@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pause, Play, Square, Volume2 } from 'lucide-react';
 
-import { answerToSpeechText, isSpeakableAnswer, SPEECH_RATES, splitIntoChunks } from './answerToSpeech.js';
+import { answerToSpeechText, SPEECH_RATES, splitIntoChunks } from './answerToSpeech.js';
 import { getSnapshot, pause, play, resume, setRate, speechSupported, stopSpeech, subscribe } from './speechController.js';
 
 export function useSpeechState() {
@@ -9,14 +9,17 @@ export function useSpeechState() {
 }
 
 /**
- * "Listen" for one assistant answer. Renders nothing when the browser has no speechSynthesis or
- * the answer isn't a full answer (clarification question, error, offline result). Never
- * auto-plays: speech only starts from the Listen button.
+ * "Listen" for one assistant reply of any kind (answer, clarification question, out-of-scope or
+ * technical-error reply, offline result, short conversational reply). Reads every visible
+ * section in screen order -- see answerToSpeech.js. Renders nothing when the browser has no
+ * speechSynthesis or there is nothing to read. Never auto-plays: speech only starts from the
+ * Listen button, and starting one reply stops any other.
  */
-export function ListenControls({ speechId, response }) {
+export function ListenControls({ speechId, response, hints = [] }) {
   const speech = useSpeechState();
-  const text = React.useMemo(() => answerToSpeechText(response), [response]);
-  if (!speechSupported || !isSpeakableAnswer(response) || !text) return null;
+  const hintsKey = hints.join('\n');
+  const text = React.useMemo(() => answerToSpeechText(response, { hints }), [response, hintsKey]);
+  if (!speechSupported || !text) return null;
 
   const isActive = speech.activeId === speechId;
   const isPlaying = isActive && speech.status === 'playing';
@@ -29,7 +32,7 @@ export function ListenControls({ speechId, response }) {
           type="button"
           className="listen-button"
           aria-pressed="false"
-          aria-label="Listen to this answer"
+          aria-label="Listen to this reply"
           onClick={() => play(speechId, splitIntoChunks(text))}
         >
           <Volume2 size={15} strokeWidth={1.9} aria-hidden="true" />
@@ -40,7 +43,7 @@ export function ListenControls({ speechId, response }) {
   }
 
   return (
-    <div className="listen-controls is-active" role="group" aria-label="Reading this answer aloud">
+    <div className="listen-controls is-active" role="group" aria-label="Reading this reply aloud">
       <span className="listen-status" role="status">
         <Volume2 size={14} strokeWidth={1.9} aria-hidden="true" />
         {isPaused ? 'Paused' : 'Reading aloud'}

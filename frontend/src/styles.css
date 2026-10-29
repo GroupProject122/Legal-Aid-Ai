@@ -8206,7 +8206,12 @@ body.has-custom-cursor textarea {
   letter-spacing: 0.02em;
 }
 
-/* The answer currently being read. */
+/* Short conversational replies: controls sit under the one line rather than under a header. */
+.conversational-reply-card .listen-controls {
+  margin: 10px 0 0;
+}
+
+/* The reply currently being read. */
 .legal-response-card.is-being-read {
   box-shadow: 0 0 0 2px rgba(179, 125, 57, 0.55), 0 14px 30px rgba(92, 56, 26, 0.12);
 }
