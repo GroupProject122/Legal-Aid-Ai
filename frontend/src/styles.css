@@ -4024,28 +4024,6 @@ body.has-custom-cursor textarea {
 
 /* --- Helplines page --- */
 
-.helpline-emergency-banner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: center;
-  margin: 0 0 18px;
-  padding: 14px 20px;
-  color: #7a1f14;
-  background: rgba(214, 101, 79, 0.14);
-  border: 1px solid rgba(168, 58, 37, 0.38);
-  border-left: 4px solid #a83a25;
-  border-radius: 10px;
-  font-family: var(--serif);
-  font-size: 1.08rem;
-  font-weight: 700;
-}
-
-.helpline-emergency-banner a {
-  color: inherit;
-  text-decoration: underline;
-}
-
 .helpline-filter-row {
   display: flex;
   flex-wrap: wrap;
@@ -4202,11 +4180,6 @@ body.has-custom-cursor textarea {
 }
 
 @media (max-width: 640px) {
-  .helpline-emergency-banner {
-    flex-direction: column;
-    text-align: center;
-  }
-
   .helpline-action {
     flex: 1;
     justify-content: center;

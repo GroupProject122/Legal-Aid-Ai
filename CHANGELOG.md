@@ -48,6 +48,12 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Helplines page: "In an emergency, call 112" banner removed (2026-10-29)
+
+Removed at the team's request (`frontend/src/helplines/Helplines.jsx`), along with its now-unused
+`.helpline-emergency-banner` CSS in `frontend/src/styles.css`. 112 is still listed on the page as
+a regular helpline card (`erss-112` in `helplinesData.js`); only the banner at the top is gone.
+
 ## Unreleased — Checks on the merged code: eligibility source links, case file (2026-10-29)
 
 Hand checks after merging PR #1 and #2; **nothing needed fixing**. Run against a scratch database
