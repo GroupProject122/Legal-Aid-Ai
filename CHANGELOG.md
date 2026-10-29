@@ -48,6 +48,14 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Schemes: top notice banner removed (2026-10-29)
+
+Removed the banner at the top of the Schemes page ("Information is based on official scheme
+guidelines and simplified for guidance. Always confirm on the official website before applying.
+Your answers are not saved.") and its styles, at the owner's request. The disclaimer under the
+results ("Check eligibility on the official website before applying. This is a guide, not a
+decision.") is unchanged, and so is each card's official-website link.
+
 ## Unreleased — Schemes: collapsible result cards (2026-10-29)
 
 Result cards were around 770 px tall each. They now start collapsed (about 140-200 px), showing

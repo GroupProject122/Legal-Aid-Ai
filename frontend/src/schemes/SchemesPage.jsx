@@ -1,13 +1,10 @@
 import React from 'react';
-import { ArrowLeft, ChevronRight, Info, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ShieldCheck } from 'lucide-react';
 
 import { HeaderControls, PageDivider, DocumentsBackgroundArt } from '../shared/PageChrome.jsx';
 import { fetchAreas, matchSchemes, SchemesError } from './api.js';
 import { EMPTY_ANSWERS } from './questions.js';
 import SchemeCard from './SchemeCard.jsx';
-
-const NOTICE =
-  'Information is based on official scheme guidelines and simplified for guidance. Always confirm on the official website before applying. Your answers are not saved.';
 
 const GENDERS = [
   { value: 'female', label: 'Woman' },
@@ -280,11 +277,6 @@ export default function SchemesPage() {
           <p>Find central government schemes you may be able to apply for.</p>
           <PageDivider />
         </header>
-
-        <p className="schemes-notice" role="note">
-          <Info size={18} strokeWidth={1.8} aria-hidden="true" />
-          <span>{NOTICE}</span>
-        </p>
 
         <section className="rights-panel schemes-panel">
           <h3 ref={headingRef} tabIndex={-1} className="schemes-step-title">{stepTitle}</h3>
