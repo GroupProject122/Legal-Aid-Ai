@@ -1,0 +1,270 @@
+{
+  "consumer_01": {
+    "id": "consumer_01",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "A consumer is broadly defined as any person who buys goods or hires or avails of any services for consideration, which includes a purchaser of commodities as well as a beneficiary of private or public services.",
+      "what_this_may_involve": [],
+      "possible_legal_position": [
+        "The retrieved material indicates that the expression consumer is comprehensive and extends from a person who buys any commodity to consume to one who uses public or private services."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "Some generated points were not clearly supported by the retrieved sources, so the answer should be treated as limited.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that the expression consumer is comprehensive and extends from a person who buys any commodity to consume to one who uses public or private services."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "Rohit Chaudhary v. M/S Vipul Ltd., 2023 INSC 807"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 11.3
+  },
+  "consumer_02": {
+    "id": "consumer_02",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, a person who avails of goods or services for any commercial purpose is generally not considered a consumer, though using goods exclusively to earn a livelihood by means of self-employment is excluded from that commercial purpose restriction.",
+      "what_this_may_involve": [
+        "The retrieved material indicates that someone who avails of goods or services for a commercial purpose is excluded from the definition of a consumer.",
+        "The definition clarifies that commercial purpose does not include goods bought and used exclusively for the purpose of earning a livelihood through self-employment."
+      ],
+      "possible_legal_position": [
+        "The retrieved material suggests that individuals who purchase goods or services for commercial activities generally fall outside the protections of the consumer framework, unless an exception for self-employment applies."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material does not provide a comprehensive list of every possible exclusion from the consumer definition beyond commercial purpose and self-employment exceptions."
+      ],
+      "possible_rights": [
+        "The retrieved material suggests that individuals who purchase goods or services for commercial activities generally fall outside the protections of the consumer framework, unless an exception for self-employment applies."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 9.4
+  },
+  "consumer_03": {
+    "id": "consumer_03",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What kind of matter or issue is the complaint about?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "Based on the provisions of the Consumer Protection Act and procedure regulations, a complaint before a consumer commission may be made by an individual consumer or supported by a recognised voluntary consumer organisation.",
+      "what_this_may_involve": [
+        "The involvement of a consumer or a recognised consumer organisation as a complainant before the consumer commission."
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that recognised consumer organisations have a right of audience and may appear or act through authorized representatives or counsel."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "Consumer Commission"
+      ],
+      "limitations": [
+        "The retrieved text does not list the complete statutory definition of every eligible complainant category."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that recognised consumer organisations have a right of audience and may appear or act through authorized representatives or counsel."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 19.1
+  },
+  "consumer_04": {
+    "id": "consumer_04",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "What is the issue or topic your complaint is about, such as online shopping, a landlord, or internet safety?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "You can file your consumer complaint before the appropriate Consumer Commission, which may include the District Commission, State Commission, or National Commission depending on the specifics of your case.",
+      "what_this_may_involve": [
+        "The Consumer Commission reviewing the complaint and deciding on its admission.",
+        "The opposite party being given an opportunity to present their version or dispute the allegations."
+      ],
+      "possible_legal_position": [
+        "The Consumer Commission may admit complaints and follow prescribed procedures for goods or services under the Consumer Protection Act, 2019."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [
+        "District Consumer Disputes Redressal Commission",
+        "State Consumer Disputes Redressal Commission",
+        "National Consumer Disputes Redressal Commission"
+      ],
+      "limitations": [
+        "The retrieved material does not specify the exact territorial or pecuniary limits for filing before a particular commission.",
+        "The available sources do not clearly establish every possible procedural detail."
+      ],
+      "possible_rights": [
+        "The Consumer Commission may admit complaints and follow prescribed procedures for goods or services under the Consumer Protection Act, 2019."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 28.6
+  },
+  "consumer_05": {
+    "id": "consumer_05",
+    "status": "answered",
+    "clarifications": [
+      {
+        "app_asked": "Which Act or service are you referring to, such as consumer protection or cyber law?",
+        "reply": "This is about a consumer complaint before a consumer commission under the Consumer Protection Act."
+      }
+    ],
+    "answer": {
+      "issue_summary": "Under the Consumer Protection Act, deficiency means any fault, imperfection, shortcoming, or inadequacy in the quality, nature, and manner of performance required to be maintained in relation to a service.",
+      "what_this_may_involve": [
+        "Any act of negligence, omission, or commission by a service provider that causes loss or injury to you",
+        "Deliberate withholding of relevant information by the service provider to you"
+      ],
+      "possible_legal_position": [],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material explains the statutory definition but does not apply it to specific facts."
+      ],
+      "possible_rights": [],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 16.0
+  },
+  "consumer_06": {
+    "id": "consumer_06",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "Based on the retrieved material, an unfair contract refers to an agreement between a manufacturer, trader, or service provider and a consumer that includes terms causing a significant change in the consumer's rights. This may involve provisions such as requiring manifestly excessive security deposits, imposing disproportionate penalties for breach, or permitting unilateral contract termination without reasonable cause.",
+      "what_this_may_involve": [
+        "Terms that cause a significant change in consumer rights",
+        "Manifestly excessive security deposits for contractual obligations",
+        "Penalties for breach of contract that are wholly disproportionate to the loss",
+        "Refusing early repayment of debts upon payment of applicable penalties"
+      ],
+      "possible_legal_position": [],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material provides a statutory definition under the Consumer Protection Act, 2019, but does not address specific case facts or outcomes."
+      ],
+      "possible_rights": [],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 6.9
+  },
+  "consumer_07": {
+    "id": "consumer_07",
+    "status": "answered",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "A misleading advertisement refers to any representation regarding a product or service that falsely describes it, gives a false guarantee, or is likely to mislead consumers about its nature, substance, quantity, or quality.",
+      "what_this_may_involve": [
+        "An advertisement falsely describing a product or service",
+        "Providing a false guarantee or misleading consumers regarding the nature, substance, quantity, or quality of goods or services",
+        "Conveying an express or implied representation that would constitute an unfair trade practice if made by the manufacturer, seller, or service provider"
+      ],
+      "possible_legal_position": [
+        "The retrieved material indicates that an advertisement is considered misleading if it falsely describes a product or service or misleads consumers as to its nature, substance, quantity, or quality based on the Consumer Protection Act, 2019."
+      ],
+      "suggested_next_steps": [],
+      "evidence_to_preserve": [],
+      "where_to_approach": [],
+      "limitations": [
+        "The retrieved material explains the definition of a misleading advertisement but does not contain case-specific facts or remedies."
+      ],
+      "possible_rights": [
+        "The retrieved material indicates that an advertisement is considered misleading if it falsely describes a product or service or misleads consumers as to its nature, substance, quantity, or quality based on the Consumer Protection Act, 2019."
+      ],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 6.1
+  },
+  "consumer_08": {
+    "id": "consumer_08",
+    "status": "empty_answer",
+    "clarifications": [],
+    "answer": {
+      "issue_summary": "",
+      "possible_rights": [],
+      "next_steps": []
+    },
+    "sources": [
+      "The Consumer Protection Act, 2019",
+      "The Consumer Protection Act, 2019",
+      "The Specific Relief Act, 1963"
+    ],
+    "routing": [
+      "consumer"
+    ],
+    "insufficient_context": false,
+    "seconds": 1.7
+  }
+}
