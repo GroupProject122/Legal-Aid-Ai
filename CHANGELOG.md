@@ -109,9 +109,10 @@ Not tested on Safari or Android.
 
 ## Unreleased — Helplines page: "In an emergency, call 112" banner removed (2026-10-29)
 
-Removed at the team's request (`frontend/src/helplines/Helplines.jsx`), along with its now-unused
-`.helpline-emergency-banner` CSS in `frontend/src/styles.css`. 112 is still listed on the page as
-a regular helpline card (`erss-112` in `helplinesData.js`); only the banner at the top is gone.
+Removed the emergency banner at the top of the Helplines page (owner decision).
+(`frontend/src/helplines/Helplines.jsx`, plus its now-unused `.helpline-emergency-banner` CSS in
+`frontend/src/styles.css`.) 112 is still listed first in the Urgent help section as a regular
+helpline card (`erss-112` in `helplinesData.js`) with a `tel:112` call link; only the banner is gone.
 
 ## Unreleased — Checks on the merged code: eligibility source links, case file (2026-10-29)
 
