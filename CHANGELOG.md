@@ -231,6 +231,27 @@ scroll at 390 px; hidden when `speechSynthesis` is removed; no page errors.
 voices; without an en-IN voice, Indian names and Hinglish are read with another English accent.
 Pause/resume restarts the current sentence rather than the exact word.
 
+## Unreleased — tests can no longer write to the real database; junk test cases removed (2026-10-28)
+
+**Fix.** `backend/tests/conftest.py` now gives every test its own empty app database and upload
+folder (`isolated_app_storage`: `case_store.DB_PATH` -- which also holds documents, accounts and
+sessions -- and `document_store.UPLOAD_DIR`), and for the whole run refuses to open the real
+`backend/legal_aid.db` (`refuse_real_database` wraps `sqlite3.connect` and raises on that path).
+The guard checks the path being opened, not whether the file changed, so a dev server writing to
+the same database during a test run can't set it off. `tests/test_test_isolation.py` proves it:
+code that sets no path lands in a temp database, and opening the real one raises -- all three of
+its tests fail on the previous conftest. Full suite: 844 passed; the real database's cases,
+messages and users and the upload folder were identical before and after the run.
+
+**Cleanup (local database on the machine where this was found, not part of the diff).** Before the
+merge, each full test run wrote 11 cases into the developer's real database; 330 accumulated on
+2026-10-28 (IDs 2027-2356, 21 distinct test queries, created 11:04-12:41 UTC, later claimed by the
+admin account). Backed up with `sqlite3 .backup` to `backend/legal_aid.db.2026-10-28-pre-cleanup.bak`
+(git-ignored), then deleted in one checked transaction: 330 cases and their 660 messages; no
+document links pointed at them. Integrity check ok, no orphaned messages, 1,905 cases remain.
+Older cases in that database look similar (a long-running dev database); only the confirmed
+range was removed. Other developers who ran the pre-merge suite may have the same kind of rows.
+
 ## Unreleased — end-to-end investigation: offline scope gate, retrieval anchor fix, normaliser flag (2026-10-28)
 
 Follow-up to the 42/54 end-to-end result in the post-merge entry below.
@@ -310,7 +331,7 @@ rather than tuned to the number.
 -- and each rewrite costs a Gemini request from the shared daily quota. When off, no rewrite is
 requested and retrieval receives the original text (tested). Set it to `true` to restore.
 
-**Test isolation gap (found, not fixed):** before the merge, this copy saved every `/api/ask` call
+**Test isolation gap (fixed in the next entry):** before the merge, this copy saved every `/api/ask` call
 as a case, and some tests (e.g. `tests/test_clarification.py`) call `/api/ask` without pointing
 `case_store.DB_PATH` at a temp file, so each full test run wrote 11 cases into the developer's real
 `backend/legal_aid.db` (330 such cases on 2026-10-28, later claimed by the admin account via

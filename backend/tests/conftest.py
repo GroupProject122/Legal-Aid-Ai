@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -9,8 +10,49 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import case_store
 import conversation_state
+import document_store
 import turn_memory
+
+# Resolved once, at import -- before any fixture redirects case_store.DB_PATH -- so the guard below
+# always knows where the developer's real database is.
+REAL_DB_PATH = Path(case_store.DB_PATH).resolve()
+REAL_UPLOAD_DIR = Path(document_store.UPLOAD_DIR).resolve()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def refuse_real_database():
+    """Any attempt to open the real backend/legal_aid.db during the test run raises instead.
+
+    Added 2026-10-28: tests calling /api/ask without redirecting case_store.DB_PATH used to write
+    real cases -- 11 per full run, 330 in one day -- into the developer's database. A redirect
+    alone (isolated_app_storage below) can be bypassed by code that captured the path earlier;
+    this makes the mistake fail loudly instead of silently writing. It checks the path being
+    opened rather than whether the file changed, so a dev server writing to the same database
+    during a test run cannot trigger it."""
+    real_connect = sqlite3.connect
+
+    def guarded_connect(database, *args, **kwargs):
+        if str(database) != ":memory:" and Path(database).resolve() == REAL_DB_PATH:
+            raise RuntimeError(
+                f"A test tried to open the real database {REAL_DB_PATH}. Tests must use a temporary "
+                "database (tests/conftest.py's isolated_app_storage sets one up for every test)."
+            )
+        return real_connect(database, *args, **kwargs)
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(sqlite3, "connect", guarded_connect)
+        yield
+
+
+@pytest.fixture(autouse=True)
+def isolated_app_storage(tmp_path, monkeypatch):
+    """Every test gets its own empty app database (cases, messages, documents, accounts and
+    sessions all live in case_store.DB_PATH) and its own upload folder. Tests that set their own
+    temp paths still can; they simply override these."""
+    monkeypatch.setattr(case_store, "DB_PATH", tmp_path / "legal_aid.db")
+    monkeypatch.setattr(document_store, "UPLOAD_DIR", tmp_path / "user_uploads")
 
 
 def fake_embed(texts: list[str]) -> np.ndarray:
