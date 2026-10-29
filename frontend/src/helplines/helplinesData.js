@@ -98,6 +98,17 @@ const helplines = [
     sourceUrl: "https://cms.rbi.org.in",
     lastVerified: LAST_VERIFIED
   },
+  {
+    id: "e-jagriti",
+    domain: "consumer",
+    name: "e-Jagriti (file a consumer complaint online)",
+    number: null,
+    website: "https://e-jagriti.gov.in",
+    handles: "Filing a formal consumer complaint online with a Consumer Commission, paying the fee and tracking the case. Run by the Ministry of Consumer Affairs, Food and Public Distribution.",
+    whenToUse: "Use this to file a formal consumer case when complaining to the seller and the National Consumer Helpline has not resolved it.",
+    sourceUrl: "https://e-jagriti.gov.in/static/media/CC_Filing.34e0fc5dd03b1d864cab.pdf",
+    lastVerified: "2026-10-29"
+  },
 
   // --- Free legal aid / rights ---
   {
@@ -110,6 +121,17 @@ const helplines = [
     whenToUse: "Use this if you need a lawyer or legal guidance and cannot afford one, or to find your nearest legal aid office.",
     sourceUrl: "https://nalsa.gov.in",
     lastVerified: LAST_VERIFIED
+  },
+  {
+    id: "tele-law-14454",
+    domain: "rights",
+    name: "Tele-Law",
+    number: "14454",
+    website: "https://www.tele-law.in",
+    handles: "Free legal advice from panel lawyers before going to court -- by phone, through a video call at a Common Service Centre (CSC), or in the Tele-Law app. Run by the Department of Justice.",
+    whenToUse: "Use this to understand your legal options or next steps early, before a case is filed.",
+    sourceUrl: "https://tele-law.in/historical-background-information.html",
+    lastVerified: "2026-10-29"
   },
   {
     id: "rti-online",

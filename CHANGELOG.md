@@ -48,6 +48,27 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Helplines: Tele-Law and e-Jagriti added (2026-10-29)
+
+Neither was on the Helplines page. Both added in the existing format
+(`frontend/src/helplines/helplinesData.js`), each with an official source checked on
+2026-10-29:
+- **Tele-Law -- 14454** (Legal aid & rights). Free legal advice from panel lawyers before going to
+  court, by phone, video call at a Common Service Centre, or the Tele-Law app; run by the
+  Department of Justice. Source: the official Tele-Law site's background page
+  (https://tele-law.in/historical-background-information.html), which states the 14454
+  toll-free number.
+- **e-Jagriti** (Consumer) -- https://e-jagriti.gov.in, the Ministry of Consumer Affairs, Food and
+  Public Distribution's portal for filing a consumer complaint online with a Consumer Commission
+  and tracking it. Source: the portal's official "Help Documentation for Consumer Complaint (CC)
+  Filing" (NIC, March 2025). The old e-Daakhil address (edaakhil.nic.in) no longer responds.
+  Secondary sources say e-Jagriti replaced it from 1 January 2025, but that could not be
+  confirmed from an official page readable here (PIB refuses automated access), so the entry
+  does not claim it.
+
+`helplinesData.test.js` checks both entries, and that every entry has an https source and a
+number or website.
+
 ## Unreleased — Schemes: PMAY-U 2.0 source link fixed (2026-10-29)
 
 The PMAY-U 2.0 `sourceUrl` in `backend/data/schemes.json` contained a stray space
