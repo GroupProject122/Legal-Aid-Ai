@@ -1233,9 +1233,24 @@ def authority_level_boost(question: str, chunk: RetrievedChunk) -> float:
     return boost
 
 
+# The retrieval query is often fact sufficiency's rewritten summary, which narrates the user in
+# the third person ("User reports that their account was hacked", "The tenant is reporting an
+# issue where..."). That "reports" is the summary describing the user, not the user asking how to
+# report something, so it is removed before looking for procedural terms.
+SUMMARY_NARRATION_RE = re.compile(
+    r"\b(?:the |a |an )?(?:user|tenant|consumer|customer|person|complainant|individual|citizen)s?"
+    r" (?:reports|reported|is reporting|has reported|was reporting)\b(?: that)?"
+)
+PROCEDURAL_QUERY_RES = [re.compile(r"\b" + re.escape(term) + r"\b") for term in sorted(PROCEDURAL_QUERY_TERMS)]
+
+
 def is_procedural_query(question: str) -> bool:
-    lowered = question.lower()
-    return any(term in lowered for term in PROCEDURAL_QUERY_TERMS)
+    """A "how do I report / where can I file" question. Whole-word matches only (2026-10-29): as
+    substrings, "report" matched "User reports that..." and "file" matched "profile", so a
+    substantive question was treated as procedural and the manuals were not down-weighted
+    (e2e multi_003)."""
+    lowered = SUMMARY_NARRATION_RE.sub(" ", question.lower())
+    return any(pattern.search(lowered) for pattern in PROCEDURAL_QUERY_RES)
 
 
 def is_case_law_query(question: str) -> bool:

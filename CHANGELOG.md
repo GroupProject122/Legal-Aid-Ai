@@ -48,6 +48,27 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Retrieval: "User reports that..." is no longer treated as a how-to-report question (2026-10-29)
+
+**Problem (e2e `multi_003`).** For the rewritten retrieval query "User reports that their online
+marketplace account was hacked resulting in loss of money.", the Cybercrime Portal manual was not
+down-weighted at all and took the top two places. `rag.is_procedural_query()` matched
+`PROCEDURAL_QUERY_TERMS` as substrings, so "report" matched the summary's own narration ("User
+**report**s that") and "file" would match "pro**file**". The question looked like "how do I
+report" and the manual down-weighting was switched off.
+
+**Fix (`backend/rag.py`).** Whole-word matching, and the summary's third-person narration ("the
+user/tenant/consumer ... reports / is reporting / has reported (that)") is removed before
+matching. Real procedural questions are unchanged ("how do I report...", "kaise report karu",
+"where can I file...", "kahan file karu", "...period for filing a consumer complaint"). The same
+classification on all 47 retrieval-eval queries; of the 48 retrieval queries in today's e2e run,
+only two narrated summaries change (both to substantive).
+
+**Effect.** `multi_003`'s query now selects the RBI liability circular, the Intermediary Rules
+and CERT-In Directions -- no manuals. The IT Act itself is in the pool but still ranks below these.
+Local retrieval eval and scam checker rules-only: unchanged (0 queries changed). Tests
+(`tests/test_retrieval_selection.py`, +10, 4 fail without the fix); full backend suite 894 passed.
+
 ## Unreleased — Retrieval: down-weighted manuals no longer fill the candidate pool (2026-10-29)
 
 **Problem (e2e `cyber_001`, `cyber_010`).** Answers cited the Cybercrime Portal citizen manual

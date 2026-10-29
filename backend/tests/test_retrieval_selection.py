@@ -101,3 +101,43 @@ def test_pool_is_unchanged_for_procedural_questions(monkeypatch):
     question = "how do I report payment fraud on the cybercrime portal"
     pool = stub_engine(manuals_then_statute()).production_candidates(question)
     assert [c.chunk_id for c in pool] == [f"m{i}" for i in range(12)]  # manuals count normally here
+
+
+# is_procedural_query() (2026-10-29, e2e multi_003): substring matching made "User reports that
+# their account was hacked" (the rewritten summary narrating the user) and "profile" look like
+# "how do I report / file" questions, so the manuals were not down-weighted.
+import pytest
+
+from rag import is_procedural_query
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "how do I report a hacked account",
+        "online cybercrime kaise report karu",
+        "where can I file a consumer complaint",
+        "consumer complaint kahan file karu",
+        "Inquiry regarding the limitation period for filing a consumer complaint.",
+        "I want to register a complaint on the portal",
+    ],
+)
+def test_real_procedural_questions_are_procedural(question):
+    assert is_procedural_query(question) is True
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "User reports that their online marketplace account was hacked resulting in loss of money.",
+        "The tenant is reporting an issue where the landlord is disconnecting the electricity supply.",
+        "my instagram profile was hacked",
+    ],
+)
+def test_narration_and_partial_words_are_not_procedural(question):
+    assert is_procedural_query(question) is False
+
+
+def test_manual_is_down_weighted_for_a_narrated_substantive_summary():
+    question = "User reports that their online marketplace account was hacked resulting in loss of money."
+    assert is_down_weighted_manual(question, candidates()[0]) is True
