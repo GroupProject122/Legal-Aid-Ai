@@ -6278,9 +6278,10 @@ body.has-custom-cursor textarea {
 }
 
 /* ============================================================
-   Schemes & Legal Support — intake form + eligibility results
-   (ported from schemes-legal-support/frontend, restyled onto
-   the parchment theme). Feature-scoped, all classes `scheme-`.
+   Shared form styles (`scheme-` prefix kept for history): first
+   written for the old Schemes intake form, now used by the
+   complaint drafter. The Schemes page's own styles are under
+   "Schemes page (2026-10-29)" further down.
    ============================================================ */
 
 :root {
@@ -6294,12 +6295,6 @@ body.has-custom-cursor textarea {
 .scheme-form {
   display: grid;
   gap: 18px;
-}
-
-.scheme-intro {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 1.06rem;
 }
 
 .scheme-field-grid {
@@ -6358,13 +6353,6 @@ body.has-custom-cursor textarea {
   color: rgba(63, 40, 22, 0.62);
 }
 
-.scheme-gender .scheme-radio-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  padding-top: 4px;
-}
-
 .scheme-radio {
   display: inline-flex;
   align-items: center;
@@ -6379,17 +6367,6 @@ body.has-custom-cursor textarea {
   width: auto;
   min-height: 0;
   margin: 0;
-}
-
-.scheme-subhead {
-  grid-column: 1 / -1;
-  margin: 4px 0 0;
-  padding-top: 14px;
-  border-top: 1px dashed rgba(183, 125, 62, 0.4);
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--mocha-soft);
 }
 
 .scheme-error {
@@ -6419,333 +6396,9 @@ body.has-custom-cursor textarea {
   cursor: progress;
 }
 
-.scheme-clear {
-  padding: 0;
-  color: var(--mocha);
-  background: transparent;
-  border: 0;
-  font-family: var(--serif);
-  font-weight: 700;
-  text-decoration: underline;
-}
-
-.scheme-clear:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.scheme-clear-confirming {
-  color: #a24a3a;
-}
-
-.scheme-count {
-  font-size: 0.85rem;
-  color: rgba(63, 40, 22, 0.6);
-}
-
-/* ---- results ---- */
-
-.scheme-results .rights-back-button {
-  cursor: pointer;
-}
-
-.scheme-disclaimer {
-  margin: 0 0 20px;
-  padding: 13px 16px;
-  color: #6c3b1f;
-  background: rgba(247, 230, 199, 0.7);
-  border: 1px solid rgba(168, 104, 43, 0.26);
-  border-left: 4px solid var(--caramel);
-  border-radius: 10px;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.scheme-bucket {
-  margin-bottom: 26px;
-}
-
-.scheme-bucket-head {
-  margin: 0;
-  padding-bottom: 6px;
-  border-bottom: 2px solid var(--line);
-  font-family: var(--serif);
-  font-size: 1.4rem;
-}
-
-.scheme-bucket-head span {
-  font-weight: 400;
-  font-size: 1.02rem;
-  color: rgba(63, 40, 22, 0.55);
-}
-
-.scheme-bucket-likely {
-  color: var(--scheme-eligible);
-  border-bottom-color: var(--scheme-eligible);
-}
-
-.scheme-bucket-possibly {
-  color: #8a5a1e;
-  border-bottom-color: var(--caramel);
-}
-
-.scheme-bucket-sub {
-  margin: 6px 0 14px;
-  font-size: 0.88rem;
-  color: rgba(63, 40, 22, 0.65);
-}
-
-.scheme-card {
-  position: relative;
-  margin-bottom: 14px;
-  padding: 20px 22px;
-  background:
-    linear-gradient(180deg, rgba(255, 253, 247, 0.93), rgba(250, 241, 225, 0.86)),
-    radial-gradient(circle at 50% 0%, rgba(215, 177, 118, 0.08), transparent 34%);
-  border: 1px solid rgba(151, 91, 38, 0.3);
-  border-left-width: 4px;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 3px rgba(255, 250, 240, 0.46), 0 12px 24px rgba(70, 42, 19, 0.08);
-}
-
-.scheme-card-likely_eligible {
-  border-left-color: var(--scheme-eligible);
-}
-
-.scheme-card-possibly_eligible {
-  border-left-color: var(--caramel);
-}
-
-.scheme-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 14px;
-}
-
-.scheme-card-headings {
-  min-width: 0;
-}
-
-.scheme-card-head h3 {
-  margin: 8px 0 4px;
-  font-family: var(--serif);
-  font-size: 1.3rem;
-  line-height: 1.15;
-  color: var(--mocha);
-}
-
-.scheme-card-summary {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  color: rgba(63, 40, 22, 0.7);
-}
-
-.scheme-status {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 9px;
-  border-radius: 999px;
-}
-
-.scheme-status-likely_eligible {
-  color: #2f5a2f;
-  background: var(--scheme-eligible-tint);
-}
-
-.scheme-status-possibly_eligible {
-  color: #7a4e15;
-  background: var(--scheme-caution-tint);
-}
-
-.scheme-badge {
-  flex-shrink: 0;
-  white-space: nowrap;
-  font-family: var(--sans);
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: var(--walnut);
-  padding: 3px 9px;
-  border: 1px solid rgba(151, 91, 38, 0.35);
-  border-radius: 7px;
-  background: rgba(245, 229, 199, 0.5);
-}
-
-.scheme-reasoning {
-  margin: 12px 0 0;
-  font-family: var(--serif);
-  font-size: 1.05rem;
-  color: var(--ink);
-}
-
-.scheme-missing {
-  margin: 10px 0 0;
-  padding: 10px 13px;
-  background: var(--scheme-caution-tint);
-  border: 1px solid rgba(179, 125, 57, 0.3);
-  border-radius: 9px;
-  font-size: 0.92rem;
-  color: var(--mocha);
-}
-
-.scheme-benefits {
-  margin: 12px 0 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
-.scheme-mini-label {
-  display: block;
-  margin-bottom: 3px;
-  font-family: var(--sans);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(63, 40, 22, 0.55);
-}
-
-.scheme-details {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(151, 91, 38, 0.22);
-}
-
-.scheme-details > summary {
-  cursor: pointer;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 0.98rem;
-  color: var(--walnut);
-}
-
-.scheme-details > summary:hover {
-  color: var(--mocha);
-}
-
-.scheme-details-body {
-  margin-top: 10px;
-}
-
-.scheme-details-body section {
-  margin-bottom: 14px;
-}
-
-.scheme-details-body h4 {
-  margin: 0 0 5px;
-  font-family: var(--serif);
-  font-size: 1.02rem;
-  color: var(--mocha);
-}
-
-.scheme-details-body ul {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.scheme-details-body li,
-.scheme-details-body p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
-.scheme-details-body li {
-  margin: 3px 0;
-}
-
-.scheme-tree,
-.scheme-tree ul {
-  list-style: none;
-  margin: 0;
-  padding-left: 14px;
-  font-size: 0.9rem;
-}
-
-.scheme-tree > li {
-  padding-left: 0;
-}
-
-.scheme-tree li {
-  margin: 2px 0;
-  color: var(--ink);
-}
-
-.scheme-tree-note {
-  margin: 8px 0 3px !important;
-  font-size: 0.82rem !important;
-  color: rgba(63, 40, 22, 0.6);
-}
-
-.scheme-verify-note {
-  font-size: 0.82rem !important;
-  font-style: italic;
-  color: rgba(63, 40, 22, 0.62);
-}
-
-.scheme-official {
-  margin-top: 14px;
-  padding: 14px 16px;
-  background: rgba(245, 229, 199, 0.55);
-  border: 1.5px solid var(--walnut);
-  border-radius: 10px;
-}
-
-.scheme-official-title {
-  margin: 0 0 4px;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 1.02rem;
-  color: var(--mocha);
-}
-
-.scheme-official-copy {
-  margin: 0 0 9px;
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: rgba(63, 40, 22, 0.72);
-}
-
-.scheme-official-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  margin: 0;
-}
-
-.scheme-official-links a {
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 0.98rem;
-  color: var(--walnut);
-  text-decoration: underline;
-}
-
-.scheme-official-links a:hover {
-  color: var(--mocha);
-}
-
-.scheme-empty .ask-button {
-  margin-top: 10px;
-}
-
 @media (max-width: 720px) {
   .scheme-field-grid {
     grid-template-columns: 1fr;
-  }
-
-  .scheme-card-head {
-    flex-direction: column;
-  }
-
-  .scheme-badge {
-    align-self: flex-start;
   }
 }
 
@@ -8376,5 +8029,341 @@ body.has-custom-cursor textarea {
 
   .persisted-documents-panel .upload-card {
     padding: 18px 16px 18px;
+  }
+}
+
+/* --- Schemes page (2026-10-29, schemes/SchemesPage.jsx) ---
+   Background comes from the shared Home-image rule (.schemes-page-panel); the panel reuses
+   .rights-panel and the form reuses the shared .scheme-field / .scheme-radio styles. */
+.schemes-content-frame {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-top: 14px;
+}
+
+.schemes-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 18px 0 0;
+  padding: 13px 16px;
+  color: var(--ink);
+  background: #fff4d6;
+  border: 1px solid rgba(179, 125, 57, 0.45);
+  border-radius: 10px;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.schemes-notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--caramel);
+}
+
+.schemes-panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 247, 0.94), rgba(250, 241, 225, 0.9)),
+    radial-gradient(circle at 50% 0%, rgba(215, 177, 118, 0.08), transparent 34%);
+  border: 1px solid rgba(151, 91, 38, 0.32);
+  border-radius: 14px;
+  box-shadow: 0 14px 28px rgba(70, 42, 19, 0.08);
+}
+
+.schemes-step-title:focus {
+  outline: none;
+}
+
+.schemes-step-title:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.schemes-step-intro,
+.schemes-section-intro {
+  margin: 0;
+  color: rgba(47, 32, 23, 0.78);
+  line-height: 1.5;
+}
+
+.schemes-optional {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(63, 40, 22, 0.6);
+}
+
+.schemes-choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.schemes-pill {
+  padding: 8px 14px;
+  background: rgba(255, 252, 245, 0.92);
+  border: 1px solid rgba(179, 125, 57, 0.36);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.schemes-pill:has(input:checked) {
+  color: var(--mocha);
+  background: rgba(214, 170, 108, 0.24);
+  border-color: rgba(139, 82, 31, 0.7);
+  font-weight: 600;
+}
+
+.schemes-pill:has(input:focus-visible) {
+  outline: 2px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.schemes-pill-skip {
+  color: rgba(63, 40, 22, 0.7);
+  border-style: dashed;
+}
+
+.schemes-area-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.schemes-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 10px 14px;
+  color: var(--ink);
+  background: rgba(255, 252, 245, 0.92);
+  border: 1px solid rgba(179, 125, 57, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.schemes-area:has(input:checked) {
+  background: rgba(214, 170, 108, 0.2);
+  border-color: rgba(139, 82, 31, 0.6);
+}
+
+.schemes-area:has(input:focus-visible) {
+  outline: 2px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.schemes-area input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--caramel);
+}
+
+.schemes-area small {
+  color: rgba(63, 40, 22, 0.6);
+}
+
+.schemes-results {
+  display: grid;
+  gap: 26px;
+}
+
+.schemes-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+}
+
+.schemes-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  font-size: 1.32rem;
+}
+
+.schemes-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  color: var(--mocha);
+  background: rgba(214, 170, 108, 0.22);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.schemes-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.schemes-card {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 18px 18px 16px;
+  background: rgba(255, 253, 248, 0.96);
+  border: 1px solid rgba(150, 101, 56, 0.2);
+  border-left: 4px solid rgba(179, 125, 57, 0.55);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(92, 56, 26, 0.06);
+}
+
+.schemes-card-likely_eligible {
+  border-left-color: #3f6d3f;
+}
+
+.schemes-card-might_be_eligible {
+  border-left-color: var(--caramel);
+}
+
+.schemes-card-check_with_authority {
+  border-left-color: rgba(120, 100, 80, 0.55);
+}
+
+.schemes-card-not_eligible {
+  border-left-color: rgba(163, 49, 31, 0.55);
+}
+
+.schemes-card-area {
+  margin: 0;
+  color: var(--caramel);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.schemes-card h4 {
+  margin: 0;
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-size: 1.18rem;
+  line-height: 1.2;
+}
+
+.schemes-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.schemes-card-benefits {
+  color: var(--ink);
+}
+
+.schemes-card-reason {
+  padding: 9px 11px;
+  color: rgba(47, 32, 23, 0.86);
+  background: rgba(247, 236, 214, 0.6);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.schemes-card-ask {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.schemes-card-ask-title,
+.schemes-card-more summary {
+  color: var(--mocha);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.schemes-card-more summary {
+  cursor: pointer;
+}
+
+.schemes-card ul {
+  margin: 4px 0 0;
+  padding-left: 20px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.schemes-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 4px;
+}
+
+.schemes-official {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 14px;
+  color: #fff9ef;
+  background: linear-gradient(160deg, #7a4a26 0%, #5d3219 100%);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.schemes-official:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 2px;
+}
+
+.schemes-verified {
+  color: var(--taupe);
+  font-size: 0.78rem;
+}
+
+.schemes-verified.is-unverified {
+  font-style: italic;
+}
+
+.schemes-empty {
+  margin: 10px 0 0;
+  color: rgba(63, 40, 22, 0.7);
+  font-style: italic;
+}
+
+.schemes-not-eligible > summary {
+  color: var(--mocha);
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.schemes-disclaimer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0;
+  color: rgba(47, 32, 23, 0.8);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 640px) {
+  .schemes-panel {
+    padding: 18px 14px;
+  }
+
+  .schemes-card-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .schemes-area-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

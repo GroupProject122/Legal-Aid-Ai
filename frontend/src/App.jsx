@@ -67,9 +67,7 @@ import {
 } from './shared/PageChrome.jsx';
 
 import { AutoGrowTextarea } from './AutoGrowTextarea.jsx';
-import { IntakeForm } from './schemes/IntakeForm.jsx';
-import { ResultsList } from './schemes/ResultsList.jsx';
-import { ApiError, postMatch } from './schemes/api.js';
+import SchemesPage from './schemes/SchemesPage.jsx';
 
 import { ScenarioPicker, SCENARIOS } from './complaints/ScenarioPicker.jsx';
 import Helplines from './helplines/Helplines.jsx';
@@ -3748,65 +3746,6 @@ function AboutUsPage() {
   );
 }
 
-const schemes = [
-  {
-    name: 'Free Legal Aid (NALSA)',
-    detail: 'Free legal services for women, children, SC/ST, persons with disabilities, and people below the income limit.',
-    href: 'https://nalsa.gov.in'
-  },
-  {
-    name: 'National Consumer Helpline',
-    detail: 'Register complaints against sellers and service providers. Helpline 1915.',
-    href: 'https://consumerhelpline.gov.in'
-  },
-  {
-    name: 'Cyber Crime Reporting Portal',
-    detail: 'Report online fraud, financial scams, and cyber harassment. Helpline 1930.',
-    href: 'https://cybercrime.gov.in'
-  },
-  {
-    name: 'Tele-Law',
-    detail: 'Free advice from panel lawyers through Common Service Centres.',
-    href: 'https://tele-law.in'
-  },
-  {
-    name: 'e-Daakhil',
-    detail: 'File consumer cases online without visiting the commission.',
-    href: 'https://edaakhil.nic.in'
-  },
-  {
-    name: 'State Legal Services Authority',
-    detail: 'District Lok Adalats and mediation for quick, low-cost settlement of disputes.',
-    href: ''
-  }
-];
-
-function OtherLegalAidServices() {
-  return (
-    <section className="rights-panel">
-      <h3>Other free legal-aid services</h3>
-      <div className="rights-category-list">
-        {schemes.map((scheme) => {
-          const Wrapper = scheme.href ? 'a' : 'div';
-          const linkProps = scheme.href
-            ? { href: scheme.href, target: '_blank', rel: 'noreferrer' }
-            : {};
-          return (
-            <Wrapper className="rights-source-card" key={scheme.name} {...linkProps}>
-              <FileText size={22} strokeWidth={1.5} />
-              <span>
-                <strong>{scheme.name}</strong>
-                <small>{scheme.detail}</small>
-              </span>
-              {scheme.href ? <ArrowUpRight size={16} strokeWidth={1.7} /> : <span />}
-            </Wrapper>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
 function ComplaintDrafterPage() {
   const [scenario, setScenario] = React.useState(null);
   const [submitting, setSubmitting] = React.useState(false);
@@ -3889,71 +3828,6 @@ function ComplaintDrafterPage() {
         )}
 
         <RightsDisclaimerCard text="This tool fills a fixed legal template from what you enter — it does not generate or invent legal wording. Always review the finished document, and consult a lawyer before filing anything beyond routine drafting." />
-      </div>
-    </>
-  );
-}
-
-function SchemesPage() {
-  const [screen, setScreen] = React.useState('form');
-  const [profile, setProfile] = React.useState({});
-  const [results, setResults] = React.useState([]);
-  const [submitting, setSubmitting] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState(null);
-
-  async function handleSubmit(nextProfile) {
-    setProfile(nextProfile);
-    setSubmitting(true);
-    setErrorMessage(null);
-    try {
-      const matches = await postMatch(nextProfile);
-      setResults(matches);
-      setScreen('results');
-    } catch (error) {
-      setErrorMessage(
-        error instanceof ApiError
-          ? error.message
-          : 'Something went wrong while searching. Please try again.'
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <>
-      <DocumentsBackgroundArt />
-      <HeaderControls />
-      <div className="rights-content-frame">
-        <header className="documents-page-header">
-          <div className="header-ornament-line"><span /><i>◇</i></div>
-          <h2>Schemes</h2>
-          <div className="header-ornament-line"><i>◇</i><span /></div>
-          <p>
-            Answer a few optional questions to see which Indian government schemes you may
-            qualify for. Nothing is saved and no sign-in is needed.
-          </p>
-          <PageDivider />
-        </header>
-
-        {screen === 'form' ? (
-          <>
-            <section className="rights-panel">
-              <h3>Find schemes for you</h3>
-              <IntakeForm
-                initialProfile={profile}
-                submitting={submitting}
-                errorMessage={errorMessage}
-                onSubmit={handleSubmit}
-              />
-            </section>
-            <OtherLegalAidServices />
-          </>
-        ) : (
-          <ResultsList results={results} onRefine={() => setScreen('form')} />
-        )}
-
-        <RightsDisclaimerCard text="Eligibility shown here is an automated estimate, not an official decision. Always confirm on the scheme's official government website before applying." />
       </div>
     </>
   );

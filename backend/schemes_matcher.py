@@ -253,7 +253,8 @@ def match_scheme(scheme: dict[str, Any], answers: dict[str, Any]) -> dict[str, A
     also_check: list[str] = []
     if not rules:
         group = "check_with_authority"
-        reason = f"This scheme's eligibility can't be checked from a few questions. In short: {scheme['eligibilitySummary']}"
+        # The summary itself is a separate field (eligibilitySummary), shown next to this.
+        reason = "This scheme has no conditions that can be checked from a few questions, so ask the authority."
     elif failed:
         group = "not_eligible"
         reason = "Based on your answers, this scheme requires that " + "; and that ".join(
