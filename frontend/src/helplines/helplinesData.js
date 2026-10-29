@@ -18,17 +18,6 @@ export const HELPLINE_DOMAINS = [
 const helplines = [
   // --- Urgent help (always shown first, regardless of filter) ---
   {
-    id: "erss-112",
-    domain: "urgent",
-    name: "Emergency Response Support System (ERSS)",
-    number: "112",
-    website: null,
-    handles: "Any life-threatening emergency -- police, fire, or medical.",
-    whenToUse: "Call this first if you or someone else is in immediate danger.",
-    sourceUrl: "https://112.gov.in/about",
-    lastVerified: LAST_VERIFIED
-  },
-  {
     id: "women-helpline-181",
     domain: "urgent",
     name: "Women Helpline",

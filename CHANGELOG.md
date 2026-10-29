@@ -48,6 +48,16 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Helplines: 112 / ERSS entry removed (2026-10-29)
+
+Removed the 112 / ERSS entry from Helplines (owner decision). The "Emergency Response Support
+System (ERSS)" card -- name, description, "When to use" and the Call 112 link -- is gone from
+`frontend/src/helplines/helplinesData.js`; the Urgent section keeps its other entries. (This
+supersedes the earlier banner entry below, which said 112 stayed as a card.) The Women Helpline
+(181) entry still cites `112.gov.in/about` as its official source; that is a source link, not a
+112 listing. New `frontend/src/helplines/helplinesData.test.js` checks that no 112 / ERSS entry
+is listed and that every Urgent entry still has a number.
+
 ## Unreleased — Router: Gemini failure no longer loses the keyword rules or the offline fallback (2026-10-29)
 
 Fix for the router-fallback finding in the general-question entry below (Set 1 banking_07: "Can I
