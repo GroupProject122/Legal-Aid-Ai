@@ -48,6 +48,15 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Gemini model pinned to gemini-3.5-flash-lite (2026-11-03)
+
+`GEMINI_MODEL` was the `gemini-flash-lite-latest` alias, which can move to a new model without
+notice. It now names the exact version the alias resolved to, both at the 2026-10-29 key check
+(start of last week's runs) and on 2026-11-03: `gemini-3.5-flash-lite` (confirmed with one test
+call). Set in `backend/.env.example`, the `config.py` fallback and the README (with a one-line
+note why), and in the local, uncommitted `backend/.env`. Same version both times, so the
+2026-10-30 `consumer_009` change was not a model-version switch.
+
 ## Unreleased — Fact sufficiency: Gemini can't overrule "too vague" for a bare issue statement (2026-11-03)
 
 e2e `consumer_009` ("consumer complaint karni hai") failed on 2026-10-30, 3 times out of 3. Gemini

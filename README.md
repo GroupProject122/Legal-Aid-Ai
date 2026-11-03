@@ -28,11 +28,13 @@ Add your Gemini API key in `backend/.env`:
 
 ```text
 GEMINI_API_KEY=your_gemini_key_here
-GEMINI_MODEL=gemini-flash-lite-latest
+GEMINI_MODEL=gemini-3.5-flash-lite
 EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 EMBEDDING_PROVIDER=local
 LLM_PROVIDER=gemini
 ```
+
+`GEMINI_MODEL` is pinned to an exact version (not the `gemini-flash-lite-latest` alias) so evaluation results stay comparable between runs; change it deliberately and re-run the evals when you do.
 
 The two legal PDFs should be placed in:
 

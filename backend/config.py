@@ -20,7 +20,8 @@ def _csv_env(name: str, default: str) -> list[str]:
 
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
+# Pinned to an exact version, not the "-latest" alias, so results stay comparable between runs.
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 # Every Gemini call gives up after this many seconds. Without a limit, a call on a connection
 # that went stale (e.g. after the computer slept) waited forever, leaving the question
 # unanswered with no error. Timeouts raise httpx errors, which each call site handles safely.
