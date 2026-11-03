@@ -179,12 +179,12 @@
       ],
       "expected_primary_documents": [
         "Reserve Bank of India - Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (DBR.No.Leg.BC.78/09.07.005/2017-18, 6 July 2017)",
-        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
         "The Consumer Protection Act, 2019"
       ],
       "expected_primary_sources": [
         "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
-        "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+        "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
         "consumer/consumer_protection_act_2019.pdf"
       ],
       "expected_provision_numbers": [
@@ -207,7 +207,7 @@
       ],
       "expected_primary_documents": [
         "Reserve Bank of India - Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (DBR.No.Leg.BC.78/09.07.005/2017-18, 6 July 2017)",
-        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
         "The Consumer Protection Act, 2019",
         "The Information Technology Act, 2000",
         "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
@@ -215,7 +215,7 @@
       ],
       "expected_primary_sources": [
         "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
-        "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+        "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
         "consumer/consumer_protection_act_2019.pdf",
         "cyber/information_technology_act_2000.pdf",
         "cyber/cybercrime_portal_citizen_manual_latest.pdf",
@@ -268,7 +268,7 @@
       ],
       "expected_primary_documents": [
         "Reserve Bank of India - Customer Protection - Limiting Liability of Customers in Unauthorised Electronic Banking Transactions (DBR.No.Leg.BC.78/09.07.005/2017-18, 6 July 2017)",
-        "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
+        "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
         "The Information Technology Act, 2000",
         "The Bharatiya Nyaya Sanhita, 2023",
         "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
@@ -277,7 +277,7 @@
       ],
       "expected_primary_sources": [
         "cyber/rbi_limiting_liability_unauthorised_transactions_2017.pdf",
-        "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+        "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
         "cyber/information_technology_act_2000.pdf",
         "cyber/bharatiya_nyaya_sanhita_2023.pdf",
         "cyber/cybercrime_portal_citizen_manual_latest.pdf",

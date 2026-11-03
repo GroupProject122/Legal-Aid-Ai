@@ -101,7 +101,7 @@ documents/
 │   ├── sale_of_goods_act_1930.pdf                          ✚ new
 │   ├── bureau_of_indian_standards_act_2016.pdf              ✚ new
 │   ├── insurance_ombudsman_rules_2017.pdf                   ✚ new
-│   ├── rbi_integrated_ombudsman_scheme_2021.pdf             ✚ new
+│   ├── rbi_integrated_ombudsman_scheme_2026.pdf             ✚ new (2021 scheme archived)
 │   ├── greenwashing_guidelines_2024_summary.pdf             ✚ new — compiled summary, not verbatim text (see manifest notes)
 │   ├── coaching_sector_ads_guidelines_2024_summary.pdf      ✚ new — compiled summary, not verbatim text (see manifest notes)
 │   └── case_law/                                            ✚ indexed — see §3

@@ -936,6 +936,33 @@ def test_splice_refuses_documents_not_in_the_manifest(monkeypatch, tmp_path):
     assert chunks_path.read_text(encoding="utf-8").count("\n") == 1  # nothing written
 
 
+def test_splice_removes_an_archived_document(monkeypatch, tmp_path):
+    chunks_path, summary_path = tmp_path / "legal_chunks.jsonl", tmp_path / "parse_summary.json"
+    _write_jsonl(chunks_path, [_record("a.pdf", 1), _record("old.pdf", 1), _record("old.pdf", 2)])
+    monkeypatch.setattr(ingest, "load_corpus_manifest", lambda: {"archived_documents": [{"source_file": "archive/old.pdf", "archived_from": "old.pdf"}]})
+    entries = [(tmp_path / "new.pdf", {"source_file": "new.pdf", "domain": "consumer", "document_type": "scheme"})]
+    monkeypatch.setattr(ingest, "discover_document_entries", lambda: (entries, []))
+    monkeypatch.setattr(ingest, "parse_document", lambda _path, entry: [_record("new.pdf", 1)])
+
+    result = ingest.splice_documents(["new.pdf", "old.pdf"], chunks_path, summary_path)
+
+    records = [json.loads(line) for line in chunks_path.read_text(encoding="utf-8").splitlines()]
+    assert [r["chunk_id"] for r in records] == ["a.pdf__1", "new.pdf__1"]
+    assert result["removed"] == ["old.pdf"] and result["spliced"] == {"new.pdf": 1}
+
+
+def test_scheme_clauses_are_provisions_and_the_annex_form_stays_one_annexure(tmp_path):
+    pages = [
+        (1, "CHAPTER I\n1. Short Title, Commencement\n(1) The Scheme shall be called the Scheme.\n2. Definitions\n(a) Award means an award."),
+        (2, "20. Repeal of the Existing Schemes\n(1) The 2021 Scheme shall stand repealed.\nAnnex\nComplaint Form\n1. A Complainant must first complain to the entity.\n2. A complaint can be filed if no reply is received."),
+    ]
+    units = ingest.legal_units_from_pages(tmp_path / "scheme.pdf", pages, "scheme")
+    labels = [(u["metadata"]["structure_type"], u["metadata"]["provision_number"]) for u in units]
+    assert labels == [("clause", "1"), ("clause", "2"), ("clause", "20"), ("annexure", None)]
+    assert ingest.provision_label_number_title(units[2]["metadata"]) == ("Clause", "20", "Repeal of the Existing Schemes")
+    assert units[3]["metadata"]["chapter"] is None and len(units[3]["lines"]) == 4
+
+
 def test_clean_text_removes_nul_characters():
     assert "\x00" not in ingest.clean_text("क\x00 द्र Indian Cybercrime")
 

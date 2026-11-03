@@ -225,20 +225,24 @@
       "notes": "Remedy route for insurance claim repudiation, delay, mis-selling and policy-servicing disputes: Ombudsman jurisdiction, monetary limit, complaint procedure, award and time limits. Consolidated text incorporating the 2018/2021 amendments."
     },
     {
-      "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-      "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-      "short_title": "RBI Integrated Ombudsman Scheme, 2021",
+      "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+      "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+      "short_title": "RBI Integrated Ombudsman Scheme, 2026",
       "domain": "consumer",
-      "document_type": "guidelines",
+      "document_type": "scheme",
       "jurisdiction": "India",
       "status": "active",
       "authority_level": "official_guidance",
-      "year": 2021,
+      "issuing_authority": "Reserve Bank of India",
+      "year": 2026,
       "cross_domain_relevance": [
         "cyber"
       ],
       "retrieval_priority": "medium",
-      "notes": "Cost-free remedy for deficiency in banking, NBFC and digital-payment services (subsumes the earlier Banking / NBFC / Digital Transactions ombudsman schemes). Grounds unauthorised-transaction and payment-service complaints; document_type set to guidelines because ingest.py has no scheme parser."
+      "in_force_from": "2026-07-01",
+      "source_url": "https://rbidocs.rbi.org.in/rdocs/content/pdfs/SCHEME16012026_A.pdf",
+      "retrieved": "2026-11-03",
+      "notes": "Cost-free remedy for deficiency in service by banks, NBFCs, non-bank PPI issuers and credit information companies, issued under s.35A BR Act, s.45L RBI Act, s.18 PSS Act and s.11 CICRA. In force from 1 July 2026; repeals the RB-IOS 2021 (cl.20), which still governs complaints received before that date. cl.10 maintainability (complain to the entity first; no reply in 30 days or unsatisfied; file within 90 days), cl.11 filing (cms.rbi.org.in, crpc@rbi.org.in, CRPC Chandigarh), cl.8(3) no limit on the disputed amount, compensation up to Rs 30 lakh for consequential loss and Rs 3 lakh for time, expenses and harassment, cl.14 settlement, cl.15 Award, cl.16 rejection, cl.17 appeal to the Appellate Authority within 30 days. Parsed with the scheme parser (clauses as provisions; the complaint form after 'Annex' is one annexure)."
     },
     {
       "source_file": "consumer/greenwashing_guidelines_2024_summary.pdf",
@@ -1470,6 +1474,24 @@
       "cross_domain_relevance": [],
       "retrieval_priority": "low",
       "notes": "Archived from active retrieval: broad criminal procedure (~1,128 chunks) that added retrieval noise without grounding cyber legal-information queries. Re-introduce only as a curated FIR / e-FIR extract if needed."
+    },
+    {
+      "source_file": "archive/rbi_integrated_ombudsman_scheme_2021.pdf",
+      "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
+      "short_title": "RBI Integrated Ombudsman Scheme, 2021",
+      "domain": "consumer",
+      "document_type": "guidelines",
+      "jurisdiction": "India",
+      "status": "superseded",
+      "authority_level": "official_guidance",
+      "year": 2021,
+      "cross_domain_relevance": [
+        "cyber"
+      ],
+      "retrieval_priority": "low",
+      "notes": "SUPERSEDED: repealed from 1 July 2026 by cl.20 of the RB-IOS 2026 (consumer/rbi_integrated_ombudsman_scheme_2026.pdf). Archived from active retrieval on 2026-11-03; it still governs complaints received before 1 July 2026, their appeals and execution of their Awards. Previous notes: Cost-free remedy for deficiency in banking, NBFC and digital-payment services (subsumes the earlier Banking / NBFC / Digital Transactions ombudsman schemes). Grounds unauthorised-transaction and payment-service complaints; document_type set to guidelines because ingest.py has no scheme parser.",
+      "archived_from": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
+      "superseded_by": "The Reserve Bank - Integrated Ombudsman Scheme, 2026 (in force 1 July 2026)"
     }
   ],
   "missing_expected_documents": [

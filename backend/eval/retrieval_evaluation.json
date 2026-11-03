@@ -13992,54 +13992,6 @@
             "structure_type": "section"
           },
           {
-            "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
-            "domain": "consumer",
-            "domain_debug": {
-              "authority_boost": 0.018,
-              "chunk_domain": "consumer",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.0,
-              "final_rerank_score": 0.5632,
-              "primary_domains": [],
-              "priority_boost": 0.02,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.0,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.038,
-              "supporting_status_boost": 0.0
-            },
-            "page": 6,
-            "provision_number": "9",
-            "provision_title": "Grounds of Complaint",
-            "rank": 9,
-            "rerank_score": 0.5632,
-            "retrieval_priority": "medium",
-            "similarity_score": 0.4532,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
-          },
-          {
             "authority_level": "procedural_guide",
             "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0051",
             "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
@@ -14079,13 +14031,61 @@
             "page": 32,
             "provision_number": "5.2",
             "provision_title": "Report Online Financial Fraud",
-            "rank": 10,
+            "rank": 9,
             "rerank_score": 0.241,
             "retrieval_priority": "low",
             "similarity_score": 0.449,
             "snippet": "Manual Section 5.2 — Report Online Financial Fraud 5.2 Report Online Financial Fraud If any unknown person had withdrawn money/ made transactions through your internet banking, credit/debit cards, Wallets or UPI you can ",
             "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
             "structure_type": "manual_section"
+          },
+          {
+            "authority_level": "primary",
+            "chunk_id": "consumer_direct_selling_rules_2021__chunk_0010",
+            "document_title": "The Consumer Protection (Direct Selling) Rules, 2021",
+            "document_type": "rules",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.035,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.0,
+              "final_rerank_score": 0.4588,
+              "primary_domains": [],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.0,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.055,
+              "supporting_status_boost": 0.0
+            },
+            "page": 10,
+            "provision_number": "5",
+            "provision_title": "Obligations of direct selling entity",
+            "rank": 10,
+            "rerank_score": 0.4588,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4398,
+            "snippet": "Rule 5 — Obligations of direct selling entity nently printed on the product information sheet or pamphlet. (7) Every direct selling entity shall ensure that the grievance redressal officer referred to in sub -rule (6) ac",
+            "source_file": "consumer/direct_selling_rules_2021.pdf",
+            "structure_type": "rule"
           }
         ],
         "reranked_top10": [
@@ -14379,16 +14379,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0012",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.0,
-              "final_rerank_score": 0.5632,
+              "final_rerank_score": 0.5446,
               "primary_domains": [],
               "priority_boost": 0.02,
               "public_authority_chunk_intent": null,
@@ -14414,16 +14414,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
+            "page": 7,
             "provision_number": "9",
             "provision_title": "Grounds of Complaint",
             "rank": 7,
-            "rerank_score": 0.5632,
+            "rerank_score": 0.5446,
             "retrieval_priority": "medium",
-            "similarity_score": 0.4532,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.4346,
+            "snippet": "CHAPTER IV Clause 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally or",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "clause"
           },
           {
             "authority_level": "primary",
@@ -14716,19 +14716,19 @@
             "structure_type": "rule"
           },
           {
-            "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "authority_level": "primary",
+            "chunk_id": "consumer_ecommerce_rules_2020__chunk_0008",
+            "document_title": "The Consumer Protection (E-Commerce) Rules, 2020",
+            "document_type": "rules",
             "domain": "consumer",
             "domain_debug": {
-              "authority_boost": 0.018,
+              "authority_boost": 0.035,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.0,
-              "final_rerank_score": 0.5632,
+              "final_rerank_score": 0.6045,
               "primary_domains": [],
-              "priority_boost": 0.02,
+              "priority_boost": 0.045,
               "public_authority_chunk_intent": null,
               "public_authority_intent_boost": 0.0,
               "public_authority_intents": {
@@ -14749,19 +14749,19 @@
                 "tenancy": 0.0
               },
               "secondary_domains": [],
-              "source_role_boost": 0.038,
+              "source_role_boost": 0.08,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "9",
-            "provision_title": "Grounds of Complaint",
+            "page": 9,
+            "provision_number": "5",
+            "provision_title": "Liabilities of marketplace e -commerce entities",
             "rank": 4,
-            "rerank_score": 0.5632,
-            "retrieval_priority": "medium",
-            "similarity_score": 0.4532,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "rerank_score": 0.6045,
+            "retrieval_priority": "high",
+            "similarity_score": 0.5605,
+            "snippet": "Rule 5 — Liabilities of marketplace e -commerce entities 5. Liabilities of marketplace e -commerce entities. – (1) A marketplace e-commerce entity which seeks to avail the exemption from liability under sub -section (1) ",
+            "source_file": "consumer/ecommerce_rules_2020.pdf",
+            "structure_type": "rule"
           }
         ]
       }
@@ -18547,16 +18547,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0031",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.8217,
+              "final_rerank_score": 0.8335,
               "primary_domains": [
                 "consumer"
               ],
@@ -18584,16 +18584,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "9",
-            "provision_title": "Grounds of Complaint",
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
             "rank": 3,
-            "rerank_score": 0.8217,
+            "rerank_score": 0.8335,
             "retrieval_priority": "medium",
-            "similarity_score": 0.5917,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.5855,
+            "snippet": "e the RBI Ombudsman but the person/s should not be an advocate. 19 Amount of compensation admissible under the Scheme 4. (i) There is no limit on the amount involved in the dispute that can be considered under the Scheme",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           },
           {
             "authority_level": "primary",
@@ -18696,6 +18696,56 @@
             "structure_type": "section"
           },
           {
+            "authority_level": "official_guidance",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0012",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.018,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.8033,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.42,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.038,
+              "supporting_status_boost": 0.0
+            },
+            "page": 7,
+            "provision_number": "9",
+            "provision_title": "Grounds of Complaint",
+            "rank": 6,
+            "rerank_score": 0.8033,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5733,
+            "snippet": "CHAPTER IV Clause 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally or",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "clause"
+          },
+          {
             "authority_level": "primary",
             "chunk_id": "consumer_consumer_protection_act_2019__chunk_0107",
             "document_title": "The Consumer Protection Act, 2019",
@@ -18737,7 +18787,7 @@
             "page": 31,
             "provision_number": "81",
             "provision_title": "Recording settlement and passing of order",
-            "rank": 6,
+            "rank": 7,
             "rerank_score": 0.87,
             "retrieval_priority": "high",
             "similarity_score": 0.572,
@@ -18787,7 +18837,7 @@
             "page": 1,
             "provision_number": null,
             "provision_title": null,
-            "rank": 7,
+            "rank": 8,
             "rerank_score": 0.6067,
             "retrieval_priority": "low",
             "similarity_score": 0.5701,
@@ -18837,7 +18887,7 @@
             "page": 27,
             "provision_number": "5.1.7.2",
             "provision_title": "Complaint reporting",
-            "rank": 8,
+            "rank": 9,
             "rerank_score": 0.6185,
             "retrieval_priority": "low",
             "similarity_score": 0.5639,
@@ -18847,9 +18897,9 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0015",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0016",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
@@ -18884,66 +18934,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 8,
+            "page": 9,
             "provision_number": "11",
             "provision_title": "Procedure for Filing a Complaint",
-            "rank": 9,
+            "rank": 10,
             "rerank_score": 0.7205,
             "retrieval_priority": "medium",
             "similarity_score": 0.5625,
-            "snippet": "CHAPTER IV Guideline 11 — Procedure for Filing a Complaint 11. Procedure for Filing a Complaint (1) The complaint may be lodged online through the portal designed for the purpose (https://cms.rbi.org.in). (2) The complai",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
-          },
-          {
-            "authority_level": "procedural_guide",
-            "chunk_id": "cyber_i4c_1930_helpline_faq__chunk_0005",
-            "document_title": "Indian Cybercrime Coordination Centre (I4C), Ministry of Home Affairs - FAQ: National Helpline 1930 and the National Cybercrime Reporting Portal (official website)",
-            "document_type": "procedural_user_guide",
-            "domain": "cyber",
-            "domain_debug": {
-              "authority_boost": 0.048,
-              "chunk_domain": "cyber",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": -0.0504,
-              "final_rerank_score": 0.581,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": -0.015,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.42,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.033,
-              "supporting_status_boost": 0.0
-            },
-            "page": 1,
-            "provision_number": null,
-            "provision_title": null,
-            "rank": 10,
-            "rerank_score": 0.581,
-            "retrieval_priority": "low",
-            "similarity_score": 0.5624,
-            "snippet": "ave reported the complaint using “Report and Track” option or “Report Other Cybercrime” section available on the portal. The complainant will receive an acknowledgement number which can be used to track the progress of t",
-            "source_file": "cyber/i4c_1930_helpline_faq.pdf",
-            "structure_type": "fallback"
+            "snippet": "CHAPTER IV Clause 11 — Procedure for Filing a Complaint 11. Procedure for Filing a Complaint (1) The complaint may be lodged online through the portal https://cms.rbi.org.in. (2) The complaint may also be submitted throu",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "clause"
           }
         ],
         "reranked_top10": [
@@ -19298,6 +19298,56 @@
             "structure_type": "section"
           },
           {
+            "authority_level": "official_guidance",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0031",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.018,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.8335,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.42,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.038,
+              "supporting_status_boost": 0.0
+            },
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
+            "rank": 8,
+            "rerank_score": 0.8335,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5855,
+            "snippet": "e the RBI Ombudsman but the person/s should not be an advocate. 19 Amount of compensation admissible under the Scheme 4. (i) There is no limit on the amount involved in the dispute that can be considered under the Scheme",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
+          },
+          {
             "authority_level": "primary",
             "chunk_id": "consumer_consumer_protection_act_2019__chunk_0094",
             "document_title": "The Consumer Protection Act, 2019",
@@ -19339,63 +19389,13 @@
             "page": 28,
             "provision_number": "69",
             "provision_title": "Limitation period",
-            "rank": 8,
+            "rank": 9,
             "rerank_score": 0.8321,
             "retrieval_priority": "high",
             "similarity_score": 0.5161,
             "snippet": "CHAPTER IV Section 69 — Limitation period 69. Limitation period .—(1) The District Commission, the State Commission or the Nationa l Commission shall not admit a complaint unless it is filed within two years from the dat",
             "source_file": "consumer/consumer_protection_act_2019.pdf",
             "structure_type": "section"
-          },
-          {
-            "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
-            "domain": "consumer",
-            "domain_debug": {
-              "authority_boost": 0.018,
-              "chunk_domain": "consumer",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.084,
-              "final_rerank_score": 0.8217,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": 0.02,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.42,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.038,
-              "supporting_status_boost": 0.0
-            },
-            "page": 6,
-            "provision_number": "9",
-            "provision_title": "Grounds of Complaint",
-            "rank": 9,
-            "rerank_score": 0.8217,
-            "retrieval_priority": "medium",
-            "similarity_score": 0.5917,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
           },
           {
             "authority_level": "primary",
@@ -19601,16 +19601,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0031",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.8217,
+              "final_rerank_score": 0.8335,
               "primary_domains": [
                 "consumer"
               ],
@@ -19638,16 +19638,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "9",
-            "provision_title": "Grounds of Complaint",
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
             "rank": 4,
-            "rerank_score": 0.8217,
+            "rerank_score": 0.8335,
             "retrieval_priority": "medium",
-            "similarity_score": 0.5917,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.5855,
+            "snippet": "e the RBI Ombudsman but the person/s should not be an advocate. 19 Amount of compensation admissible under the Scheme 4. (i) There is no limit on the amount involved in the dispute that can be considered under the Scheme",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           }
         ]
       }
@@ -19908,16 +19908,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0014",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0030",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.08,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.9345,
+              "final_rerank_score": 0.9524,
               "primary_domains": [
                 "consumer"
               ],
@@ -19945,66 +19945,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "10",
-            "provision_title": "Grounds for non-maintainability of a Complaint",
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
             "rank": 5,
-            "rerank_score": 0.9345,
+            "rerank_score": 0.9524,
             "retrieval_priority": "medium",
-            "similarity_score": 0.6125,
-            "snippet": "CHAPTER IV Guideline 10 — Grounds for non-maintainability of a Complaint e reply; or the complainant had not received any reply within 30 days after the Regulated Entity received the complaint; and (ii) the complaint is ",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
-          },
-          {
-            "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0013",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
-            "domain": "consumer",
-            "domain_debug": {
-              "authority_boost": 0.018,
-              "chunk_domain": "consumer",
-              "credential_misuse_boost": 0.08,
-              "domain_boost": 0.084,
-              "final_rerank_score": 0.8671,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": 0.02,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.42,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.038,
-              "supporting_status_boost": 0.0
-            },
-            "page": 6,
-            "provision_number": "10",
-            "provision_title": "Grounds for non-maintainability of a Complaint",
-            "rank": 6,
-            "rerank_score": 0.8671,
-            "retrieval_priority": "medium",
-            "similarity_score": 0.6021,
-            "snippet": "CHAPTER IV Guideline 10 — Grounds for non-maintainability of a Complaint 10. Grounds for non-maintainability of a Complaint (1) N o complaint for deficiency in service shall lie under the Scheme in matters involving: (a)",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.6124,
+            "snippet": "Annex Complaint Form Form for filing of online and offline complaints with the RBI Ombudsman Part A: Guidance for filing of a complaint The salient mandatory requirements under the captioned scheme are listed below, whic",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           },
           {
             "authority_level": "primary",
@@ -20048,7 +19998,7 @@
             "page": 21,
             "provision_number": "53",
             "provision_title": "Limitation to apply in certain cases",
-            "rank": 7,
+            "rank": 6,
             "rerank_score": 0.8239,
             "retrieval_priority": "medium",
             "similarity_score": 0.6013,
@@ -20098,7 +20048,7 @@
             "page": 20,
             "provision_number": "38",
             "provision_title": "Procedure on admission of complaint",
-            "rank": 8,
+            "rank": 7,
             "rerank_score": 1.0728,
             "retrieval_priority": "high",
             "similarity_score": 0.5928,
@@ -20148,13 +20098,63 @@
             "page": 14,
             "provision_number": "17",
             "provision_title": "Complaints to authorities",
-            "rank": 9,
+            "rank": 8,
             "rerank_score": 0.9762,
             "retrieval_priority": "high",
             "similarity_score": 0.5882,
             "snippet": "CHAPTER III Section 17 — Complaints to authorities 17. Complaints to authorities.—A complaint relating to violation of consumer rights or unfair trade practices or false or misleading advertisements which are prejudicial",
             "source_file": "consumer/consumer_protection_act_2019.pdf",
             "structure_type": "section"
+          },
+          {
+            "authority_level": "official_guidance",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0015",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.018,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.7295,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.42,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.038,
+              "supporting_status_boost": 0.0
+            },
+            "page": 7,
+            "provision_number": "10",
+            "provision_title": "Grounds for maintainability of a Complaint",
+            "rank": 9,
+            "rerank_score": 0.7295,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5805,
+            "snippet": "CHAPTER IV Clause 10 — Grounds for maintainability of a Complaint etween Regulated Entities; (g) a dispute involving the employee- employer relationship of a Regulated Entity; (h) a grievance for which a remedy has been ",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "clause"
           },
           {
             "authority_level": "primary",
@@ -20560,16 +20560,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0014",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0030",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.08,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.9345,
+              "final_rerank_score": 0.9524,
               "primary_domains": [
                 "consumer"
               ],
@@ -20597,16 +20597,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "10",
-            "provision_title": "Grounds for non-maintainability of a Complaint",
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
             "rank": 8,
-            "rerank_score": 0.9345,
+            "rerank_score": 0.9524,
             "retrieval_priority": "medium",
-            "similarity_score": 0.6125,
-            "snippet": "CHAPTER IV Guideline 10 — Grounds for non-maintainability of a Complaint e reply; or the complainant had not received any reply within 30 days after the Regulated Entity received the complaint; and (ii) the complaint is ",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.6124,
+            "snippet": "Annex Complaint Form Form for filing of online and offline complaints with the RBI Ombudsman Part A: Guidance for filing of a complaint The salient mandatory requirements under the captioned scheme are listed below, whic",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           },
           {
             "authority_level": "primary",
@@ -58752,16 +58752,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0015",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0016",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.7014,
+              "final_rerank_score": 0.6976,
               "primary_domains": [
                 "consumer"
               ],
@@ -58789,16 +58789,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 8,
+            "page": 9,
             "provision_number": "11",
             "provision_title": "Procedure for Filing a Complaint",
             "rank": 4,
-            "rerank_score": 0.7014,
+            "rerank_score": 0.6976,
             "retrieval_priority": "medium",
-            "similarity_score": 0.5434,
-            "snippet": "CHAPTER IV Guideline 11 — Procedure for Filing a Complaint 11. Procedure for Filing a Complaint (1) The complaint may be lodged online through the portal designed for the purpose (https://cms.rbi.org.in). (2) The complai",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.5396,
+            "snippet": "CHAPTER IV Clause 11 — Procedure for Filing a Complaint 11. Procedure for Filing a Complaint (1) The complaint may be lodged online through the portal https://cms.rbi.org.in. (2) The complaint may also be submitted throu",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "clause"
           },
           {
             "authority_level": "primary",
@@ -58901,6 +58901,56 @@
             "structure_type": "judgment_paragraph"
           },
           {
+            "authority_level": "official_guidance",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0031",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.018,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.7318,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.42,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.038,
+              "supporting_status_boost": 0.0
+            },
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
+            "rank": 7,
+            "rerank_score": 0.7318,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5198,
+            "snippet": "e the RBI Ombudsman but the person/s should not be an advocate. 19 Amount of compensation admissible under the Scheme 4. (i) There is no limit on the amount involved in the dispute that can be considered under the Scheme",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
+          },
+          {
             "authority_level": "procedural_guide",
             "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0077",
             "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
@@ -58942,13 +58992,63 @@
             "page": 47,
             "provision_number": "5.4.2.2",
             "provision_title": "Complaint reporting",
-            "rank": 7,
+            "rank": 8,
             "rerank_score": 0.5338,
             "retrieval_priority": "low",
             "similarity_score": 0.5152,
             "snippet": "Manual Section 5.4.2.2 — Complaint reporting 5.4.2.2 Complaint reporting i. Select the “Category of complaint” (Mandatory) from the drop-down “Hacking” ii. Select the Sub-category of complaint (Mandatory) from the drop-d",
             "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
             "structure_type": "manual_section"
+          },
+          {
+            "authority_level": "official_guidance",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0032",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.018,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.6724,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.42,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.038,
+              "supporting_status_boost": 0.0
+            },
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
+            "rank": 9,
+            "rerank_score": 0.6724,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.5144,
+            "snippet": "with Toll Free #14448 is available 24x7 for Complainants to know about the Scheme and the process of complaint lodging. The facility to connect to Contact Center personnel is available from Monday to Saturday except for ",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           },
           {
             "authority_level": "primary",
@@ -58992,113 +59092,13 @@
             "page": 20,
             "provision_number": "38",
             "provision_title": "Procedure on admission of complaint",
-            "rank": 8,
+            "rank": 10,
             "rerank_score": 0.8632,
             "retrieval_priority": "high",
             "similarity_score": 0.5112,
             "snippet": "CHAPTER IV Section 38 — Procedure on admission of complaint atory for carrying out the necessary analysis or test in relation to the goods in question; (e) remit the amount deposited to its credit under clause (d) to the",
             "source_file": "consumer/consumer_protection_act_2019.pdf",
             "structure_type": "section"
-          },
-          {
-            "authority_level": "procedural_guide",
-            "chunk_id": "cyber_cybercrime_portal_citizen_manual_latest__chunk_0020",
-            "document_title": "National Cyber Crime Reporting Portal - Citizen User Manual (reporting cyber crimes other than child sexual abuse material)",
-            "document_type": "procedural_user_guide",
-            "domain": "cyber",
-            "domain_debug": {
-              "authority_boost": 0.048,
-              "chunk_domain": "cyber",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": -0.0504,
-              "final_rerank_score": 0.5293,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": -0.015,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.42,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.033,
-              "supporting_status_boost": 0.0
-            },
-            "page": 5,
-            "provision_number": null,
-            "provision_title": "ANNEXURE C",
-            "rank": 9,
-            "rerank_score": 0.5293,
-            "retrieval_priority": "low",
-            "similarity_score": 0.5107,
-            "snippet": "L Page 13 of 91 i. Select the “Gender” & Enter “DOB”. ii. Enter the “Father/Mother/Spouse Name” details (Mandatory) iii. Select “Relationship with the victim” iv. Provide your email id if any, for further communication d",
-            "source_file": "cyber/cybercrime_portal_citizen_manual_latest.pdf",
-            "structure_type": "annexure"
-          },
-          {
-            "authority_level": "primary",
-            "chunk_id": "consumer_case_law_case3_experion_developers_v_sushma_ashok_shiroor_2022__chunk_0024",
-            "document_title": "Experion Developers Pvt. Ltd. v. Sushma Ashok Shiroor, Civil Appeal No. 6044 of 2019, decided 7 April 2022",
-            "document_type": "case_law",
-            "domain": "consumer",
-            "domain_debug": {
-              "authority_boost": -0.145,
-              "chunk_domain": "consumer",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.084,
-              "final_rerank_score": 0.6162,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": 0.045,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.42,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": -0.1,
-              "supporting_status_boost": 0.0
-            },
-            "page": 10,
-            "provision_number": "15",
-            "provision_title": null,
-            "rank": 10,
-            "rerank_score": 0.6162,
-            "retrieval_priority": "high",
-            "similarity_score": 0.5062,
-            "snippet": "Experion Developers Pvt. Ltd. v. Sushma Ashok Shiroor, Civil Appeal No. 6044 of 2019, decided 7 April 2022 (Supreme Court of India) Paragraph 15 15. We may hasten to clarify that the power to direct refund of the amount ",
-            "source_file": "consumer/case_law/case3_experion_developers_v_sushma_ashok_shiroor_2022.pdf",
-            "structure_type": "judgment_paragraph"
           }
         ],
         "reranked_top10": [
@@ -59354,16 +59354,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0031",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.7255,
+              "final_rerank_score": 0.7318,
               "primary_domains": [
                 "consumer"
               ],
@@ -59391,29 +59391,29 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "9",
-            "provision_title": "Grounds of Complaint",
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
             "rank": 6,
-            "rerank_score": 0.7255,
+            "rerank_score": 0.7318,
             "retrieval_priority": "medium",
-            "similarity_score": 0.4955,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.5198,
+            "snippet": "e the RBI Ombudsman but the person/s should not be an advocate. 19 Amount of compensation admissible under the Scheme 4. (i) There is no limit on the amount involved in the dispute that can be considered under the Scheme",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0015",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0012",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.7014,
+              "final_rerank_score": 0.7206,
               "primary_domains": [
                 "consumer"
               ],
@@ -59441,16 +59441,66 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 8,
+            "page": 7,
+            "provision_number": "9",
+            "provision_title": "Grounds of Complaint",
+            "rank": 7,
+            "rerank_score": 0.7206,
+            "retrieval_priority": "medium",
+            "similarity_score": 0.4906,
+            "snippet": "CHAPTER IV Clause 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally or",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "clause"
+          },
+          {
+            "authority_level": "official_guidance",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0016",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
+            "domain": "consumer",
+            "domain_debug": {
+              "authority_boost": 0.018,
+              "chunk_domain": "consumer",
+              "credential_misuse_boost": 0.0,
+              "domain_boost": 0.084,
+              "final_rerank_score": 0.6976,
+              "primary_domains": [
+                "consumer"
+              ],
+              "priority_boost": 0.02,
+              "public_authority_chunk_intent": null,
+              "public_authority_intent_boost": 0.0,
+              "public_authority_intents": {
+                "primary_intents": [],
+                "scores": {
+                  "contempt": 0.0,
+                  "fundamental_rights": 0.0,
+                  "human_rights": 0.0,
+                  "legal_aid": 0.0,
+                  "rti": 0.0
+                },
+                "secondary_intents": []
+              },
+              "scores": {
+                "constitutional_public_authority": 0.0,
+                "consumer": 0.42,
+                "cyber": 0.0,
+                "tenancy": 0.0
+              },
+              "secondary_domains": [],
+              "source_role_boost": 0.038,
+              "supporting_status_boost": 0.0
+            },
+            "page": 9,
             "provision_number": "11",
             "provision_title": "Procedure for Filing a Complaint",
-            "rank": 7,
-            "rerank_score": 0.7014,
+            "rank": 8,
+            "rerank_score": 0.6976,
             "retrieval_priority": "medium",
-            "similarity_score": 0.5434,
-            "snippet": "CHAPTER IV Guideline 11 — Procedure for Filing a Complaint 11. Procedure for Filing a Complaint (1) The complaint may be lodged online through the portal designed for the purpose (https://cms.rbi.org.in). (2) The complai",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.5396,
+            "snippet": "CHAPTER IV Clause 11 — Procedure for Filing a Complaint 11. Procedure for Filing a Complaint (1) The complaint may be lodged online through the portal https://cms.rbi.org.in. (2) The complaint may also be submitted throu",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "clause"
           },
           {
             "authority_level": "primary",
@@ -59494,7 +59544,7 @@
             "page": 4,
             "provision_number": null,
             "provision_title": null,
-            "rank": 8,
+            "rank": 9,
             "rerank_score": 0.6771,
             "retrieval_priority": "high",
             "similarity_score": 0.5671,
@@ -59503,67 +59553,17 @@
             "structure_type": "judgment_segment"
           },
           {
-            "authority_level": "primary",
-            "chunk_id": "consumer_consumer_commission_procedure_regulations_2020__chunk_0013",
-            "document_title": "The Consumer Protection (Consumer Commission Procedure) Regulations, 2020",
-            "document_type": "regulations",
-            "domain": "consumer",
-            "domain_debug": {
-              "authority_boost": 0.035,
-              "chunk_domain": "consumer",
-              "credential_misuse_boost": 0.0,
-              "domain_boost": 0.084,
-              "final_rerank_score": 0.6691,
-              "primary_domains": [
-                "consumer"
-              ],
-              "priority_boost": 0.02,
-              "public_authority_chunk_intent": null,
-              "public_authority_intent_boost": 0.0,
-              "public_authority_intents": {
-                "primary_intents": [],
-                "scores": {
-                  "contempt": 0.0,
-                  "fundamental_rights": 0.0,
-                  "human_rights": 0.0,
-                  "legal_aid": 0.0,
-                  "rti": 0.0
-                },
-                "secondary_intents": []
-              },
-              "scores": {
-                "constitutional_public_authority": 0.0,
-                "consumer": 0.42,
-                "cyber": 0.0,
-                "tenancy": 0.0
-              },
-              "secondary_domains": [],
-              "source_role_boost": 0.055,
-              "supporting_status_boost": 0.0
-            },
-            "page": 1,
-            "provision_number": null,
-            "provision_title": null,
-            "rank": 9,
-            "rerank_score": 0.6691,
-            "retrieval_priority": "medium",
-            "similarity_score": 0.4761,
-            "snippet": "्थत होता है और जनरक्षर है, तो कोटव मास्ट्टर ऄथिा न्यायपीठ जलजपक ईसे जलजखत रूप से सुनिाइ की ऄगली तारीख ईपलब्ध कराएगा। 26. प्रकीणव - (1) ईपभोक्ता अयोग क े समक्ष सभी कायविाजहयों में, पक्षकारों और ईनक े ऄजभकतावओं द्वारा जसजि",
-            "source_file": "consumer/consumer_commission_procedure_regulations_2020.pdf",
-            "structure_type": "fallback"
-          },
-          {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0032",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0035",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.6666,
+              "final_rerank_score": 0.6766,
               "primary_domains": [
                 "consumer"
               ],
@@ -59591,16 +59591,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 17,
-            "provision_number": "9",
-            "provision_title": "Subject matter of the complaint",
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
             "rank": 10,
-            "rerank_score": 0.6666,
+            "rerank_score": 0.6766,
             "retrieval_priority": "medium",
-            "similarity_score": 0.4906,
-            "snippet": "CHAPTER V Guideline 9 — Subject matter of the complaint 9. Subject matter of the complaint ………………………………………………………………………………………………….",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.5006,
+            "snippet": "y, in support of your claim at (j) above, including the calculations for compensation sought for the consequential loss. (Please enclose copy/copies) Declaration I/We, the Complainant/s herein declare that the informatio",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           }
         ],
         "selected_by_current_retrieve": [
@@ -59756,16 +59756,16 @@
           },
           {
             "authority_level": "official_guidance",
-            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2021__chunk_0012",
-            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2021 (with 2022 amendments)",
-            "document_type": "guidelines",
+            "chunk_id": "consumer_rbi_integrated_ombudsman_scheme_2026__chunk_0031",
+            "document_title": "The Reserve Bank - Integrated Ombudsman Scheme, 2026",
+            "document_type": "scheme",
             "domain": "consumer",
             "domain_debug": {
               "authority_boost": 0.018,
               "chunk_domain": "consumer",
               "credential_misuse_boost": 0.0,
               "domain_boost": 0.084,
-              "final_rerank_score": 0.7255,
+              "final_rerank_score": 0.7318,
               "primary_domains": [
                 "consumer"
               ],
@@ -59793,16 +59793,16 @@
               "source_role_boost": 0.038,
               "supporting_status_boost": 0.0
             },
-            "page": 6,
-            "provision_number": "9",
-            "provision_title": "Grounds of Complaint",
+            "page": 18,
+            "provision_number": null,
+            "provision_title": "Annex",
             "rank": 4,
-            "rerank_score": 0.7255,
+            "rerank_score": 0.7318,
             "retrieval_priority": "medium",
-            "similarity_score": 0.4955,
-            "snippet": "CHAPTER IV Guideline 9 — Grounds of Complaint 9. Grounds of Complaint Any customer aggrieved by an act or omission of a Regulated Entity resulting in deficiency in service may file a complaint under the Scheme personally",
-            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2021.pdf",
-            "structure_type": "guideline"
+            "similarity_score": 0.5198,
+            "snippet": "e the RBI Ombudsman but the person/s should not be an advocate. 19 Amount of compensation admissible under the Scheme 4. (i) There is no limit on the amount involved in the dispute that can be considered under the Scheme",
+            "source_file": "consumer/rbi_integrated_ombudsman_scheme_2026.pdf",
+            "structure_type": "annexure"
           }
         ]
       }

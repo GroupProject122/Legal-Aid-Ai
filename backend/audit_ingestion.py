@@ -34,6 +34,7 @@ NUMBER_FIELD_BY_STRUCTURE = {
 }
 TITLE_OR_NUMBER_STRUCTURES = {
     "guideline": ("guideline_number", "guideline_title", "provision_number", "provision_title"),
+    "clause": ("provision_number", "provision_title", "provision_number", "provision_title"),
     "manual_section": ("heading_number", "heading_title", "provision_number", "provision_title"),
 }
 # judgment_segment is unnumbered judgment prose -- a legitimate outcome for the judgments that
@@ -47,6 +48,7 @@ STRUCTURE_AWARE_TYPES = {
     "rule",
     "regulation",
     "guideline",
+    "clause",
     "manual_section",
     "preamble",
     "schedule",
@@ -115,6 +117,8 @@ def provision_identity(record: dict[str, Any]) -> str | None:
         return f"regulation:{record.get('regulation_number')}"
     if structure_type == "guideline":
         return f"guideline:{record.get('guideline_number') or record.get('provision_number')}"
+    if structure_type == "clause":
+        return f"clause:{record.get('provision_number')}"
     if structure_type == "manual_section":
         return f"manual_section:{record.get('heading_number') or record.get('provision_number')}"
     if structure_type in {"schedule", "annexure", "preamble", "heading"}:

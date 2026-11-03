@@ -163,6 +163,10 @@ GUIDELINE_BOUNDARY_RE = re.compile(
     r"^(?P<number>\d{1,3}[A-Z]?)\.\s+"
     r"(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{2,180})(?:[.—-]|$)"
 )
+# An RBI scheme numbers its provisions as clauses ("10. Grounds for maintainability of a
+# Complaint"). Its complaint form follows a bare "Annex" line and restarts the numbering at 1, so
+# from there on numbered lines stay inside the annexure instead of becoming clauses 1-7 again.
+SCHEME_ANNEX_RE = re.compile(r"^ANNEX(?:URE)?$", re.I)
 MANUAL_HEADING_RE = re.compile(r"^(?P<number>\d+(?:\.\d+)*)\s+(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{3,140})$")
 # A judgment paragraph is just "12. " followed by prose -- unlike a statute section there is no
 # title to anchor on, so this pattern is deliberately loose and the sequence check in
@@ -490,6 +494,8 @@ def parser_boundary_pattern(parser_family: str) -> tuple[str, re.Pattern | None]
         return "regulation", REGULATION_BOUNDARY_RE
     if parser_family == "guidelines":
         return "guideline", GUIDELINE_BOUNDARY_RE
+    if parser_family == "scheme":
+        return "clause", GUIDELINE_BOUNDARY_RE
     if parser_family == "amendment_rules":
         return "rule", RULE_BOUNDARY_RE
     if parser_family == "manual":
@@ -639,6 +645,7 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
     units: list[dict] = []
     current: dict | None = None
     previous_number: int | None = None
+    in_scheme_annex = False
 
     def start_unit(page_number: int, metadata: dict, first_line: str) -> None:
         nonlocal current
@@ -667,6 +674,16 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
                 if current and current["metadata"].get("structure_type") == "fallback" and not current["lines"]:
                     current["metadata"]["part"] = context.get("part")
                     current["metadata"]["chapter"] = context.get("chapter")
+                continue
+
+            if parser_family == "scheme" and SCHEME_ANNEX_RE.match(line):
+                in_scheme_annex = True
+                context["chapter"] = None
+                start_unit(page_number, {"structure_type": "annexure", "provision_title": "Annex"}, line)
+                continue
+            if in_scheme_annex:
+                current["lines"].append(line)
+                current["page_end"] = page_number
                 continue
 
             neutral_metadata = schedule_or_annexure_metadata(line)
@@ -1110,6 +1127,10 @@ def parse_amendment_rules_document(pdf_path: Path, manifest_entry: dict) -> list
     return parse_existing_chunking(pdf_path, manifest_entry, "amendment_rules")
 
 
+def parse_scheme_document(pdf_path: Path, manifest_entry: dict) -> list[dict]:
+    return parse_existing_chunking(pdf_path, manifest_entry, "scheme")
+
+
 def parse_manual_document(pdf_path: Path, manifest_entry: dict) -> list[dict]:
     return parse_existing_chunking(pdf_path, manifest_entry, "manual")
 
@@ -1126,6 +1147,7 @@ def parser_for_document_type(document_type: str) -> Callable[[Path, dict], list[
         "rules": parse_rules_document,
         "regulations": parse_regulations_document,
         "guidelines": parse_guidelines_document,
+        "scheme": parse_scheme_document,
         "amendment_rules": parse_amendment_rules_document,
         "procedural_user_guide": parse_manual_document,
         "case_law": parse_case_law_document,
@@ -1653,10 +1675,16 @@ def splice_documents(
     PDF with the current parser does not reproduce the frozen legal_chunks.jsonl (1,441 chunks
     changed and 94 disappeared across 12 documents, 1,278 of them in the Constitution), so adding
     one document that way silently rewrites much of the corpus. Use this to add or re-parse
-    specific documents; run `python ingest.py` afterwards to re-embed."""
+    specific documents; run `python ingest.py` afterwards to re-embed.
+
+    A source that has been archived (listed in archived_documents under its old path as
+    "archived_from", e.g. a scheme replaced by a newer one) has its chunks removed instead."""
     chunks_path = chunks_path or LEGAL_CHUNKS_PATH
     summary_path = summary_path or PARSE_SUMMARY_PATH
-    wanted = list(dict.fromkeys(source_files))
+    requested = list(dict.fromkeys(source_files))
+    archived_from = {entry.get("archived_from") for entry in load_corpus_manifest().get("archived_documents", [])}
+    removed = [source for source in requested if source in archived_from]
+    wanted = [source for source in requested if source not in archived_from]
     entries = {entry.get("source_file"): (path, entry) for path, entry in discover_document_entries()[0]}
     unknown = [source for source in wanted if source not in entries]
     if unknown:
@@ -1674,6 +1702,8 @@ def splice_documents(
     placed: set[str] = set()
     for record in existing:
         source = record.get("source_file")
+        if source in removed:
+            continue
         if source in replacement:
             if source not in placed:
                 records.extend(replacement[source])
@@ -1691,7 +1721,11 @@ def splice_documents(
     validation = validate_parse_outputs(chunks_path, {"chunk_count": len(records)})
 
     summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else {"documents": []}
-    by_source = {document.get("source_file"): document for document in summary.get("documents", [])}
+    by_source = {
+        document.get("source_file"): document
+        for document in summary.get("documents", [])
+        if document.get("source_file") not in removed
+    }
     for source in wanted:
         chunks = replacement[source]
         fallback = sum(1 for chunk in chunks if chunk.get("structure_type") == "fallback")
@@ -1719,7 +1753,11 @@ def splice_documents(
     )
     atomic_write_text(summary_path, json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
     logger.info("Spliced %s document(s) into %s: %s records", len(wanted), chunks_path, validation["record_count"])
-    return {"spliced": {source: len(replacement[source]) for source in wanted}, "validation": validation}
+    return {
+        "spliced": {source: len(replacement[source]) for source in wanted},
+        "removed": removed,
+        "validation": validation,
+    }
 
 
 def main(argv: list[str] | None = None) -> dict:

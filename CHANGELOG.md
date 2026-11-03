@@ -3,6 +3,8 @@
 Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives in
 [`frontend/CHANGELOG.md`](frontend/CHANGELOG.md).
 
+> **Corpus 2026-11-03 — RBI Integrated Ombudsman Scheme 2026 added, 2021 scheme archived as superseded** (in force 1 July 2026; official PDF from rbidocs.rbi.org.in, retrieved 2026-11-03). Parsed with a new `scheme` document type: its 20 clauses become "Clause N" provisions and the complaint form after "Annex" becomes one annexure. `ingest.py --parse-only --only` now removes the chunks of a document listed in `archived_documents` (`archived_from`). Corpus: 37 chunks out (2021), 35 in (2026); every other chunk is unchanged. The retrieval eval is unchanged (47 queries, Hit@5 95.7%, MRR 0.892). The Set 1 and Set 3 expected-source labels now point to the 2026 scheme. Live check: incomplete because Gemini returned 503/504. Of 3 questions, 1 answer was grounded in the 2026 scheme (fee question, cl.8 and the annex); the other 2 came back offline, citing the 2026 scheme first. "Can I appeal the Ombudsman's decision?" also came back once with every claim removed by claim verification, even though retrieval puts cl.17 (appeal) first. Not yet re-checked.
+
 > **Fixed 2026-10-28 — date-dependent test failure**
 > `tests/test_rti_first_appeal.py::test_timely_appeal_has_no_lateness_warning` hard-coded
 > `original_application_date="2026-08-01"` while `complaint_drafter.py` compares against the real
