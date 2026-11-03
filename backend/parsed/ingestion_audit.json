@@ -4,16 +4,27 @@
     "severity_counts": {
       "HIGH": 0,
       "LOW": 3,
-      "MEDIUM": 94
+      "MEDIUM": 92
     },
     "status": "PASS WITH WARNINGS",
-    "total_chunks_checked": 6709,
-    "unique_chunk_ids": 6709
+    "total_chunks_checked": 6693,
+    "unique_chunk_ids": 6693
   },
   "child_chunk_issues": [],
   "duplicate_findings": {
-    "exact_duplicate_group_count": 1,
+    "exact_duplicate_group_count": 2,
     "exact_duplicate_groups": [
+      {
+        "chunk_ids": [
+          "consumer_sale_of_goods_act_1930__chunk_0049",
+          "consumer_sale_of_goods_act_1930__chunk_0050"
+        ],
+        "count": 2,
+        "snippet": "Section 46 — Unpaid seller’s rights 46. Unpaid seller’s rights.— (1)Subject to the provisions of this Act and of any law for the time being in force, notwithsta",
+        "source_files": [
+          "consumer/sale_of_goods_act_1930.pdf"
+        ]
+      },
       {
         "chunk_ids": [
           "cyber_cybercrime_portal_citizen_manual_latest__chunk_0120",
@@ -27,7 +38,7 @@
         ]
       }
     ],
-    "near_duplicate_group_count": 14,
+    "near_duplicate_group_count": 17,
     "near_duplicate_groups": [
       {
         "chunk_ids": [
@@ -96,6 +107,39 @@
         "source_files": [
           "constitutional_public_authority/protection_of_human_rights_act_1993.pdf",
           "consumer/bureau_of_indian_standards_act_2016.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "consumer_sale_of_goods_act_1930__chunk_0043",
+          "consumer_sale_of_goods_act_1930__chunk_0044"
+        ],
+        "count": 2,
+        "snippet": "Section 41 — Buyer’s right of examining the goods 41. Buyer’s right of examining the goods.— (1)Where goods are delivered to the buyer which he has not previous",
+        "source_files": [
+          "consumer/sale_of_goods_act_1930.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "consumer_sale_of_goods_act_1930__chunk_0049",
+          "consumer_sale_of_goods_act_1930__chunk_0050"
+        ],
+        "count": 2,
+        "snippet": "Section 46 — Unpaid seller’s rights 46. Unpaid seller’s rights.— (1)Subject to the provisions of this Act and of any law for the time being in force, notwithsta",
+        "source_files": [
+          "consumer/sale_of_goods_act_1930.pdf"
+        ]
+      },
+      {
+        "chunk_ids": [
+          "consumer_sale_of_goods_act_1930__chunk_0051",
+          "consumer_sale_of_goods_act_1930__chunk_0052"
+        ],
+        "count": 2,
+        "snippet": "Section 47 — Seller’s lien 47. Seller’s lien.— (1)Subject to the provisions of this Act, the unpaid seller of goods who is in possession of them is entitled to ",
+        "source_files": [
+          "consumer/sale_of_goods_act_1930.pdf"
         ]
       },
       {
@@ -224,12 +268,12 @@
       {
         "document_type": "procedural_user_guide",
         "domain": "cyber",
-        "fallback_chunks": 6,
+        "fallback_chunks": 5,
         "fallback_percentage": 100.0,
-        "source_file": "cyber/sanchar_saathi_ceir_user_manual.pdf",
+        "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
         "structure_aware_chunks": 0,
         "structure_aware_percentage": 0.0,
-        "total_chunks": 6
+        "total_chunks": 5
       },
       {
         "document_type": "procedural_user_guide",
@@ -244,12 +288,12 @@
       {
         "document_type": "procedural_user_guide",
         "domain": "cyber",
-        "fallback_chunks": 5,
+        "fallback_chunks": 6,
         "fallback_percentage": 100.0,
-        "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+        "source_file": "cyber/sanchar_saathi_ceir_user_manual.pdf",
         "structure_aware_chunks": 0,
         "structure_aware_percentage": 0.0,
-        "total_chunks": 5
+        "total_chunks": 6
       },
       {
         "document_type": "amendment_rules",
@@ -635,11 +679,11 @@
         "document_type": "statute",
         "domain": "tenancy",
         "fallback_chunks": 1,
-        "fallback_percentage": 1.89,
+        "fallback_percentage": 1.85,
         "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
-        "structure_aware_chunks": 52,
-        "structure_aware_percentage": 98.11,
-        "total_chunks": 53
+        "structure_aware_chunks": 53,
+        "structure_aware_percentage": 98.15,
+        "total_chunks": 54
       },
       {
         "document_type": "rules",
@@ -672,16 +716,6 @@
         "total_chunks": 67
       },
       {
-        "document_type": "statute",
-        "domain": "consumer",
-        "fallback_chunks": 1,
-        "fallback_percentage": 1.49,
-        "source_file": "consumer/sale_of_goods_act_1930.pdf",
-        "structure_aware_chunks": 66,
-        "structure_aware_percentage": 98.51,
-        "total_chunks": 67
-      },
-      {
         "document_type": "procedural_user_guide",
         "domain": "cyber",
         "fallback_chunks": 2,
@@ -690,6 +724,16 @@
         "structure_aware_chunks": 137,
         "structure_aware_percentage": 98.56,
         "total_chunks": 139
+      },
+      {
+        "document_type": "statute",
+        "domain": "consumer",
+        "fallback_chunks": 1,
+        "fallback_percentage": 1.41,
+        "source_file": "consumer/sale_of_goods_act_1930.pdf",
+        "structure_aware_chunks": 70,
+        "structure_aware_percentage": 98.59,
+        "total_chunks": 71
       },
       {
         "document_type": "supporting_property_law",
@@ -745,11 +789,11 @@
         "document_type": "supporting_document_registration_law",
         "domain": "tenancy",
         "fallback_chunks": 1,
-        "fallback_percentage": 0.94,
+        "fallback_percentage": 0.95,
         "source_file": "tenancy/registration_act_1908.pdf",
-        "structure_aware_chunks": 105,
-        "structure_aware_percentage": 99.06,
-        "total_chunks": 106
+        "structure_aware_chunks": 104,
+        "structure_aware_percentage": 99.05,
+        "total_chunks": 105
       },
       {
         "document_type": "rules",
@@ -797,9 +841,9 @@
         "fallback_chunks": 1,
         "fallback_percentage": 0.54,
         "source_file": "tenancy/transfer_of_property_act_1882.pdf",
-        "structure_aware_chunks": 184,
+        "structure_aware_chunks": 185,
         "structure_aware_percentage": 99.46,
-        "total_chunks": 185
+        "total_chunks": 186
       },
       {
         "document_type": "constitution",
@@ -937,9 +981,9 @@
         "fallback_chunks": 0,
         "fallback_percentage": 0.0,
         "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
-        "structure_aware_chunks": 72,
+        "structure_aware_chunks": 51,
         "structure_aware_percentage": 100.0,
-        "total_chunks": 72
+        "total_chunks": 51
       },
       {
         "document_type": "case_law",
@@ -1790,27 +1834,27 @@
     {
       "counts_by_structure_type": {
         "fallback": 1,
-        "section": 66
+        "section": 70
       },
       "document_type": "statute",
       "domain": "consumer",
       "fallback_chunks": 1,
       "source_file": "consumer/sale_of_goods_act_1930.pdf",
-      "structure_aware_chunks": 66,
-      "structure_aware_percentage": 98.51,
-      "total_chunks": 67
+      "structure_aware_chunks": 70,
+      "structure_aware_percentage": 98.59,
+      "total_chunks": 71
     },
     {
       "counts_by_structure_type": {
-        "section": 72
+        "section": 51
       },
       "document_type": "supporting_criminal_law",
       "domain": "cyber",
       "fallback_chunks": 0,
       "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
-      "structure_aware_chunks": 72,
+      "structure_aware_chunks": 51,
       "structure_aware_percentage": 100.0,
-      "total_chunks": 72
+      "total_chunks": 51
     },
     {
       "counts_by_structure_type": {
@@ -2233,28 +2277,28 @@
       "counts_by_structure_type": {
         "fallback": 1,
         "schedule": 2,
-        "section": 103
+        "section": 102
       },
       "document_type": "supporting_document_registration_law",
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/registration_act_1908.pdf",
-      "structure_aware_chunks": 105,
-      "structure_aware_percentage": 99.06,
-      "total_chunks": 106
+      "structure_aware_chunks": 104,
+      "structure_aware_percentage": 99.05,
+      "total_chunks": 105
     },
     {
       "counts_by_structure_type": {
         "fallback": 1,
-        "section": 52
+        "section": 53
       },
       "document_type": "statute",
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
-      "structure_aware_chunks": 52,
-      "structure_aware_percentage": 98.11,
-      "total_chunks": 53
+      "structure_aware_chunks": 53,
+      "structure_aware_percentage": 98.15,
+      "total_chunks": 54
     },
     {
       "counts_by_structure_type": {
@@ -2273,15 +2317,15 @@
       "counts_by_structure_type": {
         "fallback": 1,
         "schedule": 6,
-        "section": 178
+        "section": 179
       },
       "document_type": "supporting_property_law",
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
-      "structure_aware_chunks": 184,
+      "structure_aware_chunks": 185,
       "structure_aware_percentage": 99.46,
-      "total_chunks": 185
+      "total_chunks": 186
     }
   ],
   "provision_metadata_inconsistencies": [],
@@ -2937,19 +2981,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0020",
+      "current_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0051",
       "current_number": "2",
-      "previous_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0019",
-      "previous_number": "356",
-      "severity": "MEDIUM",
-      "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
-      "structure_type": "section",
-      "type": "sequence_reverse_jump"
-    },
-    {
-      "current_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0072",
-      "current_number": "2",
-      "previous_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0067",
+      "previous_chunk_id": "cyber_bharatiya_nyaya_sanhita_2023__chunk_0046",
       "previous_number": "356",
       "severity": "MEDIUM",
       "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
@@ -3097,16 +3131,6 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_registration_act_1908__chunk_0106",
-      "current_number": "1",
-      "previous_chunk_id": "tenancy_registration_act_1908__chunk_0104",
-      "previous_number": "91",
-      "severity": "MEDIUM",
-      "source_file": "tenancy/registration_act_1908.pdf",
-      "structure_type": "section",
-      "type": "sequence_reverse_jump"
-    },
-    {
       "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0060",
       "current_number": "1",
       "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0059",
@@ -3117,9 +3141,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0080",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0081",
       "current_number": "1",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0076",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0077",
       "previous_number": "57",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3127,9 +3151,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0084",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0085",
       "current_number": "1",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0083",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0084",
       "previous_number": "60",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3137,9 +3161,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0099",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0100",
       "current_number": "1",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0098",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0099",
       "previous_number": "67",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3147,9 +3171,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0103",
-      "current_number": "4",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0102",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0106",
+      "current_number": "8",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0103",
       "previous_number": "69",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3157,9 +3181,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0118",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0119",
       "current_number": "3",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0117",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0118",
       "previous_number": "72",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3167,9 +3191,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0129",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0130",
       "current_number": "2",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0128",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0129",
       "previous_number": "83",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3177,9 +3201,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0134",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0135",
       "current_number": "3",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0133",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0134",
       "previous_number": "92",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3187,9 +3211,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0143",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0144",
       "current_number": "2",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0142",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0143",
       "previous_number": "101",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3197,9 +3221,9 @@
       "type": "sequence_reverse_jump"
     },
     {
-      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0178",
+      "current_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0179",
       "current_number": "6",
-      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0177",
+      "previous_chunk_id": "tenancy_transfer_of_property_act_1882__chunk_0178",
       "previous_number": "130A",
       "severity": "MEDIUM",
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
@@ -3362,7 +3386,6 @@
       "constitutional_public_authority/right_to_information_act_2005.pdf": 15,
       "constitutional_public_authority/rti_rules_2012.pdf": 4,
       "consumer/legal_metrology_packaged_commodities_rules_2011.pdf": 24,
-      "cyber/bharatiya_nyaya_sanhita_2023.pdf": 10,
       "cyber/cybercrime_portal_citizen_manual_latest.pdf": 13,
       "cyber/digital_personal_data_protection_rules_2025.pdf": 3,
       "cyber/it_blocking_rules_2009.pdf": 1,
@@ -3370,10 +3393,10 @@
       "cyber/npci_upi_procedural_guidelines.pdf": 5,
       "tenancy/delhi_rent_control_rules_1959.pdf": 9,
       "tenancy/indian_stamp_act_1899.pdf": 1,
-      "tenancy/registration_act_1908.pdf": 2,
+      "tenancy/registration_act_1908.pdf": 1,
       "tenancy/transfer_of_property_act_1882.pdf": 4
     },
-    "review_40_to_100_count": 268,
+    "review_40_to_100_count": 257,
     "review_samples": [
       {
         "char_count": 53,

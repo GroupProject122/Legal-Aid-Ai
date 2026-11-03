@@ -2,39 +2,39 @@
 
 ## Overall Results
 - Status: PASS WITH WARNINGS
-- Total chunks checked: 6709
-- Unique chunk IDs: 6709
+- Total chunks checked: 6693
+- Unique chunk IDs: 6693
 - HIGH findings: 0
-- MEDIUM findings: 94
+- MEDIUM findings: 92
 - LOW findings: 3
 
 ## High-Priority Issues
 - None found.
 
 ## Medium-Priority Issues
-- 94 medium-priority finding(s), mainly review-scale quality signals.
+- 92 medium-priority finding(s), mainly review-scale quality signals.
 - Large chunks over 8,000 characters: 0
-- Exact duplicate text groups: 1
-- Near-duplicate text groups: 14
+- Exact duplicate text groups: 2
+- Near-duplicate text groups: 17
 
 ## Low-Priority / Informational Findings
 - Very short chunks under 40 characters: 10
-- Review-candidate chunks from 40 to 100 characters: 268
+- Review-candidate chunks from 40 to 100 characters: 257
 - Suspicious recurring header/footer patterns: 14
 
 ## Documents Requiring Attention
-- `cyber/sanchar_saathi_ceir_user_manual.pdf`: 6 fallback chunks (100.0%)
-- `cyber/i4c_1930_helpline_faq.pdf`: 7 fallback chunks (100.0%)
 - `cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf`: 5 fallback chunks (100.0%)
+- `cyber/i4c_1930_helpline_faq.pdf`: 7 fallback chunks (100.0%)
+- `cyber/sanchar_saathi_ceir_user_manual.pdf`: 6 fallback chunks (100.0%)
 - `consumer/ecommerce_amendment_rules_2021.pdf`: 1 fallback chunks (50.0%)
 - `cyber/cert_in_directions_2022.pdf`: 5 fallback chunks (50.0%)
 - `consumer/consumer_commission_procedure_regulations_2020.pdf`: 13 fallback chunks (33.33%)
 
 ## Fallback Analysis
 - Total fallback chunks: 107
-- `cyber/sanchar_saathi_ceir_user_manual.pdf`: 6/6 fallback (100.0%)
-- `cyber/i4c_1930_helpline_faq.pdf`: 7/7 fallback (100.0%)
 - `cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf`: 5/5 fallback (100.0%)
+- `cyber/i4c_1930_helpline_faq.pdf`: 7/7 fallback (100.0%)
+- `cyber/sanchar_saathi_ceir_user_manual.pdf`: 6/6 fallback (100.0%)
 - `consumer/ecommerce_amendment_rules_2021.pdf`: 1/2 fallback (50.0%)
 - `cyber/cert_in_directions_2022.pdf`: 5/10 fallback (50.0%)
 - `consumer/consumer_commission_procedure_regulations_2020.pdf`: 13/39 fallback (33.33%)
@@ -54,8 +54,8 @@
 - `constitutional_public_authority_case_law_case6_sp_gupta_v_union_of_india_1981__chunk_0145` in `constitutional_public_authority/case_law/case6_sp_gupta_v_union_of_india_1981.pdf`: 2251 chars, judgment_segment 
 
 ## Duplicate / Noise Findings
-- Exact duplicate groups: 1
-- Near-duplicate groups: 14
+- Exact duplicate groups: 2
+- Near-duplicate groups: 17
 - Recurring noise examples:
   - `MINISTRY OF CONSUMER AFFAIRS, FOOD AND PUBLIC DISTRIBUTION` (6 occurrences)
   - `(2) They shall come into force on the date of their publication in the Official Gazette.` (5 occurrences)

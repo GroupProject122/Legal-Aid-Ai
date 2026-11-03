@@ -18,6 +18,7 @@ from sentence_transformers import SentenceTransformer
 
 import grounded_answer
 import claim_verifier
+import ipc_bns
 import source_text
 from gemini_http import gemini_http_options
 from config import (
@@ -271,6 +272,9 @@ AUTHORITY_LEVEL_WEIGHTS = {
 }
 SUPPORTING_ONLY_PENALTY = 0.04
 REFERENCE_ONLY_PENALTY = 0.035
+# A BNS section the user's own IPC citation maps to is the provision the question is about, so it
+# must outrank the supporting_only penalty the BNS extract otherwise carries.
+IPC_MAPPED_BNS_SECTION_BOOST = 0.30
 PROCEDURAL_QUERY_MANUAL_BOOST = 0.06
 PROCEDURAL_GUIDE_SUBSTANTIVE_PENALTY = 0.20
 # Same shape of problem as the procedural-manual penalty above, found when judgments were first
@@ -496,6 +500,12 @@ def is_consumer_law_question(question: str) -> bool:
 
 
 def retrieval_query(question: str) -> str:
+    query = domain_retrieval_query(question)
+    ipc_terms = ipc_bns.retrieval_terms(ipc_bns.mappings_for_text(question))
+    return f"{query} {ipc_terms}" if ipc_terms else query
+
+
+def domain_retrieval_query(question: str) -> str:
     lowered = question.lower()
     signals = detect_domain_signals(question)
     consumer_score = signals["scores"]["consumer"]
@@ -812,42 +822,40 @@ class LegalRAG:
         query_vector = embed_texts([retrieval_query(question)], provider=provider)
         candidate_k = min(len(self.chunks), candidate_k or max(TOP_K * 2, 12))
         candidates: list[RetrievedChunk] = []
-        for score, idx in self._best_chunk_matches(query_vector, candidate_k):
-            item = self.chunks[idx]
-            candidates.append(
-                RetrievedChunk(
-                    text=item["text"],
-                    source=item["source"],
-                    document_title=item.get("document_title") or item["source"],
-                    page=int(item["page"]),
-                    score=float(score),
-                    chunk_id=item.get("chunk_id"),
-                    domain=item.get("domain"),
-                    retrieval_priority=item.get("retrieval_priority"),
-                    authority_level=item.get("authority_level"),
-                    status=item.get("status"),
-                    document_type=item.get("document_type"),
-                    chapter=item.get("chapter"),
-                    section_number=item.get("section_number"),
-                    section_title=item.get("section_title"),
-                    rule_number=item.get("rule_number"),
-                    rule_title=item.get("rule_title"),
-                    article_number=item.get("article_number"),
-                    article_title=item.get("article_title"),
-                    regulation_number=item.get("regulation_number"),
-                    regulation_title=item.get("regulation_title"),
-                    guideline_number=item.get("guideline_number"),
-                    guideline_title=item.get("guideline_title"),
-                    page_start=item.get("page_start"),
-                    page_end=item.get("page_end"),
-                    paragraph_number=item.get("paragraph_number"),
-                    case_name=item.get("case_name"),
-                    citation=item.get("citation"),
-                    court=item.get("court"),
-                    good_law=item.get("good_law"),
-                )
-            )
+        faiss_matches = self._best_chunk_matches(query_vector, candidate_k)
+        matches = [(score, self.chunks[idx]) for score, idx in faiss_matches]
+        matches += self._ipc_mapped_bns_matches(question, query_vector, {idx for _score, idx in faiss_matches}, provider)
+        for score, item in matches:
+            candidates.append(retrieved_chunk_from_item(item, score))
         return candidates
+
+    def _ipc_mapped_bns_matches(
+        self, question: str, query_vector: np.ndarray, already: set[int], provider: str
+    ) -> list[tuple[float, dict[str, Any]]]:
+        """Chunks of the BNS sections that the question's IPC citations map to, added even when FAISS
+        did not rank them: the user named the offence, so its current provision is always a candidate.
+        Sections in the indexed BNS extract score as their best window, like any FAISS match; the rest
+        come from ipc_bns's full-BNS reference chunks, which are not indexed, and are embedded here."""
+        sections = ipc_bns.mapped_bns_sections(question)
+        if not sections:
+            return []
+        positions = self.vector_chunk_positions
+        matches = []
+        indexed_sections = set()
+        for chunk_position, item in enumerate(self.chunks):
+            if item["source"] != ipc_bns.BNS_SOURCE_FILE or item.get("section_number") not in sections:
+                continue
+            indexed_sections.add(item["section_number"])
+            if chunk_position in already:
+                continue
+            vector_ids = [chunk_position] if positions is None else [v for v, p in enumerate(positions) if p == chunk_position]
+            vectors = np.vstack([self.index.reconstruct(vector_id) for vector_id in vector_ids])
+            matches.append((float(np.max(vectors @ query_vector[0])), item))
+        reference = ipc_bns.bns_reference_chunks(sections - indexed_sections)
+        if reference:
+            vectors = embed_texts([item["text"] for item in reference], provider=provider)
+            matches += [(float(vector @ query_vector[0]), item) for vector, item in zip(vectors, reference)]
+        return matches
 
     def _best_chunk_matches(self, query_vector: np.ndarray, chunk_count: int) -> list[tuple[float, int]]:
         """The `chunk_count` best-matching chunks as (score, chunk position), best first. A chunk
@@ -1435,7 +1443,54 @@ def final_rerank_score(question: str, chunk: RetrievedChunk) -> float:
         + source_role_boost(question, chunk)
         + public_authority_intent_boost(question, chunk)
         + title_subject_match_boost(question, chunk)
+        + ipc_mapped_section_boost(question, chunk)
     )
+
+
+def retrieved_chunk_from_item(item: dict[str, Any], score: float) -> RetrievedChunk:
+    return RetrievedChunk(
+        text=item["text"],
+        source=item["source"],
+        document_title=item.get("document_title") or item["source"],
+        page=int(item["page"]),
+        score=float(score),
+        chunk_id=item.get("chunk_id"),
+        domain=item.get("domain"),
+        retrieval_priority=item.get("retrieval_priority"),
+        authority_level=item.get("authority_level"),
+        status=item.get("status"),
+        document_type=item.get("document_type"),
+        chapter=item.get("chapter"),
+        section_number=item.get("section_number"),
+        section_title=item.get("section_title"),
+        rule_number=item.get("rule_number"),
+        rule_title=item.get("rule_title"),
+        article_number=item.get("article_number"),
+        article_title=item.get("article_title"),
+        regulation_number=item.get("regulation_number"),
+        regulation_title=item.get("regulation_title"),
+        guideline_number=item.get("guideline_number"),
+        guideline_title=item.get("guideline_title"),
+        page_start=item.get("page_start"),
+        page_end=item.get("page_end"),
+        paragraph_number=item.get("paragraph_number"),
+        case_name=item.get("case_name"),
+        citation=item.get("citation"),
+        court=item.get("court"),
+        good_law=item.get("good_law"),
+    )
+
+
+def bns_section_chunks(sections: set[str]) -> list[RetrievedChunk]:
+    """The full text of these BNS sections, in section order, for answers that need a section by
+    number rather than by search (the IPC lookup reply)."""
+    return [retrieved_chunk_from_item(item, 1.0) for item in ipc_bns.bns_reference_chunks(sections)]
+
+
+def ipc_mapped_section_boost(question: str, chunk: RetrievedChunk) -> float:
+    if chunk.source != ipc_bns.BNS_SOURCE_FILE or not chunk.section_number:
+        return 0.0
+    return IPC_MAPPED_BNS_SECTION_BOOST if chunk.section_number in ipc_bns.mapped_bns_sections(question) else 0.0
 
 
 def relevance_gate_score(question: str, chunk: RetrievedChunk) -> float:

@@ -7,16 +7,16 @@
     "procedural_user_guide": 291,
     "regulations": 114,
     "rules": 574,
-    "statute": 1487,
-    "supporting_criminal_law": 72,
-    "supporting_document_registration_law": 106,
-    "supporting_property_law": 307
+    "statute": 1492,
+    "supporting_criminal_law": 51,
+    "supporting_document_registration_law": 105,
+    "supporting_property_law": 308
   },
   "chunks_by_domain": {
     "constitutional_public_authority": 3195,
-    "consumer": 857,
-    "cyber": 1625,
-    "tenancy": 1032
+    "consumer": 861,
+    "cyber": 1604,
+    "tenancy": 1033
   },
   "chunks_by_structure_type": {
     "annexure": 49,
@@ -30,7 +30,7 @@
     "regulation": 98,
     "rule": 535,
     "schedule": 110,
-    "section": 1907
+    "section": 1891
   },
   "documents": [
     {
@@ -398,16 +398,16 @@
       "domain": "consumer",
       "fallback_chunks": 1,
       "source_file": "consumer/sale_of_goods_act_1930.pdf",
-      "structure_aware_chunks": 66,
-      "total_chunks": 67
+      "structure_aware_chunks": 70,
+      "total_chunks": 71
     },
     {
       "document_type": "supporting_criminal_law",
       "domain": "cyber",
       "fallback_chunks": 0,
       "source_file": "cyber/bharatiya_nyaya_sanhita_2023.pdf",
-      "structure_aware_chunks": 72,
-      "total_chunks": 72
+      "structure_aware_chunks": 51,
+      "total_chunks": 51
     },
     {
       "document_type": "case_law",
@@ -488,6 +488,22 @@
       "source_file": "cyber/digital_personal_data_protection_rules_2025.pdf",
       "structure_aware_chunks": 90,
       "total_chunks": 91
+    },
+    {
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 5,
+      "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
+      "structure_aware_chunks": 0,
+      "total_chunks": 5
+    },
+    {
+      "document_type": "procedural_user_guide",
+      "domain": "cyber",
+      "fallback_chunks": 7,
+      "source_file": "cyber/i4c_1930_helpline_faq.pdf",
+      "structure_aware_chunks": 0,
+      "total_chunks": 7
     },
     {
       "document_type": "statute",
@@ -654,16 +670,16 @@
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/registration_act_1908.pdf",
-      "structure_aware_chunks": 105,
-      "total_chunks": 106
+      "structure_aware_chunks": 104,
+      "total_chunks": 105
     },
     {
       "document_type": "statute",
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/slum_areas_improvement_and_clearance_act_1956.pdf",
-      "structure_aware_chunks": 52,
-      "total_chunks": 53
+      "structure_aware_chunks": 53,
+      "total_chunks": 54
     },
     {
       "document_type": "supporting_property_law",
@@ -678,24 +694,8 @@
       "domain": "tenancy",
       "fallback_chunks": 1,
       "source_file": "tenancy/transfer_of_property_act_1882.pdf",
-      "structure_aware_chunks": 184,
-      "total_chunks": 185
-    },
-    {
-      "document_type": "procedural_user_guide",
-      "domain": "cyber",
-      "fallback_chunks": 7,
-      "source_file": "cyber/i4c_1930_helpline_faq.pdf",
-      "structure_aware_chunks": 0,
-      "total_chunks": 7
-    },
-    {
-      "document_type": "procedural_user_guide",
-      "domain": "cyber",
-      "fallback_chunks": 5,
-      "source_file": "cyber/dot_sanchar_saathi_chakshu_press_release_2026-10-05.pdf",
-      "structure_aware_chunks": 0,
-      "total_chunks": 5
+      "structure_aware_chunks": 185,
+      "total_chunks": 186
     }
   ],
   "documents_parsed": 83,
@@ -706,7 +706,7 @@
     }
   ],
   "fallback_chunks": 107,
-  "structure_aware_chunks": 6602,
-  "structure_aware_percentage": 98.41,
-  "total_chunks": 6709
+  "structure_aware_chunks": 6586,
+  "structure_aware_percentage": 98.4,
+  "total_chunks": 6693
 }

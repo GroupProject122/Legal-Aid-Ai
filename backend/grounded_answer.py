@@ -91,6 +91,7 @@ Leave any list empty when it does not fit the question; not every reply needs ri
 Do not repeat the same point in more than one field. Procedural steps belong only in suggested_next_steps; what_this_may_involve explains what the situation is, not what to do.
 Answer every part of a multi-part message. If the user raises an innocent or non-legal explanation (for example a number deactivated by the telecom operator rather than an account taken over), address it: say what the retrieved material says about it, or say plainly in limitations that the retrieved material does not cover it. Never silently drop part of the question.
 For tenancy issues where the user has not said where the property is, assume it is in Delhi and give the most relevant answer from the retrieved Delhi and central-law material. Do not refuse, and do not say the question cannot be answered, because the location was not stated; do not ask for the location. A note about the Delhi assumption is added to the answer separately, so do not add your own.
+When an IPC TO BNS MAPPING block is supplied, the user has cited sections of the Indian Penal Code, which the Bharatiya Nyaya Sanhita (BNS) replaced. In issue_summary, tell the user which BNS section each cited IPC section now corresponds to, or that it has none, exactly as the block states, and whether the IPC or the BNS applies to their case going by when the offence happened, as the block's transition note explains; if the user has not said when it happened, say that this decides which law applies. Never state an IPC-to-BNS correspondence that the block does not list. When the block marks a link as our reading rather than the government table, or as not from any document, keep that qualification. In every other field, explain the legal position using the BNS provisions in the retrieved material; do not repeat the IPC-to-BNS correspondence there, because it is shown to the user separately.
 Return only the required structured JSON.
 Only include source_chunk_ids from the retrieved chunk IDs listed below.
 Do not include markdown, bullets, numbering prefixes, or raw SVG/icon text inside strings.
@@ -103,6 +104,7 @@ def generate_grounded_answer(
     domains: list[str],
     chunks: list[Any],
     confirmed_case_facts: list[str] | None = None,
+    ipc_mapping_block: str = "",
 ) -> dict[str, Any]:
     if not chunks:
         return insufficient_response("I do not have retrieved legal material to answer this reliably.")
@@ -118,7 +120,7 @@ def generate_grounded_answer(
         client = genai.Client(api_key=GEMINI_API_KEY, http_options=gemini_http_options())
         response = client.models.generate_content(
             model=GEMINI_MODEL,
-            contents=build_grounded_prompt(original_message, normalized_case_summary, domains, chunks, confirmed_case_facts),
+            contents=build_grounded_prompt(original_message, normalized_case_summary, domains, chunks, confirmed_case_facts, ipc_mapping_block),
             config=types.GenerateContentConfig(
                 temperature=0.2,
                 response_mime_type="application/json",
@@ -173,6 +175,7 @@ def build_grounded_prompt(
     domains: list[str],
     chunks: list[Any],
     confirmed_case_facts: list[str] | None = None,
+    ipc_mapping_block: str = "",
 ) -> str:
     legal_blocks = []
     for index, chunk in enumerate(chunks, start=1):
@@ -187,6 +190,7 @@ def build_grounded_prompt(
             block += f"CURRENCY_WARNING: {currency}\n"
         legal_blocks.append(block + f"TEXT:\n{compact_text(getattr(chunk, 'text', ''), 1800)}")
     document_fact_block = "\n".join(f"- {clean_text(item)}" for item in confirmed_case_facts or [] if clean_text(item)) or "None"
+    ipc_section = f"IPC TO BNS MAPPING (from the project's IPC-BNS map, not retrieved material):\n{ipc_mapping_block}\n\n" if ipc_mapping_block else ""
     return (
         f"{GROUNDED_SYSTEM_PROMPT}\n\n"
         "LATEST USER MESSAGE (reply to this):\n"
@@ -196,6 +200,7 @@ def build_grounded_prompt(
         f"- Routed domain(s): {', '.join(domains)}\n\n"
         "CONFIRMED CASE FACTS FROM USER DOCUMENTS:\n"
         f"{document_fact_block}\n\n"
+        f"{ipc_section}"
         "RETRIEVED LEGAL MATERIAL:\n"
         + "\n\n".join(legal_blocks)
     )

@@ -29,6 +29,7 @@ import document_summarizer
 import domain_router
 import fact_sufficiency
 import grounded_answer
+import ipc_bns
 import legal_aid_eligibility
 import schemes_matcher
 import legal_education
@@ -45,9 +46,11 @@ from rag import (
     RAGError,
     VectorStoreIncompatibleError,
     VectorStoreMissingError,
+    bns_section_chunks,
     detect_domain_signals,
     offline_retrieval_response,
     rag,
+    source_payload,
     validate_question,
 )
 
@@ -702,6 +705,15 @@ def ask(request: AskRequest, user: dict | None = Depends(optional_user)) -> dict
             and case_store.is_small_talk(question)
         ):
             return no_case_small_talk_response()
+        # "What is IPC 302 now?" has no supported domain for the router to find, so a fresh
+        # section lookup is answered from the IPC-BNS map before routing.
+        if (
+            request.case_id is None
+            and request.conversation_state_id is None
+            and request.clarification_state_id is None
+            and ipc_bns.is_lookup_question(question)
+        ):
+            return persist_case_turn(user_id, None, request.document_ids, question, ipc_lookup_response(question))
 
         active_case = conversation_state.get_state(request.conversation_state_id)
         if active_case is None and persisted_case:
@@ -752,7 +764,7 @@ def ask(request: AskRequest, user: dict | None = Depends(optional_user)) -> dict
             )
             response = clarification_response(route, state, clarification_question)
             return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
-        response = router_minimal_response(route)
+        response = router_minimal_response(route, routing_text)
         return persist_case_turn(user_id, request.case_id, request.document_ids, question, response, confirmed_context)
     except HTTPException:
         raise
@@ -1045,7 +1057,7 @@ def continue_clarification(state_id: str, answer: str, conversation_state_id: st
         return with_routing(handle_classified_issue(state.accumulated_context, route, conversation_state_id=conversation_state_id), route)
     if route.status in {"unsupported", "out_of_scope"}:
         clarification.clear_state(state_id)
-        return router_minimal_response(route)
+        return router_minimal_response(route, state.accumulated_context)
     if progress.safe_exit:
         clarification.clear_state(state_id)
         return insufficient_detail_response()
@@ -1109,7 +1121,7 @@ def handle_active_case_turn(
         state, clarification_question = clarification.start_clarification(combined_message, route)
         active_case.clarification_state_id = state.state_id
         return with_conversation_state(clarification_response(route, state, clarification_question), active_case)
-    return with_conversation_state(router_minimal_response(route), active_case)
+    return with_conversation_state(router_minimal_response(route, question), active_case)
 
 
 def handle_new_issue_without_active_context(question: str, confirmed_context: dict | None = None) -> dict:
@@ -1126,7 +1138,7 @@ def handle_new_issue_without_active_context(question: str, confirmed_context: di
     if route.status == "unclear":
         state, clarification_question = clarification.start_clarification(question, route)
         return clarification_response(route, state, clarification_question)
-    return router_minimal_response(route)
+    return router_minimal_response(route, routing_text)
 
 
 def handle_classified_issue(
@@ -1239,6 +1251,33 @@ def answer_grounded_from_context(
     conversation_case: conversation_state.ActiveCaseState | None = None,
     route: domain_router.RouteDecision | None = None,
 ) -> dict:
+    """Answers the case, adding the IPC -> BNS mapping when the user cites IPC sections. Citations are
+    read from what the user wrote (and any confirmed document, such as an FIR), not from
+    fact_sufficiency's summary, which may paraphrase them away. The mapping is attached to every
+    outcome, abstentions included: it comes from the map, not from retrieval."""
+    citation_text = "\n".join(
+        [document_facts.combined_question_with_confirmed_facts(original_message, confirmed_context), user_question or ""]
+    )
+    ipc_mappings = ipc_bns.mappings_for_text(citation_text)
+    response = _answer_grounded_from_context(
+        original_message, context, fact_result, confirmed_context, user_question, conversation_case, route, ipc_mappings
+    )
+    payload = ipc_bns.response_payload(ipc_mappings)
+    if payload:
+        response["ipc_bns_mapping"] = payload
+    return response
+
+
+def _answer_grounded_from_context(
+    original_message: str,
+    context: fact_sufficiency.CaseContext,
+    fact_result: fact_sufficiency.FactSufficiencyResult,
+    confirmed_context: dict | None,
+    user_question: str | None,
+    conversation_case: conversation_state.ActiveCaseState | None,
+    route: domain_router.RouteDecision | None,
+    ipc_mappings: list[ipc_bns.IpcMapping],
+) -> dict:
     retrieval_text = fact_sufficiency.retrieval_query(context, fact_result)
     # English-only rewrite for retrieval ONLY -- the embedding model and the corpus are both
     # English-language, so a Hinglish retrieval_text searched as-is misses relevant provisions
@@ -1247,6 +1286,8 @@ def answer_grounded_from_context(
     # string actually sent to rag.retrieve() is affected. Behind config.HINGLISH_RETRIEVAL_NORMALIZER
     # (default off) -- see that setting for why.
     rag_query = query_normalizer.english_retrieval_query(retrieval_text) if HINGLISH_RETRIEVAL_NORMALIZER else retrieval_text
+    # After the rewrite, which may paraphrase IPC citations away along with the Hinglish.
+    rag_query = ipc_bns.with_ipc_citations(rag_query, ipc_mappings)
     chunks = rag.retrieve(rag_query, domains=context.domains)
     if not chunks:
         return grounded_answer.insufficient_response("I do not have enough retrieved legal material to answer this reliably.")
@@ -1263,7 +1304,7 @@ def answer_grounded_from_context(
         response = corpus_gap.abstention_response(pre_gap)
         return attach_active_case_state(response, conversation_case, route, retrieval_text, user_question or original_message, confirmed_context)
     if LLM_PROVIDER == "local":
-        answer = rag.answer(retrieval_text, skip_scope_check=True)
+        answer = rag.answer(rag_query, skip_scope_check=True)
         attach_document_evidence(answer, confirmed_context)
         response = corpus_gap.apply_gap_to_response(answer, pre_gap)
         response = corpus_gap.delhi_tenancy_note(response, context.domains, raw_check_query)
@@ -1286,6 +1327,7 @@ def answer_grounded_from_context(
             domains=context.domains,
             chunks=chunks,
             confirmed_case_facts=document_facts.confirmed_fact_lines(confirmed_context),
+            ipc_mapping_block=ipc_bns.prompt_block(ipc_mappings),
         )
         verified_answer = claim_verifier.verify_and_sanitize_response(answer, chunks)
         attach_document_evidence(verified_answer, confirmed_context)
@@ -1462,7 +1504,53 @@ def document_fact_conflict_response(question: str) -> dict:
     }
 
 
-def router_minimal_response(route: domain_router.RouteDecision) -> dict:
+IPC_LOOKUP_LIMITATION = (
+    "This is a section lookup from the government (BPR&D) correspondence table and the text of the "
+    "BNS. It does not assess any particular case."
+)
+
+
+def ipc_lookup_response(question: str) -> dict:
+    """Direct reply to "where did this IPC section go" ("what is IPC 302 now?"). Built from the
+    IPC-BNS map and the BNS text alone -- no router, no model -- so it works for offences outside
+    the four supported areas and when Gemini is unreachable. Every sentence says where it comes from."""
+    mappings = ipc_bns.mappings_for_text(question)
+    summary = []
+    for mapping in mappings:
+        title = f" ({mapping.ipc_title})" if mapping.ipc_title else ""
+        if mapping.status == "repealed_before_bns":
+            summary.append(f"IPC {mapping.ipc_section} had already been repealed before the BNS came into force.")
+        elif mapping.status == "no_bns_equivalent":
+            summary.append(f"IPC {mapping.ipc_section}{title} has no equivalent in the BNS.")
+        else:
+            bns = " and ".join(f"BNS {section}" for section in mapping.bns_sections)
+            table_backed = all(entry.get("source") == "bprd_table" for entry in mapping.bns)
+            qualifier = "" if table_backed else " (our reading of the BNS text; the government table does not list it)"
+            summary.append(f"IPC {mapping.ipc_section}{title} is now {bns} of the Bharatiya Nyaya Sanhita, 2023{qualifier}.")
+    if any(mapping.status == "mapped" for mapping in mappings):
+        summary.append("Which law applies depends on when the offence happened: before 1 July 2024 the IPC, from that date the BNS.")
+    chunks = bns_section_chunks(ipc_bns.mapped_bns_sections(question))
+    return {
+        "answer": {
+            "issue_summary": " ".join(summary),
+            "what_this_may_involve": [],
+            "possible_legal_position": [],
+            "suggested_next_steps": [],
+            "evidence_to_preserve": [],
+            "where_to_approach": [],
+            "limitations": [IPC_LOOKUP_LIMITATION],
+        },
+        "sources": source_payload(chunks),
+        "confidence": "medium",
+        "insufficient_context": False,
+        "disclaimer": DISCLAIMER,
+        "ipc_bns_mapping": ipc_bns.response_payload(mappings),
+    }
+
+
+def router_minimal_response(route: domain_router.RouteDecision, question: str | None = None) -> dict:
+    """`question`, when given, is checked for IPC citations: an issue outside the supported areas
+    (a murder charge under IPC 302, say) still gets told where its IPC sections are in the BNS."""
     messages = {
         "unclear": "I need a little more detail about what happened before I can point you to the relevant law.",
         "unsupported": "This issue appears to be legal, but it is outside the legal areas currently supported by this Legal Aid AI corpus.",
@@ -1474,7 +1562,7 @@ def router_minimal_response(route: domain_router.RouteDecision) -> dict:
         "out_of_scope": ["Try asking a legal-information question related to consumer, cyber, tenancy, or public-authority issues."],
     }
     message = messages.get(route.status, messages["unclear"])
-    return {
+    response = {
         "answer": {
             "issue_summary": route.issue_summary or message,
             "possible_rights": [],
@@ -1486,6 +1574,10 @@ def router_minimal_response(route: domain_router.RouteDecision) -> dict:
         "disclaimer": DISCLAIMER,
         "routing": route_public_payload(route),
     }
+    payload = ipc_bns.response_payload(ipc_bns.mappings_for_text(question or ""))
+    if payload:
+        response["ipc_bns_mapping"] = payload
+    return response
 
 
 def with_routing(response: dict, route: domain_router.RouteDecision) -> dict:

@@ -835,6 +835,8 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
   ].filter(Boolean);
   const cardClass = (base) => `${base}${isBeingRead ? ' is-being-read' : ''}`;
   const listen = speechId !== null ? <ListenControls speechId={speechId} response={response} hints={visibleHints} /> : null;
+  // Built by the backend from its IPC-BNS map, not written by the model; each note says its source.
+  const ipcMapping = response?.ipc_bns_mapping;
 
   // No internet / Gemini unreachable: the backend already fell back to what it found locally
   // (embeddings + FAISS, no network involved) instead of a Gemini-written answer. Shown as its
@@ -982,6 +984,16 @@ function LegalAIResponse({ response, onSourceClick, question = '', speechId = nu
           <h4>In short</h4>
           <p>{cleanDisplayText(answer.issue_summary) || DISPLAY_FALLBACKS.summary}</p>
         </div>
+
+        {ipcMapping?.sections?.length > 0 && (
+          <div className="response-section">
+            <h4>IPC to BNS</h4>
+            <ul>
+              {ipcMapping.sections.map((section) => <li key={section.ipc_section}>{cleanDisplayText(section.note)}</li>)}
+            </ul>
+            <p><small>{cleanDisplayText(ipcMapping.transition_note)}</small></p>
+          </div>
+        )}
 
         {whatThisMayInvolve.length > 0 && (
           <div className="response-section">

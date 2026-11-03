@@ -971,3 +971,55 @@ def test_regulation_numbers_parse_correctly_with_merged_footnote_markers(tmp_pat
     assert numbers == ["4", "5", "6", "7"]
     seven = next(unit for unit in units if unit["metadata"].get("regulation_number") == "7")
     assert seven["lines"][0].startswith("7. Scrutiny")
+
+
+def statute_sections(pages: list[tuple[int, str]]) -> list[str | None]:
+    """Numbered sections only: stray lines such as a preamble become their own unnumbered unit."""
+    units = ingest.legal_units_from_pages(Path("some_act.pdf"), pages, "statute")
+    return [unit["metadata"]["section_number"] for unit in units if unit["metadata"].get("section_number")]
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "63. Rape.—A man is said to commit “rape” if he—",
+        "114. Hurt.—Whoever causes bodily pain, disease or infirmity to any person is said to cause",
+        "89. Causing miscarriage without woman’s consent .—Whoever commits the offence under",
+        "255.—Public servant disobeying direction of law with intent to save person from punishment",
+    ],
+)
+def test_bns_headings_the_parser_used_to_miss_start_their_own_section(line):
+    number = line.split(".")[0]
+    pages = [(20, f"62. Punishment for attempting to commit offences.—Whoever attempts to commit an offence.\n{line}\nthe rest of the section.")]
+    assert statute_sections(pages) == ["62", number]
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "1. Section 66A has been struck down by Supreme Court’s Order dated 24th March, 2015 in the",
+        "1. Section 91 renumbered as sub-section (1) thereof by Act 20 of 1983, s. 2 and Schedule.",
+        "2. Subs. by the A.O. 1950, for “Provincial Government”.",
+        "4. Ins. by Act 20 of 1983, s. 2 and Schedule (w.e.f. 15-3-1984).",
+    ],
+)
+def test_amendment_footnotes_are_not_section_headings(line):
+    pages = [(20, f"66E. Punishment for violation of privacy.–Whoever captures an image.\n{line}")]
+    assert statute_sections(pages) == ["66E"]
+
+
+def test_short_word_without_heading_dash_is_still_not_a_heading():
+    pages = [(20, "5. Penalty for breach.—Whoever breaches this.\n6. Rep. by Act 10 of 1990.")]
+    assert statute_sections(pages) == ["5"]
+
+
+def test_contents_pages_past_page_six_are_skipped_when_they_continue_a_contents_run():
+    contents = "SECTIONS\n" + "\n".join(f"{n}. Heading number {n}." for n in range(100, 125))
+    body = "BE IT ENACTED by Parliament.\n1. Short title.—This Act may be called the Example Act."
+    pages = [(3, "ARRANGEMENT OF SECTIONS\n" + contents), (7, contents), (12, contents), (16, body)]
+    assert statute_sections(pages) == ["1"]
+
+
+def test_a_sections_header_after_page_six_is_body_text_unless_it_continues_contents():
+    body = "SECTIONS\n100. Heading.—Whoever does this shall be punished."
+    assert statute_sections([(12, body)]) == ["100"]

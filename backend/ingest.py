@@ -143,9 +143,12 @@ PREAMBLE_RE = re.compile(r"^PREAMBLE$", re.I)
 # pointed at the wrong section. This is the cause of the "ss. 43-47 and 65-66A merge into adjacent
 # chunks" limitation recorded in the changelog.
 AMENDMENT_FOOTNOTE_PREFIX = r"(?:\d{1,2}\[\s*)?"
+# Two more ways a real heading was missed, each merging a section into the one before it (seen in
+# the BNS): a heading with no space before its title ("255.—Public servant ..."), and a title with
+# a typographic apostrophe ("89. Causing miscarriage without woman’s consent .—").
 SECTION_BOUNDARY_RE = re.compile(
-    r"^" + AMENDMENT_FOOTNOTE_PREFIX + r"(?:SECTION\s+)?(?P<number>\d{1,3}[A-Z]?(?:-[A-Z])?)\.\s+"
-    r"(?P<title>[A-Z][A-Za-z0-9 ,()/'&:;-]{2,180})(?:[.—-]|$)"
+    r"^" + AMENDMENT_FOOTNOTE_PREFIX + r"(?:SECTION\s+)?(?P<number>\d{1,3}[A-Z]?(?:-[A-Z])?)\.(?:\s+|—\s*)"
+    r"(?P<title>[A-Z][A-Za-z0-9 ,()/'’&:;-]{2,180})(?:[.—-]|$)"
 )
 ARTICLE_BOUNDARY_RE = re.compile(
     r"^" + AMENDMENT_FOOTNOTE_PREFIX + r"(?:ARTICLE\s+)?(?P<number>\d{1,3}[A-Z]?)\.\s+"
@@ -366,7 +369,10 @@ def trim_bilingual_gazette_front_matter(
     return pages
 
 
-def is_arrangement_page(text: str, pdf_path: Path, page_index: int) -> bool:
+def is_arrangement_page(text: str, pdf_path: Path, page_index: int, follows_arrangement_page: bool = False) -> bool:
+    """`follows_arrangement_page`: the previous page was contents. A long Act's contents run past
+    page 6 (the BNS's to page 15), and those later pages were parsed as sections -- every heading
+    became a text-less chunk -- so a page continuing a contents run is checked at any page index."""
     lowered = text.lower()
     if "arrangement of sections" in lowered or "arrangement of articles" in lowered:
         return True
@@ -374,7 +380,7 @@ def is_arrangement_page(text: str, pdf_path: Path, page_index: int) -> bool:
         return True
     if pdf_path.name.lower() == "consumer_protection_act_2019.pdf" and page_index <= 3:
         return True
-    if page_index <= 6:
+    if page_index <= 6 or follows_arrangement_page:
         heading_count = sum(
             len(pattern.findall(text))
             for pattern in (SECTION_BOUNDARY_RE, ARTICLE_BOUNDARY_RE, RULE_BOUNDARY_RE, REGULATION_BOUNDARY_RE)
@@ -385,6 +391,10 @@ def is_arrangement_page(text: str, pdf_path: Path, page_index: int) -> bool:
         lacks_substantive_enactment_text = not any(
             marker in lowered for marker in ("an act to", "be it enacted", "in exercise of the powers")
         )
+        if page_index > 6:
+            # Past the usual contents pages only the explicit continuation header counts: a
+            # dense run of short sections can also reach the heading-count threshold.
+            return lacks_substantive_enactment_text and starts_like_contents_continuation
         if lacks_substantive_enactment_text and (starts_like_contents_continuation or heading_count >= 8):
             return True
     return False
@@ -573,7 +583,14 @@ def is_probable_false_boundary(match: re.Match) -> bool:
     )
     if lowered in false_prefixes or lowered.startswith(tuple(f"{prefix}." for prefix in false_prefixes)):
         return True
-    if len(title) <= 4 and title.replace(".", "").isalpha():
+    # A numbered footnote about another provision ("1. Section 66A has been struck down by ..."),
+    # not a heading: no section's title begins by naming a section.
+    if re.match(r"section \d", lowered):
+        return True
+    # A short word is usually an amendment abbreviation, but a short title followed by the
+    # heading dash is a real section ("63. Rape.—", "114. Hurt.—").
+    followed_by_heading_dash = bool(re.match(r"\s*\.?\s*—", match.string[match.end("title"):]))
+    if len(title) <= 4 and title.replace(".", "").isalpha() and not followed_by_heading_dash:
         return True
     return False
 
@@ -654,10 +671,13 @@ def legal_units_from_pages(pdf_path: Path, pages: list[tuple[int, str]], parser_
             "metadata": merged_metadata,
         }
 
+    previous_was_arrangement = False
     for page_number, text in pages:
-        if is_arrangement_page(text, pdf_path, page_number):
+        if is_arrangement_page(text, pdf_path, page_number, follows_arrangement_page=previous_was_arrangement):
             logger.info("Skipping arrangement/contents page %s in %s", page_number, pdf_path.name)
+            previous_was_arrangement = True
             continue
+        previous_was_arrangement = False
         footnote_markers = page_footnote_markers(text)
         for raw_line in text.splitlines():
             line = raw_line.strip()
