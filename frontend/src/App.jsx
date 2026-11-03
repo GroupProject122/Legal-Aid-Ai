@@ -749,6 +749,15 @@ function createTechnicalErrorResponse(message = TECHNICAL_ERROR_MESSAGE) {
   };
 }
 
+class AskRateLimitError extends Error {}
+
+function createRateLimitResponse(message) {
+  return {
+    ...createTechnicalErrorResponse(message),
+    answer: { issue_summary: message, possible_rights: [], next_steps: ['Wait a minute, then ask your question again.'] }
+  };
+}
+
 async function parseAskResponse(response) {
   const contentType = response.headers.get('content-type') || '';
   const rawBody = await response.text();
@@ -763,6 +772,12 @@ async function parseAskResponse(response) {
     }
   } else if (rawBody.trim()) {
     console.error('Received non-JSON /api/ask response', { status: response.status, contentType, rawBody });
+  }
+
+  // Public deployments limit how often one connection can ask (backend/rate_limit.py); show the
+  // server's message instead of the generic technical-error text.
+  if (response.status === 429) {
+    throw new AskRateLimitError(payload?.detail || 'Too many requests. Please wait a minute and try again.');
   }
 
   if (!response.ok) {
@@ -1869,7 +1884,7 @@ function useLegalChat({ initialQuery = '', initialCaseId = '' } = {}) {
         setMessages((current) => replaceAssistantPlaceholder(current, assistantMessageId, {
           id: createMessageId('ai-error'),
           role: 'ai',
-          response: createTechnicalErrorResponse(error.message),
+          response: error instanceof AskRateLimitError ? createRateLimitResponse(error.message) : createTechnicalErrorResponse(error.message),
           timestamp: new Date().toISOString()
         }));
       } finally {
@@ -5248,8 +5263,25 @@ function SignInRequired({ page }) {
   );
 }
 
+const DEMO_BANNER_TEXT = "Demo deployment: accounts and saved cases may be reset. Don't upload real personal documents.";
+
+/** True when the backend reports a public demo deployment (DEMO_DEPLOYMENT=true). */
+function useDemoDeployment() {
+  const [demo, setDemo] = React.useState(false);
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch('/api/site-config')
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => { if (!cancelled && payload?.demoDeployment === true) setDemo(true); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+  return demo;
+}
+
 export default function App() {
   const { user, status: authStatus } = useAuth();
+  const demoDeployment = useDemoDeployment();
   const [route, setRoute] = React.useState(() => window.location.hash || '#/');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
     try {
@@ -5334,6 +5366,7 @@ export default function App() {
         }}
       />
       <main className={`main-panel ${activePage}-page-panel`}>
+        {demoDeployment ? <p className="demo-banner" role="note">{DEMO_BANNER_TEXT}</p> : null}
         {pageToRender}
       </main>
     </div>

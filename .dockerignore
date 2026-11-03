@@ -1,0 +1,27 @@
+# Secrets and local data never go into the image.
+**/.env
+**/.env.*
+!**/.env.example
+backend/legal_aid.db
+backend/legal_aid.db.*
+backend/user_uploads/*
+!backend/user_uploads/.gitkeep
+
+# Rebuilt inside the image.
+backend/vectorstore
+frontend/dist
+dist
+**/node_modules
+
+# Local tooling, caches and things the app does not use at run time.
+.git
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.DS_Store
+backend/tests
+backend/eval
+4parameters_test
+datasetcybernconsumer
+sample-documents
+schemes-legal-support

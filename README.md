@@ -1,3 +1,13 @@
+---
+title: Legal Aid AI
+emoji: ⚖️
+colorFrom: yellow
+colorTo: gray
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Legal Aid AI
 
 Frontend pages are in the `frontend/` Vite app. The backend is a small FastAPI RAG MVP for Indian consumer-law questions using only PDFs placed in `backend/documents/`.
@@ -191,6 +201,33 @@ the app loads at startup. Re-run the script after editing the source file; it re
 The Vite dev server proxies `/api/*` to `http://localhost:8000`, so the browser only talks to `:4000`.
 
 `schemes-legal-support/` is a separate, unused experimental project; the app does not use it.
+
+## Deploying to Hugging Face Spaces
+
+The repo builds into one Docker container (`Dockerfile`, `.dockerignore`): FastAPI serves the API
+and the built React app from the same origin on port 7860. The Spaces settings are in the header at
+the top of this README (`sdk: docker`, `app_port: 7860`).
+
+1. On huggingface.co create a new **Space** and choose the **Docker** SDK (blank template).
+2. Push this repository to the Space's git remote, e.g.
+   `git remote add space https://huggingface.co/spaces/<user>/<space>` then `git push space main`.
+3. In the Space's **Settings -> Variables and secrets**, add the secrets **`GEMINI_API_KEY`** and
+   **`LEGAL_AID_ADMIN_PASSWORD`**. Everything else has a deployment default in the Dockerfile
+   (pinned `GEMINI_MODEL`, `AUTH_COOKIE_SECURE=true`, `SERVE_FRONTEND=true`, per-IP rate limit on
+   the Gemini endpoints at 10/minute and 100/day, `DEMO_DEPLOYMENT=true`); override any of them as a
+   Space variable.
+4. The first build takes about 15-25 minutes: it installs LibreOffice and PyTorch (CPU), builds the
+   frontend, downloads the embedding model and embeds the corpus. Later builds reuse cached layers
+   unless dependencies change.
+
+**Data is not kept.** The database (accounts, saved cases) and uploaded documents live inside the
+container and are lost whenever the Space restarts or rebuilds. The deployed site shows a banner
+saying so ("Demo deployment: accounts and saved cases may be reset. Don't upload real personal
+documents."). Don't use a demo Space for real cases.
+
+To try the same image locally: `docker build -t legal-aid-ai .` then
+`docker run -p 7860:7860 -e GEMINI_API_KEY=... -e LEGAL_AID_ADMIN_PASSWORD=... legal-aid-ai` and
+open http://localhost:7860.
 
 ## Local Development Fallback
 

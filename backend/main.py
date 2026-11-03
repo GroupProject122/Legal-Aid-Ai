@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import datetime
 import json
+import os
+from pathlib import Path
 import logging
 import re
 from contextlib import asynccontextmanager
@@ -30,6 +32,7 @@ import domain_router
 import fact_sufficiency
 import grounded_answer
 import legal_aid_eligibility
+import rate_limit
 import schemes_matcher
 import legal_education
 import query_normalizer
@@ -96,6 +99,7 @@ app.add_middleware(
 )
 
 app.include_router(complaint_drafter_router.router)
+rate_limit.install(app)
 
 
 @app.exception_handler(StarletteHTTPException)
@@ -229,6 +233,13 @@ def health() -> dict:
         "status": "ok",
         "knowledge_base_loaded": rag.loaded,
     }
+
+
+@app.get("/api/site-config")
+def site_config() -> dict:
+    """Deployment settings the frontend needs. demoDeployment (DEMO_DEPLOYMENT=true) shows the
+    "Demo deployment" banner on a public demo."""
+    return {"demoDeployment": rate_limit.env_flag("DEMO_DEPLOYMENT")}
 
 
 DEFAULT_CASES_PAGE_SIZE = 20
@@ -1597,3 +1608,14 @@ def route_public_payload(route: domain_router.RouteDecision) -> dict:
         "primary_domain": route.primary_domain,
         "confidence": route.confidence,
     }
+
+
+# Single-container deployment (Dockerfile): serve the built React app from the same origin as the
+# API. Only when SERVE_FRONTEND=true, so local development (Vite on :4000) and the tests are
+# unchanged. Mounted last, so every /api route above keeps priority. The app routes by URL hash
+# (#/ask, #/cases ...), which never reaches the server, so "/" -> index.html covers every page.
+FRONTEND_DIST = Path(os.getenv("FRONTEND_DIST", str(Path(__file__).resolve().parent.parent / "frontend" / "dist")))
+if rate_limit.env_flag("SERVE_FRONTEND") and (FRONTEND_DIST / "index.html").exists():
+    from fastapi.staticfiles import StaticFiles
+
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
