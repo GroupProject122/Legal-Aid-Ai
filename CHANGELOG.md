@@ -48,6 +48,14 @@ Notable changes to Legal Aid AI. Newest first. Frontend-only detail also lives i
 > wrong about live steps, which actively misleads a user filing a real case. Left out rather than
 > risk that.
 
+## Unreleased — Fact sufficiency: Gemini can't overrule "too vague" for a bare issue statement (2026-11-03)
+
+e2e `consumer_009` ("consumer complaint karni hai") failed on 2026-10-30, 3 times out of 3. Gemini
+called it sufficient, so no fact question was asked; the answer step then judged the same text
+too vague and the app refused. Now, on the first turn with no document facts, a bare issue
+statement (`is_generic_issue_statement()`) keeps the deterministic "insufficient" verdict without
+asking Gemini. Test in `tests/test_fact_sufficiency.py`; backend suite 957 passed.
+
 ## Unreleased — Retrieval: RTI time-limit question answered (Set 1 rti_02) (2026-10-29)
 
 `rag.py`: retrieval now uses the router's domains when the question's wording has no domain

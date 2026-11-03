@@ -297,3 +297,22 @@ def test_general_declaration_detector():
         assert fact_sufficiency.declares_general_question(reply)
     for reply in ("phone defective tha", "seller refused a refund"):
         assert not fact_sufficiency.declares_general_question(reply)
+
+
+def test_gemini_cannot_overrule_the_too_vague_verdict_for_a_bare_issue_statement(monkeypatch):
+    # e2e consumer_009: Gemini said "sufficient" for "consumer complaint karni hai".
+    calls = []
+
+    class Models:
+        def generate_content(self, **_kwargs):
+            calls.append(1)
+            return type("Response", (), {"text": '{"status": "sufficient", "missing_facts": [], "needs_fact_clarification": false, '
+                                                 '"question": "", "reason": "", "normalized_case_summary": "consumer complaint"}'})()
+
+    monkeypatch.setattr(fact_sufficiency, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(fact_sufficiency.genai, "Client", lambda *_a, **_kw: type("Client", (), {"models": Models()})())
+    for message in ("consumer complaint karni hai", "consumer issue hai"):
+        _context, result = fact_sufficiency.start_fact_check(message, route("consumer"))
+        assert result.status == "insufficient"
+        assert result.needs_fact_clarification is True
+    assert calls == []

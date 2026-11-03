@@ -207,6 +207,17 @@ def assess_fact_sufficiency(context: CaseContext) -> FactSufficiencyResult:
     deterministic = deterministic_fact_result(context)
     if deterministic.status == "sufficient" or not GEMINI_API_KEY:
         return deterministic
+    # A bare issue statement ("consumer complaint karni hai", "consumer issue hai") on the first
+    # turn always gets the fact question; Gemini is not asked to overrule that (e2e consumer_009,
+    # 2026-10-30: Gemini called it sufficient, then the answer step judged the same text too vague
+    # and the app refused). Not applied when document facts are attached -- those can carry the
+    # missing detail.
+    if (
+        not context.fact_clarification_history
+        and not context.document_fact_lines
+        and is_generic_issue_statement(context.original_message)
+    ):
+        return deterministic
 
     started = time.perf_counter()
     try:
