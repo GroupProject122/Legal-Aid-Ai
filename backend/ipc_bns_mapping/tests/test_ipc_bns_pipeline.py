@@ -3,10 +3,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import grounded_answer
-import ipc_bns
+from ipc_bns_mapping import ipc_bns
 import rag
 from rag import RetrievedChunk
 

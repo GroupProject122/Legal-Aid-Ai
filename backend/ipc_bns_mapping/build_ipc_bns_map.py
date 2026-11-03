@@ -1,7 +1,7 @@
-"""One-time authoring script that generates backend/ipc_bns_map.json, the IPC -> BNS lookup the
-assistant uses to answer questions framed under the repealed Indian Penal Code.
+"""One-time authoring script that generates ipc_bns_map.json (next to this file), the IPC -> BNS
+lookup the assistant uses to answer questions framed under the repealed Indian Penal Code.
 
-Inputs (both under documents/ipc_bns_mapping/, neither of which is ingested into the RAG index):
+Inputs (both under sources/ next to this file; neither is ingested into the RAG index):
 - bns_ipc_correspondence_table_bprd.pdf -- BPR&D's BNS-to-IPC correspondence table. This is the
   source of every mapping. It is a four-column table (BNS section, subject, IPC section(s),
   summary of comparison) whose plain-text extraction interleaves the columns, so rows are rebuilt
@@ -11,13 +11,14 @@ Inputs (both under documents/ipc_bns_mapping/, neither of which is ingested into
   either repealed before the BNS or dropped by it (377, 497, ...), and a lookup must say so rather
   than come back empty.
 
-It also writes parsed/bns_reference_chunks.jsonl: every BNS section, chunked by ingest.py's own
+It also writes bns_reference_chunks.jsonl: every BNS section, chunked by ingest.py's own
 parser. Only a 30-section BNS extract is in the search index (the full Sanhita was retrieval noise
 for cyber questions), so when a user's IPC citation maps to any other BNS section, rag.py takes
 that section's text from this file instead. It is never embedded or searched on its own.
 
-Run manually (`python build_ipc_bns_map.py`) whenever either PDF, the BNS PDF or ingest.py's
-statute parser changes; ipc_bns.py and rag.py load the outputs at request time.
+Run manually from backend/ (`python -m ipc_bns_mapping.build_ipc_bns_map`) whenever either PDF,
+the BNS PDF or ingest.py's statute parser changes; ipc_bns.py and rag.py load the outputs at
+request time.
 """
 from __future__ import annotations
 
@@ -29,16 +30,16 @@ from typing import Any
 
 from pypdf import PdfReader
 
-from config import BASE_DIR, DOCUMENTS_DIR
+from config import DOCUMENTS_DIR
 
 logger = logging.getLogger("legal_aid_ai.build_ipc_bns_map")
 
-MAPPING_DIR = DOCUMENTS_DIR / "ipc_bns_mapping"
-TABLE_PDF = MAPPING_DIR / "bns_ipc_correspondence_table_bprd.pdf"
-IPC_PDF = MAPPING_DIR / "indian_penal_code_1860.pdf"
-OUTPUT_PATH = BASE_DIR / "ipc_bns_map.json"
+PACKAGE_DIR = Path(__file__).resolve().parent
+TABLE_PDF = PACKAGE_DIR / "sources" / "bns_ipc_correspondence_table_bprd.pdf"
+IPC_PDF = PACKAGE_DIR / "sources" / "indian_penal_code_1860.pdf"
+OUTPUT_PATH = PACKAGE_DIR / "ipc_bns_map.json"
 BNS_SOURCE_FILE = "cyber/bharatiya_nyaya_sanhita_2023.pdf"
-BNS_REFERENCE_PATH = BASE_DIR / "parsed" / "bns_reference_chunks.jsonl"
+BNS_REFERENCE_PATH = PACKAGE_DIR / "bns_reference_chunks.jsonl"
 BNS_SECTION_COUNT = 358
 
 BNS_COMMENCEMENT_DATE = "2024-07-01"
@@ -356,7 +357,7 @@ def build_map() -> dict[str, Any]:
             "ipc_text": "Read from the IPC text itself.",
             "not_in_dataset": "General legal knowledge; no document in this dataset supports it.",
         },
-        "generated_by": "backend/build_ipc_bns_map.py",
+        "generated_by": "backend/ipc_bns_mapping/build_ipc_bns_map.py",
         "ipc_to_bns": dict(sorted(ipc_to_bns.items(), key=lambda item: section_sort_key(item[0]))),
         "bns_to_ipc": bns_to_ipc,
     }

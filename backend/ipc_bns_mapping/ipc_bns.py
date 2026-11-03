@@ -12,13 +12,13 @@ import json
 import re
 from dataclasses import dataclass
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
-from config import BASE_DIR
-
-MAP_PATH = BASE_DIR / "ipc_bns_map.json"
+PACKAGE_DIR = Path(__file__).resolve().parent
+MAP_PATH = PACKAGE_DIR / "ipc_bns_map.json"
 # Every BNS section, not just the indexed extract; written by build_ipc_bns_map.py.
-BNS_REFERENCE_PATH = BASE_DIR / "parsed" / "bns_reference_chunks.jsonl"
+BNS_REFERENCE_PATH = PACKAGE_DIR / "bns_reference_chunks.jsonl"
 BNS_SOURCE_FILE = "cyber/bharatiya_nyaya_sanhita_2023.pdf"
 
 # Which law governs an IPC-era offence. Quotes BNS 358 rather than paraphrasing it; the date is

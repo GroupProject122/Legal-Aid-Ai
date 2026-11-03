@@ -18,7 +18,7 @@ from sentence_transformers import SentenceTransformer
 
 import grounded_answer
 import claim_verifier
-import ipc_bns
+from ipc_bns_mapping import ipc_bns
 import source_text
 from gemini_http import gemini_http_options
 from config import (

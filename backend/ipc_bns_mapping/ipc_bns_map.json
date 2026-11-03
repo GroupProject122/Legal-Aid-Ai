@@ -12,7 +12,7 @@
     "ipc_text": "Read from the IPC text itself.",
     "not_in_dataset": "General legal knowledge; no document in this dataset supports it."
   },
-  "generated_by": "backend/build_ipc_bns_map.py",
+  "generated_by": "backend/ipc_bns_mapping/build_ipc_bns_map.py",
   "ipc_to_bns": {
     "1": {
       "ipc_title": "Title and extent of operation of the Code",

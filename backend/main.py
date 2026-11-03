@@ -29,7 +29,7 @@ import document_summarizer
 import domain_router
 import fact_sufficiency
 import grounded_answer
-import ipc_bns
+from ipc_bns_mapping import ipc_bns
 import legal_aid_eligibility
 import schemes_matcher
 import legal_education
